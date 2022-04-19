@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Header from '$lib/header/Header.svelte';
+	import "carbon-components-svelte/css/all.css";
 	import '../app.css';
 </script>
 
