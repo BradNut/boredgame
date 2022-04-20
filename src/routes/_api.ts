@@ -13,10 +13,10 @@ import { URLSearchParams } from "url";
 
 const base = 'https://api.boardgameatlas.com/api';
 
-export function api(method: string, resource: string, queryParams: Record<string, string>, data?: Record<string, unknown>) {
-  queryParams.client_key = import.meta.env.BASE_URL
+export function boardGameApi(method: string, resource: string, queryParams: Record<string, string>, data?: Record<string, unknown>) {
+  queryParams.client_id = import.meta.env.VITE_PUBLIC_CLIENT_ID;
   const urlQueryParams = new URLSearchParams(queryParams)
-  const url = `${base}/${resource}${urlQueryParams ? urlQueryParams : ''}`
+  const url = `${base}/${resource}${urlQueryParams ? `?${urlQueryParams}` : ''}`
   return fetch(url, {
     method,
     headers: {

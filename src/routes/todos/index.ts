@@ -1,5 +1,5 @@
 import { api } from './_api';
-import type { RequestHandler } from './index';
+import type { RequestHandler } from '@sveltejs/kit';
 
 export const get: RequestHandler = async ({ locals }) => {
   // locals.userid comes from src/hooks.js
