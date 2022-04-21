@@ -1,34 +1,27 @@
 <script lang="ts">
-  import { enhance } from "$lib/form";
+  import type { Game } from "$lib/types";
+import { Checkbox, NumberInput, Tooltip } from "carbon-components-svelte";
+  // import { enhance } from "$lib/form";
+
+  let games: Game[] = [];
+  let submitting = false;
+
+  async function handleSubmit(event: SubmitEvent) {
+    submitting = true;
+    const form = event.target as HTMLFormElement;
+    const response = await fetch('/api/games', {
+      method: 'post',
+      headers: { accept: 'application/json' },
+      body: new FormData(form)
+    });
+    const responseData = await response.json();
+    submitting = false;
+    games = responseData?.games;
+  }
 
   let minAge = 0;
-	let maxAge = 0;
-	let minPlayers = 0;
-	let maxPlayers = 0;
-	let loading = false;
-  type Game = {
-		id: string;
-		handle: string;
-		name: string;
-		url: string;
-		edit_url: string;
-		price: number;
-		price_ca: number;
-		price_uk: number;
-		price_au: number;
-		msrp: number;
-		year_published: number;
-		min_players: number;
-		max_players: number;
-		min_playtime: number;
-		max_playtime: number;
-		min_age: number;
-		description: string;
-		players: string;
-		playtime: string;
-	}
-
-	export let games: Game[];
+	let minPlayers = 1;
+	let maxPlayers = 1;
 </script>
 
 
@@ -37,44 +30,62 @@
 </svelte:head>
 
 <div class="game-form">
-    <form
-      action="/games"
-      method="post"
-      use:enhance={{
-        pending: () => {
-          loading = true;
-        },
-        result: async ({ data, form, response }) => {
-          loading = false;
-          console.log(JSON.stringify(data))
-        }
-      }}
-    >
-    <fieldset aria-busy={loading} disabled={loading}>
-      <label for="minAge">Min Age:
-        <input id="minAge" name="minAge" type="range" min="0" max="120" step="1" bind:value={minAge} />
-        {minAge}
-      </label>
-      <label for="maxAge">Max Age:
-        <input id="maxAge" name="maxAge" type="range" min="0" max="120" step="1" bind:value={maxAge} />
-        {maxAge}
-      </label>
-      <label for="minPlayers">Min Players:
-        <input id="minPlayers" name="minPlayers" type="range" min="1" max="50" step="1" bind:value={minPlayers} />
-        {minPlayers}
-      </label>
-      <label for="maxPlayers">Max Players:
-        <input id="maxPlayers" name="maxPlayers" type="range" min="1" max="50" step="1" bind:value={maxPlayers} />
-        {maxPlayers}
-      </label>
+  <form on:submit|preventDefault={handleSubmit} method="post">
+    <fieldset aria-busy={submitting} disabled={submitting}>
+      <div>
+        <NumberInput
+          name="minAge"
+          min={0}
+          max={120}
+          bind:value={minAge}
+          invalidText="Number must be between 0 and 120"
+          label="Min Age"
+        />
+        <Checkbox name="exactMinAge" labelText="Exact?" />
+      </div>
+      <div>
+        <NumberInput
+          name="minPlayers"
+          min={1}
+          max={50}
+          bind:value={minPlayers}
+          invalidText="Number must be between 1 and 50"
+          label="Min Players"
+        />
+        <div>
+        <Checkbox name="exactMinPlayers" labelText="Exact?" />
+        <Tooltip>
+          <p id="tooltip-body">
+            Resources are provisioned based on your account's organization.
+          </p>
+        </Tooltip>
+        </div>
+      </div>
+      <div>
+        <NumberInput
+          name="maxPlayers"
+          min={1}
+          max={50}
+          bind:value={maxPlayers}
+          invalidText="Number must be between 1 and 50"
+          label="Max Players"
+        />
+        <Checkbox name="exactMaxPlayers" labelText="Exact?" />
+      </div>
     </fieldset>
-    <button type="submit" disabled={loading}>Submit</button>
+    <button type="submit" disabled={submitting}>Submit</button>
+  </form>
+  <form on:submit|preventDefault={handleSubmit} method="post">
+    <fieldset aria-busy={submitting} disabled={submitting}>
+      <input type="checkbox" id="random" name="random" hidden checked />
+      <button type="submit" disabled={submitting}>🎲</button>
+    </fieldset>
   </form>
 </div>
 
 <div class="games">
 	<h1>Games</h1>
-  {#each games as game (game.id)}
+  {#each games as game}
     <section>
         <div>
           <h2>{game.name}</h2>
@@ -100,6 +111,13 @@
     font-weight: 600;
   }
 
+  button {
+    border-radius: 4px;
+    margin: 0;
+    padding: 0.2rem;
+    background-color: palegreen;
+  }
+
   .games {
     display: grid;
     gap: 2rem;
@@ -110,7 +128,13 @@
   }
 
   .game-form {
+    display: flex;
+    place-items: center;
+  }
+
+  .game-form fieldset {
     display: grid;
-    grid-template-columns: 1fr;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
   }
 </style>

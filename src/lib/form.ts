@@ -59,7 +59,7 @@ export function enhance(
 
 				const url = new URL(form.action);
 				url.search = url.hash = '';
-				// invalidate(url.href);
+				invalidate(url.href);
 			} else if (error) {
 				error({ data, form, error: null, response });
 			} else {

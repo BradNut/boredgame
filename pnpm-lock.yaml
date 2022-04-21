@@ -23,11 +23,13 @@ specifiers:
   svelte-preprocess: ^4.10.6
   tslib: ^2.3.1
   typescript: ^4.6.3
+  zod: ^3.14.4
 
 dependencies:
   '@fontsource/fira-mono': 4.5.7
   '@lukeed/uuid': 2.0.0
   cookie: 0.5.0
+  zod: 3.14.4
 
 devDependencies:
   '@playwright/test': 1.21.1
@@ -2823,3 +2825,7 @@ packages:
     dependencies:
       buffer-crc32: 0.2.13
     dev: true
+
+  /zod/3.14.4:
+    resolution: {integrity: sha512-U9BFLb2GO34Sfo9IUYp0w3wJLlmcyGoMd75qU9yf+DrdGA4kEx6e+l9KOkAlyUO0PSQzZCa3TR4qVlcmwqSDuw==}
+    dev: false
