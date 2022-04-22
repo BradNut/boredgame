@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Game } from "$lib/types";
-import { Checkbox, NumberInput, Tooltip } from "carbon-components-svelte";
+import { Checkbox, NumberInput } from "carbon-components-svelte";
   // import { enhance } from "$lib/form";
 
   let games: Game[] = [];
@@ -9,6 +9,7 @@ import { Checkbox, NumberInput, Tooltip } from "carbon-components-svelte";
   async function handleSubmit(event: SubmitEvent) {
     submitting = true;
     const form = event.target as HTMLFormElement;
+    console.log('form', form);
     const response = await fetch('/api/games', {
       method: 'post',
       headers: { accept: 'application/json' },
@@ -22,6 +23,9 @@ import { Checkbox, NumberInput, Tooltip } from "carbon-components-svelte";
   let minAge = 0;
 	let minPlayers = 1;
 	let maxPlayers = 1;
+  let exactMinAge = false;
+  let exactMinPlayers = false;
+  let exactMaxPlayers = false;
 </script>
 
 
@@ -29,6 +33,11 @@ import { Checkbox, NumberInput, Tooltip } from "carbon-components-svelte";
 	<title>Games</title>
 </svelte:head>
 
+<h1>Search Boardgames!</h1>
+
+<section>
+  <p>Input your requirements to search for board game that match your criteria</p>
+</section>
 <div class="game-form">
   <form on:submit|preventDefault={handleSubmit} method="post">
     <fieldset aria-busy={submitting} disabled={submitting}>
@@ -41,7 +50,7 @@ import { Checkbox, NumberInput, Tooltip } from "carbon-components-svelte";
           invalidText="Number must be between 0 and 120"
           label="Min Age"
         />
-        <Checkbox name="exactMinAge" labelText="Exact?" />
+        <Checkbox name="exactMinAge" labelText="Search exact?" bind:checked={exactMinAge} />
       </div>
       <div>
         <NumberInput
@@ -52,14 +61,7 @@ import { Checkbox, NumberInput, Tooltip } from "carbon-components-svelte";
           invalidText="Number must be between 1 and 50"
           label="Min Players"
         />
-        <div>
-        <Checkbox name="exactMinPlayers" labelText="Exact?" />
-        <Tooltip>
-          <p id="tooltip-body">
-            Resources are provisioned based on your account's organization.
-          </p>
-        </Tooltip>
-        </div>
+        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:checked={exactMinPlayers} />
       </div>
       <div>
         <NumberInput
@@ -70,7 +72,7 @@ import { Checkbox, NumberInput, Tooltip } from "carbon-components-svelte";
           invalidText="Number must be between 1 and 50"
           label="Max Players"
         />
-        <Checkbox name="exactMaxPlayers" labelText="Exact?" />
+        <Checkbox name="exactMaxPlayers" labelText="Search exact?" bind:checked={exactMaxPlayers} />
       </div>
     </fieldset>
     <button type="submit" disabled={submitting}>Submit</button>

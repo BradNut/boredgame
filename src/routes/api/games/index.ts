@@ -6,18 +6,57 @@ export const post: RequestHandler = async ({ request }) => {
   const queryParams : SearchQuery = {
     order_by: 'rank',
     ascending: false,
-    limit: 20,
+    limit: 2,
     client_id: import.meta.env.VITE_PUBLIC_CLIENT_ID,
   }
 
   const minAge = form.get('minAge');
   const minPlayers = form.get('minPlayers');
   const maxPlayers = form.get('maxPlayers');
+  const exactMinAge = form.get('exactMinAge') === 'on' || false;
+  const exactMinPlayers = form.get('exactMinPlayers') === 'on' || false;
+  const exactMaxPlayers = form.get('exactMaxPlayers') === 'on' || false;
   const random = form.get('random') === 'on' || false;
   
-  if (minPlayers) queryParams.gt_min_players = (+minPlayers === 1 ? 0 : (+minPlayers - 1));
-  if (maxPlayers) queryParams.lt_max_players = +maxPlayers + 1;
-  if (minAge) queryParams.gt_min_age = +minAge === 1 ? 0 : +minAge - 1;
+  console.log("form.get('minAge')", form.get('minAge'));
+  console.log("form.get('minPlayers')", form.get('minPlayers'));
+  console.log("form.get('maxPlayers')", form.get('maxPlayers'));
+  console.log("form.get('exactMinAge')", form.get('exactMinAge'));
+  console.log("form.get('exactMinPlayers')", form.get('exactMinPlayers'));
+  console.log("form.get('exactMaxPlayers')", form.get('exactMaxPlayers'));
+  console.log("form.get('random')", form.get('random'));
+
+  console.log('minAge',minAge);
+  console.log('minPlayers',minPlayers);
+  console.log('maxPlayers',maxPlayers);
+  console.log('exactMinAge',exactMinAge);
+  console.log('exactMinPlayers',exactMinPlayers);
+  console.log('exactMaxPlayers',exactMaxPlayers);
+  console.log('random',random);
+
+  if (minAge) {
+    if (exactMinAge) {
+      queryParams.min_age = +minAge;
+    } else {
+      queryParams.gt_min_age = +minAge === 1 ? 0 : +minAge - 1;
+    }
+  }
+
+  if (minPlayers) {
+    if (exactMinPlayers) {
+      queryParams.min_players = +minPlayers;
+    } else {
+      queryParams.gt_min_players = (+minPlayers === 1 ? 0 : (+minPlayers - 1));
+    }
+  }
+
+  if (maxPlayers) {
+    if (exactMaxPlayers) {
+      queryParams.max_players = +maxPlayers;
+    } else {
+      queryParams.lt_max_players = +maxPlayers + 1;
+    }
+  }
   queryParams.random = random;
 
   const newQueryParams = {};
