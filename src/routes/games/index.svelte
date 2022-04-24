@@ -50,7 +50,7 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
           invalidText="Number must be between 0 and 120"
           label="Min Age"
         />
-        <Checkbox name="exactMinAge" labelText="Search exact?" bind:checked={exactMinAge} />
+        <Checkbox name="exactMinAge" bind:value={exactMinAge} labelText="Search exact?" bind:checked={exactMinAge} />
       </div>
       <div>
         <NumberInput
@@ -61,7 +61,7 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
           invalidText="Number must be between 1 and 50"
           label="Min Players"
         />
-        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:checked={exactMinPlayers} />
+        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:value={exactMinPlayers} bind:checked={exactMinPlayers} />
       </div>
       <div>
         <NumberInput
@@ -72,7 +72,7 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
           invalidText="Number must be between 1 and 50"
           label="Max Players"
         />
-        <Checkbox name="exactMaxPlayers" labelText="Search exact?" bind:checked={exactMaxPlayers} />
+        <Checkbox name="exactMaxPlayers" labelText="Search exact?" bind:value={exactMaxPlayers} bind:checked={exactMaxPlayers} />
       </div>
     </fieldset>
     <button type="submit" disabled={submitting}>Submit</button>
@@ -106,7 +106,7 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
   {/each}
 </div>
 
-<style>
+<style lang="scss">
   h2 {
     text-align: center;
     font-size: 2.5rem;

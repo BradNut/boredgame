@@ -19,26 +19,23 @@
 	</div>
 
 	<nav>
+		<Theme
+		render="toggle"
+		toggle={{
+			themes: ['white','g100'],
+			hideLabel: true,
+			size: 'sm'
+		}}
+		bind:theme
+		persist
+		persistKey="__carbon-theme"
+	/>
 		<ul>
 			<li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">Home</a></li>
 			<li class:active={$page.url.pathname === '/about'}>
 				<a sveltekit:prefetch href="/about">About</a>
 			</li>
-			<li class:active={$page.url.pathname === '/todos'}>
-				<a sveltekit:prefetch href="/todos">Todos</a>
-			</li>
 		</ul>
-		<Theme
-			render="toggle"
-			toggle={{
-				themes: ['white','g100'],
-				hideLabel: true,
-				size: 'sm'
-			}}
-			bind:theme
-			persist
-			persistKey="__carbon-theme"
-		/>
 	</nav>
 </header>
 

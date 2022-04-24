@@ -3,118 +3,153 @@
 </script>
 
 <script lang="ts">
-	import { enhance } from "$lib/form";
-	import { Button } from "carbon-components-svelte";
-	import { NumberInput } from "carbon-components-svelte";
+	import { Checkbox, NumberInput } from "carbon-components-svelte";
+	import type { Game } from "$lib/types";
+  // import { enhance } from "$lib/form";
 
-	let minAge = 0;
-	let maxAge = 0;
-	let minPlayers = 0;
-	let maxPlayers = 0;
-	let loading = false;
-	// type Game = {
-	// 	id: string;
-	// 	handle: string;
-	// 	name: string;
-	// 	url: string;
-	// 	edit_url: string;
-	// 	price: number;
-	// 	price_ca: number;
-	// 	price_uk: number;
-	// 	price_au: number;
-	// 	msrp: number;
-	// 	year_published: number;
-	// 	min_players: number;
-	// 	max_players: number;
-	// 	min_playtime: number;
-	// 	max_playtime: number;
-	// 	min_age: number;
-	// 	description: string;
-	// 	players: string;
-	// 	playtime: string;
-	// }
+  let games: Game[] = [];
+  let submitting = false;
 
-	export let games = [];
+  async function handleSubmit(event: SubmitEvent) {
+    submitting = true;
+    const form = event.target as HTMLFormElement;
+    console.log('form', form);
+    const response = await fetch('/api/games', {
+      method: 'post',
+      headers: { accept: 'application/json' },
+      body: new FormData(form)
+    });
+    const responseData = await response.json();
+    submitting = false;
+    games = responseData?.games;
+  }
+
+  let minAge = 0;
+	let minPlayers = 1;
+	let maxPlayers = 1;
+  let exactMinAge = false;
+  let exactMinPlayers = false;
+  let exactMaxPlayers = false;
 </script>
 
 <svelte:head>
 	<title>Home</title>
 </svelte:head>
 
-<section>
-	<h1>
-		<div class="welcome">
-			Search for a board game!
-		</div>
-	</h1>
-	Games: {JSON.stringify(games, null, 2)}
-	<form
-		action="/games"
-		method="post"
-		use:enhance={{
-			pending: () => {
-				loading = true;
-			},
-			result: async ({ data, form, response }) => {
-				loading = false;
-				console.log(JSON.stringify(data))
-			}
-		}}
-	>
-		<fieldset aria-busy={loading} disabled={loading}>
-			<label for="minAge">Min Age:
-				<input id="minAge" name="minAge" type="range" min="0" max="120" step="1" bind:value={minAge} />
-				{minAge}
-			</label>
-			<label for="maxAge">Max Age:
-				<input id="maxAge" name="maxAge" type="range" min="0" max="120" step="1" bind:value={maxAge} />
-				{maxAge}
-			</label>
-			<label for="minPlayers">Min Players:
-				<input id="minPlayers" name="minPlayers" type="range" min="1" max="50" step="1" bind:value={minPlayers} />
-				{minPlayers}
-			</label>
-			<label for="maxPlayers">Max Players:
-				<input id="maxPlayers" name="maxPlayers" type="range" min="1" max="50" step="1" bind:value={maxPlayers} />
-				{maxPlayers}
-			</label>
-		</fieldset>
-		<button type="submit" disabled={loading}>Submit</button>
-	</form>
+<h1>Search Boardgames!</h1>
+<p>Input your requirements to search for board game that match your criteria</p>
+<div class="game-form">
+  <form on:submit|preventDefault={handleSubmit} method="post">
+    <fieldset aria-busy={submitting} disabled={submitting}>
+      <div>
+        <NumberInput
+          name="minAge"
+          min={0}
+          max={120}
+          bind:value={minAge}
+          invalidText="Number must be between 0 and 120"
+          label="Min Age"
+        />
+        <Checkbox name="exactMinAge" bind:checked={exactMinAge} bind:value={exactMinAge} labelText="Search exact?" />
+      </div>
+      <div>
+        <NumberInput
+          name="minPlayers"
+          min={1}
+          max={50}
+          bind:value={minPlayers}
+          invalidText="Number must be between 1 and 50"
+          label="Min Players"
+        />
+        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:checked={exactMinPlayers} />
+      </div>
+      <div>
+        <NumberInput
+          name="maxPlayers"
+          min={1}
+          max={50}
+          bind:value={maxPlayers}
+          invalidText="Number must be between 1 and 50"
+          label="Max Players"
+        />
+        <Checkbox name="exactMaxPlayers" labelText="Search exact?" bind:checked={exactMaxPlayers} />
+      </div>
+    </fieldset>
+    <button type="submit" disabled={submitting}>Submit</button>
+  </form>
+  <form on:submit|preventDefault={handleSubmit} method="post">
+    <fieldset aria-busy={submitting} disabled={submitting}>
+      <input type="checkbox" id="random" name="random" hidden checked />
+      <button type="submit" disabled={submitting}>🎲</button>
+    </fieldset>
+  </form>
+</div>
 
-	<div class="games">
-		<h1>Games</h1>
-		<!-- {#each games as game (game.id)}
-			<section>
-					<div>
-						<h2>{game.name}</h2>
-						<p>price : {game.price}</p>
-						<p>year_published : {game.year_published}</p>
-						<p>min_players : {game.min_players}</p>
-						<p>max_players : {game.max_players}</p>
-						<p>min_playtime : {game.min_playtime}</p>
-						<p>max_playtime : {game.max_playtime}</p>
-						<p>min_age : {game.min_age}</p>
-						<p>players : {game.players}</p>
-						<p>playtime : {game.playtime}</p>
-						<div class="description">{@html game.description}</div>
-					</div>
-			</section>
-		{/each} -->
-	</div>
-</section>
+<div class="games">
+	<h1>Games</h1>
+  {#each games as game}
+    <section>
+        <div>
+          <h2>{game.name}</h2>
+          <p>price : {game.price}</p>
+          <p>year_published : {game.year_published}</p>
+          <p>min_players : {game.min_players}</p>
+          <p>max_players : {game.max_players}</p>
+          <p>min_playtime : {game.min_playtime}</p>
+          <p>max_playtime : {game.max_playtime}</p>
+          <p>min_age : {game.min_age}</p>
+          <p>players : {game.players}</p>
+          <p>playtime : {game.playtime}</p>
+          <div class="description">{@html game.description}</div>
+        </div>
+    </section>
+  {/each}
+</div>
 
-<style>
+<style lang="scss">
+	h1 {
+		width: 100%;
+	}
+
+	h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+  }
+
+  button {
+    border-radius: 4px;
+    margin: 0;
+    padding: 0.2rem;
+    background-color: palegreen;
+  }
+
+  .games {
+    display: grid;
+    gap: 2rem;
+  }
+  
+  .description {
+    margin: 1rem;
+  }
+
+  .game-form {
+    display: flex;
+    place-items: center;
+  }
+
+  .game-form fieldset {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
+  }
+
 	section {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		flex: 1;
-	}
-
-	h1 {
-		width: 100%;
 	}
 
 	.welcome {

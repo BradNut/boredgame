@@ -1,21 +1,22 @@
-import type { SearchQuery } from "$lib/types";
 import type { RequestHandler } from "@sveltejs/kit";
+import type { SearchQuery } from "$lib/types";
 
 export const post: RequestHandler = async ({ request }) => {
   const form = await request.formData();
+  console.log('form', form);
   const queryParams : SearchQuery = {
     order_by: 'rank',
     ascending: false,
-    limit: 2,
+    limit: 1,
     client_id: import.meta.env.VITE_PUBLIC_CLIENT_ID,
   }
 
   const minAge = form.get('minAge');
   const minPlayers = form.get('minPlayers');
   const maxPlayers = form.get('maxPlayers');
-  const exactMinAge = form.get('exactMinAge') === 'on' || false;
-  const exactMinPlayers = form.get('exactMinPlayers') === 'on' || false;
-  const exactMaxPlayers = form.get('exactMaxPlayers') === 'on' || false;
+  const exactMinAge = form.get('exactMinAge') || false;
+  const exactMinPlayers = form.get('exactMinPlayers') || false;
+  const exactMaxPlayers = form.get('exactMaxPlayers') || false;
   const random = form.get('random') === 'on' || false;
   
   console.log("form.get('minAge')", form.get('minAge'));
@@ -58,13 +59,16 @@ export const post: RequestHandler = async ({ request }) => {
     }
   }
   queryParams.random = random;
+  console.log('queryParams', queryParams);
 
   const newQueryParams = {};
   for (const key in queryParams) {
-    newQueryParams[key] = new String(queryParams[key]);
+    console.log('key', key);
+    console.log('queryParams[key]', queryParams[key]);
+    newQueryParams[key] = `${queryParams[key]}`;
   }
+
   const urlQueryParams = new URLSearchParams(newQueryParams);
-  console.log('urlQueryParams', JSON.stringify(urlQueryParams, null, 2));
 
   const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''}`
   const response = await fetch(url, {
