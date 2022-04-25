@@ -1,9 +1,11 @@
-export type Game = {
+export type GameType = {
   id: string;
   handle: string;
   name: string;
   url: string;
   edit_url: string;
+  thumb_url: string;
+  image_url: string,
   price: number;
   price_ca: number;
   price_uk: number;

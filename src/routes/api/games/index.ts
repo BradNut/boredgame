@@ -4,10 +4,10 @@ import type { SearchQuery } from "$lib/types";
 export const post: RequestHandler = async ({ request }) => {
   const form = await request.formData();
   console.log('form', form);
-  const queryParams : SearchQuery = {
+  const queryParams: SearchQuery = {
     order_by: 'rank',
     ascending: false,
-    limit: 1,
+    limit: 20,
     client_id: import.meta.env.VITE_PUBLIC_CLIENT_ID,
   }
 
@@ -18,7 +18,7 @@ export const post: RequestHandler = async ({ request }) => {
   const exactMinPlayers = form.get('exactMinPlayers') || false;
   const exactMaxPlayers = form.get('exactMaxPlayers') || false;
   const random = form.get('random') === 'on' || false;
-  
+
   console.log("form.get('minAge')", form.get('minAge'));
   console.log("form.get('minPlayers')", form.get('minPlayers'));
   console.log("form.get('maxPlayers')", form.get('maxPlayers'));
@@ -27,13 +27,13 @@ export const post: RequestHandler = async ({ request }) => {
   console.log("form.get('exactMaxPlayers')", form.get('exactMaxPlayers'));
   console.log("form.get('random')", form.get('random'));
 
-  console.log('minAge',minAge);
-  console.log('minPlayers',minPlayers);
-  console.log('maxPlayers',maxPlayers);
-  console.log('exactMinAge',exactMinAge);
-  console.log('exactMinPlayers',exactMinPlayers);
-  console.log('exactMaxPlayers',exactMaxPlayers);
-  console.log('random',random);
+  console.log('minAge', minAge);
+  console.log('minPlayers', minPlayers);
+  console.log('maxPlayers', maxPlayers);
+  console.log('exactMinAge', exactMinAge);
+  console.log('exactMinPlayers', exactMinPlayers);
+  console.log('exactMaxPlayers', exactMaxPlayers);
+  console.log('random', random);
 
   if (minAge) {
     if (exactMinAge) {

@@ -1,13 +1,14 @@
 <script context="module" lang="ts">
-	export const prerender = true;
+  export const prerender = true;
 </script>
 
 <script lang="ts">
-	import { Checkbox, NumberInput } from "carbon-components-svelte";
-	import type { Game } from "$lib/types";
+  import { Checkbox, NumberInput } from 'carbon-components-svelte';
+  import Game from '$root/components/game.svelte';
+  import type { GameType } from '$lib/types';
   // import { enhance } from "$lib/form";
 
-  let games: Game[] = [];
+  let games: GameType[] = [];
   let submitting = false;
 
   async function handleSubmit(event: SubmitEvent) {
@@ -25,15 +26,15 @@
   }
 
   let minAge = 0;
-	let minPlayers = 1;
-	let maxPlayers = 1;
+  let minPlayers = 1;
+  let maxPlayers = 1;
   let exactMinAge = false;
   let exactMinPlayers = false;
   let exactMaxPlayers = false;
 </script>
 
 <svelte:head>
-	<title>Home</title>
+  <title>Home</title>
 </svelte:head>
 
 <h1>Search Boardgames!</h1>
@@ -50,7 +51,12 @@
           invalidText="Number must be between 0 and 120"
           label="Min Age"
         />
-        <Checkbox name="exactMinAge" bind:checked={exactMinAge} bind:value={exactMinAge} labelText="Search exact?" />
+        <Checkbox
+          name="exactMinAge"
+          bind:checked={exactMinAge}
+          bind:value={exactMinAge}
+          labelText="Search exact?"
+        />
       </div>
       <div>
         <NumberInput
@@ -86,32 +92,18 @@
 </div>
 
 <div class="games">
-	<h1>Games</h1>
+  <h1>Games</h1>
   {#each games as game}
-    <section>
-        <div>
-          <h2>{game.name}</h2>
-          <p>price : {game.price}</p>
-          <p>year_published : {game.year_published}</p>
-          <p>min_players : {game.min_players}</p>
-          <p>max_players : {game.max_players}</p>
-          <p>min_playtime : {game.min_playtime}</p>
-          <p>max_playtime : {game.max_playtime}</p>
-          <p>min_age : {game.min_age}</p>
-          <p>players : {game.players}</p>
-          <p>playtime : {game.playtime}</p>
-          <div class="description">{@html game.description}</div>
-        </div>
-    </section>
+    <Game {game} />
   {/each}
 </div>
 
 <style lang="scss">
-	h1 {
-		width: 100%;
-	}
+  h1 {
+    width: 100%;
+  }
 
-	h2 {
+  h2 {
     text-align: center;
     font-size: 2.5rem;
     font-weight: 600;
@@ -128,7 +120,7 @@
     display: grid;
     gap: 2rem;
   }
-  
+
   .description {
     margin: 1rem;
   }
@@ -144,26 +136,26 @@
     grid-template-columns: repeat(3, minmax(200px, 1fr));
   }
 
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 1;
-	}
+  section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+  }
 
-	.welcome {
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
+  .welcome {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding: 0 0 calc(100% * 495 / 2048) 0;
+  }
 
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
-	}
+  .welcome img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    display: block;
+  }
 </style>
