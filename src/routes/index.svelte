@@ -6,6 +6,7 @@
   import { Checkbox, NumberInput } from 'carbon-components-svelte';
   import Game from '$root/components/game.svelte';
   import type { GameType } from '$lib/types';
+  import Listbox from '$root/components/listbox.svelte';
   // import { enhance } from "$lib/form";
 
   let games: GameType[] = [];
