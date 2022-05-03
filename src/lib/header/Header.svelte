@@ -1,14 +1,16 @@
 <script lang="ts">
-	import {
-    Theme,
-    RadioButtonGroup,
-    RadioButton,
-  } from "carbon-components-svelte";
-	import type { CarbonTheme } from "carbon-components-svelte/types/Theme/Theme.svelte";
+	// import {
+  //   Theme,
+  //   RadioButtonGroup,
+  //   RadioButton,
+  // } from "carbon-components-svelte";
+	// import type { CarbonTheme } from "carbon-components-svelte/types/Theme/Theme.svelte";
+	import { Switch } from '@rgossiaux/svelte-headlessui';
 	import { page } from '$app/stores';
 	import logo from './svelte-logo.svg';
 
-	let theme: CarbonTheme = "white";
+	// let theme: CarbonTheme = "white";
+	let enabled = false;
 </script>
 
 <header>
@@ -19,7 +21,7 @@
 	</div>
 
 	<nav>
-		<Theme
+		<!-- <Theme
 		render="toggle"
 		toggle={{
 			themes: ['white','g100'],
@@ -29,7 +31,16 @@
 		bind:theme
 		persist
 		persistKey="__carbon-theme"
-	/>
+	/> -->
+	<div>
+		<Switch
+			checked={enabled}
+			on:change={(e) => (enabled = e.detail)}
+			class={enabled ? "switch switch-enabled" : "switch switch-disabled"}>
+			<span class="sr-only">Enable notifications</span>
+			<span class="toggle" class:toggle-on={enabled} class:toggle-off={!enabled} />
+		</Switch>
+	</div>
 		<ul>
 			<li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">Home</a></li>
 			<li class:active={$page.url.pathname === '/about'}>
@@ -67,6 +78,7 @@
 	nav {
 		display: flex;
 		justify-content: center;
+		align-items: center;
 		--background: rgba(255, 255, 255, 0.7);
 	}
 
@@ -127,4 +139,55 @@
 	a:hover {
 		color: var(--accent-color);
 	}
+	
+	:global(.switch) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 1rem;
+		border: 0;
+    height: 1.25rem;
+    width: 2.5rem;
+  }
+
+  :global(.switch-enabled) {
+    /* Blue */
+    background-color: rgb(37 99 235);
+  }
+
+  :global(.switch-disabled) {
+    /* Gray */
+    background-color: rgb(229 231 235);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .toggle {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-color: rgb(255 255 255);
+    border-radius: 1rem;
+		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    transition-property: transform;
+  }
+
+  .toggle-on {
+    transform: translateX(1.4rem);
+  }
+
+  .toggle-off {
+    transform: translateX(0.1rem);
+  }
 </style>
