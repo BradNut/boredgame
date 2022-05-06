@@ -1,3 +1,16 @@
+export enum ToastType {
+  INFO,
+  ERROR,
+  WARNING
+}
+
+export type ToastData = {
+  id: number;
+  duration: number;
+  type: ToastType;
+  message: string;
+}
+
 export type GameType = {
   id: string;
   handle: string;
