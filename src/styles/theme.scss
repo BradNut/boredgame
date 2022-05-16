@@ -1,0 +1,67 @@
+html[data-theme='🌛 Night'] {
+  /* Global */
+  --clr-primary: hsl(173 100% 66%);
+  --clr-txt: hsl(0 0% 98%);
+  --clr-bg: hsl(210 7% 11%);
+
+  --bg: radial-gradient(hsl(173 100% 4%), var(--clr-bg));
+  --bg-opacity: 0.7;
+
+  /* Menu */
+  --clr-menu-text: hsl(0 0% 78%);
+  --clr-menu-bg: linear-gradient(180deg,
+      hsl(180 7% 14%) 0%,
+      hsl(216 7% 14%) 100%);
+  --clr-menu-arrow-bg: hsl(180 7% 14%);
+  --clr-menu-border: hsl(0 0% 19%);
+
+  --clr-theme-txt: hsl(177 100% 15%);
+  --clr-theme-active: hsl(177 100% 80%);
+  --clr-switch-on-bg: hsl(0 0% 24%);
+  --clr-switch-off-bg: hsl(0 0% 10%);
+
+  /* Hero */
+  --clr-hero-txt: hsl(174 27% 73%);
+  --clr-hero-bg: linear-gradient(270deg,
+      hsl(210 15% 13%) 43%,
+      hsl(176 19% 15%) 66%);
+  --clr-hero-divider-bg: hsl(0 0% 21%);
+  --clr-input-txt: hsl(177 100% 15%);
+  --clr-input-bg: hsl(210 13% 24%);
+  --clr-input-placeholder-txt: hsl(210 13% 50%);
+  --clr-input-border: hsl(0 0% 21%);
+
+  /* Card */
+  --clr-card-bg: linear-gradient(180deg,
+      hsl(180 7% 14%) 0%,
+      hsl(216 7% 14%) 100%);
+  --clr-card-txt: hsl(0 0% 78%);
+
+  /* Link */
+  --clr-link-txt: hsl(0 100% 98%);
+  --clr-link-background: hsl(0 0% 4%);
+
+  /* Footer */
+  --clr-footer-txt: hsl(0 0% 78%);
+  --clr-footer-bg: hsl(210 5% 7%);
+
+  /* Post */
+  --post-overlay-bg: radial-gradient(hsl(173 100% 4% / 80%), var(--clr-bg));
+  --post-blockquote-txt: hsl(173 100% 94%);
+  --post-blockquote-bg: hsl(173 60% 4%);
+  --post-blockquote-border: hsl(173 10% 10%);
+
+  --clr-code-bg: hsl(173 60% 4%);
+  --clr-code-title: hsl(173 100% 94%);
+  --clr-code-border: hsl(173 10% 10%);
+  --clr-code-line-number: hsl(173 20% 20%);
+  --clr-code-line-highlight: hsl(173 40% 8%);
+  --clr-code-inline-txt: hsl(173 100% 94%);
+  --clr-code-inline-bg: hsl(173 60% 4%);
+
+  --clr-token-1: hsl(173 100% 66%);
+  --clr-token-2: hsl(180 60% 80%);
+  --clr-token-3: hsl(173 100% 66%);
+  --clr-token-4: hsl(0 0% 98%);
+  --clr-token-5: hsl(173 10% 60%);
+}

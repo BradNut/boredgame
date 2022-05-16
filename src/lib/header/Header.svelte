@@ -6,7 +6,8 @@
   // } from "carbon-components-svelte";
   // import type { CarbonTheme } from "carbon-components-svelte/types/Theme/Theme.svelte";
   import { page } from '$app/stores';
-  import Toggle from '$root/components/toggle.svelte';
+  import Themes from '$lib/components/preferences/themes.svelte';
+  import Toggle from '$lib/components/toggle.svelte';
   import logo from './svelte-logo.svg';
 
   // let theme: CarbonTheme = "white";
@@ -34,6 +35,7 @@
     <div>
       <Toggle />
     </div>
+    <div><Themes /></div>
     <ul>
       <li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">Home</a></li>
       <li class:active={$page.url.pathname === '/about'}>

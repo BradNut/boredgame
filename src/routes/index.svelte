@@ -3,10 +3,10 @@
 </script>
 
 <script lang="ts">
-  import { Checkbox, NumberInput } from 'carbon-components-svelte';
-  import Game from '$root/components/game.svelte';
+  // import { Checkbox, NumberInput } from 'carbon-components-svelte';
+  import Game from '$lib/components/game.svelte';
   import type { GameType } from '$lib/types';
-  import Listbox from '$root/components/listbox.svelte';
+  import Listbox from '$lib/components/listbox.svelte';
   // import { enhance } from "$lib/form";
 
   let games: GameType[] = [];
@@ -44,23 +44,38 @@
   <form on:submit|preventDefault={handleSubmit} method="post">
     <fieldset aria-busy={submitting} disabled={submitting}>
       <div>
-        <NumberInput
+        <label htmlfor="minAge">
+          <input id="minAge" name="minAge" bind:value={minAge} type="number" min={0} max={120} />
+          Min Age
+        </label>
+        <!-- <NumberInput
           name="minAge"
           min={0}
           max={120}
           bind:value={minAge}
           invalidText="Number must be between 0 and 120"
           label="Min Age"
-        />
-        <Checkbox
+        /> -->
+        <!-- <Checkbox
           name="exactMinAge"
           bind:checked={exactMinAge}
           bind:value={exactMinAge}
           labelText="Search exact?"
-        />
+        /> -->
       </div>
       <div>
-        <NumberInput
+        <label htmlfor="maxPlayers">
+          <input
+            id="maxPlayers"
+            name="maxPlayers"
+            bind:value={maxPlayers}
+            type="number"
+            min={0}
+            max={50}
+          />
+          Min Age
+        </label>
+        <!-- <NumberInput
           name="minPlayers"
           min={1}
           max={50}
@@ -68,10 +83,21 @@
           invalidText="Number must be between 1 and 50"
           label="Min Players"
         />
-        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:checked={exactMinPlayers} />
+        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:checked={exactMinPlayers} /> -->
       </div>
       <div>
-        <NumberInput
+        <label htmlfor="maxPlayers">
+          <input
+            id="maxPlayers"
+            name="maxPlayers"
+            bind:value={maxPlayers}
+            type="number"
+            min={0}
+            max={50}
+          />
+          Min Age
+        </label>
+        <!-- <NumberInput
           name="maxPlayers"
           min={1}
           max={50}
@@ -79,7 +105,7 @@
           invalidText="Number must be between 1 and 50"
           label="Max Players"
         />
-        <Checkbox name="exactMaxPlayers" labelText="Search exact?" bind:checked={exactMaxPlayers} />
+        <Checkbox name="exactMaxPlayers" labelText="Search exact?" bind:checked={exactMaxPlayers} /> -->
       </div>
     </fieldset>
     <button type="submit" disabled={submitting}>Submit</button>

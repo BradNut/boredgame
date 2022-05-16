@@ -12,14 +12,14 @@
     "format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
   },
   "devDependencies": {
-    "@playwright/test": "^1.21.1",
+    "@playwright/test": "^1.22.0",
     "@rgossiaux/svelte-headlessui": "1.0.0-beta.12",
-    "@sveltejs/adapter-auto": "next",
+    "@sveltejs/adapter-auto": "1.0.0-next.42",
     "@sveltejs/kit": "1.0.0-next.326",
     "@types/cookie": "^0.5.1",
-    "@types/node": "^17.0.31",
-    "@typescript-eslint/eslint-plugin": "^5.22.0",
-    "@typescript-eslint/parser": "^5.22.0",
+    "@types/node": "^17.0.33",
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "@typescript-eslint/parser": "^5.23.0",
     "carbon-components-svelte": "^0.63.8",
     "carbon-icons-svelte": "^11.0.1",
     "eslint": "^8.15.0",
@@ -27,6 +27,7 @@
     "eslint-plugin-svelte3": "^3.4.1",
     "prettier": "^2.6.2",
     "prettier-plugin-svelte": "^2.7.0",
+    "sass": "^1.51.0",
     "svelte": "^3.48.0",
     "svelte-check": "^2.7.0",
     "svelte-preprocess": "^4.10.6",
@@ -38,7 +39,6 @@
     "@fontsource/fira-mono": "^4.5.8",
     "@lukeed/uuid": "^2.0.0",
     "cookie": "^0.5.0",
-    "node-sass": "^7.0.1",
-    "zod": "^3.15.1"
+    "zod": "^3.16.0"
   }
 }

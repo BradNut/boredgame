@@ -1,21 +1,32 @@
 <script lang="ts">
   import Header from '$lib/header/Header.svelte';
-  import '$root/styles/global.css';
-  import 'carbon-components-svelte/css/all.css';
-  import '../app.css';
+  // import 'carbon-components-svelte/css/all.css';
+  import '$root/styles/styles.scss';
 </script>
 
-<Header />
-
-<main>
-  <slot />
-</main>
-
-<footer>
-  <p>Built by <a target="__blank" href="https://bradleyshellnut.com">Bradley Shellnut</a></p>
-</footer>
+<div class="fade" style:animation-duration="250ms" style:animation-delay="250ms">
+  <Header />
+  <main>
+    <slot />
+  </main>
+  <footer>
+    <p>Built by <a target="__blank" href="https://bradleyshellnut.com">Bradley Shellnut</a></p>
+  </footer>
+</div>
 
 <style>
+  .fade {
+    animation-name: fadeIn;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   main {
     flex: 1;
     display: flex;
