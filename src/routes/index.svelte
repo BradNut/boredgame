@@ -153,8 +153,8 @@
   }
 
   .game-form {
-    display: flex;
-    place-items: center;
+    /* display: flex; */
+    /* place-items: center; */
   }
 
   .game-form fieldset {
