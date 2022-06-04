@@ -73,7 +73,7 @@
             min={0}
             max={50}
           />
-          Min Age
+          Min Players
         </label>
         <!-- <NumberInput
           name="minPlayers"
@@ -95,7 +95,7 @@
             min={0}
             max={50}
           />
-          Min Age
+          Max Players
         </label>
         <!-- <NumberInput
           name="maxPlayers"
