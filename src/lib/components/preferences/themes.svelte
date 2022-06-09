@@ -11,9 +11,10 @@
   const themes = {
     '🌛 Night': { name: '🌛 Night' },
     '☀️ Daylight': { name: '☀️ Daylight' },
-    '😎 Synthwave': { name: '😎 Synthwave' }
-  };
-
+    '🐺 Night Howl': { name: '🐺 Night Howl' },
+    '🧠 Night Mind': { name: '🧠 Night Mind' },
+  }
+  
   let selectedTheme = getTheme() ?? themes['🌛 Night'];
 
   function getTheme() {
@@ -59,8 +60,6 @@
 </script>
 
 <div class="theme">
-  <span>Theme</span>
-
   <div class="listbox">
     <Listbox value={selectedTheme} on:change={handleChange} let:open>
       <ListboxButton class="button">
