@@ -1,7 +1,3 @@
-<script context="module" lang="ts">
-  export const prerender = true;
-</script>
-
 <script lang="ts">
   // import { Checkbox, NumberInput } from 'carbon-components-svelte';
   import Game from '$lib/components/game.svelte';
