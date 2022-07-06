@@ -117,7 +117,7 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
     border-radius: 4px;
     margin: 0;
     padding: 0.2rem;
-    background-color: palegreen;
+    background-color: var(--color-btn-primary-active);
   }
 
   .games {
