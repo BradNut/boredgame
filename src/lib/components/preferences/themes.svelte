@@ -12,9 +12,9 @@
     '🌛 Night': { name: '🌛 Night' },
     '☀️ Daylight': { name: '☀️ Daylight' },
     '🐺 Night Howl': { name: '🐺 Night Howl' },
-    '🧠 Night Mind': { name: '🧠 Night Mind' },
-  }
-  
+    '🧠 Night Mind': { name: '🧠 Night Mind' }
+  };
+
   let selectedTheme = getTheme() ?? themes['🌛 Night'];
 
   function getTheme() {

@@ -9,14 +9,19 @@
   guarantees are made. Don't use it to organize your life.)
 */
 
-import { URLSearchParams } from "url";
+import { URLSearchParams } from 'url';
 
 const base = 'https://api.boardgameatlas.com/api';
 
-export function boardGameApi(method: string, resource: string, queryParams: Record<string, string>, data?: Record<string, unknown>) {
+export function boardGameApi(
+  method: string,
+  resource: string,
+  queryParams: Record<string, string>,
+  data?: Record<string, unknown>
+) {
   queryParams.client_id = import.meta.env.VITE_PUBLIC_CLIENT_ID;
-  const urlQueryParams = new URLSearchParams(queryParams)
-  const url = `${base}/${resource}${urlQueryParams ? `?${urlQueryParams}` : ''}`
+  const urlQueryParams = new URLSearchParams(queryParams);
+  const url = `${base}/${resource}${urlQueryParams ? `?${urlQueryParams}` : ''}`;
   return fetch(url, {
     method,
     headers: {

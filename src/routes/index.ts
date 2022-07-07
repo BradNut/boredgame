@@ -19,8 +19,8 @@ export const post: RequestHandler = async ({ request, locals }) => {
     gt_min_players: String(+minPlayers === 1 ? 0 : +minPlayers - 1),
     lt_max_players: String(+maxPlayers + 1),
     gt_min_age: String(+minAge === 1 ? 0 : +minAge - 1),
-    lt_max_age: String(+maxAge + 1),
-  }
+    lt_max_age: String(+maxAge + 1)
+  };
   const response = await boardGameApi('get', `search`, queryParams);
   console.log('response', response);
   if (response.status === 404) {
@@ -39,7 +39,7 @@ export const post: RequestHandler = async ({ request, locals }) => {
     console.log('games', games);
     return {
       body: {
-        games: gameResponse?.games,
+        games: gameResponse?.games
       }
     };
   }

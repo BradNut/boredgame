@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Game } from "$lib/types";
-import { Checkbox, NumberInput } from "carbon-components-svelte";
+  import type { Game } from '$lib/types';
+  import { Checkbox, NumberInput } from 'carbon-components-svelte';
   // import { enhance } from "$lib/form";
 
   let games: Game[] = [];
@@ -21,16 +21,15 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
   }
 
   let minAge = 0;
-	let minPlayers = 1;
-	let maxPlayers = 1;
+  let minPlayers = 1;
+  let maxPlayers = 1;
   let exactMinAge = false;
   let exactMinPlayers = false;
   let exactMaxPlayers = false;
 </script>
 
-
 <svelte:head>
-	<title>Games</title>
+  <title>Games</title>
 </svelte:head>
 
 <h1>Search Boardgames!</h1>
@@ -50,7 +49,12 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
           invalidText="Number must be between 0 and 120"
           label="Min Age"
         />
-        <Checkbox name="exactMinAge" bind:value={exactMinAge} labelText="Search exact?" bind:checked={exactMinAge} />
+        <Checkbox
+          name="exactMinAge"
+          bind:value={exactMinAge}
+          labelText="Search exact?"
+          bind:checked={exactMinAge}
+        />
       </div>
       <div>
         <NumberInput
@@ -61,7 +65,12 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
           invalidText="Number must be between 1 and 50"
           label="Min Players"
         />
-        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:value={exactMinPlayers} bind:checked={exactMinPlayers} />
+        <Checkbox
+          name="exactMinPlayers"
+          labelText="Search exact?"
+          bind:value={exactMinPlayers}
+          bind:checked={exactMinPlayers}
+        />
       </div>
       <div>
         <NumberInput
@@ -72,7 +81,12 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
           invalidText="Number must be between 1 and 50"
           label="Max Players"
         />
-        <Checkbox name="exactMaxPlayers" labelText="Search exact?" bind:value={exactMaxPlayers} bind:checked={exactMaxPlayers} />
+        <Checkbox
+          name="exactMaxPlayers"
+          labelText="Search exact?"
+          bind:value={exactMaxPlayers}
+          bind:checked={exactMaxPlayers}
+        />
       </div>
     </fieldset>
     <button type="submit" disabled={submitting}>Submit</button>
@@ -86,22 +100,22 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
 </div>
 
 <div class="games">
-	<h1>Games</h1>
+  <h1>Games</h1>
   {#each games as game}
     <section>
-        <div>
-          <h2>{game.name}</h2>
-          <p>price : {game.price}</p>
-          <p>year_published : {game.year_published}</p>
-          <p>min_players : {game.min_players}</p>
-          <p>max_players : {game.max_players}</p>
-          <p>min_playtime : {game.min_playtime}</p>
-          <p>max_playtime : {game.max_playtime}</p>
-          <p>min_age : {game.min_age}</p>
-          <p>players : {game.players}</p>
-          <p>playtime : {game.playtime}</p>
-          <div class="description">{@html game.description}</div>
-        </div>
+      <div>
+        <h2>{game.name}</h2>
+        <p>price : {game.price}</p>
+        <p>year_published : {game.year_published}</p>
+        <p>min_players : {game.min_players}</p>
+        <p>max_players : {game.max_players}</p>
+        <p>min_playtime : {game.min_playtime}</p>
+        <p>max_playtime : {game.max_playtime}</p>
+        <p>min_age : {game.min_age}</p>
+        <p>players : {game.players}</p>
+        <p>playtime : {game.playtime}</p>
+        <div class="description">{@html game.description}</div>
+      </div>
     </section>
   {/each}
 </div>
@@ -124,7 +138,7 @@ import { Checkbox, NumberInput } from "carbon-components-svelte";
     display: grid;
     gap: 2rem;
   }
-  
+
   .description {
     margin: 1rem;
   }

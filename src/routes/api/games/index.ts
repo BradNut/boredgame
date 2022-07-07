@@ -1,5 +1,5 @@
-import type { RequestHandler } from "@sveltejs/kit";
-import type { SearchQuery } from "$lib/types";
+import type { RequestHandler } from '@sveltejs/kit';
+import type { SearchQuery } from '$lib/types';
 
 export const post: RequestHandler = async ({ request }) => {
   const form = await request.formData();
@@ -8,8 +8,8 @@ export const post: RequestHandler = async ({ request }) => {
     order_by: 'rank',
     ascending: false,
     limit: 20,
-    client_id: import.meta.env.VITE_PUBLIC_CLIENT_ID,
-  }
+    client_id: import.meta.env.VITE_PUBLIC_CLIENT_ID
+  };
 
   const minAge = form.get('minAge');
   const minPlayers = form.get('minPlayers');
@@ -47,7 +47,7 @@ export const post: RequestHandler = async ({ request }) => {
     if (exactMinPlayers) {
       queryParams.min_players = +minPlayers;
     } else {
-      queryParams.gt_min_players = (+minPlayers === 1 ? 0 : (+minPlayers - 1));
+      queryParams.gt_min_players = +minPlayers === 1 ? 0 : +minPlayers - 1;
     }
   }
 
@@ -70,12 +70,14 @@ export const post: RequestHandler = async ({ request }) => {
 
   const urlQueryParams = new URLSearchParams(newQueryParams);
 
-  const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''}`
+  const url = `https://api.boardgameatlas.com/api/search${
+    urlQueryParams ? `?${urlQueryParams}` : ''
+  }`;
   const response = await fetch(url, {
     method: 'get',
     headers: {
       'content-type': 'application/json'
-    },
+    }
   });
   console.log('response', response);
   if (response.status === 404) {
@@ -94,7 +96,7 @@ export const post: RequestHandler = async ({ request }) => {
     console.log('games', games);
     return {
       body: {
-        games: gameResponse?.games,
+        games: gameResponse?.games
       }
     };
   }
@@ -102,4 +104,4 @@ export const post: RequestHandler = async ({ request }) => {
   return {
     status: response.status
   };
-}
+};

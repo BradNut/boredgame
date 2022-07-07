@@ -9,7 +9,7 @@ export type ToastData = {
   duration: number;
   type: ToastType;
   message: string;
-}
+};
 
 export type GameType = {
   id: string;
@@ -18,7 +18,7 @@ export type GameType = {
   url: string;
   edit_url: string;
   thumb_url: string;
-  image_url: string,
+  image_url: string;
   price: number;
   price_ca: number;
   price_uk: number;
@@ -33,7 +33,7 @@ export type GameType = {
   description: string;
   players: string;
   playtime: string;
-}
+};
 
 export type SearchQuery = {
   client_id: string;
@@ -84,4 +84,4 @@ export type SearchQuery = {
   lt_reddit_week_count?: number;
   lt_reddit_day_count?: number;
   fields?: string;
-}
+};
