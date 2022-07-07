@@ -1,10 +1,10 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const BoardGameSearch = z.object({
   minAge: z.number(),
   maxAge: z.number(),
   minPlayers: z.number(),
-  maxPlayers: z.number(),
+  maxPlayers: z.number()
 });
 
 export const Game = z.object({
@@ -26,5 +26,5 @@ export const Game = z.object({
   min_age: z.number(),
   description: z.string(),
   players: z.string(),
-  playtime: z.string(),
+  playtime: z.string()
 });

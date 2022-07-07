@@ -24,7 +24,7 @@
   </div>
 </article>
 
-<style>
+<style lang="scss">
   .thumbnail {
     align-self: start;
   }
@@ -33,8 +33,11 @@
     border-radius: 10px;
   }
 
-  .game-container:hover {
+  .game-container {
     background-color: var(--primary);
+    &:hover {
+      background-color: hsla(222, 9%, 65%, 1);
+    }
   }
 
   .game-container {
