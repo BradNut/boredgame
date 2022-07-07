@@ -31,7 +31,7 @@
 </script>
 
 <svelte:head>
-  <title>Home</title>
+  <title>Bored Game</title>
 </svelte:head>
 
 <h1>Search Boardgames!</h1>
