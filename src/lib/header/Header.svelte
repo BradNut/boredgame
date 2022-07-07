@@ -8,14 +8,14 @@
   import { page } from '$app/stores';
   import Themes from '$lib/components/preferences/themes.svelte';
   import Toggle from '$lib/components/toggle.svelte';
-  import logo from './svelte-logo.svg';
+  import logo from './bored-game.png';
 
   // let theme: CarbonTheme = "white";
 </script>
 
 <header>
   <div class="corner">
-    <a href="https://kit.svelte.dev">
+    <a href="/">
       <img src={logo} alt="SvelteKit" />
     </a>
   </div>

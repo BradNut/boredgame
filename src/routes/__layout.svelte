@@ -11,11 +11,17 @@
   </main>
   <footer>
     <p>Built by <a target="__blank" href="https://bradleyshellnut.com">Bradley Shellnut</a></p>
+    <p>
+      <a href="https://www.flaticon.com/free-icons/board-game" title="board game icons">Board game icons created by Freepik - Flaticon</a>
+    </p>
   </footer>
 </div>
 
 <style>
   .fade {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
     animation-name: fadeIn;
   }
   @keyframes fadeIn {
