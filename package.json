@@ -16,6 +16,7 @@
   "devDependencies": {
     "@playwright/test": "^1.23.2",
     "@rgossiaux/svelte-headlessui": "1.0.2",
+    "@rgossiaux/svelte-heroicons": "^0.1.2",
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/kit": "next",
     "@types/cookie": "^0.5.1",
