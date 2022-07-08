@@ -149,15 +149,17 @@
     margin: 1rem;
   }
 
-  .game-form {
-    /* display: flex; */
-    /* place-items: center; */
-  }
-
   .game-form fieldset {
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(3, minmax(200px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
+    /* flex-direction: column; */
+    /* flex-wrap: wrap; */
+    /* gap: 0.2rem; */
+  }
+
+  .game-form label {
+    display: grid;
+    margin: 1rem;
   }
 
   section {
