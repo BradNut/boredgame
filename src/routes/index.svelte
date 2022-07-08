@@ -148,6 +148,10 @@
     display: grid;
     place-items: center;
     gap: 1rem;
+
+    h3 {
+      color: white;
+    }
   }
 
   .background {
