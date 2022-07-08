@@ -1,8 +1,12 @@
 <script lang="ts">
+  import { fly, fade } from 'svelte/transition';
+  import { flip } from 'svelte/animate';
   // import { Checkbox, NumberInput } from 'carbon-components-svelte';
   import Game from '$lib/components/game.svelte';
   import type { GameType } from '$lib/types';
   import Listbox from '$lib/components/listbox.svelte';
+  import Loading from '$lib/components/loading.svelte';
+  import Portal from '$lib/Portal.svelte';
   // import { enhance } from "$lib/form";
 
   let games: GameType[] = [];
@@ -114,6 +118,19 @@
   </form>
 </div>
 
+{#if submitting}
+  <Portal>
+    <div
+      in:fade
+      out:fade
+      class="loading">
+        <Loading />
+        <h3>Loading...</h3>
+    </div>
+    <div class="background" />
+  </Portal>
+{/if}
+
 <div class="games">
   <h1>Games</h1>
   {#each games as game}
@@ -122,6 +139,26 @@
 </div>
 
 <style lang="scss">
+  .loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+    display: grid;
+    place-items: center;
+    gap: 1rem;
+  }
+
+  .background {
+    background: black;
+    opacity: 0.8;
+    cursor: none;
+    inset: 0;
+    position: fixed;
+    z-index: 100;
+  }
+
   h1 {
     width: 100%;
   }
