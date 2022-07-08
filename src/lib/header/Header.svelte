@@ -7,7 +7,6 @@
   // import type { CarbonTheme } from "carbon-components-svelte/types/Theme/Theme.svelte";
   import { page } from '$app/stores';
   import Themes from '$lib/components/preferences/themes.svelte';
-  import Toggle from '$lib/components/toggle.svelte';
   import logo from './bored-game.png';
 
   // let theme: CarbonTheme = "white";
@@ -16,7 +15,7 @@
 <header>
   <div class="corner">
     <a href="/">
-      <img src={logo} alt="SvelteKit" />
+      <img src={logo} alt="Bored Game Home" />
     </a>
   </div>
 
@@ -32,9 +31,6 @@
 		persist
 		persistKey="__carbon-theme"
 	/> -->
-    <div>
-      <Toggle />
-    </div>
     <div><Themes /></div>
     <!-- <ul>
       <li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">Home</a></li>
