@@ -64,11 +64,11 @@
         /> -->
       </div>
       <div>
-        <label htmlfor="maxPlayers">
+        <label htmlfor="minPlayers">
           <input
-            id="maxPlayers"
-            name="maxPlayers"
-            bind:value={maxPlayers}
+            id="minPlayers"
+            name="minPlayers"
+            bind:value={minPlayers}
             type="number"
             min={0}
             max={50}

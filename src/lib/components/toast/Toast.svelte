@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fly, fade } from 'svelte/transition';
   import { flip } from 'svelte/animate';
-  import Portal from '../Portal.svelte';
+  import Portal from '../../Portal.svelte';
   import ToastMessage from './ToastMessage.svelte';
   import { toast } from './toast';
 </script>

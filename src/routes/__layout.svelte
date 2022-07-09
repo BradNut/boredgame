@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Header from '$lib/header/Header.svelte';
+  import Header from '$lib/components/header/Header.svelte';
   import Transition from '$lib/components/transition/index.svelte';
   // import 'carbon-components-svelte/css/all.css';
   import '$root/styles/styles.scss';
