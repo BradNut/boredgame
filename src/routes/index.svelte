@@ -129,8 +129,8 @@
   </Portal>
 {/if}
 
+<h1>Games</h1>
 <div class="games">
-  <h1>Games</h1>
   {#each games as game}
     <Game detailed={false} {game} />
   {/each}
@@ -183,6 +183,10 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
+
+    @media(max-width: 580px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .description {
