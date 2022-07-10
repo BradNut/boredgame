@@ -7,7 +7,7 @@
 </script>
 
 <article class="game-container" transition:fade>
-  <div class="game-">
+  <div class="game-info">
     <h2>{game.name}</h2>
     <a class="thumbnail" href={game.url}>
       <img width="140" height="140" src={game.thumb_url} alt={`Image of ${game.name}`} />
@@ -41,7 +41,7 @@
   .game-container {
     display: grid;
     /* grid-template-columns: min-content 1fr; */
-    grid-template-columns: 0.5fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: var(--spacing-16);
     padding: var(--spacing-16) var(--spacing-16);
     transition: all 0.3s;
