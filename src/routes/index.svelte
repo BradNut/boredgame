@@ -180,9 +180,8 @@
   }
 
   .games {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
   }
 
