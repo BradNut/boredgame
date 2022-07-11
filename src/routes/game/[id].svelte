@@ -21,13 +21,6 @@
     </a>
   </div>
   <div class="description">
-    {#if seeMore}
-      {@html game?.description}
-      <button on:click={() => (seeMore = !seeMore)}>See Less -</button>
-    {:else}
-      {@html game?.description_preview}
-      <button on:click={() => (seeMore = !seeMore)}>See More +</button>
-    {/if}
     <div>
       <p>Price: {game?.price}</p>
       <p>Year Published: {game?.year_published}</p>
@@ -37,6 +30,15 @@
       <a href={game.url} rel="noreferrer">Board Game Atlas Link</a>
     </div>
   </div>
+</section>
+<section>
+  {#if seeMore}
+    {@html game?.description}
+    <button on:click={() => (seeMore = !seeMore)}>See Less -</button>
+  {:else}
+    {@html game?.description_preview}
+    <button on:click={() => (seeMore = !seeMore)}>See More +</button>
+  {/if}
 </section>
 
 <style lang="scss">
