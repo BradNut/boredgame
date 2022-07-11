@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { GameType } from '$lib/types';
   import { Checkbox, NumberInput } from 'carbon-components-svelte';
+  import type { boolean } from 'zod';
   // import { enhance } from "$lib/form";
 
   export let game: GameType;
+  let seeMore: boolean = false;
 </script>
 
 <svelte:head>
@@ -19,7 +21,13 @@
     </a>
   </div>
   <div class="description">
-    {@html game?.description}
+    {#if seeMore}
+      {@html game?.description}
+      <button on:click={() => (seeMore = !seeMore)}>See Less -</button>
+    {:else}
+      {@html game?.description_preview}
+      <button on:click={() => (seeMore = !seeMore)}>See More +</button>
+    {/if}
     <div>
       <p>Price: {game?.price}</p>
       <p>Year Published: {game?.year_published}</p>

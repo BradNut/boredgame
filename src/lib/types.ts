@@ -31,6 +31,7 @@ export type GameType = {
   max_playtime: number;
   min_age: number;
   description: string;
+  description_preview: string;
   players: string;
   playtime: string;
 };
