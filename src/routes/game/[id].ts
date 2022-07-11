@@ -1,39 +1,37 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { boardGameApi } from '../_api';
 
-// export const get: RequestHandler = async ({ params }) => {
-//   const queryParams = {
-//     order_by: 'rank',
-//     ascending: 'false',
-//     limit: '10',
-//   }
-//   const response = await boardGameApi('get', `search`, queryParams);
-//   console.log('response', response);
-//   if (response.status === 404) {
-//     // user hasn't created a todo list.
-//     // start with an empty array
-//     return {
-//       body: {
-//         games: []
-//       }
-//     };
-//   }
+export const get: RequestHandler = async ({ params }) => {
+  // console.log('params', params);
+  const queryParams = {
+    ids: `${params?.id}`,
+  }
+  console.log('queryParams', queryParams);
+  const response = await boardGameApi('get', `search`, queryParams);
+  if (response.status === 404) {
+    return {
+      body: {
+        games: []
+      }
+    };
+  }
 
-//   if (response.status === 200) {
-//     const gameResponse = await response.json();
-//     const games = gameResponse?.games;
-//     console.log('games', games);
-//     return {
-//       body: {
-//         games: gameResponse?.games,
-//       }
-//     };
-//   }
+  if (response.status === 200) {
+    const gameResponse = await response.json();
+    // console.log('gameResponse', gameResponse);
+    // const games = gameResponse?.games;
+    console.log('game', gameResponse?.games[0]);
+    return {
+      body: {
+        game: gameResponse?.games[0],
+      }
+    };
+  }
 
-//   return {
-//     status: response.status
-//   };
-// }
+  return {
+    status: response.status
+  };
+}
 
 // export const post: RequestHandler = async ({ request }) => {
 //   const form = await request.formData();

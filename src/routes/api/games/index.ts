@@ -11,6 +11,7 @@ export const post: RequestHandler = async ({ request }) => {
     client_id: import.meta.env.VITE_PUBLIC_CLIENT_ID
   };
 
+  const id = form.get('id');
   const minAge = form.get('minAge');
   const minPlayers = form.get('minPlayers');
   const maxPlayers = form.get('maxPlayers');
@@ -58,6 +59,11 @@ export const post: RequestHandler = async ({ request }) => {
       queryParams.lt_max_players = +maxPlayers + 1;
     }
   }
+
+  if (id) {
+    queryParams.ids = new Array(`${id}`);
+  }
+
   queryParams.random = random;
   console.log('queryParams', queryParams);
 
@@ -70,9 +76,8 @@ export const post: RequestHandler = async ({ request }) => {
 
   const urlQueryParams = new URLSearchParams(newQueryParams);
 
-  const url = `https://api.boardgameatlas.com/api/search${
-    urlQueryParams ? `?${urlQueryParams}` : ''
-  }`;
+  const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''
+    }`;
   const response = await fetch(url, {
     method: 'get',
     headers: {

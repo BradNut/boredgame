@@ -9,7 +9,7 @@
 <article class="game-container" transition:fade>
   <div class="game-info">
     <h2>{game.name}</h2>
-    <a class="thumbnail" href={game.url}>
+    <a class="thumbnail" href={`/game/${game.id}`}>
       <img width="140" height="140" src={game.thumb_url} alt={`Image of ${game.name}`} />
     </a>
   </div>
@@ -49,6 +49,12 @@
     background-color: var(--primary);
     &:hover {
       background-color: hsla(222, 9%, 65%, 1);
+    }
+
+    .game-info {
+      margin: 0.2rem;
+      display: grid;
+      gap: 0.5rem;
     }
   }
 </style>
