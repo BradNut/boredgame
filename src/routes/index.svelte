@@ -164,13 +164,6 @@
   h1 {
     width: 100%;
   }
-
-  h2 {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: 600;
-  }
-
   button {
     border-radius: 10px;
     margin: 0.5rem;
@@ -192,11 +185,6 @@
       grid-template-columns: 1fr;
     }
   }
-
-  .description {
-    margin: 1rem;
-  }
-
   .game-form {
     margin: 1rem;
     border-radius: 4px;
@@ -209,36 +197,10 @@
   .game-form fieldset {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* flex-direction: column; */
-    /* flex-wrap: wrap; */
-    /* gap: 0.2rem; */
   }
 
   .game-form label {
     display: grid;
     margin: 1rem;
   }
-
-  section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-  }
-
-  .welcome {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding: 0 0 calc(100% * 495 / 2048) 0;
-  }
-
-  /* .welcome img {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    display: block;
-  } */
 </style>
