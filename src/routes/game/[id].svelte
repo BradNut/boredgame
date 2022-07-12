@@ -8,7 +8,6 @@
 
   export let game: GameType;
   let seeMore: boolean = false;
-  let 
 </script>
 
 <svelte:head>
