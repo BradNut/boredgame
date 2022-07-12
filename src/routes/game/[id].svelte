@@ -8,6 +8,14 @@
 
   export let game: GameType;
   let seeMore: boolean = false;
+  console.log(game?.description?.indexOf('</p>'));
+  let firstParagraphEnd = 0;
+  if (game?.description?.indexOf('</p>') > 0) {
+    firstParagraphEnd = game?.description?.indexOf('</p>') + 4;
+  } else if (game?.description?.indexOf('</ p>') > 0) {
+    firstParagraphEnd = game?.description?.indexOf('</ p>') + 5;
+  }
+  console.log('firstParagraphEnd', firstParagraphEnd);
 </script>
 
 <svelte:head>
@@ -22,24 +30,32 @@
       <img src={game.image_url} alt={`Image of ${game.name}`} />
     </a>
   </div>
-  <div class="description">
+  <div class="details">
     <div>
-      <p>Price: {game?.price}</p>
       <p>Year Published: {game?.year_published}</p>
       <p>Players: {game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
       <p>Playtime: {game.playtime} minutes</p>
       <p>Minimum Age: {game.min_age}</p>
+      <p>Price: ${game?.price}</p>
       <a href={game.url} rel="noreferrer">Board Game Atlas Link</a>
     </div>
   </div>
 </section>
-<section class="description">
-    {@html game?.description?.substring(0, game?.description?.indexOf('<br /><br />'))}
-    {#if seeMore}
-      <div transition:fade>{@html game?.description?.substring(game?.description?.indexOf('<br /><br />') + 12)}</div>
+{#if firstParagraphEnd > 0}
+  <section class="description">
+    <span>
+      {@html game?.description?.substring(0, firstParagraphEnd)}
+    </span>
+    {#if game?.description?.substring(firstParagraphEnd + 1) !== ''}
+      {#if seeMore}
+        <span transition:fade>
+          {@html game?.description?.substring(firstParagraphEnd + 1)}
+        </span>
+      {/if}
+      <button on:click={() => (seeMore = !seeMore)}>See {!seeMore ? 'More +' : 'Less -'}</button>
     {/if}
-    <button on:click={() => (seeMore = !seeMore)}>See {!seeMore ? 'More +' : 'Less -'}</button>
-</section>
+  </section>
+{/if}
 
 <style lang="scss">
   h2 {
@@ -68,6 +84,10 @@
     display: grid;
     gap: 1.5rem;
     margin: 1rem;
+    a,
+    p {
+      margin: 1rem;
+    }
   }
 
   .description {
