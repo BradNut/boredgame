@@ -184,11 +184,21 @@ a {
   color: var(--color-text-primary);
 }
 
+fieldset {
+  border: 0;
+  border-radius: 4px;
+  padding: 0;
+
+  &[disabled] {
+    opacity: 0.5;
+  }
+}
+
 label {
   display: block;
   margin: var(--spacing-8) 0;
   font-size: var(--font-24);
-  color: var(--color-text-muted);
+  color: var(--clr-txt);
 }
 
 input {
@@ -196,7 +206,11 @@ input {
   font-size: var(--font-16);
   border-radius: var(--radius-base);
   background-color: var(--clr-input-bg);
-  border: none;
+  border: solid 2px var(--clr-theme-active);
+  &:focus {
+    outline: 0;
+    border-color: var(--clr-primary);
+  }
 }
 
 .btn {

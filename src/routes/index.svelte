@@ -1,6 +1,6 @@
 <script lang="ts">
   // import { Checkbox, NumberInput } from 'carbon-components-svelte';
-  import Game from '$lib/components/game.svelte';
+  import Game from '$lib/components/game/index.svelte';
   import type { GameType } from '$lib/types';
   import Transition from '$lib/components/transition/index.svelte';
   import Listbox from '$lib/components/listbox.svelte';
@@ -195,6 +195,15 @@
 
   .description {
     margin: 1rem;
+  }
+
+  .game-form {
+    margin: 1rem;
+    border-radius: 4px;
+    box-shadow: var(--level-2);
+    background: rgba(0, 0, 0, 0.02);
+    border: 2px solid var(--clr-primary);
+    padding: 20px;
   }
 
   .game-form fieldset {

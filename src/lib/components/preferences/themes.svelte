@@ -11,8 +11,6 @@
   const themes = {
     '🌛 Night': { name: '🌛 Night' },
     '☀️ Daylight': { name: '☀️ Daylight' },
-    '🐺 Howl': { name: '🐺 Howl' },
-    '🧠 Mind': { name: '🧠 Mind' }
   };
 
   let selectedTheme = getTheme() ?? themes['🌛 Night'];
@@ -103,7 +101,7 @@
 
 <style>
   .listbox {
-    /* --width: 184px; */
+    --width: 184px;
     margin: 0.5rem;
   }
   .listbox :global(.button) {

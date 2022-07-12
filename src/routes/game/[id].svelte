@@ -1,11 +1,14 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
   import type { GameType } from '$lib/types';
+  import Transition from '$lib/components/transition/index.svelte';
   import { Checkbox, NumberInput } from 'carbon-components-svelte';
   import type { boolean } from 'zod';
   // import { enhance } from "$lib/form";
 
   export let game: GameType;
   let seeMore: boolean = false;
+  let 
 </script>
 
 <svelte:head>
@@ -31,14 +34,12 @@
     </div>
   </div>
 </section>
-<section>
-  {#if seeMore}
-    {@html game?.description}
-    <button on:click={() => (seeMore = !seeMore)}>See Less -</button>
-  {:else}
-    {@html game?.description_preview}
-    <button on:click={() => (seeMore = !seeMore)}>See More +</button>
-  {/if}
+<section class="description">
+    {@html game?.description?.substring(0, game?.description?.indexOf('<br /><br />'))}
+    {#if seeMore}
+      <div transition:fade>{@html game?.description?.substring(game?.description?.indexOf('<br /><br />') + 12)}</div>
+    {/if}
+    <button on:click={() => (seeMore = !seeMore)}>See {!seeMore ? 'More +' : 'Less -'}</button>
 </section>
 
 <style lang="scss">
@@ -52,7 +53,8 @@
   button {
     border-radius: 4px;
     margin: 0;
-    padding: 0.2rem;
+    padding: 0.5rem;
+    max-width: 200px;
     background-color: var(--color-btn-primary-active);
   }
 
@@ -60,6 +62,12 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
+    margin: 1rem;
+  }
+
+  .details {
+    display: grid;
+    gap: 1.5rem;
     margin: 1rem;
   }
 
