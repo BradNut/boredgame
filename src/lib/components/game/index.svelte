@@ -3,7 +3,7 @@
   import type { GameType } from '$lib/types';
 
   export let game: GameType;
-  export let detailed: boolean;
+  export let detailed: boolean = false;
 </script>
 
 <article class="game-container" transition:fade>
