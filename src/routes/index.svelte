@@ -6,9 +6,10 @@
   import Listbox from '$lib/components/listbox.svelte';
   import Loading from '$lib/components/loading.svelte';
   import Portal from '$lib/Portal.svelte';
+  import { gameStore } from '$lib/stores/gameSearchStore';
   // import { enhance } from "$lib/form";
 
-  let games: GameType[] = [];
+  // let games: GameType[] = [];
   let submitting = false;
 
   async function handleSubmit(event: SubmitEvent) {
@@ -22,7 +23,9 @@
     });
     const responseData = await response.json();
     submitting = false;
-    games = responseData?.games;
+    gameStore.removeAll();
+    gameStore.addAll(responseData?.games);
+    // games = responseData?.games;
   }
 
   let minAge = 0;
@@ -131,7 +134,7 @@
 
 <h1>Games</h1>
 <div class="games">
-  {#each games as game}
+  {#each $gameStore as game}
     <Game {game} />
   {/each}
 </div>
