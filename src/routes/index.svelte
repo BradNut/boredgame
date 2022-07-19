@@ -7,22 +7,25 @@
   import Loading from '$lib/components/loading.svelte';
   import Portal from '$lib/Portal.svelte';
   import { gameStore } from '$lib/stores/gameSearchStore';
+  import { boredState } from '$lib/stores/boredState';
   // import { enhance } from "$lib/form";
 
   // let games: GameType[] = [];
-  let submitting = false;
+  let submitting = $boredState?.loading;
 
   async function handleSubmit(event: SubmitEvent) {
-    submitting = true;
+    // submitting = true;
+    boredState.set({ loading: true });
     const form = event.target as HTMLFormElement;
     console.log('form', form);
     const response = await fetch('/api/games', {
-      method: 'post',
+      method: 'POST',
       headers: { accept: 'application/json' },
       body: new FormData(form)
     });
     const responseData = await response.json();
-    submitting = false;
+    // submitting = false;
+    boredState.set({ loading: false });
     gameStore.removeAll();
     gameStore.addAll(responseData?.games);
     // games = responseData?.games;
@@ -120,7 +123,7 @@
   </form>
 </div>
 
-{#if submitting}
+<!-- {#if submitting}
   <Portal>
     <Transition transition={{ type: 'fade', duration: 0 }}>
       <div class="loading">
@@ -130,7 +133,7 @@
     </Transition>
     <div class="background" />
   </Portal>
-{/if}
+{/if} -->
 
 <h1>Games</h1>
 <div class="games">

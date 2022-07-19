@@ -1,7 +1,7 @@
 import { boardGameApi } from './_api';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export const post: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({ request, locals }) => {
   const form = await request.formData();
   const minAge = form.get('minAge') || 0;
   console.log('minAge', minAge);

@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import type { SearchQuery } from '$lib/types';
 
-export const post: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request }) => {
   const form = await request.formData();
   console.log('form', form);
   const queryParams: SearchQuery = {

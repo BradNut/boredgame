@@ -20,24 +20,13 @@
   </div>
 
   <nav>
-    <!-- <Theme
-		render="toggle"
-		toggle={{
-			themes: ['white','g100'],
-			hideLabel: true,
-			size: 'sm'
-		}}
-		bind:theme
-		persist
-		persistKey="__carbon-theme"
-	/> -->
-    <div><Themes /></div>
     <!-- <ul>
       <li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">Home</a></li>
       <li class:active={$page.url.pathname === '/about'}>
         <a sveltekit:prefetch href="/about">About</a>
       </li>
     </ul> -->
+    <div><Themes /></div>
   </nav>
 </header>
 
@@ -45,6 +34,7 @@
   header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 
   .corner {
@@ -70,6 +60,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 1rem;
     --background: rgba(255, 255, 255, 0.7);
   }
 

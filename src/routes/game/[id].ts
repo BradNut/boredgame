@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { boardGameApi } from '../_api';
 
-export const get: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ params }) => {
   // console.log('params', params);
   const queryParams = {
     ids: `${params?.id}`,
