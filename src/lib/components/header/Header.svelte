@@ -30,11 +30,26 @@
   </nav>
 </header>
 
-<style>
+<style lang="scss">
   header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: var(--level-2);
+    padding: 0 var(--containerPadding);
+    font-size: 1.6rem;
+
+    @media (max-width: 1000px) {
+      padding-top: 1.25rem;
+    }
+
+    @media (max-width: 650px) {
+      align-content: center;
+      display: grid;
+      justify-items: center;
+      grid-template-columns: 1fr;
+    }
+    /* max-width: 1000px; */
   }
 
   .corner {

@@ -25,8 +25,10 @@
     <footer>
       <p>Built by <a target="__blank" href="https://bradleyshellnut.com">Bradley Shellnut</a></p>
       <p>
-        <a href="https://www.flaticon.com/free-icons/board-game" title="board game icons"
-          >Board game icons created by Freepik - Flaticon</a
+        <a
+          target="__blank"
+          href="https://www.flaticon.com/free-icons/board-game"
+          title="board game icons">Board game icons created by Freepik - Flaticon</a
         >
       </p>
     </footer>
@@ -79,10 +81,13 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
-    width: 100%;
-    max-width: 1024px;
+    max-width: 850px;
     margin: 0 auto;
+    padding: 2rem 0rem;
+
+    @media (max-width: 850px) {
+      max-width: 80%;
+    }
     box-sizing: border-box;
   }
 

@@ -21,6 +21,7 @@
         <p>{game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
         <p>{game.playtime} minutes</p>
         <p>Minimum Age: {game.min_age}</p>
+        <a href={`/game/${game.id}`}>View Game</a>
         {#if detailed}
           <div class="description">{@html game.description}</div>
         {/if}
