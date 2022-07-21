@@ -42,13 +42,6 @@
     @media (max-width: 1000px) {
       padding-top: 1.25rem;
     }
-
-    @media (max-width: 650px) {
-      align-content: center;
-      display: grid;
-      justify-items: center;
-      grid-template-columns: 1fr;
-    }
     /* max-width: 1000px; */
   }
 
