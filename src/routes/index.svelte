@@ -6,55 +6,15 @@
   import Listbox from '$lib/components/listbox.svelte';
   import Loading from '$lib/components/loading.svelte';
   import Portal from '$lib/Portal.svelte';
+  import TextSearch from '$lib/components/search/textSearch/index.svelte';
+  import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
+  import RandomSearch from '$lib/components/search/random/index.svelte';
   import { gameStore } from '$lib/stores/gameSearchStore';
   import { boredState } from '$lib/stores/boredState';
   import { Checkbox } from 'carbon-components-svelte';
   // import { enhance } from "$lib/form";
 
   // let games: GameType[] = [];
-  let submitting = $boredState?.loading;
-
-  async function handleSubmit(event: SubmitEvent) {
-    // submitting = true;
-    boredState.set({ loading: true });
-    const form = event.target as HTMLFormElement;
-    console.log('form', form);
-    const response = await fetch('/api/games', {
-      method: 'POST',
-      headers: { accept: 'application/json' },
-      body: new FormData(form)
-    });
-    const responseData = await response.json();
-    // submitting = false;
-    boredState.set({ loading: false });
-    gameStore.removeAll();
-    gameStore.addAll(responseData?.games);
-    // games = responseData?.games;
-  }
-
-  async function handleSearch(event: SubmitEvent) {
-    boredState.set({ loading: true });
-    const form = event.target as HTMLFormElement;
-    console.log('form', form);
-    const response = await fetch('/api/game', {
-      method: 'POST',
-      headers: { accept: 'application/json' },
-      body: new FormData(form)
-    });
-    const responseData = await response.json();
-    // submitting = false;
-    boredState.set({ loading: false });
-    gameStore.removeAll();
-    gameStore.addAll(responseData?.games);
-  }
-
-  let name = '';
-  let minAge = 0;
-  let minPlayers = 1;
-  let maxPlayers = 1;
-  let exactMinAge = false;
-  let exactMinPlayers = false;
-  let exactMaxPlayers = false;
 </script>
 
 <svelte:head>
@@ -64,70 +24,9 @@
 <h1>Search Boardgames!</h1>
 <p>Input your requirements to search for board game that match your criteria</p>
 <div class="game-form">
-  <form on:submit|preventDefault={handleSearch} method="post">
-    <fieldset aria-busy={submitting} disabled={submitting}>
-      <div>
-        <label htmlfor="minAge">
-          Search
-          <input id="name" name="name" bind:value={name} type="text" />
-        </label>
-      </div>
-    </fieldset>
-    <button type="submit" disabled={submitting}>Search</button>
-  </form>
-  <form on:submit|preventDefault={handleSubmit} method="post">
-    <fieldset aria-busy={submitting} disabled={submitting}>
-      <div>
-        <label htmlfor="minAge">
-          <input id="minAge" name="minAge" bind:value={minAge} type="number" min={0} max={120} />
-          Min Age
-        </label>
-      </div>
-      <div>
-        <label htmlfor="minPlayers">
-          <input
-            id="minPlayers"
-            name="minPlayers"
-            bind:value={minPlayers}
-            type="number"
-            min={0}
-            max={50}
-          />
-          Min Players
-        </label>
-        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:checked={exactMinPlayers} />
-      </div>
-      <div>
-        <label htmlfor="maxPlayers">
-          <input
-            id="maxPlayers"
-            name="maxPlayers"
-            bind:value={maxPlayers}
-            type="number"
-            min={0}
-            max={50}
-          />
-          Max Players
-        </label>
-        <label htmlfor="exactMaxPlayers">
-          <input
-            id="exactMaxPlayers"
-            type="checkbox"
-            name="exactMaxPlayers"
-            bind:checked={exactMaxPlayers}
-          />
-          <span>Search exact?</span>
-        </label>
-      </div>
-    </fieldset>
-    <button type="submit" disabled={submitting}>Submit</button>
-  </form>
-  <form on:submit|preventDefault={handleSubmit} method="post">
-    <fieldset aria-busy={submitting} disabled={submitting}>
-      <input type="checkbox" id="random" name="random" hidden checked />
-      <button type="submit" disabled={submitting}>🎲</button>
-    </fieldset>
-  </form>
+  <TextSearch />
+  <AdvancedSearch />
+  <RandomSearch />
 </div>
 
 <!-- {#if submitting}
