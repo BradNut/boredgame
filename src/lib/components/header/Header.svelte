@@ -35,7 +35,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: var(--level-2);
+    /* box-shadow: var(--level-2); */
     padding: 0 var(--containerPadding);
     font-size: 1.6rem;
 

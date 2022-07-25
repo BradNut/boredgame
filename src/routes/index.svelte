@@ -8,6 +8,7 @@
   import Portal from '$lib/Portal.svelte';
   import { gameStore } from '$lib/stores/gameSearchStore';
   import { boredState } from '$lib/stores/boredState';
+  import { Checkbox } from 'carbon-components-svelte';
   // import { enhance } from "$lib/form";
 
   // let games: GameType[] = [];
@@ -31,6 +32,23 @@
     // games = responseData?.games;
   }
 
+  async function handleSearch(event: SubmitEvent) {
+    boredState.set({ loading: true });
+    const form = event.target as HTMLFormElement;
+    console.log('form', form);
+    const response = await fetch('/api/game', {
+      method: 'POST',
+      headers: { accept: 'application/json' },
+      body: new FormData(form)
+    });
+    const responseData = await response.json();
+    // submitting = false;
+    boredState.set({ loading: false });
+    gameStore.removeAll();
+    gameStore.addAll(responseData?.games);
+  }
+
+  let name = '';
   let minAge = 0;
   let minPlayers = 1;
   let maxPlayers = 1;
@@ -46,6 +64,17 @@
 <h1>Search Boardgames!</h1>
 <p>Input your requirements to search for board game that match your criteria</p>
 <div class="game-form">
+  <form on:submit|preventDefault={handleSearch} method="post">
+    <fieldset aria-busy={submitting} disabled={submitting}>
+      <div>
+        <label htmlfor="minAge">
+          Search
+          <input id="name" name="name" bind:value={name} type="text" />
+        </label>
+      </div>
+    </fieldset>
+    <button type="submit" disabled={submitting}>Search</button>
+  </form>
   <form on:submit|preventDefault={handleSubmit} method="post">
     <fieldset aria-busy={submitting} disabled={submitting}>
       <div>
@@ -53,20 +82,6 @@
           <input id="minAge" name="minAge" bind:value={minAge} type="number" min={0} max={120} />
           Min Age
         </label>
-        <!-- <NumberInput
-          name="minAge"
-          min={0}
-          max={120}
-          bind:value={minAge}
-          invalidText="Number must be between 0 and 120"
-          label="Min Age"
-        /> -->
-        <!-- <Checkbox
-          name="exactMinAge"
-          bind:checked={exactMinAge}
-          bind:value={exactMinAge}
-          labelText="Search exact?"
-        /> -->
       </div>
       <div>
         <label htmlfor="minPlayers">
@@ -80,15 +95,7 @@
           />
           Min Players
         </label>
-        <!-- <NumberInput
-          name="minPlayers"
-          min={1}
-          max={50}
-          bind:value={minPlayers}
-          invalidText="Number must be between 1 and 50"
-          label="Min Players"
-        />
-        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:checked={exactMinPlayers} /> -->
+        <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:checked={exactMinPlayers} />
       </div>
       <div>
         <label htmlfor="maxPlayers">
@@ -102,15 +109,15 @@
           />
           Max Players
         </label>
-        <!-- <NumberInput
-          name="maxPlayers"
-          min={1}
-          max={50}
-          bind:value={maxPlayers}
-          invalidText="Number must be between 1 and 50"
-          label="Max Players"
-        />
-        <Checkbox name="exactMaxPlayers" labelText="Search exact?" bind:checked={exactMaxPlayers} /> -->
+        <label htmlfor="exactMaxPlayers">
+          <input
+            id="exactMaxPlayers"
+            type="checkbox"
+            name="exactMaxPlayers"
+            bind:checked={exactMaxPlayers}
+          />
+          <span>Search exact?</span>
+        </label>
       </div>
     </fieldset>
     <button type="submit" disabled={submitting}>Submit</button>

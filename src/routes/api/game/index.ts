@@ -1,0 +1,60 @@
+import type { RequestHandler } from '@sveltejs/kit';
+import type { SearchQuery } from '$lib/types';
+
+export const POST: RequestHandler = async ({ request }) => {
+  const form = await request.formData();
+  console.log('form', form);
+  const queryParams: SearchQuery = {
+    order_by: 'rank',
+    ascending: false,
+    limit: 20,
+    client_id: import.meta.env.VITE_PUBLIC_CLIENT_ID,
+    fuzzy_match: true,
+    name: '',
+  };
+
+  queryParams.name = `${form.get('name')}`;
+
+  const newQueryParams = {};
+  for (const key in queryParams) {
+    console.log('key', key);
+    console.log('queryParams[key]', queryParams[key]);
+    newQueryParams[key] = `${queryParams[key]}`;
+  }
+
+  const urlQueryParams = new URLSearchParams(newQueryParams);
+
+  const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''
+    }`;
+  const response = await fetch(url, {
+    method: 'get',
+    headers: {
+      'content-type': 'application/json'
+    }
+  });
+  console.log('response', response);
+  if (response.status === 404) {
+    // user hasn't created a todo list.
+    // start with an empty array
+    return {
+      body: {
+        games: []
+      }
+    };
+  }
+
+  if (response.status === 200) {
+    const gameResponse = await response.json();
+    const games = gameResponse?.games;
+    console.log('games', games);
+    return {
+      body: {
+        games: gameResponse?.games
+      }
+    };
+  }
+
+  return {
+    status: response.status
+  };
+};
