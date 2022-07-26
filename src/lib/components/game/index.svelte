@@ -15,22 +15,19 @@
   </div>
 
   <div class="game-details">
-    <div class="game">
-      <div class="content">
-        <p>{game.year_published}</p>
-        <p>{game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
-        <p>{game.playtime} minutes</p>
-        <p>Minimum Age: {game.min_age}</p>
-        <a href={`/game/${game.id}`}>View Game</a>
-        {#if detailed}
-          <div class="description">{@html game.description}</div>
-        {/if}
-      </div>
-    </div>
+    <p>{game.year_published}</p>
+    <p>{game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
+    <p>{game.playtime} minutes</p>
+    <p>Minimum Age: {game.min_age}</p>
+    <a href={`/game/${game.id}`}>View Game</a>
+    {#if detailed}
+      <div class="description">{@html game.description}</div>
+    {/if}
   </div>
 </article>
 
 <style lang="scss">
+  h2
   .thumbnail {
     align-self: start;
   }
@@ -40,9 +37,11 @@
   }
 
   .game-container {
-    display: grid;
-    /* grid-template-columns: min-content 1fr; */
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    /* grid-template-columns: repeat(minmax(100px, 1fr), 3); */
+    /* grid-template-columns: 1fr 1fr; */
+    max-width: 300px;
     gap: var(--spacing-16);
     padding: var(--spacing-16) var(--spacing-16);
     transition: all 0.3s;
@@ -53,9 +52,15 @@
     }
 
     .game-info {
-      margin: 0.2rem;
       display: grid;
       gap: 0.5rem;
+      margin: 0.2rem;
+    }
+
+    .game-details {
+      p, a {
+        padding: 0.25rem;
+      }
     }
   }
 </style>
