@@ -1,21 +1,24 @@
 <script lang="ts">
-  import type { ToastData } from '$lib/types';
-
+  
   import { onMount } from 'svelte';
-
   import { tweened } from 'svelte/motion';
+  import type { ToastData } from '$lib/types';
   import { toast } from './toast';
+  
   export let toastData: ToastData;
-
   let progress = tweened(100, { duration: toastData.duration });
 
   onMount(async () => {
-    await progress.set(0);
-    toast.remove(toastData.id);
+    if (toastData.autoDismiss) {
+      await progress.set(0);
+      toast.remove(toastData.id);
+    }
   });
 </script>
 
-<div class="progress" style={`width: ${$progress}%;`} />
+{#if toastData.autoDismiss}
+  <div class="progress" style={`width: ${$progress}%;`} />
+{/if}
 <p>{toastData.message}</p>
 
 <style>
