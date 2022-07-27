@@ -2,21 +2,12 @@
   import { fade } from 'svelte/transition';
   import { ToastType, type GameType } from '$lib/types';
   import { collectionStore } from '$lib/stores/collectionStore';
-  import { toast } from '../toast/toast';
+  import { toast } from '$lib/components/toast/toast';
+import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 
   export let game: GameType;
   export let detailed: boolean = false;
   $: existsInCollection = $collectionStore.find((item: GameType) => item.id === game.id);
-
-  function addToCollection() {
-    collectionStore.add(game)
-    toast.send(`"${game.name}" added to collection!`, { duration: 3000, type: ToastType.INFO });
-  }
-
-  function removeFromCollection() {
-    collectionStore.remove(game.id)
-    toast.send(`Removed "${game.name}" from collection!`, { duration: 3000, type: ToastType.INFO });
-  }
 </script>
 
 <article class="game-container" transition:fade>
@@ -38,9 +29,9 @@
     {/if}
   </div>
   {#if existsInCollection}
-    <button type="button" on:click={removeFromCollection}>Remove from collection -</button>
+    <button class="btn" type="button" on:click={() => removeFromCollection(game)}>Remove from collection -</button>
   {:else}
-    <button type="button" on:click={addToCollection}>Add to collection +</button>
+    <button class="btn" type="button" on:click={() => addToCollection(game)}>Add to collection +</button>
   {/if}
   
 </article>

@@ -1,5 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import type { SearchQuery } from '$lib/types';
+import type { GameType, SearchQuery } from '$lib/types';
+import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
 
 export const POST: RequestHandler = async ({ request }) => {
   const form = await request.formData();
@@ -45,8 +46,11 @@ export const POST: RequestHandler = async ({ request }) => {
 
   if (response.status === 200) {
     const gameResponse = await response.json();
-    const games = gameResponse?.games;
-    console.log('games', games);
+    const gameList = gameResponse?.games;
+    const games: GameType[] = [];
+    gameList.forEach(game => {
+      games.push(mapAPIGameToBoredGame(game))
+    });
     return {
       body: {
         games: gameResponse?.games

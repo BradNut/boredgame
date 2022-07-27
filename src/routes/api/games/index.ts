@@ -99,8 +99,6 @@ export const POST: RequestHandler = async ({ request }) => {
   if (response.status === 200) {
     const gameResponse = await response.json();
     const gameList = gameResponse?.games;
-    console.log('gameList', gameList);
-    console.log('type', typeof gameList);
     const games: GameType[] = [];
     gameList.forEach(game => {
       games.push(mapAPIGameToBoredGame(game))

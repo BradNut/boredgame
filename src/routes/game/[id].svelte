@@ -1,11 +1,11 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
+  import Icon from '$lib/components/Icon.svelte';
+  import { collectionStore } from '$lib/stores/collectionStore';
   import type { GameType } from '$lib/types';
-  import Transition from '$lib/components/transition/index.svelte';
-  import { Checkbox, NumberInput } from 'carbon-components-svelte';
-  import type { boolean } from 'zod';
-  // import { enhance } from "$lib/form";
+  import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 
+  $: existsInCollection = $collectionStore.find((item: GameType) => item.id === game.id);
   export let game: GameType;
   let seeMore: boolean = false;
   console.log(game?.description?.indexOf('</p>'));
@@ -31,14 +31,17 @@
     </a>
   </div>
   <div class="details">
-    <div>
-      <p>Year Published: {game?.year_published}</p>
-      <p>Players: {game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
-      <p>Playtime: {game.playtime} minutes</p>
-      <p>Minimum Age: {game.min_age}</p>
-      <p>Price: ${game?.price}</p>
-      <a href={game.url} rel="noreferrer">Board Game Atlas Link</a>
-    </div>
+    <p>Year Published: {game?.year_published}</p>
+    <p>Players: {game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
+    <p>Playtime: {game.playtime} minutes</p>
+    <p>Minimum Age: {game.min_age}</p>
+    <p>Price: ${game?.price}</p>
+    <a style="display: flex; gap: 1rem;" href={game.url} target="_blank" rel="noreferrer">Board Game Atlas Link <Icon name="external-link" /></a>
+    {#if existsInCollection}
+      <button class="btn" type="button" on:click={() => removeFromCollection(game)}>Remove from collection -</button>
+    {:else}
+      <button class="btn" type="button" on:click={() => addToCollection(game)}>Add to collection +</button>
+    {/if}
   </div>
 </section>
 {#if firstParagraphEnd > 0}
@@ -52,7 +55,7 @@
           {@html game?.description?.substring(firstParagraphEnd + 1)}
         </span>
       {/if}
-      <button on:click={() => (seeMore = !seeMore)}>See {!seeMore ? 'More +' : 'Less -'}</button>
+      <button class="btn" type="button" on:click={() => (seeMore = !seeMore)}>See {!seeMore ? 'More +' : 'Less -'}</button>
     {/if}
   </section>
 {/if}
@@ -68,8 +71,8 @@
   button {
     border-radius: 4px;
     margin: 0;
-    padding: 0.5rem;
-    max-width: 200px;
+    padding: 1rem;
+    max-width: 30rem;
     background-color: var(--color-btn-primary-active);
   }
 
@@ -82,7 +85,9 @@
 
   .details {
     display: grid;
-    gap: 1.5rem;
+    gap: 0.5rem;
+    align-content: center;
+    justify-content: start;
     margin: 1rem;
     a,
     p {
