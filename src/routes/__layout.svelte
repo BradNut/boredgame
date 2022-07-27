@@ -5,14 +5,17 @@
   import Transition from '$lib/components/transition/index.svelte';
   import Portal from '$lib/Portal.svelte';
   import { boredState } from '$lib/stores/boredState';
+  import { collectionStore } from '$lib/stores/collectionStore';
+  import { toast } from '$lib/components/toast/toast';
   // import 'carbon-components-svelte/css/all.css';
   import '$root/styles/styles.scss';
+import Toast from '$lib/components/toast/Toast.svelte';
 
   const dev = process.env.NODE_ENV !== 'production';
 </script>
 
 {#if dev}
-  <Toy register={{ boredState }} />
+  <Toy register={{ boredState, collectionStore, toast }} />
 {/if}
 <Transition transition={{ type: 'fade', duration: 250 }}>
   <div class="wrapper">
@@ -44,6 +47,7 @@
       <div class="background" />
     </Portal>
   {/if}
+  <Toast duration={3000} />
 </Transition>
 
 <style lang="scss">

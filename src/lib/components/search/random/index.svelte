@@ -26,7 +26,7 @@
 <form on:submit|preventDefault={handleSubmit} method="post">
   <fieldset aria-busy={submitting} disabled={submitting}>
     <input type="checkbox" id="random" name="random" hidden checked />
-    <button type="submit" disabled={submitting}>🎲</button>
+    <button type="submit" disabled={submitting}>Random Game 🎲</button>
   </fieldset>
 </form>
 

@@ -18,6 +18,7 @@
   --clr-input-txt: hsl(177 100% 15%);
 
   --red: #990000;
+  --tomatoOrange: #e54b4b;
   --redBrown: #633539;
   --blue: #336699;
   --black: #1f273a;
@@ -126,6 +127,9 @@
   /* Border radius */
   --rounded-4: 4px;
   --rounded-20: 20px;
+
+  --toast-background: var(--color-brand);
+  --toast-error-background: var(--tomatoOrange);
 
   /* Media Queryies - Not yet supported in CSS */
   /* 

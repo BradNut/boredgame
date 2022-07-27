@@ -9,6 +9,7 @@
   import TextSearch from '$lib/components/search/textSearch/index.svelte';
   import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
   import RandomSearch from '$lib/components/search/random/index.svelte';
+  import Random from '$lib/components/random/index.svelte';
   import { gameStore } from '$lib/stores/gameSearchStore';
   import { boredState } from '$lib/stores/boredState';
   import { Checkbox } from 'carbon-components-svelte';
@@ -27,6 +28,7 @@
   <TextSearch />
   <AdvancedSearch />
   <RandomSearch />
+  <Random />
 </div>
 
 <!-- {#if submitting}

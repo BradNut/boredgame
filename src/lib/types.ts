@@ -3,14 +3,17 @@ export type BoredStore = {
 }
 
 export enum ToastType {
-  INFO,
-  ERROR,
-  WARNING
+  INFO = "INFO",
+  ERROR = "ERROR",
+  WARNING = "WARNING"
 }
 
 export type ToastData = {
   id: number;
   duration: number;
+  dismissible: boolean;
+  showButton: boolean;
+  autoDismiss: boolean;
   type: ToastType;
   message: string;
 };

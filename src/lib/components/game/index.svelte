@@ -1,9 +1,22 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import type { GameType } from '$lib/types';
+  import { ToastType, type GameType } from '$lib/types';
+  import { collectionStore } from '$lib/stores/collectionStore';
+  import { toast } from '../toast/toast';
 
   export let game: GameType;
   export let detailed: boolean = false;
+  $: existsInCollection = $collectionStore.find((item: GameType) => item.id === game.id);
+
+  function addToCollection() {
+    collectionStore.add(game)
+    toast.send(`"${game.name}" added to collection!`, { duration: 3000, type: ToastType.INFO });
+  }
+
+  function removeFromCollection() {
+    collectionStore.remove(game.id)
+    toast.send(`Removed "${game.name}" from collection!`, { duration: 3000, type: ToastType.INFO });
+  }
 </script>
 
 <article class="game-container" transition:fade>
@@ -24,6 +37,12 @@
       <div class="description">{@html game.description}</div>
     {/if}
   </div>
+  {#if existsInCollection}
+    <button type="button" on:click={removeFromCollection}>Remove from collection -</button>
+  {:else}
+    <button type="button" on:click={addToCollection}>Add to collection +</button>
+  {/if}
+  
 </article>
 
 <style lang="scss">
@@ -34,6 +53,13 @@
 
   img {
     border-radius: 10px;
+  }
+
+  button {
+    width: 100%;
+    border-radius: 10px;
+    padding: 1rem;
+    background-color: var(--color-btn-primary-active);
   }
 
   .game-container {
