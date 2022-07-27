@@ -24,11 +24,13 @@
 
 <h1>Search Boardgames!</h1>
 <p>Input your requirements to search for board game that match your criteria</p>
-<div class="game-form">
+<div class="game-search">
   <TextSearch />
   <AdvancedSearch />
-  <RandomSearch />
-  <Random />
+  <div class="random-buttons">
+    <RandomSearch />
+    <Random />
+  </div>
 </div>
 
 <!-- {#if submitting}
@@ -99,22 +101,26 @@
       grid-template-columns: 1fr;
     }
   }
-  .game-form {
+  .game-search {
     margin: 1rem;
     border-radius: 4px;
     box-shadow: var(--level-2);
     background: rgba(0, 0, 0, 0.02);
     border: 2px solid var(--clr-primary);
     padding: 20px;
+
+    fieldset {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    label {
+      display: grid;
+      margin: 1rem;
+    }
   }
 
-  .game-form fieldset {
+  .random-buttons {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .game-form label {
-    display: grid;
-    margin: 1rem;
+    grid-template-columns: 1fr 1fr;
   }
 </style>

@@ -1,5 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
-import type { SearchQuery } from '$lib/types';
+import type { GameType, SearchQuery } from '$lib/types';
+import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
 
 export const POST: RequestHandler = async ({ request }) => {
   const form = await request.formData();
@@ -84,7 +85,7 @@ export const POST: RequestHandler = async ({ request }) => {
       'content-type': 'application/json'
     }
   });
-  console.log('response', response);
+  // console.log('response', response);
   if (response.status === 404) {
     // user hasn't created a todo list.
     // start with an empty array
@@ -97,11 +98,17 @@ export const POST: RequestHandler = async ({ request }) => {
 
   if (response.status === 200) {
     const gameResponse = await response.json();
-    const games = gameResponse?.games;
+    const gameList = gameResponse?.games;
+    console.log('gameList', gameList);
+    console.log('type', typeof gameList);
+    const games: GameType[] = [];
+    gameList.forEach(game => {
+      games.push(mapAPIGameToBoredGame(game))
+    });
     console.log('games', games);
     return {
       body: {
-        games: gameResponse?.games
+        games,
       }
     };
   }

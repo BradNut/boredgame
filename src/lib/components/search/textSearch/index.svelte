@@ -26,7 +26,7 @@
     <div>
       <label htmlfor="name">
         Search
-        <input id="name" name="name" bind:value={name} type="text" />
+        <input id="name" name="name" bind:value={name} type="text" placeholder="Enter name" />
       </label>
     </div>
   </fieldset>

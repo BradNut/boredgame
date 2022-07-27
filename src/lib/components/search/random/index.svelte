@@ -26,7 +26,7 @@
 <form on:submit|preventDefault={handleSubmit} method="post">
   <fieldset aria-busy={submitting} disabled={submitting}>
     <input type="checkbox" id="random" name="random" hidden checked />
-    <button type="submit" disabled={submitting}>Random Game 🎲</button>
+    <button class="btn" type="submit" disabled={submitting}>Random Game 🎲</button>
   </fieldset>
 </form>
 
@@ -35,11 +35,11 @@
     width: 100%;
   }
   button {
-    border-radius: 10px;
-    margin: 0.5rem;
-    padding: 1rem;
-    color: var(--clr-input-txt);
-    background-color: var(--color-btn-primary-active);
+    /* border-radius: 10px; */
+    /* margin: 0.5rem; */
+    /* padding: 1rem; */
+    /* color: var(--clr-input-txt); */
+    /* background-color: var(--color-btn-primary-active); */
   }
 
   fieldset {

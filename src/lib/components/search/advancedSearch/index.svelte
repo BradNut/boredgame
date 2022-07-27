@@ -22,7 +22,7 @@
   }
 
   let submitting = $boredState?.loading;
-  let minAge = 0;
+  let minAge = 1;
   let minPlayers = 1;
   let maxPlayers = 1;
   let exactMinAge = false;
@@ -34,7 +34,7 @@
   <fieldset aria-busy={submitting} disabled={submitting}>
     <div>
       <label htmlfor="minAge">
-        <input id="minAge" name="minAge" bind:value={minAge} type="number" min={0} max={120} />
+        <input id="minAge" name="minAge" bind:value={minAge} type="number" min={1} max={120} />
         Min Age
       </label>
     </div>
