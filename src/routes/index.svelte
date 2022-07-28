@@ -1,21 +1,11 @@
 <script lang="ts">
   // import { Checkbox, NumberInput } from 'carbon-components-svelte';
   import Game from '$lib/components/game/index.svelte';
-  import type { GameType } from '$lib/types';
-  import Transition from '$lib/components/transition/index.svelte';
-  import Listbox from '$lib/components/listbox.svelte';
-  import Loading from '$lib/components/loading.svelte';
-  import Portal from '$lib/Portal.svelte';
   import TextSearch from '$lib/components/search/textSearch/index.svelte';
   import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
   import RandomSearch from '$lib/components/search/random/index.svelte';
   import Random from '$lib/components/random/index.svelte';
   import { gameStore } from '$lib/stores/gameSearchStore';
-  import { boredState } from '$lib/stores/boredState';
-  import { Checkbox } from 'carbon-components-svelte';
-  // import { enhance } from "$lib/form";
-
-  // let games: GameType[] = [];
 </script>
 
 <svelte:head>
@@ -32,18 +22,6 @@
     <Random />
   </div>
 </div>
-
-<!-- {#if submitting}
-  <Portal>
-    <Transition transition={{ type: 'fade', duration: 0 }}>
-      <div class="loading">
-        <Loading />
-        <h3>Loading...</h3>
-      </div>
-    </Transition>
-    <div class="background" />
-  </Portal>
-{/if} -->
 
 <h1>Games</h1>
 <div class="games">
