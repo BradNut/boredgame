@@ -9,7 +9,7 @@
   import { toast } from '$lib/components/toast/toast';
   // import 'carbon-components-svelte/css/all.css';
   import '$root/styles/styles.scss';
-import Toast from '$lib/components/toast/Toast.svelte';
+  import Toast from '$lib/components/toast/Toast.svelte';
 
   const dev = process.env.NODE_ENV !== 'production';
 </script>

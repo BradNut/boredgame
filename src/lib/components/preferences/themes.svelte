@@ -10,7 +10,7 @@
 
   const themes = {
     '🌛 Night': { name: '🌛 Night' },
-    '☀️ Daylight': { name: '☀️ Daylight' },
+    '☀️ Daylight': { name: '☀️ Daylight' }
   };
 
   let selectedTheme = getTheme() ?? themes['🌛 Night'];

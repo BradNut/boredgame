@@ -1,4 +1,4 @@
-import type { GameType } from "$lib/types";
+import type { GameType } from '$lib/types';
 
 export function mapAPIGameToBoredGame(game): GameType {
   const {
@@ -23,7 +23,7 @@ export function mapAPIGameToBoredGame(game): GameType {
     description,
     description_preview,
     players,
-    playtime,
+    playtime
   } = game;
   return {
     id,
@@ -47,6 +47,6 @@ export function mapAPIGameToBoredGame(game): GameType {
     description,
     description_preview,
     players,
-    playtime,
+    playtime
   };
 }

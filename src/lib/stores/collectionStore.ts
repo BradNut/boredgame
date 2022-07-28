@@ -3,18 +3,18 @@ import type { GameType } from '$lib/types';
 
 // Custom store
 const state = () => {
-	const { subscribe, set, update } = writable<GameType[]>([]);
+  const { subscribe, set, update } = writable<GameType[]>([]);
 
-	function add(game: GameType) {
-		update((store) => [...store, game]);
-	}
+  function add(game: GameType) {
+    update((store) => [...store, game]);
+  }
 
-	function remove(id: string) {
-		update((store) => {
-			const newStore = store.filter((item: GameType) => item.id !== id);
-			return [...newStore];
-		});
-	}
+  function remove(id: string) {
+    update((store) => {
+      const newStore = store.filter((item: GameType) => item.id !== id);
+      return [...newStore];
+    });
+  }
 
   function removeAll() {
     update(() => {
@@ -22,7 +22,7 @@ const state = () => {
     });
   }
 
-	return { subscribe, set, update, add, remove, removeAll };
+  return { subscribe, set, update, add, remove, removeAll };
 };
 
 export const collectionStore = state();

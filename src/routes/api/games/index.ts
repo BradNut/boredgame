@@ -77,8 +77,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
   const urlQueryParams = new URLSearchParams(newQueryParams);
 
-  const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''
-    }`;
+  const url = `https://api.boardgameatlas.com/api/search${
+    urlQueryParams ? `?${urlQueryParams}` : ''
+  }`;
   const response = await fetch(url, {
     method: 'get',
     headers: {
@@ -100,13 +101,13 @@ export const POST: RequestHandler = async ({ request }) => {
     const gameResponse = await response.json();
     const gameList = gameResponse?.games;
     const games: GameType[] = [];
-    gameList.forEach(game => {
-      games.push(mapAPIGameToBoredGame(game))
+    gameList.forEach((game) => {
+      games.push(mapAPIGameToBoredGame(game));
     });
     console.log('games', games);
     return {
       body: {
-        games,
+        games
       }
     };
   }

@@ -6,9 +6,18 @@ import { ToastType } from '$lib/types';
 const newToast = () => {
   const { subscribe, update } = writable<ToastData[]>([]);
 
-  function send(message: string, { duration = 2000, type = ToastType.INFO, autoDismiss = true, dismissible = false, showButton = false } = {}) {
+  function send(
+    message: string,
+    {
+      duration = 2000,
+      type = ToastType.INFO,
+      autoDismiss = true,
+      dismissible = false,
+      showButton = false
+    } = {}
+  ) {
     const id = Math.floor(Math.random() * 1000);
-    
+
     const newMessage: ToastData = {
       id,
       duration,

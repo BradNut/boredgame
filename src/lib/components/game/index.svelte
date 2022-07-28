@@ -3,7 +3,7 @@
   import { ToastType, type GameType } from '$lib/types';
   import { collectionStore } from '$lib/stores/collectionStore';
   import { toast } from '$lib/components/toast/toast';
-import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
+  import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 
   export let game: GameType;
   export let detailed: boolean = false;
@@ -29,16 +29,18 @@ import { addToCollection, removeFromCollection } from '$lib/util/manipulateColle
     {/if}
   </div>
   {#if existsInCollection}
-    <button class="btn" type="button" on:click={() => removeFromCollection(game)}>Remove from collection -</button>
+    <button class="btn" type="button" on:click={() => removeFromCollection(game)}
+      >Remove from collection -</button
+    >
   {:else}
-    <button class="btn" type="button" on:click={() => addToCollection(game)}>Add to collection +</button>
+    <button class="btn" type="button" on:click={() => addToCollection(game)}
+      >Add to collection +</button
+    >
   {/if}
-  
 </article>
 
 <style lang="scss">
-  h2
-  .thumbnail {
+  h2 .thumbnail {
     align-self: start;
   }
 
@@ -75,7 +77,8 @@ import { addToCollection, removeFromCollection } from '$lib/util/manipulateColle
     }
 
     .game-details {
-      p, a {
+      p,
+      a {
         padding: 0.25rem;
       }
     }

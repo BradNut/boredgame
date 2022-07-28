@@ -5,9 +5,7 @@
       "name": "Launch Vite DEV server",
       "request": "launch",
       "runtimeExecutable": "npx",
-      "runtimeArgs": [
-        "vite",
-      ],
+      "runtimeArgs": ["vite"],
       "type": "node",
       "serverReadyAction": {
         "action": "debugWithChrome",

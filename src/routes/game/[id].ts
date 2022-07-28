@@ -4,8 +4,8 @@ import { boardGameApi } from '../_api';
 export const GET: RequestHandler = async ({ params }) => {
   // console.log('params', params);
   const queryParams = {
-    ids: `${params?.id}`,
-  }
+    ids: `${params?.id}`
+  };
   console.log('queryParams', queryParams);
   const response = await boardGameApi('get', `search`, queryParams);
   if (response.status === 404) {
@@ -23,7 +23,7 @@ export const GET: RequestHandler = async ({ params }) => {
     console.log('game', gameResponse?.games[0]);
     return {
       body: {
-        game: gameResponse?.games[0],
+        game: gameResponse?.games[0]
       }
     };
   }
@@ -31,4 +31,4 @@ export const GET: RequestHandler = async ({ params }) => {
   return {
     status: response.status
   };
-}
+};

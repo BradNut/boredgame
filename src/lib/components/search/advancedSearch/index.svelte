@@ -79,9 +79,6 @@
 </form>
 
 <style lang="scss">
-  h1 {
-    width: 100%;
-  }
   button {
     border-radius: 10px;
     margin: 0.5rem;

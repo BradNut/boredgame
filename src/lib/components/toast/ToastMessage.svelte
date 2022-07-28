@@ -1,10 +1,9 @@
 <script lang="ts">
-  
   import { onMount } from 'svelte';
   import { tweened } from 'svelte/motion';
   import type { ToastData } from '$lib/types';
   import { toast } from './toast';
-  
+
   export let toastData: ToastData;
   let progress = tweened(100, { duration: toastData.duration });
 

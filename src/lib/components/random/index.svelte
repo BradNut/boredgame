@@ -11,16 +11,22 @@
       let randomNumber: number = Math.round(Math.random() * $collectionStore.length - 1);
       if ($collectionStore.at(randomNumber)) {
         gameStore.removeAll();
-        gameStore.add($collectionStore.at(randomNumber));
+        gameStore.add($collectionStore.at(randomNumber)!);
         boredState.set({ loading: false });
       } else {
         toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
       }
       boredState.set({ loading: false });
     } else {
-      toast.send('No items in your collection!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
+      toast.send('No items in your collection!', {
+        duration: 3000,
+        type: ToastType.ERROR,
+        dismissible: true
+      });
     }
   }
 </script>
 
-<button class="btn" type="button" on:click={getRandomCollectionGame}>Random from collection 🎲</button>
+<button class="btn" type="button" on:click={getRandomCollectionGame}
+  >Random from collection 🎲</button
+>

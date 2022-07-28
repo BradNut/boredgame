@@ -36,11 +36,22 @@
     <p>Playtime: {game.playtime} minutes</p>
     <p>Minimum Age: {game.min_age}</p>
     <p>Price: ${game?.price}</p>
-    <a style="display: flex; gap: 1rem;" href={game.url} target="_blank" rel="noreferrer">Board Game Atlas Link <Icon name="external-link" /></a>
+    <a
+      style="display: flex; gap: 1rem;"
+      href={game.url}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={`Board Game Atlas Link for ${game.name}`}
+      >Board Game Atlas Link <Icon name="external-link" /></a
+    >
     {#if existsInCollection}
-      <button class="btn" type="button" on:click={() => removeFromCollection(game)}>Remove from collection -</button>
+      <button class="btn" type="button" on:click={() => removeFromCollection(game)}
+        >Remove from collection -</button
+      >
     {:else}
-      <button class="btn" type="button" on:click={() => addToCollection(game)}>Add to collection +</button>
+      <button class="btn" type="button" on:click={() => addToCollection(game)}
+        >Add to collection +</button
+      >
     {/if}
   </div>
 </section>
@@ -55,7 +66,9 @@
           {@html game?.description?.substring(firstParagraphEnd + 1)}
         </span>
       {/if}
-      <button class="btn" type="button" on:click={() => (seeMore = !seeMore)}>See {!seeMore ? 'More +' : 'Less -'}</button>
+      <button class="btn" type="button" on:click={() => (seeMore = !seeMore)}
+        >See {!seeMore ? 'More +' : 'Less -'}</button
+      >
     {/if}
   </section>
 {/if}

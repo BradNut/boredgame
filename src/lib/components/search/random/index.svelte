@@ -34,13 +34,6 @@
   h1 {
     width: 100%;
   }
-  button {
-    /* border-radius: 10px; */
-    /* margin: 0.5rem; */
-    /* padding: 1rem; */
-    /* color: var(--clr-input-txt); */
-    /* background-color: var(--color-btn-primary-active); */
-  }
 
   fieldset {
     display: grid;

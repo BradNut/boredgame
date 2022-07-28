@@ -1,11 +1,11 @@
 export type BoredStore = {
   loading: boolean;
-}
+};
 
 export enum ToastType {
-  INFO = "INFO",
-  ERROR = "ERROR",
-  WARNING = "WARNING"
+  INFO = 'INFO',
+  ERROR = 'ERROR',
+  WARNING = 'WARNING'
 }
 
 export type ToastData = {

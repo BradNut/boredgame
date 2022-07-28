@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { fly } from 'svelte/transition'
-  import { page } from '$app/stores'
+  import { fly } from 'svelte/transition';
+  import { page } from '$app/stores';
 
   interface Transition {
-    type: 'fade' | 'stagger' | 'page'
-    duration?: number
-    delay?: number
+    type: 'fade' | 'stagger' | 'page';
+    duration?: number;
+    delay?: number;
   }
 
-  export let transition: Transition
+  export let transition: Transition;
 </script>
 
 {#if transition.type === 'page'}
