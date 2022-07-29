@@ -24,7 +24,6 @@
   let minAge = 1;
   let minPlayers = 1;
   let maxPlayers = 1;
-  let exactMinAge = false;
   let exactMinPlayers = false;
   let exactMaxPlayers = false;
 </script>
@@ -32,13 +31,14 @@
 <form on:submit|preventDefault={handleSubmit} method="post">
   <fieldset aria-busy={submitting} disabled={submitting}>
     <div>
-      <label htmlfor="minAge">
-        <input id="minAge" name="minAge" bind:value={minAge} type="number" min={1} max={120} />
+      <label for="minAge">
         Min Age
+        <input id="minAge" name="minAge" bind:value={minAge} type="number" min={1} max={120} />
       </label>
     </div>
     <div>
-      <label htmlfor="minPlayers">
+      <label for="minPlayers">
+        Min Players
         <input
           id="minPlayers"
           name="minPlayers"
@@ -47,20 +47,20 @@
           min={0}
           max={50}
         />
-        Min Players
       </label>
-      <label htmlfor="exactMinPlayers">
+      <label for="exactMinPlayers" style="display: flex; gap: 1rem; place-items: center;">
+        <span>Exact?</span>
         <input
           id="exactMinPlayers"
           type="checkbox"
           name="exactMinPlayers"
           bind:checked={exactMinPlayers}
         />
-        <span>Exact?</span>
       </label>
     </div>
     <div>
-      <label htmlfor="maxPlayers">
+      <label for="maxPlayers">
+        Max Players
         <input
           id="maxPlayers"
           name="maxPlayers"
@@ -69,16 +69,15 @@
           min={0}
           max={50}
         />
-        Max Players
       </label>
-      <label htmlfor="exactMaxPlayers">
+      <label for="exactMaxPlayers" style="display: flex; gap: 1rem; place-items: center;">
+        <span>Exact?</span>
         <input
           id="exactMaxPlayers"
           type="checkbox"
           name="exactMaxPlayers"
           bind:checked={exactMaxPlayers}
         />
-        <span>Exact?</span>
       </label>
     </div>
   </fieldset>
