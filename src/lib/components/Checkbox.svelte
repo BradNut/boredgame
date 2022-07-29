@@ -1,34 +1,33 @@
 <script lang="ts">
   export let labelText: string;
   export let showLabel: boolean;
+  export let name: string;
+  export let value: boolean;
+  export let onChange: FormDataEvent<HTMLInputElement>;
 </script>
 
-<label htmlFor={`${guest.id}`} className="checkbox">
+<label for={name} class="checkbox">
   <span class="checkbox__input">
-    <input
-      id={`${guest.id}`}
-      name={`${guest.id}`}
-      checked={inputs[`${guest.id}`].plusOne}
-      onChange={onChangePlusOne}
-      type="checkbox"
-    />
+    <input id={name} {name} checked={value} on:change={onChange} type="checkbox" />
     <span class="checkbox__control">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
+        view-box="0 0 24 24"
         aria-hidden="true"
         focusable="false"
       >
         <path
           fill="none"
           stroke="currentColor"
-          strokeWidth="3"
+          stroke-width="3"
           d="M1.73 12.91l6.37 6.37L22.79 4.59"
         />
       </svg>
     </span>
   </span>
-  <span class="checkbox__label">Plus one? </span>
+  {#if showLabel}
+    <span class="checkbox__label">{labelText}</span>
+  {/if}
 </label>
 
 <style lang="scss">

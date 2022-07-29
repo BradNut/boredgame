@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Checkbox } from 'carbon-components-svelte';
   import { boredState } from '$lib/stores/boredState';
   import { gameStore } from '$lib/stores/gameSearchStore';
 
@@ -50,7 +49,15 @@
         />
         Min Players
       </label>
-      <Checkbox name="exactMinPlayers" labelText="Search exact?" bind:checked={exactMinPlayers} />
+      <label htmlfor="exactMinPlayers">
+        <input
+          id="exactMinPlayers"
+          type="checkbox"
+          name="exactMinPlayers"
+          bind:checked={exactMinPlayers}
+        />
+        <span>Exact?</span>
+      </label>
     </div>
     <div>
       <label htmlfor="maxPlayers">
@@ -71,7 +78,7 @@
           name="exactMaxPlayers"
           bind:checked={exactMaxPlayers}
         />
-        <span>Search exact?</span>
+        <span>Exact?</span>
       </label>
     </div>
   </fieldset>

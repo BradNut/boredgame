@@ -1,12 +1,7 @@
 <script lang="ts">
-  // import {
-  //   Theme,
-  //   RadioButtonGroup,
-  //   RadioButton,
-  // } from "carbon-components-svelte";
-  // import type { CarbonTheme } from "carbon-components-svelte/types/Theme/Theme.svelte";
   import { page } from '$app/stores';
   import Themes from '$lib/components/preferences/themes.svelte';
+  import Profile from '../preferences/profile.svelte';
   import logo from './bored-game.png';
 
   // let theme: CarbonTheme = "white";
@@ -20,13 +15,8 @@
   </div>
 
   <nav>
-    <!-- <ul>
-      <li class:active={$page.url.pathname === '/'}><a sveltekit:prefetch href="/">Home</a></li>
-      <li class:active={$page.url.pathname === '/about'}>
-        <a sveltekit:prefetch href="/about">About</a>
-      </li>
-    </ul> -->
     <div><Themes /></div>
+    <!-- <div><Profile /></div> -->
   </nav>
 </header>
 
@@ -35,14 +25,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* box-shadow: var(--level-2); */
     padding: 0 var(--containerPadding);
     font-size: 1.6rem;
 
     @media (max-width: 1000px) {
       padding-top: 1.25rem;
     }
-    /* max-width: 1000px; */
   }
 
   .corner {
