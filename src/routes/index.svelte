@@ -80,7 +80,6 @@
     }
   }
   .game-search {
-    margin: 1rem;
     border-radius: 4px;
     box-shadow: var(--level-2);
     background: rgba(0, 0, 0, 0.02);

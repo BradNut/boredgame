@@ -15,8 +15,8 @@
   </div>
 
   <nav>
-    <div><Themes /></div>
-    <!-- <div><Profile /></div> -->
+    <!-- <div><Themes /></div> -->
+    <div><Profile /></div>
   </nav>
 </header>
 

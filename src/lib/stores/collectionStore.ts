@@ -5,6 +5,12 @@ import type { GameType } from '$lib/types';
 const state = () => {
   const { subscribe, set, update } = writable<GameType[]>([]);
 
+  function addAll(games: GameType[]) {
+    for (const game of games) {
+      add(game);
+    }
+  }
+
   function add(game: GameType) {
     update((store) => [...store, game]);
   }
@@ -22,7 +28,7 @@ const state = () => {
     });
   }
 
-  return { subscribe, set, update, add, remove, removeAll };
+  return { subscribe, set, update, add, addAll, remove, removeAll };
 };
 
 export const collectionStore = state();

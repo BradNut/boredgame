@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from '$app/env';
   import { Toy } from '@leveluptuts/svelte-toy';
   import Header from '$lib/components/header/Header.svelte';
   import Loading from '$lib/components/loading.svelte';
@@ -10,6 +11,14 @@
   // import 'carbon-components-svelte/css/all.css';
   import '$root/styles/styles.scss';
   import Toast from '$lib/components/toast/Toast.svelte';
+
+  if (browser) {
+    const collection = JSON.parse(localStorage.collection);
+    console.log('collection', collection);
+    if (collection) {
+      collectionStore.addAll(collection);
+    }
+  }
 
   const dev = process.env.NODE_ENV !== 'production';
 </script>
