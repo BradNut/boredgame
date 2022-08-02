@@ -23,11 +23,13 @@
   </div>
 </div>
 
-<h1>Games</h1>
 <div class="games">
-  {#each $gameStore as game}
-    <Game {game} />
-  {/each}
+  <h1>Games</h1>
+  <div class="games-list">
+    {#each $gameStore as game}
+      <Game {game} />
+    {/each}
+  </div>
 </div>
 
 <style lang="scss">
@@ -67,6 +69,10 @@
   }
 
   .games {
+    margin-top: 2rem;
+  }
+
+  .games-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;

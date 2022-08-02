@@ -13,6 +13,7 @@ export const POST: RequestHandler = async ({ request }) => {
   };
 
   const id = form.get('id');
+  const ids = form.get('ids');
   const minAge = form.get('minAge');
   const minPlayers = form.get('minPlayers');
   const maxPlayers = form.get('maxPlayers');
@@ -20,22 +21,6 @@ export const POST: RequestHandler = async ({ request }) => {
   const exactMinPlayers = form.get('exactMinPlayers') || false;
   const exactMaxPlayers = form.get('exactMaxPlayers') || false;
   const random = form.get('random') === 'on' || false;
-
-  console.log("form.get('minAge')", form.get('minAge'));
-  console.log("form.get('minPlayers')", form.get('minPlayers'));
-  console.log("form.get('maxPlayers')", form.get('maxPlayers'));
-  console.log("form.get('exactMinAge')", form.get('exactMinAge'));
-  console.log("form.get('exactMinPlayers')", form.get('exactMinPlayers'));
-  console.log("form.get('exactMaxPlayers')", form.get('exactMaxPlayers'));
-  console.log("form.get('random')", form.get('random'));
-
-  console.log('minAge', minAge);
-  console.log('minPlayers', minPlayers);
-  console.log('maxPlayers', maxPlayers);
-  console.log('exactMinAge', exactMinAge);
-  console.log('exactMinPlayers', exactMinPlayers);
-  console.log('exactMaxPlayers', exactMaxPlayers);
-  console.log('random', random);
 
   if (minAge) {
     if (exactMinAge) {
@@ -65,21 +50,23 @@ export const POST: RequestHandler = async ({ request }) => {
     queryParams.ids = new Array(`${id}`);
   }
 
+  if (ids) {
+    // TODO: Pass in ids array from localstorage / game store
+    queryParams.ids = new Array(ids);
+  }
+
   queryParams.random = random;
   console.log('queryParams', queryParams);
 
-  const newQueryParams = {};
+  const newQueryParams: Record<string, string> = {};
   for (const key in queryParams) {
-    console.log('key', key);
-    console.log('queryParams[key]', queryParams[key]);
-    newQueryParams[key] = `${queryParams[key]}`;
+    newQueryParams[key] = `${queryParams[key as keyof typeof queryParams]}`;
   }
 
   const urlQueryParams = new URLSearchParams(newQueryParams);
 
-  const url = `https://api.boardgameatlas.com/api/search${
-    urlQueryParams ? `?${urlQueryParams}` : ''
-  }`;
+  const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''
+    }`;
   const response = await fetch(url, {
     method: 'get',
     headers: {
