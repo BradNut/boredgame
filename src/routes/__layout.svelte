@@ -12,15 +12,25 @@
   import '$root/styles/styles.scss';
   import Toast from '$lib/components/toast/Toast.svelte';
 
-  // let collectionEmpty = $collectionStore.length === 0 || false;
-  // console.log('collectionEmpty', collectionEmpty);
-  // if (browser && collectionEmpty) {
-  //   const collection = JSON.parse(localStorage.collection);
-  //   console.log('collection', collection);
-  //   if (collection && collection.length !== 0) {
-  //     collectionStore.addAll(collection);
-  //   }
-  // }
+  console.log('browser', browser);
+  if (browser) {
+    let collectionEmpty = $collectionStore.length === 0 || false;
+    console.log('collectionEmpty', collectionEmpty);
+    console.log('localStorage.collection', localStorage.collection);
+    if (
+      browser &&
+      collectionEmpty &&
+      localStorage &&
+      localStorage.collection &&
+      localStorage.collection !== 0
+    ) {
+      const collection = JSON.parse(localStorage.collection);
+      console.log('collection', collection);
+      if (collection && collection.length !== 0) {
+        collectionStore.addAll(collection);
+      }
+    }
+  }
 
   const dev = process.env.NODE_ENV !== 'production';
 </script>
