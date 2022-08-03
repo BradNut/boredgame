@@ -17,7 +17,9 @@
     gameStore.addAll(responseData?.games);
   }
 
-  export const showButton = false;
+  export let showButton: boolean = false;
+  export let advancedSearch: boolean = false;
+  console.log('showButton', showButton);
 
   let submitting = $boredState?.loading;
   let name = '';
@@ -45,24 +47,13 @@
 <style lang="scss">
   form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     place-items: start;
   }
   h1 {
     width: 100%;
   }
   button {
-    max-height: 5rem;
-    padding: 2rem;
-    /* border-radius: 10px; */
-    /* margin: 0.5rem; */
-    /* padding: 1rem; */
-    /* color: var(--clr-input-txt); */
-    /* background-color: var(--color-btn-primary-active); */
-  }
-
-  fieldset {
-    /* grid-template-columns: repeat(3, 1fr); */
+    padding: 1rem;
   }
 
   label {

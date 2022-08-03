@@ -15,7 +15,7 @@
 <h1>Search Boardgames!</h1>
 <p>Input your requirements to search for board game that match your criteria</p>
 <div class="game-search">
-  <TextSearch />
+  <TextSearch showButton />
   <AdvancedSearch />
   <div class="random-buttons">
     <RandomSearch />
