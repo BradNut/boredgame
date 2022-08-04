@@ -2,7 +2,7 @@
   import { browser } from '$app/env';
   import { collectionStore } from '$root/lib/stores/collectionStore';
   import { ToastType } from '$root/lib/types';
-  import { SaveIcon }  from '@rgossiaux/svelte-heroicons/outline';
+  import { SaveIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
   import { toast } from '../toast/toast';
 
   function saveCollection() {
@@ -10,19 +10,26 @@
     console.log('collectionStore', $collectionStore);
     if (!browser) return;
     localStorage.collection = JSON.stringify($collectionStore);
-    toast.send("Saved collection", { duration: 3000, type: ToastType.INFO });
+    toast.send('Saved collection', { duration: 3000, type: ToastType.INFO });
   }
 
   function clearCollection() {
     if (!browser) return;
     localStorage.collection = [];
-    toast.send("Cleared collection", { duration: 3000, type: ToastType.INFO });
+    toast.send('Cleared collection', { duration: 3000, type: ToastType.INFO });
   }
 </script>
 
 <div>
-  <button type="button" on:click={() => saveCollection()}><SaveIcon class="preferences-icon" /> Save Collection</button>
-  <button type="button" on:click={() => clearCollection()}><SaveIcon class="preferences-icon" /> Clear Collection</button>
+  <span class="collection-title">Your Collection</span>
+  <div class="collection-buttons">
+    <button type="button" aria-label="Save Collection" on:click={() => saveCollection()}
+      ><SaveIcon class="preferences-icon" />Save</button
+    >
+    <button type="button" aria-label="Clear saved collection" on:click={() => clearCollection()}
+      ><TrashIcon class="preferences-icon" />Clear</button
+    >
+  </div>
 </div>
 
 <style>
@@ -31,8 +38,18 @@
     width: 24px;
   }
 
-  div {
-    display: grid;
+  :global(.collection-title) {
+    padding-bottom: var(--spacing-8);
+    font-size: var(--font-24);
+    font-weight: 700;
+    line-height: 32px;
+  }
+
+  :global(.collection-buttons) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1.5rem;
   }
 
   button {
