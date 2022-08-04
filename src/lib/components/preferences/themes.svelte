@@ -8,18 +8,20 @@
     ListboxOptions
   } from '@rgossiaux/svelte-headlessui';
 
-  const themes = {
+  type Themes = Record<string, { name: string }>;
+
+  const themes: Themes = {
     '🌛 Night': { name: '🌛 Night' },
     '☀️ Daylight': { name: '☀️ Daylight' }
   };
 
-  let selectedTheme = getTheme() ?? themes['🌛 Night'];
+  let selectedTheme: { name: string } = getTheme() ?? themes['🌛 Night'];
 
   function getTheme() {
     if (!browser) return;
 
     const htmlElement = document.documentElement;
-    const userTheme = localStorage.theme;
+    const userTheme: string = localStorage.theme;
     const prefersDarkMode = window.matchMedia('prefers-color-scheme: dark').matches;
     const prefersLightMode = window.matchMedia('prefers-color-scheme: light').matches;
 
