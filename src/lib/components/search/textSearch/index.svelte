@@ -62,5 +62,10 @@
     gap: 1rem;
     place-items: center;
     margin: 1rem;
+
+    @media (max-width: 850px) {
+     display: flex;
+     flex-wrap: wrap;
+    }
   }
 </style>
