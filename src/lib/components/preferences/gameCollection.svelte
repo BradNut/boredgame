@@ -21,7 +21,9 @@
 </script>
 
 <div>
-  <span class="collection-title">Your Collection</span>
+  <div>
+    <span class="collection-title">Your Collection</span>
+  </div>
   <div class="collection-buttons">
     <button type="button" aria-label="Save Collection" on:click={() => saveCollection()}
       ><SaveIcon class="preferences-icon" />Save</button
@@ -49,7 +51,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    gap: 1.5rem;
+    gap: 6rem;
   }
 
   button {
