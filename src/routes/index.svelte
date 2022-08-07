@@ -6,6 +6,22 @@
   import RandomSearch from '$lib/components/search/random/index.svelte';
   import Random from '$lib/components/random/index.svelte';
   import { gameStore } from '$lib/stores/gameSearchStore';
+  import { boredState } from '$root/lib/stores/boredState';
+
+  async function handleSearch(event: SubmitEvent) {
+    boredState.set({ loading: true });
+    const form = event.target as HTMLFormElement;
+    console.log('form', form);
+    const response = await fetch('/api/game', {
+      method: 'POST',
+      headers: { accept: 'application/json' },
+      body: new FormData(form)
+    });
+    const responseData = await response.json();
+    boredState.set({ loading: false });
+    gameStore.removeAll();
+    gameStore.addAll(responseData?.games);
+  }
 </script>
 
 <svelte:head>
@@ -15,8 +31,10 @@
 <h1>Search Boardgames!</h1>
 <p>Input your requirements to search for board game that match your criteria</p>
 <div class="game-search">
-  <TextSearch showButton />
-  <AdvancedSearch />
+  <form on:submit|preventDefault={handleSearch} method="post">
+    <TextSearch showButton advancedSearch />
+  </form>
+  <!-- <AdvancedSearch /> -->
   <div class="random-buttons">
     <RandomSearch />
     <Random />
