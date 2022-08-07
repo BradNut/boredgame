@@ -39,6 +39,7 @@
   }
   button {
     padding: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   label {
