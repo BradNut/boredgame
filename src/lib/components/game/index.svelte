@@ -1,13 +1,14 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import { ToastType, type GameType } from '$lib/types';
+  import { MinusCircleIcon, PlusCircleIcon } from '@rgossiaux/svelte-heroicons/outline';
+  import { ToastType, type GameType, type SavedGameType } from '$lib/types';
   import { collectionStore } from '$lib/stores/collectionStore';
   import { toast } from '$lib/components/toast/toast';
   import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 
   export let game: GameType;
   export let detailed: boolean = false;
-  $: existsInCollection = $collectionStore.find((item: GameType) => item.id === game.id);
+  $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 </script>
 
 <article class="game-container" transition:fade>
@@ -29,12 +30,12 @@
     {/if}
   </div>
   {#if existsInCollection}
-    <button class="btn" type="button" on:click={() => removeFromCollection(game)}
-      >Remove from collection -</button
+    <button aria-label="Remove from collection" class="btn" type="button" on:click={() => removeFromCollection(game)}
+      >Remove <MinusCircleIcon class="icon" /></button
     >
   {:else}
-    <button class="btn" type="button" on:click={() => addToCollection(game)}
-      >Add to collection +</button
+    <button aria-label="Add to collection" class="btn" type="button" on:click={() => addToCollection(game)}
+      >Add to collection <PlusCircleIcon class="icon" /></button
     >
   {/if}
 </article>
@@ -49,11 +50,19 @@
   }
 
   button {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
     width: 100%;
     border-radius: 10px;
     padding: 1rem;
     background-color: var(--color-btn-primary-active);
   }
+
+  /* :global(.icon) {
+    width: 24px;
+    height: 24px;
+  } */
 
   .game-container {
     display: flex;

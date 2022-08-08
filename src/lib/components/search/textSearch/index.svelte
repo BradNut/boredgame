@@ -1,21 +1,14 @@
 <script lang="ts">
+  import { fade } from "svelte/transition";
+  import {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+  } from "@rgossiaux/svelte-headlessui";
+  import { ChevronRightIcon } from "@rgossiaux/svelte-heroicons/solid";
   import { boredState } from '$lib/stores/boredState';
   import { gameStore } from '$lib/stores/gameSearchStore';
-
-  async function handleSearch(event: SubmitEvent) {
-    boredState.set({ loading: true });
-    const form = event.target as HTMLFormElement;
-    console.log('form', form);
-    const response = await fetch('/api/game', {
-      method: 'POST',
-      headers: { accept: 'application/json' },
-      body: new FormData(form)
-    });
-    const responseData = await response.json();
-    boredState.set({ loading: false });
-    gameStore.removeAll();
-    gameStore.addAll(responseData?.games);
-  }
+  import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
 
   export let showButton: boolean = false;
   export let advancedSearch: boolean = false;
@@ -25,8 +18,9 @@
   let name = '';
 </script>
 
-<form on:submit|preventDefault={handleSearch} method="post">
-  <fieldset aria-busy={submitting} disabled={submitting}>
+<!-- <form on:submit|preventDefault={handleSearch} method="post"> -->
+<div class="search">
+  <fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
     <label for="name">
       Search
       <input
@@ -37,35 +31,63 @@
         aria-label="Search boardgame"
         placeholder="Search boardgame"
       />
-      {#if showButton}
-        <button class="btn" type="submit" disabled={submitting}>Search</button>
-      {/if}
     </label>
   </fieldset>
-</form>
+  {#if advancedSearch}
+    <Disclosure let:open>
+      <DisclosureButton class="disclosure-button">
+        <span>Advanced Search?</span>
+        <ChevronRightIcon class="icon disclosure-icon" style={open ? "transform: rotate(90deg); transition: transform 0.5s ease;" : "transform: rotate(0deg); transition: transform 0.5s ease;"} />
+      </DisclosureButton>
 
+      {#if open}
+        <div transition:fade>
+          <!-- Using `static`, `DisclosurePanel` is always rendered,
+                and ignores the `open` state -->
+          <DisclosurePanel static>
+            <AdvancedSearch />
+          </DisclosurePanel>
+        </div>
+      {/if}
+    </Disclosure>
+  {/if}
+</div>
+{#if showButton}
+  <button class="btn" type="submit" disabled={submitting}>Submit</button>
+{/if}
+
+
+<!-- </form> -->
 <style lang="scss">
-  form {
+  .search {
     display: grid;
-    place-items: start;
+    gap: 1rem;
   }
+
+  :global(.disclosure-button) {
+    display: flex;
+    gap: 0.25rem;
+    place-items: center;
+  }
+
   h1 {
     width: 100%;
   }
   button {
     padding: 1rem;
+    margin: 1.5rem 0;
   }
 
   label {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto;
     gap: 1rem;
+    place-content: start;
     place-items: center;
-    margin: 1rem;
 
     @media (max-width: 850px) {
-     display: flex;
-     flex-wrap: wrap;
+      display: flex;
+      flex-wrap: wrap;
     }
   }
 </style>

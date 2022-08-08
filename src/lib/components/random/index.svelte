@@ -3,15 +3,22 @@
   import { gameStore } from '$lib/stores/gameSearchStore';
   import { collectionStore } from '$lib/stores/collectionStore';
   import { toast } from '$lib/components/toast/toast';
-  import { ToastType } from '$lib/types';
+  import { ToastType, type SavedGameType } from '$lib/types';
 
-  function getRandomCollectionGame() {
+  async function getRandomCollectionGame() {
     if ($collectionStore.length > 0) {
       boredState.set({ loading: true });
       let randomNumber: number = Math.round(Math.random() * $collectionStore.length - 1);
       if ($collectionStore.at(randomNumber)) {
         gameStore.removeAll();
-        gameStore.add($collectionStore.at(randomNumber)!);
+        const randomGame: SavedGameType = $collectionStore.at(randomNumber)!;
+        const response = await fetch(`/api/game/${randomGame?.id}`, {
+          method: 'GET',
+          headers: { accept: 'application/json' },
+        });
+        const responseData = await response.json();
+        console.log('responseData', responseData);
+        gameStore.add(responseData?.game);
         boredState.set({ loading: false });
       } else {
         toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
@@ -27,6 +34,6 @@
   }
 </script>
 
-<button class="btn" type="button" on:click={getRandomCollectionGame}
+<button class="btn" type="button" on:click={() => getRandomCollectionGame()}
   >Random from collection 🎲</button
 >

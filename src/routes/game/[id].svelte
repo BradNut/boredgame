@@ -2,10 +2,10 @@
   import { fade } from 'svelte/transition';
   import Icon from '$lib/components/Icon.svelte';
   import { collectionStore } from '$lib/stores/collectionStore';
-  import type { GameType } from '$lib/types';
+  import type { GameType, SavedGameType } from '$lib/types';
   import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 
-  $: existsInCollection = $collectionStore.find((item: GameType) => item.id === game.id);
+  $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
   export let game: GameType;
   let seeMore: boolean = false;
   console.log(game?.description?.indexOf('</p>'));
