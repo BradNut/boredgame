@@ -3,7 +3,7 @@ import type { GameType } from '$lib/types';
 
 // Custom store
 const newGameStore = () => {
-  const { subscribe, update } = writable<GameType[]>([]);
+  const { subscribe, set, update } = writable<GameType[]>([]);
 
   function add(game: GameType) {
     update((store) => [...store, game]);
@@ -26,7 +26,7 @@ const newGameStore = () => {
     });
   }
 
-  return { subscribe, add, addAll, remove, removeAll };
+  return { subscribe, set, update, add, addAll, remove, removeAll };
 };
 
 export const gameStore = newGameStore();

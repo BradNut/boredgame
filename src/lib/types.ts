@@ -18,6 +18,11 @@ export type ToastData = {
   message: string;
 };
 
+export type SavedGameType = {
+  id: string;
+  name: string;
+}
+
 export type GameType = {
   id: string;
   handle: string;

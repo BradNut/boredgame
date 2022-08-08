@@ -7,6 +7,7 @@
   import Portal from '$lib/Portal.svelte';
   import { boredState } from '$lib/stores/boredState';
   import { collectionStore } from '$lib/stores/collectionStore';
+  import { gameStore } from '$lib/stores/gameSearchStore';
   import { toast } from '$lib/components/toast/toast';
   // import 'carbon-components-svelte/css/all.css';
   import '$root/styles/styles.scss';
@@ -18,7 +19,6 @@
     console.log('collectionEmpty', collectionEmpty);
     console.log('localStorage.collection', localStorage.collection);
     if (
-      browser &&
       collectionEmpty &&
       localStorage &&
       localStorage.collection &&
@@ -36,7 +36,7 @@
 </script>
 
 {#if dev}
-  <Toy register={{ boredState, collectionStore, toast }} />
+  <Toy register={{ boredState, collectionStore, gameStore, toast }} />
 {/if}
 <Transition transition={{ type: 'fade', duration: 250 }}>
   <div class="wrapper">
