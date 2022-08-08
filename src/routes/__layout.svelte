@@ -22,7 +22,7 @@
       collectionEmpty &&
       localStorage &&
       localStorage.collection &&
-      localStorage.collection !== 0
+      localStorage.collection.length !== 0
     ) {
       const collection = JSON.parse(localStorage.collection);
       console.log('collection', collection);
