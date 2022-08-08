@@ -44,8 +44,9 @@
 
   label {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto;
     gap: 1rem;
+    place-content: start;
     place-items: center;
     margin: 1rem;
 
