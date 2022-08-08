@@ -54,7 +54,7 @@ export const POST: RequestHandler = async ({ request }) => {
     });
     return {
       body: {
-        games: gameResponse?.games
+        games
       }
     };
   }
