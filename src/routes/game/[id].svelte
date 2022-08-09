@@ -1,9 +1,10 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import Icon from '$lib/components/Icon.svelte';
+  import ExternalLink from '@rgossiaux/svelte-heroicons/outline/ExternalLink';
   import { collectionStore } from '$lib/stores/collectionStore';
   import type { GameType, SavedGameType } from '$lib/types';
   import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
+import { MinusCircleIcon, MinusIcon, PlusCircleIcon, PlusIcon } from '@rgossiaux/svelte-heroicons/outline';
 
   $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
   export let game: GameType;
@@ -42,15 +43,15 @@
       target="_blank"
       rel="noreferrer"
       aria-label={`Board Game Atlas Link for ${game.name}`}
-      >Board Game Atlas Link <Icon name="external-link" /></a
+      >Board Game Atlas Link <ExternalLink width="24" height="24" /></a
     >
     {#if existsInCollection}
       <button class="btn" type="button" on:click={() => removeFromCollection(game)}
-        >Remove from collection -</button
+        >Remove from collection <MinusCircleIcon width="24" height="24" /></button
       >
     {:else}
       <button class="btn" type="button" on:click={() => addToCollection(game)}
-        >Add to collection +</button
+        >Add to collection <PlusCircleIcon width="24" height="24" /></button
       >
     {/if}
   </div>
@@ -67,8 +68,13 @@
         </span>
       {/if}
       <button class="btn" type="button" on:click={() => (seeMore = !seeMore)}
-        >See {!seeMore ? 'More +' : 'Less -'}</button
-      >
+        >See 
+        {#if !seeMore}
+          More <PlusIcon width="24" height="24" />
+        {:else}
+          Less <MinusIcon width="24" height="24" />
+        {/if}
+      </button>
     {/if}
   </section>
 {/if}
@@ -82,6 +88,9 @@
   }
 
   button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-radius: 4px;
     margin: 0;
     padding: 1rem;
@@ -112,16 +121,5 @@
     display: grid;
     gap: 1.5rem;
     margin: 1rem;
-  }
-
-  .game-form {
-    display: flex;
-    place-items: center;
-  }
-
-  .game-form fieldset {
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(3, minmax(200px, 1fr));
   }
 </style>

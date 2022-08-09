@@ -16,7 +16,7 @@
 
   $: {
 		if ($navigating) {
-      debounce(() => boredState.set({ loading: true }), 250);
+      debounce(() => {boredState.set({ loading: true });}, 250);
 		}
 		if (!$navigating) {
 			boredState.set({ loading: false });
@@ -118,10 +118,11 @@
     max-width: 850px;
     margin: 0 auto;
     padding: 2rem 0rem;
+    max-width: 80%;
 
-    @media (max-width: 850px) {
+    /* @media (max-width: 850px) {
       max-width: 80%;
-    }
+    } */
     box-sizing: border-box;
   }
 

@@ -31,11 +31,11 @@
   </div>
   {#if existsInCollection}
     <button aria-label="Remove from collection" class="btn" type="button" on:click={() => removeFromCollection(game)}
-      >Remove <MinusCircleIcon class="icon" /></button
+      >Remove <MinusCircleIcon width="24" height="24" /></button
     >
   {:else}
     <button aria-label="Add to collection" class="btn" type="button" on:click={() => addToCollection(game)}
-      >Add to collection <PlusCircleIcon class="icon" /></button
+      >Add to collection <PlusCircleIcon width="24" height="24" /></button
     >
   {/if}
 </article>
@@ -52,6 +52,7 @@
   button {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 1rem;
     width: 100%;
     border-radius: 10px;
@@ -67,9 +68,11 @@
   .game-container {
     display: flex;
     flex-wrap: wrap;
-    /* grid-template-columns: repeat(minmax(100px, 1fr), 3); */
-    /* grid-template-columns: 1fr 1fr; */
-    max-width: 300px;
+    
+    @media (max-width: 650px) {
+      max-width: none;
+    }
+    
     gap: var(--spacing-16);
     padding: var(--spacing-16) var(--spacing-16);
     transition: all 0.3s;

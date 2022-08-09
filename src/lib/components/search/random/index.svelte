@@ -31,17 +31,8 @@
 </form>
 
 <style lang="scss">
-  h1 {
-    width: 100%;
-  }
-
   fieldset {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-  }
-
-  label {
-    display: grid;
-    margin: 1rem;
   }
 </style>

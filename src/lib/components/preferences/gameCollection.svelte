@@ -26,20 +26,15 @@
   </div>
   <div class="collection-buttons">
     <button type="button" aria-label="Save Collection" on:click={() => saveCollection()}
-      ><SaveIcon class="preferences-icon" />Save</button
+      ><SaveIcon width="24" height="24" />Save</button
     >
     <button type="button" aria-label="Clear saved collection" on:click={() => clearCollection()}
-      ><TrashIcon class="preferences-icon" />Clear</button
+      ><TrashIcon width="24" height="24" />Clear</button
     >
   </div>
 </div>
 
 <style>
-  :global(.preferences-icon) {
-    height: 24px;
-    width: 24px;
-  }
-
   :global(.collection-title) {
     padding-bottom: var(--spacing-8);
     font-size: var(--font-24);
