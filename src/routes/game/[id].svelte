@@ -1,10 +1,9 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import ExternalLink from '@rgossiaux/svelte-heroicons/outline/ExternalLink';
+  import { ExternalLinkIcon, MinusCircleIcon, MinusIcon, PlusCircleIcon, PlusIcon } from '@rgossiaux/svelte-heroicons/outline';
   import { collectionStore } from '$lib/stores/collectionStore';
   import type { GameType, SavedGameType } from '$lib/types';
   import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
-import { MinusCircleIcon, MinusIcon, PlusCircleIcon, PlusIcon } from '@rgossiaux/svelte-heroicons/outline';
 
   $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
   export let game: GameType;
@@ -38,12 +37,13 @@ import { MinusCircleIcon, MinusIcon, PlusCircleIcon, PlusIcon } from '@rgossiaux
     <p>Minimum Age: {game.min_age}</p>
     <p>Price: ${game?.price}</p>
     <a
+      class="with-icon"
       style="display: flex; gap: 1rem;"
       href={game.url}
       target="_blank"
       rel="noreferrer"
       aria-label={`Board Game Atlas Link for ${game.name}`}
-      >Board Game Atlas Link <ExternalLink width="24" height="24" /></a
+      >Board Game Atlas Link <ExternalLinkIcon width="24" height="24" /></a
     >
     {#if existsInCollection}
       <button class="btn" type="button" on:click={() => removeFromCollection(game)}

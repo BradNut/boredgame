@@ -1,9 +1,8 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import { MinusCircleIcon, PlusCircleIcon } from '@rgossiaux/svelte-heroicons/outline';
-  import { ToastType, type GameType, type SavedGameType } from '$lib/types';
+  import type { GameType, SavedGameType } from '$lib/types';
   import { collectionStore } from '$lib/stores/collectionStore';
-  import { toast } from '$lib/components/toast/toast';
   import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 
   export let game: GameType;
