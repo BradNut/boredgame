@@ -1,5 +1,7 @@
 <script lang="ts">
   import { browser } from '$app/env';
+  import { navigating } from '$app/stores';
+  import debounce from 'just-debounce-it';
   import { Toy } from '@leveluptuts/svelte-toy';
   import Header from '$lib/components/header/Header.svelte';
   import Loading from '$lib/components/loading.svelte';
@@ -9,11 +11,18 @@
   import { collectionStore } from '$lib/stores/collectionStore';
   import { gameStore } from '$lib/stores/gameSearchStore';
   import { toast } from '$lib/components/toast/toast';
-  // import 'carbon-components-svelte/css/all.css';
-  import '$root/styles/styles.scss';
   import Toast from '$lib/components/toast/Toast.svelte';
+  import '$root/styles/styles.scss';
 
-  console.log('browser', browser);
+  $: {
+		if ($navigating) {
+      debounce(() => boredState.set({ loading: true }), 250);
+		}
+		if (!$navigating) {
+			boredState.set({ loading: false });
+		}
+	}
+
   if (browser) {
     let collectionEmpty = $collectionStore.length === 0 || false;
     console.log('collectionEmpty', collectionEmpty);
