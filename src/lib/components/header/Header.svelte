@@ -25,7 +25,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 var(--containerPadding);
+    padding: var(--containerPadding);
     font-size: 1.6rem;
 
     @media (max-width: 1000px) {

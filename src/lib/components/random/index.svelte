@@ -14,7 +14,7 @@
         const randomGame: SavedGameType = $collectionStore.at(randomNumber)!;
         const response = await fetch(`/api/game/${randomGame?.id}`, {
           method: 'GET',
-          headers: { accept: 'application/json' },
+          headers: { accept: 'application/json' }
         });
         const responseData = await response.json();
         console.log('responseData', responseData);
@@ -37,3 +37,10 @@
 <button class="btn" type="button" on:click={() => getRandomCollectionGame()}
   >Random from collection 🎲</button
 >
+
+<style lang="scss">
+  button {
+    max-width: 450px;
+    padding: var(--spacing-8) var(--spacing-16);
+  }
+</style>

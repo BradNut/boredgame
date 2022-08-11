@@ -35,4 +35,9 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
+
+  button {
+    max-width: 450px;
+    padding: var(--spacing-8) var(--spacing-16);
+  }
 </style>

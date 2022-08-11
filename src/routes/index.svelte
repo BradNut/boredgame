@@ -123,7 +123,13 @@
   }
 
   .random-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    place-content: space-between;
+    place-items: center;
+
+    @media (max-width: 650px) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
   }
 </style>

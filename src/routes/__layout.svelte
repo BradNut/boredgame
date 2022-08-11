@@ -15,24 +15,21 @@
   import '$root/styles/styles.scss';
 
   $: {
-		if ($navigating) {
-      debounce(() => {boredState.set({ loading: true });}, 250);
-		}
-		if (!$navigating) {
-			boredState.set({ loading: false });
-		}
-	}
+    if ($navigating) {
+      debounce(() => {
+        boredState.set({ loading: true });
+      }, 250);
+    }
+    if (!$navigating) {
+      boredState.set({ loading: false });
+    }
+  }
 
   if (browser) {
     let collectionEmpty = $collectionStore.length === 0 || false;
     console.log('collectionEmpty', collectionEmpty);
     console.log('localStorage.collection', localStorage.collection);
-    if (
-      collectionEmpty &&
-      localStorage &&
-      localStorage.collection &&
-      localStorage.collection.length !== 0
-    ) {
+    if (collectionEmpty && localStorage?.collection && localStorage.collection.length !== 0) {
       const collection = JSON.parse(localStorage.collection);
       console.log('collection', collection);
       if (collection && collection.length !== 0) {
@@ -120,9 +117,9 @@
     padding: 2rem 0rem;
     max-width: 80%;
 
-    /* @media (max-width: 850px) {
-      max-width: 80%;
-    } */
+    @media (min-width: 1500px) {
+      max-width: 60%;
+    }
     box-sizing: border-box;
   }
 
