@@ -1,19 +1,17 @@
+import { json as json$1 } from '@sveltejs/kit';
+import { boardGameApi } from '$root/routes/_api';
 import type { RequestHandler } from '@sveltejs/kit';
-import { boardGameApi } from '../_api';
 
 export const GET: RequestHandler = async ({ params }) => {
-  // console.log('params', params);
   const queryParams = {
     ids: `${params?.id}`
   };
   console.log('queryParams', queryParams);
   const response = await boardGameApi('get', `search`, queryParams);
   if (response.status === 404) {
-    return {
-      body: {
-        games: []
-      }
-    };
+    return json$1({
+  games: []
+});
   }
 
   if (response.status === 200) {
@@ -21,14 +19,10 @@ export const GET: RequestHandler = async ({ params }) => {
     // console.log('gameResponse', gameResponse);
     // const games = gameResponse?.games;
     console.log('game', gameResponse?.games[0]);
-    return {
-      body: {
-        game: gameResponse?.games[0]
-      }
-    };
+    return json$1({
+  game: gameResponse?.games[0]
+});
   }
 
-  return {
-    status: response.status
-  };
+  return new Response(undefined, { status: response.status });
 };

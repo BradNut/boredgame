@@ -1,7 +1,7 @@
 import { api } from './_api';
-import type { RequestHandler } from '@sveltejs/kit';
+import type { PageServerLoad, Action } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals }) => {
   // locals.userid comes from src/hooks.js
   const response = await api('get', `todos/${locals.userid}`);
 
@@ -9,32 +9,30 @@ export const GET: RequestHandler = async ({ locals }) => {
     // user hasn't created a todo list.
     // start with an empty array
     return {
-      body: {
-        todos: []
-      }
-    };
+  todos: []
+};
   }
 
   if (response.status === 200) {
     return {
-      body: {
-        todos: await response.json()
-      }
-    };
+  todos: await response.json()
+};
   }
 
+  throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
   return {
     status: response.status
   };
 };
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: Action = async ({ request, locals }) => {
   const form = await request.formData();
 
   await api('post', `todos/${locals.userid}`, {
     text: form.get('text')
   });
 
+  throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
   return {};
 };
 
@@ -47,7 +45,7 @@ const redirect = {
   }
 };
 
-export const PATCH: RequestHandler = async ({ request, locals }) => {
+export const PATCH: Action = async ({ request, locals }) => {
   const form = await request.formData();
 
   await api('patch', `todos/${locals.userid}/${form.get('uid')}`, {
@@ -55,13 +53,15 @@ export const PATCH: RequestHandler = async ({ request, locals }) => {
     done: form.has('done') ? !!form.get('done') : undefined
   });
 
+  throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
   return redirect;
 };
 
-export const DELETE: RequestHandler = async ({ request, locals }) => {
+export const DELETE: Action = async ({ request, locals }) => {
   const form = await request.formData();
 
   await api('delete', `todos/${locals.userid}/${form.get('uid')}`);
 
+  throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
   return redirect;
 };

@@ -1,12 +1,23 @@
 <script lang="ts">
+  // throw new Error(
+  //   '@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)'
+  // );
+
   import { fade } from 'svelte/transition';
-  import { ExternalLinkIcon, MinusCircleIcon, MinusIcon, PlusCircleIcon, PlusIcon } from '@rgossiaux/svelte-heroicons/outline';
+  import {
+    ExternalLinkIcon,
+    MinusCircleIcon,
+    MinusIcon,
+    PlusCircleIcon,
+    PlusIcon
+  } from '@rgossiaux/svelte-heroicons/outline';
   import { collectionStore } from '$lib/stores/collectionStore';
   import type { GameType, SavedGameType } from '$lib/types';
   import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 
   $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
   export let game: GameType;
+  export const data;
   let seeMore: boolean = false;
   console.log(game?.description?.indexOf('</p>'));
   let firstParagraphEnd = 0;
@@ -68,7 +79,7 @@
         </span>
       {/if}
       <button class="btn" type="button" on:click={() => (seeMore = !seeMore)}
-        >See 
+        >See
         {#if !seeMore}
           More <PlusIcon width="24" height="24" />
         {:else}
