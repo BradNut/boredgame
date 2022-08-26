@@ -26,9 +26,8 @@ export const POST: RequestHandler = async ({ request }) => {
 
   const urlQueryParams = new URLSearchParams(newQueryParams);
 
-  const url = `https://api.boardgameatlas.com/api/search${
-    urlQueryParams ? `?${urlQueryParams}` : ''
-  }`;
+  const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''
+    }`;
   const response = await fetch(url, {
     method: 'get',
     headers: {
@@ -40,8 +39,8 @@ export const POST: RequestHandler = async ({ request }) => {
     // user hasn't created a todo list.
     // start with an empty array
     return json$1({
-  games: []
-});
+      games: []
+    });
   }
 
   if (response.status === 200) {
@@ -51,9 +50,10 @@ export const POST: RequestHandler = async ({ request }) => {
     gameList.forEach((game) => {
       games.push(mapAPIGameToBoredGame(game));
     });
+
     return json$1({
-  games
-});
+      games
+    });
   }
 
   return new Response(undefined, { status: response.status });

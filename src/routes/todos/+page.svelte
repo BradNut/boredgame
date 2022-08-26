@@ -1,27 +1,15 @@
 <script lang="ts">
-  // throw new Error(
-  //   '@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)'
-  // );
-
   import { enhance } from '$lib/form';
   import { scale } from 'svelte/transition';
   import { flip } from 'svelte/animate';
+  import type { PageData } from './$types';
 
-  type Todo = {
-    uid: string;
-    created_at: Date;
-    text: string;
-    done: boolean;
-    pending_delete: boolean;
-  };
-
-  // export let data;
-  export let todos: Todo[];
-  console.log('todos', todos);
+  export let data: Pagedata;
 </script>
 
 <svelte:head>
   <title>Todos</title>
+  <meta name="description" content="A todo list app" />
 </svelte:head>
 
 <div class="todos">
@@ -40,7 +28,7 @@
     <input name="text" aria-label="Add todo" placeholder="+ tap to add a todo" />
   </form>
 
-  {#each todos as todo (todo.uid)}
+  {#each data.todos as todo (todo.uid)}
     <div
       class="todo"
       class:done={todo.done}

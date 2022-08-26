@@ -18,7 +18,7 @@
 
   $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
   export let data: PageData;
-  export let game: GameType = data.game;
+  export let game: GameType = data?.game;
   console.log('page game', game);
   let seeMore: boolean = false;
   console.log(game?.description?.indexOf('</p>'));
@@ -89,6 +89,12 @@
         {/if}
       </button>
     {/if}
+  </section>
+{:else}
+  <section class="description">
+    <span>
+      {@html game?.description}
+    </span>
   </section>
 {/if}
 
