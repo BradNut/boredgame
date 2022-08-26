@@ -15,8 +15,9 @@
     pending_delete: boolean;
   };
 
-  export let data;
+  // export let data;
   export let todos: Todo[];
+  console.log('todos', todos);
 </script>
 
 <svelte:head>

@@ -14,10 +14,12 @@
   import { collectionStore } from '$lib/stores/collectionStore';
   import type { GameType, SavedGameType } from '$lib/types';
   import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
+  import type { PageData } from './$types';
 
   $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
-  export let game: GameType;
-  export const data;
+  export let data: PageData;
+  export let game: GameType = data.game;
+  console.log('page game', game);
   let seeMore: boolean = false;
   console.log(game?.description?.indexOf('</p>'));
   let firstParagraphEnd = 0;

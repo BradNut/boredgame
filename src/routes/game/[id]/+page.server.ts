@@ -1,3 +1,4 @@
+import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types'
 import { boardGameApi } from '../../_api';
 
@@ -16,7 +17,7 @@ export const load: PageServerLoad = async ({ params }: GamePageParams) => {
   const response = await boardGameApi('get', `search`, queryParams);
   if (response.status === 404) {
     return {
-      games: []
+      game: []
     };
   }
 
@@ -24,11 +25,12 @@ export const load: PageServerLoad = async ({ params }: GamePageParams) => {
     const gameResponse = await response.json();
     // console.log('gameResponse', gameResponse);
     // const games = gameResponse?.games;
-    console.log('game', gameResponse?.games[0]);
+    console.log('game response', gameResponse?.games[0]);
     return {
       game: gameResponse?.games[0]
     };
   }
 
-  throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
+  throw error(response.status);
+  // throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
 };
