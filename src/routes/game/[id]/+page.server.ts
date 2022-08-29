@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types'
-import { boardGameApi } from '../../_api';
+import { boardGameApi } from '../../api';
 
 type GamePageParams = {
   params: {

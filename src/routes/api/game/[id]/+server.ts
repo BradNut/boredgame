@@ -1,5 +1,5 @@
 import { json as json$1 } from '@sveltejs/kit';
-import { boardGameApi } from '$root/routes/_api';
+import { boardGameApi } from '$root/routes/api';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ params }) => {
@@ -10,8 +10,8 @@ export const GET: RequestHandler = async ({ params }) => {
   const response = await boardGameApi('get', `search`, queryParams);
   if (response.status === 404) {
     return json$1({
-  games: []
-});
+      games: []
+    });
   }
 
   if (response.status === 200) {
@@ -20,8 +20,8 @@ export const GET: RequestHandler = async ({ params }) => {
     // const games = gameResponse?.games;
     console.log('game', gameResponse?.games[0]);
     return json$1({
-  game: gameResponse?.games[0]
-});
+      game: gameResponse?.games[0]
+    });
   }
 
   return new Response(undefined, { status: response.status });

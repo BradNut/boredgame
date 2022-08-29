@@ -1,4 +1,4 @@
-import { boardGameApi } from './_api';
+import { boardGameApi } from './api';
 import { error, type Action } from '@sveltejs/kit';
 
 export const POST: Action = async ({ request, locals }) => {
