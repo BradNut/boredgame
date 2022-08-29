@@ -5,7 +5,8 @@
   import { collectionStore } from '$lib/stores/collectionStore';
   import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 
-  export let game: GameType;
+  export let game: GameType | SavedGameType;
+  export let minimal: boolean = false;
   export let detailed: boolean = false;
   $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 </script>
@@ -18,22 +19,32 @@
     </a>
   </div>
 
-  <div class="game-details">
-    <p>{game.year_published}</p>
-    <p>{game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
-    <p>{game.playtime} minutes</p>
-    <p>Minimum Age: {game.min_age}</p>
-    <a href={`/game/${game.id}`}>View Game</a>
-    {#if detailed}
-      <div class="description">{@html game.description}</div>
-    {/if}
-  </div>
+  {#if !minimal && game?.year_published && game.players && game.max_players && game.playtime}
+    <div class="game-details">
+      <p>{game.year_published}</p>
+      <p>{game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
+      <p>{game.playtime} minutes</p>
+      <p>Minimum Age: {game.min_age}</p>
+      <a href={`/game/${game.id}`}>View Game</a>
+      {#if detailed}
+        <div class="description">{@html game.description}</div>
+      {/if}
+    </div>
+  {/if}
   {#if existsInCollection}
-    <button aria-label="Remove from collection" class="btn" type="button" on:click={() => removeFromCollection(game)}
+    <button
+      aria-label="Remove from collection"
+      class="btn"
+      type="button"
+      on:click={() => removeFromCollection(game)}
       >Remove <MinusCircleIcon width="24" height="24" /></button
     >
   {:else}
-    <button aria-label="Add to collection" class="btn" type="button" on:click={() => addToCollection(game)}
+    <button
+      aria-label="Add to collection"
+      class="btn"
+      type="button"
+      on:click={() => addToCollection(game)}
       >Add to collection <PlusCircleIcon width="24" height="24" /></button
     >
   {/if}
@@ -67,11 +78,11 @@
   .game-container {
     display: flex;
     flex-wrap: wrap;
-    
+
     @media (max-width: 650px) {
       max-width: none;
     }
-    
+
     gap: var(--spacing-16);
     padding: var(--spacing-16) var(--spacing-16);
     transition: all 0.3s;

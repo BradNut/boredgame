@@ -21,6 +21,7 @@ export type ToastData = {
 export type SavedGameType = {
   id: string;
   name: string;
+  thumb_url: string;
 }
 
 export type GameType = {

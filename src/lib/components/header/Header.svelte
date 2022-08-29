@@ -1,22 +1,18 @@
 <script lang="ts">
-  import { page } from '$app/stores';
-  import Themes from '$lib/components/preferences/themes.svelte';
   import Profile from '../preferences/profile.svelte';
   import logo from './bored-game.png';
-
-  // let theme: CarbonTheme = "white";
 </script>
 
 <header>
   <div class="corner">
-    <a href="/">
+    <a href="/" title="Home">
       <img src={logo} alt="Bored Game Home" />
     </a>
   </div>
 
   <nav>
-    <!-- <div><Themes /></div> -->
-    <div><Profile /></div>
+    <a href="/collection" title="Go to your collection">Your Collection</a>
+    <Profile />
   </nav>
 </header>
 
@@ -56,6 +52,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 2rem;
     margin: 1rem;
     --background: rgba(255, 255, 255, 0.7);
   }
@@ -107,7 +104,7 @@
     padding: 0 1em;
     color: var(--heading-color);
     font-weight: 700;
-    font-size: 0.8rem;
+    /* font-size: 0.8rem; */
     text-transform: uppercase;
     letter-spacing: 0.1em;
     text-decoration: none;
@@ -115,6 +112,7 @@
   }
 
   a:hover {
+    text-decoration: underline;
     color: var(--accent-color);
   }
 </style>

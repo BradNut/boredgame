@@ -12,7 +12,7 @@
 <div class="games">
   <div class="games-list">
     {#each $collectionStore as game}
-      <Game {game} />
+      <Game minimal {game} />
     {/each}
   </div>
 </div>
