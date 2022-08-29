@@ -19,7 +19,7 @@ export function boardGameApi(
   queryParams: Record<string, string>,
   data?: Record<string, unknown>
 ) {
-  console.log('queryParams', queryParams);
+  // console.log('queryParams', queryParams);
   queryParams.client_id = import.meta.env.VITE_PUBLIC_CLIENT_ID;
   const urlQueryParams = new URLSearchParams(queryParams);
   const url = `${base}/${resource}${urlQueryParams ? `?${urlQueryParams}` : ''}`;

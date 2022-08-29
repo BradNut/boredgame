@@ -1,7 +1,7 @@
 import { collectionStore } from '$lib/stores/collectionStore';
 import { toast } from '$lib/components/toast/toast';
 import { ToastType, type GameType, type SavedGameType } from '$lib/types';
-import { browser } from '$app/env';
+import { browser } from '$app/environment';
 
 function convertToSavedGame(game: GameType): SavedGameType {
   return {
@@ -19,18 +19,4 @@ export function addToCollection(game: GameType) {
 export function removeFromCollection(game: GameType) {
   collectionStore.remove(game.id);
   toast.send("Removed from collection", { duration: 3000, type: ToastType.INFO });
-}
-
-export function saveCollection() {
-  console.log('Saving collection');
-  console.log('collectionStore', collectionStore);
-  if (!browser) return;
-  localStorage.collection = JSON.stringify(collectionStore);
-  toast.send('Saved collection', { duration: 3000, type: ToastType.INFO });
-}
-
-export function clearCollection() {
-  if (!browser) return;
-  localStorage.collection = [];
-  toast.send('Cleared collection', { duration: 3000, type: ToastType.INFO });
 }

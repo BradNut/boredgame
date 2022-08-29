@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ params }: GamePageParams) => {
   const queryParams = {
     ids: `${params?.id}`
   };
-  console.log('queryParams', queryParams);
+  // console.log('queryParams', queryParams);
   const response = await boardGameApi('get', `search`, queryParams);
   if (response.status === 404) {
     return {
@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ params }: GamePageParams) => {
     const gameResponse = await response.json();
     // console.log('gameResponse', gameResponse);
     // const games = gameResponse?.games;
-    console.log('game response', gameResponse?.games[0]);
+    // console.log('game response', gameResponse?.games[0]);
     return {
       game: gameResponse?.games[0]
     };

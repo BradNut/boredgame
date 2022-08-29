@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { browser } from '$app/env';
+  import { browser } from '$app/environment';
   import { navigating } from '$app/stores';
   import debounce from 'just-debounce-it';
   import { Toy } from '@leveluptuts/svelte-toy';
@@ -29,10 +29,10 @@
     let collectionEmpty = $collectionStore.length === 0 || false;
     console.log('collectionEmpty', collectionEmpty);
     console.log('localStorage.collection', localStorage.collection);
-    if (collectionEmpty && localStorage?.collection && localStorage.collection.length !== 0) {
+    if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
       const collection = JSON.parse(localStorage.collection);
       console.log('collection', collection);
-      if (collection && collection.length !== 0) {
+      if (collection?.length !== 0) {
         collectionStore.addAll(collection);
       }
     }
