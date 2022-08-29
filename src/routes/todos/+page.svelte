@@ -1,10 +1,10 @@
 <script lang="ts">
+  import type { PageData } from './$types';
   import { enhance } from '$lib/form';
   import { scale } from 'svelte/transition';
   import { flip } from 'svelte/animate';
-  import type { PageData } from './$types';
 
-  export let data: Pagedata;
+  export let data: PageData;
 </script>
 
 <svelte:head>

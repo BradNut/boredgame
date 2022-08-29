@@ -19,7 +19,7 @@
     </a>
   </div>
 
-  {#if !minimal && game?.year_published && game.players && game.max_players && game.playtime}
+  {#if !minimal}
     <div class="game-details">
       <p>{game.year_published}</p>
       <p>{game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
@@ -51,10 +51,6 @@
 </article>
 
 <style lang="scss">
-  h2 .thumbnail {
-    align-self: start;
-  }
-
   img {
     border-radius: 10px;
   }

@@ -3,12 +3,10 @@
   import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
   import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
   import { boredState } from '$lib/stores/boredState';
-  import { gameStore } from '$lib/stores/gameSearchStore';
   import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
 
   export let showButton: boolean = false;
   export let advancedSearch: boolean = false;
-  // console.log('showButton', showButton);
 
   let submitting = $boredState?.loading;
   let name = '';
@@ -70,9 +68,6 @@
     place-items: center;
   }
 
-  h1 {
-    width: 100%;
-  }
   button {
     padding: 1rem;
     margin: 1.5rem 0;

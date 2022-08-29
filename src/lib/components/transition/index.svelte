@@ -32,7 +32,7 @@
 {#if transition.type === 'stagger'}
   <div
     class="stagger"
-    style:animation-duration="{transition.duration * 300}ms"
+    style:animation-duration="{transition.duration || 1 * 300}ms"
     style:animation-delay="{transition.delay}ms"
   >
     <slot />

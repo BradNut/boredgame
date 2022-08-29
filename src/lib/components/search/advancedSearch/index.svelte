@@ -1,24 +1,5 @@
 <script lang="ts">
   import { boredState } from '$lib/stores/boredState';
-  import { gameStore } from '$lib/stores/gameSearchStore';
-
-  // async function handleSubmit(event: SubmitEvent) {
-  //   // submitting = true;
-  //   boredState.set({ loading: true });
-  //   const form = event.target as HTMLFormElement;
-  //   console.log('form', form);
-  //   const response = await fetch('/api/games', {
-  //     method: 'POST',
-  //     headers: { accept: 'application/json' },
-  //     body: new FormData(form)
-  //   });
-  //   const responseData = await response.json();
-  //   // submitting = false;
-  //   boredState.set({ loading: false });
-  //   gameStore.removeAll();
-  //   gameStore.addAll(responseData?.games);
-  //   // games = responseData?.games;
-  // }
 
   let submitting = $boredState?.loading;
   let minAge = 1;
@@ -85,14 +66,6 @@
 
 <!-- </form> -->
 <style lang="scss">
-  button {
-    border-radius: 10px;
-    margin: 0.5rem;
-    padding: 1rem;
-    color: var(--clr-input-txt);
-    background-color: var(--color-btn-primary-active);
-  }
-
   fieldset {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
