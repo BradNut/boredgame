@@ -4,7 +4,7 @@ import { writable } from 'svelte/store';
 
 // Custom store
 const state = () => {
-  const { subscribe, set, update } = writable<BoredStore>({ loading: false });
+  const { subscribe, set, update } = writable<BoredStore>({ loading: false, dialogOpen: false });
 
   // function remove(id: string) {
   // 	update((store) => {
@@ -20,7 +20,7 @@ const state = () => {
   // }
 
   function clear() {
-    set({ loading: false });
+    set({ loading: false, dialogOpen: false });
   }
 
   return { subscribe, set, update, clear };
