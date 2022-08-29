@@ -49,41 +49,6 @@
 </div>
 
 <style lang="scss">
-  .loading {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 101;
-    display: grid;
-    place-items: center;
-    gap: 1rem;
-
-    h3 {
-      color: white;
-    }
-  }
-
-  .background {
-    background: black;
-    opacity: 0.8;
-    cursor: none;
-    inset: 0;
-    position: fixed;
-    z-index: 100;
-  }
-
-  h1 {
-    width: 100%;
-  }
-  button {
-    border-radius: 10px;
-    margin: 0.5rem;
-    padding: 1rem;
-    color: var(--clr-input-txt);
-    background-color: var(--color-btn-primary-active);
-  }
-
   .games {
     margin: 2rem 0rem;
 
@@ -103,22 +68,6 @@
 
     @media (max-width: 650px) {
       grid-template-columns: 1fr;
-    }
-  }
-  .game-search {
-    border-radius: 4px;
-    box-shadow: var(--level-2);
-    background: rgba(0, 0, 0, 0.02);
-    border: 2px solid var(--clr-primary);
-    padding: 20px;
-
-    fieldset {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-    }
-    label {
-      display: grid;
-      margin: 1rem;
     }
   }
 

@@ -1,3 +1,4 @@
+import { json as json$1 } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
 import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
@@ -25,9 +26,8 @@ export const POST: RequestHandler = async ({ request }) => {
 
   const urlQueryParams = new URLSearchParams(newQueryParams);
 
-  const url = `https://api.boardgameatlas.com/api/search${
-    urlQueryParams ? `?${urlQueryParams}` : ''
-  }`;
+  const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''
+    }`;
   const response = await fetch(url, {
     method: 'get',
     headers: {
@@ -38,11 +38,9 @@ export const POST: RequestHandler = async ({ request }) => {
   if (response.status === 404) {
     // user hasn't created a todo list.
     // start with an empty array
-    return {
-      body: {
-        games: []
-      }
-    };
+    return json$1({
+      games: []
+    });
   }
 
   if (response.status === 200) {
@@ -52,14 +50,11 @@ export const POST: RequestHandler = async ({ request }) => {
     gameList.forEach((game) => {
       games.push(mapAPIGameToBoredGame(game));
     });
-    return {
-      body: {
-        games
-      }
-    };
+
+    return json$1({
+      games
+    });
   }
 
-  return {
-    status: response.status
-  };
+  return new Response(undefined, { status: response.status });
 };

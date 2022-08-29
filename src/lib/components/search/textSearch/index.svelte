@@ -1,18 +1,12 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
-  import {
-    Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
-  } from "@rgossiaux/svelte-headlessui";
-  import { ChevronRightIcon } from "@rgossiaux/svelte-heroicons/solid";
+  import { fade } from 'svelte/transition';
+  import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
+  import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
   import { boredState } from '$lib/stores/boredState';
-  import { gameStore } from '$lib/stores/gameSearchStore';
   import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
 
   export let showButton: boolean = false;
   export let advancedSearch: boolean = false;
-  console.log('showButton', showButton);
 
   let submitting = $boredState?.loading;
   let name = '';
@@ -37,7 +31,12 @@
     <Disclosure let:open>
       <DisclosureButton class="disclosure-button">
         <span>Advanced Search?</span>
-        <ChevronRightIcon class="icon disclosure-icon" style={open ? "transform: rotate(90deg); transition: transform 0.5s ease;" : "transform: rotate(0deg); transition: transform 0.5s ease;"} />
+        <ChevronRightIcon
+          class="icon disclosure-icon"
+          style={open
+            ? 'transform: rotate(90deg); transition: transform 0.5s ease;'
+            : 'transform: rotate(0deg); transition: transform 0.5s ease;'}
+        />
       </DisclosureButton>
 
       {#if open}
@@ -56,7 +55,6 @@
   <button class="btn" type="submit" disabled={submitting}>Submit</button>
 {/if}
 
-
 <!-- </form> -->
 <style lang="scss">
   .search {
@@ -70,9 +68,6 @@
     place-items: center;
   }
 
-  h1 {
-    width: 100%;
-  }
   button {
     padding: 1rem;
     margin: 1.5rem 0;

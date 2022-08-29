@@ -1,7 +1,7 @@
-import { boardGameApi } from './_api';
-import type { RequestHandler } from '@sveltejs/kit';
+import { boardGameApi } from './api';
+import { error, type Action } from '@sveltejs/kit';
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: Action = async ({ request, locals }) => {
   const form = await request.formData();
   const minAge = form.get('minAge') || 0;
   console.log('minAge', minAge);
@@ -26,10 +26,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   if (response.status === 404) {
     // user hasn't created a todo list.
     // start with an empty array
+    // throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
     return {
-      body: {
-        games: []
-      }
+      games: []
     };
   }
 
@@ -37,14 +36,15 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     const gameResponse = await response.json();
     const games = gameResponse?.games;
     console.log('games', games);
+    // throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
     return {
-      body: {
-        games: gameResponse?.games
-      }
+      games: gameResponse?.games
     };
   }
 
-  return {
-    status: response.status
-  };
+  // throw new Error("@migration task: Migrate this return statement (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292699)");
+  // return {
+  //   status: response.status
+  // };
+  throw error(response.status);
 };

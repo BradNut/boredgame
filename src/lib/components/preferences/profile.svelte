@@ -50,11 +50,6 @@
 </div>
 
 <style lang="scss">
-  .panel-contents {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .container {
     width: 24px;
     height: 24px;

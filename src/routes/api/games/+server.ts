@@ -1,3 +1,4 @@
+import { json as json$1 } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
 import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
@@ -77,11 +78,9 @@ export const POST: RequestHandler = async ({ request }) => {
   if (response.status === 404) {
     // user hasn't created a todo list.
     // start with an empty array
-    return {
-      body: {
-        games: []
-      }
-    };
+    return json$1({
+  games: []
+});
   }
 
   if (response.status === 200) {
@@ -92,14 +91,10 @@ export const POST: RequestHandler = async ({ request }) => {
       games.push(mapAPIGameToBoredGame(game));
     });
     console.log('games', games);
-    return {
-      body: {
-        games
-      }
-    };
+    return json$1({
+  games
+});
   }
 
-  return {
-    status: response.status
-  };
+  return new Response(undefined, { status: response.status });
 };
