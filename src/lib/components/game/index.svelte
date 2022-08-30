@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
   import { MinusCircleIcon, PlusCircleIcon } from '@rgossiaux/svelte-heroicons/outline';
   import type { GameType, SavedGameType } from '$lib/types';
@@ -8,6 +9,13 @@
   export let game: GameType | SavedGameType;
   export let minimal: boolean = false;
   export let detailed: boolean = false;
+
+  const dispatch = createEventDispatcher();
+
+  function removeGame() {
+    dispatch('removeGameEvent', game);
+  }
+
   $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 </script>
 
@@ -36,8 +44,7 @@
       aria-label="Remove from collection"
       class="btn"
       type="button"
-      on:click={() => removeFromCollection(game)}
-      >Remove <MinusCircleIcon width="24" height="24" /></button
+      on:click={() => removeGame()}>Remove <MinusCircleIcon width="24" height="24" /></button
     >
   {:else}
     <button

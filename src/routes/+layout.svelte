@@ -1,15 +1,8 @@
 <script lang="ts">
   import { browser } from '$app/environment';
-  import { fade } from 'svelte/transition';
   import { navigating } from '$app/stores';
   import debounce from 'just-debounce-it';
   import { Toy } from '@leveluptuts/svelte-toy';
-  import {
-    Dialog,
-    DialogOverlay,
-    DialogTitle,
-    DialogDescription
-  } from '@rgossiaux/svelte-headlessui';
   import Header from '$lib/components/header/Header.svelte';
   import Loading from '$lib/components/loading.svelte';
   import Transition from '$lib/components/transition/index.svelte';
@@ -24,11 +17,11 @@
   $: {
     if ($navigating) {
       debounce(() => {
-        boredState.set({ loading: true, dialogOpen: false });
+        boredState.set({ loading: true });
       }, 250);
     }
     if (!$navigating) {
-      boredState.set({ loading: false, dialogOpen: false });
+      boredState.set({ loading: false });
     }
   }
 
@@ -81,51 +74,10 @@
       <div class="background" />
     </Portal>
   {/if}
-  {#if $boredState?.dialogOpen}
-    <div transition:fade>
-      <Dialog
-        open={$boredState?.dialogOpen}
-        on:close={() => boredState.set({ loading: false, dialogOpen: false })}
-        static
-      >
-        <DialogOverlay
-          style={'position: fixed; inset: 0; z-index: 100; background-color: rgb(0 0 0); opacity: 0.3;'}
-        />
-        <div class="dialog">
-          <DialogTitle>Deactivate account</DialogTitle>
-          <DialogDescription>This will permanently deactivate your account</DialogDescription>
-
-          <p>
-            Are you sure you want to deactivate your account? All of your data will be permanently
-            removed. This action cannot be undone.
-          </p>
-
-          <button on:click={() => boredState.set({ loading: false, dialogOpen: false })}
-            >Deactivate</button
-          >
-          <button on:click={() => boredState.set({ loading: false, dialogOpen: false })}
-            >Cancel</button
-          >
-        </div>
-      </Dialog>
-    </div>
-  {/if}
   <Toast />
 </Transition>
 
 <style lang="scss">
-  :global(.dialog) {
-    position: fixed;
-    top: 25%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 101;
-    border-radius: 10px;
-    background-color: var(--primary);
-    padding: 2rem;
-    /* max-width: 400px; */
-  }
-
   .loading {
     position: fixed;
     top: 50%;

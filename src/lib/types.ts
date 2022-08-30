@@ -1,6 +1,5 @@
 export type BoredStore = {
   loading: boolean;
-  dialogOpen: boolean;
 };
 
 export enum ToastType {

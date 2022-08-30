@@ -8,7 +8,7 @@
   import { boredState } from '$root/lib/stores/boredState';
 
   async function handleSearch(event: SubmitEvent) {
-    boredState.set({ loading: true, dialogOpen: false });
+    boredState.set({ loading: true });
     const form = event.target as HTMLFormElement;
     console.log('form', form);
     const response = await fetch('/api/game', {
@@ -17,7 +17,7 @@
       body: new FormData(form)
     });
     const responseData = await response.json();
-    boredState.set({ loading: false, dialogOpen: false });
+    boredState.set({ loading: false });
     gameStore.removeAll();
     gameStore.addAll(responseData?.games);
   }
