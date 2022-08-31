@@ -79,9 +79,7 @@
   {/if}
   {#if isOpen}
     <div class="container">
-      <div transition:fade>
-        <svelte:component this={$boredState?.dialog?.content} />
-      </div>
+      <svelte:component this={$boredState?.dialog?.content} />
     </div>
   {/if}
   <Toast />
@@ -149,48 +147,5 @@
     footer {
       padding: 40px 0;
     }
-  }
-
-  .dialog {
-    display: grid;
-    gap: 1.5rem;
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 101;
-    border-radius: 10px;
-    background-color: var(--clr-input-bg);
-    padding: 2rem;
-    min-width: 400px;
-
-    .dialog-footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-      margin: 1rem 0;
-
-      button {
-        display: flex;
-        place-content: center;
-        gap: 1rem;
-        width: 100%;
-        border-radius: 10px;
-        padding: 1rem;
-        background-color: var(--color-btn-primary-active);
-
-        &:hover {
-          background-color: var(--color-btn-primary-active-hover);
-        }
-      }
-    }
-  }
-
-  :global(.dialog-overlay) {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    background-color: rgb(0 0 0);
-    opacity: 0.8;
   }
 </style>
