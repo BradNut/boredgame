@@ -17,11 +17,11 @@
   $: {
     if ($navigating) {
       debounce(() => {
-        boredState.set({ loading: true });
+        boredState.update((n) => ({ ...n, loading: true }));
       }, 250);
     }
     if (!$navigating) {
-      boredState.set({ loading: false });
+      boredState.update((n) => ({ ...n, loading: false }));
     }
   }
 

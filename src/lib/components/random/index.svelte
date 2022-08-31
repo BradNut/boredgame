@@ -7,7 +7,7 @@
 
   async function getRandomCollectionGame() {
     if ($collectionStore.length > 0) {
-      boredState.set({ loading: true });
+      boredState.update((n) => ({ ...n, loading: true }));
       let randomNumber: number = Math.round(Math.random() * $collectionStore.length - 1);
       if ($collectionStore.at(randomNumber)) {
         gameStore.removeAll();
@@ -19,11 +19,11 @@
         const responseData = await response.json();
         console.log('responseData', responseData);
         gameStore.add(responseData?.game);
-        boredState.set({ loading: false });
+        boredState.update((n) => ({ ...n, loading: false }));
       } else {
         toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
       }
-      boredState.set({ loading: false });
+      boredState.update((n) => ({ ...n, loading: false }));
     } else {
       toast.send('No items in your collection!', {
         duration: 3000,

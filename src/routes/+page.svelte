@@ -16,7 +16,7 @@
   import type { GameType, SavedGameType } from '$root/lib/types';
 
   async function handleSearch(event: SubmitEvent) {
-    boredState.set({ loading: true });
+    boredState.update((n) => ({ ...n, loading: true }));
     const form = event.target as HTMLFormElement;
     console.log('form', form);
     const response = await fetch('/api/game', {
@@ -25,7 +25,7 @@
       body: new FormData(form)
     });
     const responseData = await response.json();
-    boredState.set({ loading: false });
+    boredState.update((n) => ({ ...n, loading: false }));
     gameStore.removeAll();
     gameStore.addAll(responseData?.games);
   }

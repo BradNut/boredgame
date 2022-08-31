@@ -4,7 +4,7 @@
 
   async function handleSubmit(event: SubmitEvent) {
     // submitting = true;
-    boredState.set({ loading: true });
+    boredState.update((n) => ({ ...n, loading: true }));
     const form = event.target as HTMLFormElement;
     console.log('form', form);
     const response = await fetch('/api/games', {
@@ -14,7 +14,7 @@
     });
     const responseData = await response.json();
     // submitting = false;
-    boredState.set({ loading: false });
+    boredState.update((n) => ({ ...n, loading: false }));
     gameStore.removeAll();
     gameStore.addAll(responseData?.games);
     // games = responseData?.games;
