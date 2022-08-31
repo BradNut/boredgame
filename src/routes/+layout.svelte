@@ -1,6 +1,7 @@
 <script lang="ts">
   import { browser } from '$app/environment';
   import { navigating } from '$app/stores';
+  import { fade } from 'svelte/transition';
   import debounce from 'just-debounce-it';
   import { Toy } from '@leveluptuts/svelte-toy';
   import Header from '$lib/components/header/Header.svelte';
@@ -24,6 +25,8 @@
       boredState.update((n) => ({ ...n, loading: false }));
     }
   }
+
+  $: isOpen = $boredState?.dialog?.isOpen;
 
   if (browser) {
     let collectionEmpty = $collectionStore.length === 0 || false;
@@ -73,6 +76,13 @@
       </Transition>
       <div class="background" />
     </Portal>
+  {/if}
+  {#if isOpen}
+    <div class="container">
+      <div transition:fade>
+        <svelte:component this={$boredState?.dialog?.content} />
+      </div>
+    </div>
   {/if}
   <Toast />
 </Transition>
@@ -139,5 +149,48 @@
     footer {
       padding: 40px 0;
     }
+  }
+
+  .dialog {
+    display: grid;
+    gap: 1.5rem;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+    border-radius: 10px;
+    background-color: var(--clr-input-bg);
+    padding: 2rem;
+    min-width: 400px;
+
+    .dialog-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      margin: 1rem 0;
+
+      button {
+        display: flex;
+        place-content: center;
+        gap: 1rem;
+        width: 100%;
+        border-radius: 10px;
+        padding: 1rem;
+        background-color: var(--color-btn-primary-active);
+
+        &:hover {
+          background-color: var(--color-btn-primary-active-hover);
+        }
+      }
+    }
+  }
+
+  :global(.dialog-overlay) {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background-color: rgb(0 0 0);
+    opacity: 0.8;
   }
 </style>

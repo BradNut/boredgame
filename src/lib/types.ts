@@ -1,5 +1,14 @@
+import type { SvelteComponent } from "svelte";
+
+export type Dialog = {
+  isOpen: boolean;
+  content?: typeof SvelteComponent;
+  additionalData?: SavedGameType | GameType;
+}
+
 export type BoredStore = {
   loading: boolean;
+  dialog: Dialog;
 };
 
 export enum ToastType {
