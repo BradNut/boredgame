@@ -15,7 +15,11 @@
   let gameToRemove: GameType | SavedGameType;
   console.log('isOpen', isOpen);
 
-  function handleRemoveGame(event: Event) {
+  interface RemoveGameEvent extends Event {
+    detail: GameType | SavedGameType;
+  }
+
+  function handleRemoveGame(event: RemoveGameEvent) {
     console.log('event', event);
     gameToRemove = event?.detail;
     isOpen = true;
@@ -45,26 +49,26 @@
   </div>
 </div>
 {#if isOpen}
-  <!-- <div class="container"> -->
-  <div transition:fade>
-    <Dialog open={isOpen} on:close={() => (isOpen = false)} static>
-      <div transition:fade>
-        <DialogOverlay class="dialog-overlay" />
-        <div class="dialog">
-          <DialogTitle>Remove from collection</DialogTitle>
-          <DialogDescription
-            >Are you sure you want to remove from your collection?</DialogDescription
-          >
+  <div class="container">
+    <div transition:fade>
+      <Dialog open={isOpen} on:close={() => (isOpen = false)} static>
+        <div transition:fade>
+          <DialogOverlay class="dialog-overlay" />
+          <div class="dialog">
+            <DialogTitle>Remove from collection</DialogTitle>
+            <DialogDescription
+              >Are you sure you want to remove from your collection?</DialogDescription
+            >
 
-          <div class="dialog-footer">
-            <button on:click={() => removeGame()}>Remove</button>
-            <button on:click={() => (isOpen = false)}>Cancel</button>
+            <div class="dialog-footer">
+              <button on:click={() => removeGame()}>Remove</button>
+              <button on:click={() => (isOpen = false)}>Cancel</button>
+            </div>
           </div>
         </div>
-      </div>
-    </Dialog>
+      </Dialog>
+    </div>
   </div>
-  <!-- </div> -->
 {/if}
 
 <style lang="scss">
@@ -90,18 +94,39 @@
     }
   }
 
-  :global(.dialog) {
+  .dialog {
     display: grid;
     gap: 1.5rem;
-    position: fixed;
-    top: 25%;
+    position: absolute;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 101;
     border-radius: 10px;
-    background-color: var(--primary);
+    background-color: var(--clr-input-bg);
     padding: 2rem;
-    max-width: 500px;
+    min-width: 400px;
+
+    .dialog-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      margin: 1rem 0;
+
+      button {
+        display: flex;
+        place-content: center;
+        gap: 1rem;
+        width: 100%;
+        border-radius: 10px;
+        padding: 1rem;
+        background-color: var(--color-btn-primary-active);
+
+        &:hover {
+          background-color: var(--color-btn-primary-active-hover);
+        }
+      }
+    }
   }
 
   :global(.dialog-overlay) {
@@ -112,12 +137,6 @@
     opacity: 0.8;
   }
 
-  :global(.dialog-footer) {
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    margin: 1rem 0;
-  }
   /* 
   .container > .button {
     display: grid;
