@@ -1,26 +1,19 @@
-import type { BoredStore } from '$lib/types';
+import type { BoredStore, Dialog } from '$lib/types';
 import { writable } from 'svelte/store';
+import DefaultDialog from '../components/dialog/DefaultDialog.svelte';
 // import { BoredStore } from '$lib/types';
 
 // Custom store
 const state = () => {
-  const { subscribe, set, update } = writable<BoredStore>({ loading: false });
-
-  // function remove(id: string) {
-  // 	update((store) => {
-  // 		const newStore = store.filter((item: GameType) => item.id !== id);
-  // 		return [...newStore];
-  // 	});
-  // }
-
-  // function removeAll() {
-  // 	update(() => {
-  // 		return [];
-  // 	});
-  // }
+  const initialDialog: Dialog = {
+    isOpen: false,
+    content: DefaultDialog
+  }
+  const initial = { loading: false, dialog: initialDialog }
+  const { subscribe, set, update } = writable<BoredStore>(initial);
 
   function clear() {
-    set({ loading: false });
+    set(initial);
   }
 
   return { subscribe, set, update, clear };

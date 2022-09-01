@@ -73,12 +73,9 @@
     background-color: var(--color-btn-primary-active);
   }
 
-  /* :global(.icon) {
-    width: 24px;
-    height: 24px;
-  } */
-
   .game-container {
+    /* display: grid; */
+    /* grid-template-rows: minmax(25px, 50px) 1fr minmax(50px, 75px); */
     display: flex;
     flex-wrap: wrap;
 
@@ -106,6 +103,10 @@
       a {
         padding: 0.25rem;
       }
+    }
+
+    .btn {
+      max-height: 50px;
     }
   }
 </style>

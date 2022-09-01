@@ -1,15 +1,10 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition';
-  import {
-    Dialog,
-    DialogDescription,
-    DialogOverlay,
-    DialogTitle
-  } from '@rgossiaux/svelte-headlessui';
   import Game from '$lib/components/game/index.svelte';
   import { collectionStore } from '$lib/stores/collectionStore';
   import type { GameType, SavedGameType } from '$root/lib/types';
   import { removeFromCollection } from '$root/lib/util/manipulateCollection';
+  import { boredState } from '$root/lib/stores/boredState';
+  import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
 
   let isOpen: boolean = false;
   let gameToRemove: GameType | SavedGameType;
@@ -22,12 +17,10 @@
   function handleRemoveGame(event: RemoveGameEvent) {
     console.log('event', event);
     gameToRemove = event?.detail;
-    isOpen = true;
-  }
-
-  function removeGame() {
-    removeFromCollection(gameToRemove);
-    isOpen = false;
+    boredState.update((n) => ({
+      ...n,
+      dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
+    }));
   }
 </script>
 
@@ -48,28 +41,6 @@
     {/if}
   </div>
 </div>
-{#if isOpen}
-  <div class="container">
-    <div transition:fade>
-      <Dialog open={isOpen} on:close={() => (isOpen = false)} static>
-        <div transition:fade>
-          <DialogOverlay class="dialog-overlay" />
-          <div class="dialog">
-            <DialogTitle>Remove from collection</DialogTitle>
-            <DialogDescription
-              >Are you sure you want to remove from your collection?</DialogDescription
-            >
-
-            <div class="dialog-footer">
-              <button on:click={() => removeGame()}>Remove</button>
-              <button on:click={() => (isOpen = false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      </Dialog>
-    </div>
-  </div>
-{/if}
 
 <style lang="scss">
   h1 {
@@ -89,58 +60,8 @@
       grid-template-columns: 1fr 1fr;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 550px) {
       grid-template-columns: 1fr;
     }
   }
-
-  .dialog {
-    display: grid;
-    gap: 1.5rem;
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 101;
-    border-radius: 10px;
-    background-color: var(--clr-input-bg);
-    padding: 2rem;
-    min-width: 400px;
-
-    .dialog-footer {
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-      margin: 1rem 0;
-
-      button {
-        display: flex;
-        place-content: center;
-        gap: 1rem;
-        width: 100%;
-        border-radius: 10px;
-        padding: 1rem;
-        background-color: var(--color-btn-primary-active);
-
-        &:hover {
-          background-color: var(--color-btn-primary-active-hover);
-        }
-      }
-    }
-  }
-
-  :global(.dialog-overlay) {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    background-color: rgb(0 0 0);
-    opacity: 0.8;
-  }
-
-  /* 
-  .container > .button {
-    display: grid;
-    justify-content: center;
-    background-color: var(--primary);
-  } */
 </style>

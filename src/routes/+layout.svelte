@@ -1,6 +1,7 @@
 <script lang="ts">
   import { browser } from '$app/environment';
   import { navigating } from '$app/stores';
+  import { fade } from 'svelte/transition';
   import debounce from 'just-debounce-it';
   import { Toy } from '@leveluptuts/svelte-toy';
   import Header from '$lib/components/header/Header.svelte';
@@ -24,6 +25,8 @@
       boredState.update((n) => ({ ...n, loading: false }));
     }
   }
+
+  $: isOpen = $boredState?.dialog?.isOpen;
 
   if (browser) {
     let collectionEmpty = $collectionStore.length === 0 || false;
@@ -73,6 +76,11 @@
       </Transition>
       <div class="background" />
     </Portal>
+  {/if}
+  {#if isOpen}
+    <div class="container">
+      <svelte:component this={$boredState?.dialog?.content} />
+    </div>
   {/if}
   <Toast />
 </Transition>
@@ -139,5 +147,13 @@
     footer {
       padding: 40px 0;
     }
+  }
+
+  :global(.dialog-overlay) {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background-color: rgb(0 0 0);
+    opacity: 0.8;
   }
 </style>
