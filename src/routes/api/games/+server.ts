@@ -74,13 +74,13 @@ export const POST: RequestHandler = async ({ request }) => {
       'content-type': 'application/json'
     }
   });
-  // console.log('response', response);
+  console.log('board game response', response);
   if (response.status === 404) {
     // user hasn't created a todo list.
     // start with an empty array
     return json$1({
-  games: []
-});
+      games: []
+    });
   }
 
   if (response.status === 200) {
@@ -92,8 +92,8 @@ export const POST: RequestHandler = async ({ request }) => {
     });
     console.log('games', games);
     return json$1({
-  games
-});
+      games
+    });
   }
 
   return new Response(undefined, { status: response.status });

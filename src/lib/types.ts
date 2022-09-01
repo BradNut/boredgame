@@ -6,9 +6,17 @@ export type Dialog = {
   additionalData?: SavedGameType | GameType;
 }
 
+export type Search = {
+  totalCount?: number;
+  pageSize: number;
+  skip: number;
+  currentPage: number;
+}
+
 export type BoredStore = {
   loading: boolean;
   dialog: Dialog;
+  search: Search;
 };
 
 export enum ToastType {

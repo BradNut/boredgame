@@ -7,6 +7,7 @@
   import TextSearch from '$lib/components/search/textSearch/index.svelte';
   import RandomSearch from '$lib/components/search/random/index.svelte';
   import Random from '$lib/components/random/index.svelte';
+  import Pagination from '$lib/components/pagination/index.svelte';
 
   async function handleSearch(event: SubmitEvent) {
     boredState.update((n) => ({ ...n, loading: true }));
@@ -46,29 +47,45 @@
 </svelte:head>
 
 <h1>Search Boardgames!</h1>
-<p>Input your requirements to search for board game that match your criteria</p>
+<p style="margin: 1rem 0;">
+  Input your requirements to search for board game that match your criteria.
+</p>
 <div class="game-search">
   <form on:submit|preventDefault={handleSearch} method="post">
     <TextSearch showButton advancedSearch />
   </form>
-  <div class="random-buttons">
-    <RandomSearch />
-    <Random />
-  </div>
+  <section>
+    <p>Or pick a random game!</p>
+    <div class="random-buttons">
+      <RandomSearch />
+      <Random />
+    </div>
+  </section>
 </div>
 
 {#if $gameStore?.length > 0}
   <div class="games">
     <h1>Games Found:</h1>
     <div class="games-list">
-      {#each $gameStore as game}
+      {#each $gameStore as game (game.id)}
         <Game on:removeGameEvent={handleRemoveGame} {game} />
       {/each}
     </div>
+    <!-- <Pagination /> -->
   </div>
 {/if}
 
 <style lang="scss">
+  .game-search {
+    display: grid;
+    gap: 2rem;
+
+    section {
+      display: grid;
+      gap: 1rem;
+    }
+  }
+
   .games {
     margin: 2rem 0rem;
 

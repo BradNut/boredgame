@@ -9,7 +9,13 @@ const state = () => {
     isOpen: false,
     content: DefaultDialog
   }
-  const initial = { loading: false, dialog: initialDialog }
+  const initial: BoredStore = {
+    loading: false, dialog: initialDialog, search: {
+      pageSize: 25,
+      skip: 0,
+      currentPage: 1
+    }
+  };
   const { subscribe, set, update } = writable<BoredStore>(initial);
 
   function clear() {

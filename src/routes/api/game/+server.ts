@@ -9,7 +9,7 @@ export const POST: RequestHandler = async ({ request }) => {
   const queryParams: SearchQuery = {
     order_by: 'rank',
     ascending: false,
-    limit: 20,
+    limit: 25,
     client_id: import.meta.env.VITE_PUBLIC_CLIENT_ID,
     fuzzy_match: true,
     name: ''
@@ -34,7 +34,7 @@ export const POST: RequestHandler = async ({ request }) => {
       'content-type': 'application/json'
     }
   });
-  console.log('response', response);
+  // console.log('board game response', response);
   if (response.status === 404) {
     // user hasn't created a todo list.
     // start with an empty array
@@ -46,6 +46,8 @@ export const POST: RequestHandler = async ({ request }) => {
   if (response.status === 200) {
     const gameResponse = await response.json();
     const gameList = gameResponse?.games;
+    const totalCount = gameResponse?.count;
+    console.log('totalCount', totalCount);
     const games: GameType[] = [];
     gameList.forEach((game) => {
       games.push(mapAPIGameToBoredGame(game));
