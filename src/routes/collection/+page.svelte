@@ -60,7 +60,7 @@
       grid-template-columns: 1fr 1fr;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 550px) {
       grid-template-columns: 1fr;
     }
   }

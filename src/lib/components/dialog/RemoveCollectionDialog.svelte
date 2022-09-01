@@ -49,7 +49,7 @@
     display: grid;
     gap: 1.5rem;
     position: absolute;
-    top: 35%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 101;

@@ -147,4 +147,9 @@
     gap: 1.5rem;
     margin: 1rem;
   }
+
+  .with-icon {
+    display: flex;
+    place-items: center;
+  }
 </style>
