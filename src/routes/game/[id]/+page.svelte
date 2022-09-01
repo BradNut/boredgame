@@ -1,8 +1,4 @@
 <script lang="ts">
-  // throw new Error(
-  //   '@migration task: Add data prop (https://github.com/sveltejs/kit/discussions/5774#discussioncomment-3292707)'
-  // );
-
   import { fade } from 'svelte/transition';
   import {
     ExternalLinkIcon,
@@ -11,12 +7,15 @@
     PlusCircleIcon,
     PlusIcon
   } from '@rgossiaux/svelte-heroicons/outline';
-  import { collectionStore } from '$lib/stores/collectionStore';
   import type { GameType, SavedGameType } from '$lib/types';
-  import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
+  import { collectionStore } from '$lib/stores/collectionStore';
+  import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
+  import { addToCollection } from '$lib/util/manipulateCollection';
   import type { PageData } from './$types';
+  import { boredState } from '$root/lib/stores/boredState';
 
   $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
+
   export let data: PageData;
   export let game: GameType = data?.game;
   console.log('page game', game);
@@ -29,6 +28,13 @@
     firstParagraphEnd = game?.description?.indexOf('</ p>') + 5;
   }
   console.log('firstParagraphEnd', firstParagraphEnd);
+
+  function removeGame() {
+    boredState.update((n) => ({
+      ...n,
+      dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: game }
+    }));
+  }
 </script>
 
 <svelte:head>
@@ -59,7 +65,7 @@
       >Board Game Atlas Link <ExternalLinkIcon width="24" height="24" /></a
     >
     {#if existsInCollection}
-      <button class="btn" type="button" on:click={() => removeFromCollection(game)}
+      <button class="btn" type="button" on:click={() => removeGame()}
         >Remove from collection <MinusCircleIcon width="24" height="24" /></button
       >
     {:else}
