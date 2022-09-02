@@ -3,11 +3,11 @@
 
   const totalCount = $boredState.search.totalCount; // TODO: Check default value
   console.log('totalCount', totalCount);
-  $: pageSize = $boredState.search.pageSize;
+  const pageSize = $boredState.search.pageSize;
   console.log('pageSize', pageSize);
-  $: currentPage = $boredState.search.currentPage;
+  const currentPage = $boredState.search.currentPage;
   console.log('currentPage', currentPage);
-  $: skip = $boredState.search.skip;
+  let skip = $boredState.search.skip;
   console.log('skip', skip);
 
   const totalPages: number = Math.ceil(totalCount / pageSize);
@@ -19,18 +19,29 @@
   const itemsLeft: number =
     totalCount - currentPage * pageSize >= 0 ? totalCount - currentPage * pageSize : 0;
 
-  const pageArray = Array.from({ length: 10 }, (_, i) => i + 1);
+  const maxPaginationButtons = 10;
+  let addition = maxPaginationButtons;
+  if (addition <= maxPaginationButtons) {
+    addition = skip;
+  }
+  const pageArray = Array.from({ length: maxPaginationButtons }, (_, i) => i + 1 + addition);
   // console.log('pageArray', pageArray);
 </script>
 
 <div class="container">
   <button type="button" class="btn" disabled={!hasPrevPage}>Prev</button>
-  {#each pageArray as page}
+  {#each pageArray as page (page)}
     <button
       type="button"
       class="btn"
-      aria-current={page === currentPage}
-      class:current={page === currentPage}>{page}</button
+      class:current={page === currentPage}
+      value={page}
+      on:click={() => {
+        boredState.update((n) => ({
+          ...n,
+          search: { skip: page * pageSize, currentPage: currentPage + 1, pageSize, totalCount }
+        }));
+      }}>{page}</button
     >
   {/each}
   <button type="button" class="btn" disabled={!hasNextPage}>Next</button>

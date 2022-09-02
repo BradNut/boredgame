@@ -22,6 +22,14 @@
     boredState.update((n) => ({ ...n, loading: false }));
     gameStore.removeAll();
     gameStore.addAll(responseData?.games);
+    const skip = $boredState?.search?.skip;
+    const pageSize = $boredState?.search?.pageSize;
+    const currentPage = $boredState?.search?.currentPage;
+    const totalCount = responseData?.totalCount;
+    boredState.update((n) => ({
+      ...n,
+      search: { totalCount, skip, pageSize, currentPage }
+    }));
   }
 
   let isOpen: boolean = false;

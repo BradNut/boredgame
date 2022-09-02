@@ -54,6 +54,7 @@ export const POST: RequestHandler = async ({ request }) => {
     });
 
     return json$1({
+      totalCount,
       games
     });
   }
