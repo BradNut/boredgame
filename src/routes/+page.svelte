@@ -71,7 +71,7 @@
         <Game on:removeGameEvent={handleRemoveGame} {game} />
       {/each}
     </div>
-    <!-- <Pagination /> -->
+    <Pagination />
   </div>
 {/if}
 

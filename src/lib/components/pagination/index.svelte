@@ -1,12 +1,17 @@
 <script lang="ts">
   import { boredState } from '$root/lib/stores/boredState';
 
-  const totalCount = $boredState.search.totalCount || 1; // TODO: Check default value
+  const totalCount = $boredState.search.totalCount; // TODO: Check default value
+  console.log('totalCount', totalCount);
   $: pageSize = $boredState.search.pageSize;
+  console.log('pageSize', pageSize);
   $: currentPage = $boredState.search.currentPage;
+  console.log('currentPage', currentPage);
   $: skip = $boredState.search.skip;
+  console.log('skip', skip);
 
   const totalPages: number = Math.ceil(totalCount / pageSize);
+  console.log('totalPages', totalPages);
   const prevPage: number = currentPage - 1;
   const nextPage: number = currentPage + 1;
   const hasNextPage: boolean = nextPage <= totalPages;
@@ -15,17 +20,41 @@
     totalCount - currentPage * pageSize >= 0 ? totalCount - currentPage * pageSize : 0;
 
   const pageArray = Array.from({ length: 10 }, (_, i) => i + 1);
-  console.log('pageArray', pageArray);
+  // console.log('pageArray', pageArray);
 </script>
 
 <div class="container">
+  <button type="button" class="btn" disabled={!hasPrevPage}>Prev</button>
   {#each pageArray as page}
-    <p>{page}</p>
+    <button
+      type="button"
+      class="btn"
+      aria-current={page === currentPage}
+      class:current={page === currentPage}>{page}</button
+    >
   {/each}
+  <button type="button" class="btn" disabled={!hasNextPage}>Next</button>
 </div>
 
 <style lang="scss">
   .container {
-    display: grid;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 3rem 0;
+  }
+
+  button {
+    /* min-width: 50px; */
+    &[aria-current],
+    &.current {
+      color: black; // TODO: Fix these colors
+      background: white;
+    }
+    &[disabled] {
+      pointer-events: none;
+      color: var(--lightGrey);
+      text-decoration: line-through;
+    }
   }
 </style>

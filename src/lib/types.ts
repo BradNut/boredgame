@@ -7,7 +7,7 @@ export type Dialog = {
 }
 
 export type Search = {
-  totalCount?: number;
+  totalCount: number;
   pageSize: number;
   skip: number;
   currentPage: number;
