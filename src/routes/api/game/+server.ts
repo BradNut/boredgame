@@ -9,7 +9,8 @@ export const POST: RequestHandler = async ({ request }) => {
   const queryParams: SearchQuery = {
     order_by: 'rank',
     ascending: false,
-    limit: 25,
+    limit: 10,
+    skip: 0,
     client_id: import.meta.env.VITE_PUBLIC_CLIENT_ID,
     fuzzy_match: true,
     name: ''

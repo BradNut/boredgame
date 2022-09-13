@@ -9,7 +9,33 @@
   import Random from '$lib/components/random/index.svelte';
   import Pagination from '$lib/components/pagination/index.svelte';
 
+  let pageSize: number;
+  let currentPage: number;
+  $: totalItems = 0;
+  console.log('totalItems', totalItems);
+
   async function handleSearch(event: SubmitEvent) {
+    boredState.update((n) => ({ ...n, loading: true }));
+    const form = event.target as HTMLFormElement;
+    console.log('form', form);
+    const response = await fetch('/api/game', {
+      method: 'POST',
+      headers: { accept: 'application/json' },
+      body: new FormData(form)
+    });
+    const responseData = await response.json();
+    boredState.update((n) => ({ ...n, loading: false }));
+    gameStore.removeAll();
+    gameStore.addAll(responseData?.games);
+    totalItems = responseData?.totalCount;
+  }
+
+  // async function handleItemsPerPageChange(event) {
+  //   const perPage = event?.detail;
+  //   if ($gameStore.length )
+  // }
+  async function handleNextPageEvent(event: CustomEvent) {
+    console.log('Next page called', event);
     boredState.update((n) => ({ ...n, loading: true }));
     const form = event.target as HTMLFormElement;
     console.log('form', form);
@@ -79,7 +105,17 @@
         <Game on:removeGameEvent={handleRemoveGame} {game} />
       {/each}
     </div>
-    <Pagination />
+    <Pagination
+      {pageSize}
+      {currentPage}
+      {totalItems}
+      forwardText="Next"
+      backwardText="Prev"
+      pageSizes={[10, 25, 50, 100]}
+      on:nextPageEvent={handleNextPageEvent}
+      on:previousPageEvent={(event) => console.log('Prev page called', event)}
+      on:perPageEvent={(event) => console.log('Per page called', event)}
+    />
   </div>
 {/if}
 

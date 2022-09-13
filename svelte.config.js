@@ -12,11 +12,14 @@ const config = {
       $components: 'src/components',
       $root: './src'
     },
-    // Override http methods in the Todo forms
-    methodOverride: {
-      allowed: ['PATCH', 'DELETE']
-    }
-  }
+  },
+  vitePlugin: {
+    experimental: {
+      inspector: {
+        toggleKeyCombo: 'control-alt-shift',
+      },
+    },
+  },
 };
 
 export default config;
