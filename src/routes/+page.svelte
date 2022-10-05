@@ -2,6 +2,7 @@
 	import { enhance, applyAction } from '$app/forms';
 	import type { PageData } from './$types';
 	import { ToastType, type GameType, type SavedGameType } from '$root/lib/types';
+	import { toast } from '$root/lib/components/toast/toast';
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { boredState } from '$root/lib/stores/boredState';
 	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
@@ -10,7 +11,6 @@
 	import RandomSearch from '$lib/components/search/random/index.svelte';
 	import Random from '$lib/components/random/index.svelte';
 	import Pagination from '$lib/components/pagination/index.svelte';
-	import { toast } from '$root/lib/components/toast/toast';
 
 	export let data: PageData;
 	console.log('Formed data:', JSON.stringify(data));
@@ -91,7 +91,7 @@
 </p>
 <div class="game-search">
 	<form
-		action="/search?/search"
+		action="/search"
 		method="post"
 		use:enhance={() => {
 			boredState.update((n) => ({ ...n, loading: true }));
