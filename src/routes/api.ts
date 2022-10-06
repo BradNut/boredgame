@@ -8,7 +8,7 @@
   (The data on the todo app will expire periodically; no
   guarantees are made. Don't use it to organize your life.)
 */
-
+import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
 import { URLSearchParams } from 'url';
 
 const base = 'https://api.boardgameatlas.com/api';
@@ -20,7 +20,7 @@ export function boardGameApi(
   data?: Record<string, unknown>
 ) {
   // console.log('queryParams', queryParams);
-  queryParams.client_id = import.meta.env.VITE_PUBLIC_CLIENT_ID;
+  queryParams.client_id = BOARD_GAME_ATLAS_CLIENT_ID;
   const urlQueryParams = new URLSearchParams(queryParams);
   const url = `${base}/${resource}${urlQueryParams ? `?${urlQueryParams}` : ''}`;
   return fetch(url, {

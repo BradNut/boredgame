@@ -14,7 +14,8 @@ type GamePageParams = {
 // }
 
 export const load: PageServerLoad = async ({ params }: GamePageParams) => {
-  console.log('params', params);
+  console.log('params', params); 
+  debugger;
   const queryParams = {
     ids: `${params?.id}`
   };
