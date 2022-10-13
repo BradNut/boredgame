@@ -97,6 +97,7 @@
 			boredState.update((n) => ({ ...n, loading: true }));
 			return async ({ result }) => {
 				boredState.update((n) => ({ ...n, loading: false }));
+				console.log(result);
 				// `result` is an `ActionResult` object
 				if (result.type === 'error') {
 					toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });

@@ -91,9 +91,9 @@ export const POST: RequestHandler = async ({ request }) => {
       games.push(mapAPIGameToBoredGame(game));
     });
     console.log('games', games);
-    return json$1({
+    return {
       games
-    });
+    };
   }
 
   return new Response(undefined, { status: response.status });

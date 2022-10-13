@@ -13,30 +13,30 @@
     "format": "prettier --write --plugin-search-dir=. ."
   },
   "devDependencies": {
-    "@playwright/test": "^1.26.1",
+    "@playwright/test": "^1.27.1",
     "@rgossiaux/svelte-headlessui": "1.0.2",
     "@rgossiaux/svelte-heroicons": "^0.1.2",
     "@sveltejs/adapter-auto": "1.0.0-next.72",
     "@sveltejs/kit": "1.0.0-next.480",
     "@types/cookie": "^0.5.1",
-    "@types/node": "^18.8.1",
-    "@typescript-eslint/eslint-plugin": "^5.39.0",
-    "@typescript-eslint/parser": "^5.39.0",
-    "carbon-components-svelte": "^0.70.9",
+    "@types/node": "^18.8.5",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "carbon-components-svelte": "^0.70.10",
     "carbon-icons-svelte": "^11.3.0",
-    "eslint": "^8.24.0",
+    "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "just-debounce-it": "^3.1.1",
     "prettier": "^2.7.1",
-    "prettier-plugin-svelte": "^2.7.1",
+    "prettier-plugin-svelte": "^2.8.0",
     "sass": "^1.55.0",
-    "svelte": "^3.50.1",
-    "svelte-check": "^2.9.1",
+    "svelte": "^3.51.0",
+    "svelte-check": "^2.9.2",
     "svelte-preprocess": "^4.10.7",
     "tslib": "^2.0.0",
     "typescript": "^4.8.4",
-    "vite": "^3.1.4"
+    "vite": "^3.1.7"
   },
   "type": "module",
   "dependencies": {
@@ -47,6 +47,7 @@
     "@types/feather-icons": "^4.7.0",
     "cookie": "^0.5.0",
     "feather-icons": "^4.29.0",
-    "zod": "^3.19.1"
+    "zod": "^3.19.1",
+    "zod-to-json-schema": "^3.18.1"
   }
 }
