@@ -17,6 +17,11 @@
 		gameStore.addAll(data?.games);
 	}
 
+	$: if (form?.games) {
+		gameStore.removeAll();
+		gameStore.addAll(form?.games);
+	}
+
 	interface RemoveGameEvent extends Event {
 		detail: GameType | SavedGameType;
 	}
@@ -43,3 +48,27 @@
 		</div>
 	</div>
 {/if}
+
+<style lang="scss">
+	.games {
+		margin: 2rem 0rem;
+
+		h1 {
+			margin-bottom: 2rem;
+		}
+	}
+
+	.games-list {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(200px, 1fr));
+		gap: 2rem;
+
+		@media (max-width: 800px) {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		@media (max-width: 650px) {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

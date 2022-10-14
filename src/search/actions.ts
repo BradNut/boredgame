@@ -68,6 +68,8 @@ export const Games: Actions = {
         games.push(mapAPIGameToBoredGame(game));
       });
 
+      console.log('returning from search')
+
       return {
         games,
         totalCount: games.length

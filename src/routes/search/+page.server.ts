@@ -1,8 +1,8 @@
 import type { Actions, PageServerLoad } from '../$types';
 import { Games } from '$root/search/actions';
 
-export const load: PageServerLoad = ({ request }) => {
-	console.log('page server load request', request)
+export const load: PageServerLoad = (v) => {
+	console.log('page server load request', v)
 
 	return {
     games: [],
