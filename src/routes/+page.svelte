@@ -122,7 +122,7 @@
 				<Game on:removeGameEvent={handleRemoveGame} {game} />
 			{/each}
 		</div>
-		<Pagination
+		<!-- <Pagination
 			{pageSize}
 			{currentPage}
 			{totalItems}
@@ -132,7 +132,7 @@
 			on:nextPageEvent={handleNextPageEvent}
 			on:previousPageEvent={(event) => console.log('Prev page called', event)}
 			on:perPageEvent={(event) => console.log('Per page called', event)}
-		/>
+		/> -->
 	</div>
 {/if}
 
