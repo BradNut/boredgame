@@ -14,27 +14,12 @@
 
 	export let data: PageData;
 	export let form: ActionData;
+	console.log('form routesss', form);
 	console.log('Formed data:', JSON.stringify(data));
 	let pageSize: number;
 	let currentPage: number;
 	$: totalItems = 0;
 	console.log('totalItems', totalItems);
-
-	async function handleSearch(event: SubmitEvent) {
-		boredState.update((n) => ({ ...n, loading: true }));
-		const form = event.target as HTMLFormElement;
-		console.log('form', form);
-		const response = await fetch('/api/game', {
-			method: 'POST',
-			headers: { accept: 'application/json' },
-			body: new FormData(form)
-		});
-		const responseData = await response.json();
-		boredState.update((n) => ({ ...n, loading: false }));
-		gameStore.removeAll();
-		gameStore.addAll(responseData?.games);
-		totalItems = responseData?.totalCount;
-	}
 
 	// async function handleItemsPerPageChange(event) {
 	//   const perPage = event?.detail;
@@ -113,11 +98,12 @@
 					await applyAction(result);
 				} else {
 					console.log('Invalid');
+					await applyAction(result);
 				}
 			};
 		}}
 	>
-		<TextSearch showButton advancedSearch />
+		<TextSearch showButton advancedSearch {form} />
 	</form>
 	<section>
 		<p>Or pick a random game!</p>
