@@ -12,7 +12,7 @@ const state = () => {
   const initial: BoredStore = {
     loading: false, dialog: initialDialog, search: {
       totalCount: 1,
-      pageSize: 25,
+      pageSize: 10,
       skip: 0,
       currentPage: 1
     }

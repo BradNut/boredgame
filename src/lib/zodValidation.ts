@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import zodToJsonSchema from 'zod-to-json-schema';
 
 export const BoardGameSearch = z.object({
   minAge: z.number(),
@@ -7,7 +8,9 @@ export const BoardGameSearch = z.object({
   maxPlayers: z.number()
 });
 
-export const Game = z.object({
+export const Board
+
+export const game_schema = z.object({
   id: z.string(),
   handle: z.string(),
   name: z.string(),
@@ -28,3 +31,9 @@ export const Game = z.object({
   players: z.string(),
   playtime: z.string()
 });
+
+export const game_raw_schema_json = zodToJsonSchema(game_schema, {
+  $refStrategy: 'none',
+});
+
+export type Game = z.infer<typeof game_schema>;

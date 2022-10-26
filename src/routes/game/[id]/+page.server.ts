@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types'
 import { boardGameApi } from '../../api';
+// import { Games } from '$lib/db/actions';
 
 type GamePageParams = {
   params: {
@@ -8,8 +9,12 @@ type GamePageParams = {
   }
 }
 
+// export const actions = {
+//   default Games.create,
+// }
+
 export const load: PageServerLoad = async ({ params }: GamePageParams) => {
-  console.log('params', params);
+  console.log('params', params); 
   const queryParams = {
     ids: `${params?.id}`
   };
