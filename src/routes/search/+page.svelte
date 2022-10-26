@@ -41,7 +41,7 @@
 
 <div class="game-search">
 	<form
-		action="/search"
+		action="?/search"
 		method="post"
 		use:enhance={() => {
 			boredState.update((n) => ({ ...n, loading: true }));

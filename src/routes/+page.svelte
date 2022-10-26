@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance, applyAction } from '$app/forms';
-	import type { PageData } from './$types';
+	import type { ActionData, PageData } from './$types';
 	import { ToastType, type GameType, type SavedGameType } from '$root/lib/types';
 	import { toast } from '$root/lib/components/toast/toast';
 	import { gameStore } from '$lib/stores/gameSearchStore';
@@ -13,6 +13,7 @@
 	import Pagination from '$lib/components/pagination/index.svelte';
 
 	export let data: PageData;
+	export let form: ActionData;
 	console.log('Formed data:', JSON.stringify(data));
 	let pageSize: number;
 	let currentPage: number;
@@ -97,18 +98,21 @@
 			boredState.update((n) => ({ ...n, loading: true }));
 			return async ({ result }) => {
 				boredState.update((n) => ({ ...n, loading: false }));
-				console.log(result);
+				console.log('result main page search', result);
 				// `result` is an `ActionResult` object
-				if (result.type === 'error') {
-					toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
-					await applyAction(result);
-				} else {
+				if (result.type === 'success') {
+					console.log('In success');
 					gameStore.removeAll();
-					gameStore.addAll(result?.data?.games);
+					const resultGames = result?.data?.games;
+					if (resultGames?.length <= 0) {
+						toast.send('No results!', { duration: 3000, type: ToastType.INFO, dismissible: true });
+					}
+					gameStore.addAll(resultGames);
 					totalItems = result?.data?.totalCount;
 					console.log(`Frontend result: ${JSON.stringify(result)}`);
-					toast.send('Sucess!', { duration: 3000, type: ToastType.INFO, dismissible: true });
 					await applyAction(result);
+				} else {
+					console.log('Invalid');
 				}
 			};
 		}}

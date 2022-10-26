@@ -1,4 +1,4 @@
-import type { RequestEvent } from '@sveltejs/kit';
+import { invalid, type RequestEvent } from '@sveltejs/kit';
 import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
 import type { GameType, SearchQuery } from "$root/lib/types";
 import { mapAPIGameToBoredGame } from "$root/lib/util/gameMapper";
@@ -39,47 +39,49 @@ export const Games: Actions = {
     const urlQueryParams = new URLSearchParams(newQueryParams);
     console.log('urlQueryParams', urlQueryParams);
 
-    const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''
-      }`;
-    const response = await fetch(url, {
-      method: 'get',
-      headers: {
-        'content-type': 'application/json'
-      }
-    });
-    console.log('board game response', response);
-    if (response.status === 404) {
-      // user hasn't created a todo list.
-      // start with an empty array
-      return {
-        games: [],
-        totalCount: 0
-      };
+    try {
+      throw new Error("test error");
+      // const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''
+      //   }`;
+      // const response = await fetch(url, {
+      //   method: 'get',
+      //   headers: {
+      //     'content-type': 'application/json'
+      //   }
+      // });
+      // console.log('board game response', response);
+      // if (response.status !== 200) {
+      //   console.log('Status not 200', response.status)
+      //   invalid(response.status, {});
+      // }
+
+      // if (response.status === 200) {
+      //   const gameResponse = await response.json();
+      //   console.log('gameResponse', gameResponse);
+      //   const gameList = gameResponse?.games;
+      //   const totalCount = gameResponse?.count;
+      //   console.log('totalCount', totalCount);
+      //   const games: GameType[] = [];
+      //   gameList.forEach((game) => {
+      //     games.push(mapAPIGameToBoredGame(game));
+      //   });
+
+      //   console.log('returning from search')
+
+      //   return {
+      //     games,
+      //     totalCount: games.length
+      //   };
+      // }
+
+      // return {
+      //   games: [],
+      //   totalCount: 0
+      // };
+    } catch (e) {
+      console.log(`Error searching board games ${e}`);
+      invalid(400, { reason: 'Exception' })
     }
-
-    if (response.status === 200) {
-      const gameResponse = await response.json();
-      console.log('gameResponse', gameResponse);
-      const gameList = gameResponse?.games;
-      const totalCount = gameResponse?.count;
-      console.log('totalCount', totalCount);
-      const games: GameType[] = [];
-      gameList.forEach((game) => {
-        games.push(mapAPIGameToBoredGame(game));
-      });
-
-      console.log('returning from search')
-
-      return {
-        games,
-        totalCount: games.length
-      };
-    }
-
-    return {
-      games: [],
-      totalCount: 0
-    };
   }
 
   //   const id = form.get('id');
