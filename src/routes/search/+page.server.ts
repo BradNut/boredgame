@@ -29,44 +29,50 @@ export const actions: Actions = {
       name: ''
     };
 
-    const minAge = form.get('minAge');
-    const minPlayers = form.get('minPlayers');
-    const maxPlayers = form.get('maxPlayers');
-    const exactMinAge = form.get('exactMinAge') || false;
-    const exactMinPlayers = form.get('exactMinPlayers') || false;
-    const exactMaxPlayers = form.get('exactMaxPlayers') || false;
-    
-    if (minAge) {
-      if (exactMinAge) {
-        queryParams.min_age = +minAge;
-      } else {
-        queryParams.gt_min_age = +minAge === 1 ? 0 : +minAge - 1;
-      }
-    }
+    const random = form.get('random') && form.get('random') === 'on';
 
-    if (minPlayers && maxPlayers) {
-      if (minPlayers > maxPlayers) {
-        return invalid(400, { minPlayers, error: { id: 'minPlayers', message: 'Min must be less than max' } });
-      } else if (maxPlayers < minPlayers) {
-        return invalid(400, { maxPlayers, error: { id: 'maxPlayers', message: 'Max must be greater than min' } });
-      }
-      if (exactMinPlayers) {
-        queryParams.min_players = +minPlayers;
-      } else {
-        queryParams.gt_min_players = +minPlayers === 1 ? 0 : +minPlayers - 1;
+    if (random) {
+      queryParams.random = random;
+    } else {
+      const minAge = form.get('minAge');
+      const minPlayers = form.get('minPlayers');
+      const maxPlayers = form.get('maxPlayers');
+      const exactMinAge = form.get('exactMinAge') || false;
+      const exactMinPlayers = form.get('exactMinPlayers') || false;
+      const exactMaxPlayers = form.get('exactMaxPlayers') || false;
+
+      if (minAge) {
+        if (exactMinAge) {
+          queryParams.min_age = +minAge;
+        } else {
+          queryParams.gt_min_age = +minAge === 1 ? 0 : +minAge - 1;
+        }
       }
 
-      if (exactMaxPlayers) {
-        queryParams.max_players = +maxPlayers;
-      } else {
-        queryParams.lt_max_players = +maxPlayers + 1;
-      }
-    }
+      if (minPlayers && maxPlayers) {
+        if (minPlayers > maxPlayers) {
+          return invalid(400, { minPlayers, error: { id: 'minPlayers', message: 'Min must be less than max' } });
+        } else if (maxPlayers < minPlayers) {
+          return invalid(400, { maxPlayers, error: { id: 'maxPlayers', message: 'Max must be greater than min' } });
+        }
+        if (exactMinPlayers) {
+          queryParams.min_players = +minPlayers;
+        } else {
+          queryParams.gt_min_players = +minPlayers === 1 ? 0 : +minPlayers - 1;
+        }
 
-    const name = form.has('name') ? form.get('name') : await request?.text();
-    console.log('name', name);
-    if (name) {
-      queryParams.name = `${name}`;
+        if (exactMaxPlayers) {
+          queryParams.max_players = +maxPlayers;
+        } else {
+          queryParams.lt_max_players = +maxPlayers + 1;
+        }
+      }
+
+      const name = form.has('name') ? form.get('name') : await request?.text();
+      console.log('name', name);
+      if (name) {
+        queryParams.name = `${name}`;
+      }
     }
 
     const newQueryParams: Record<string, string> = {};

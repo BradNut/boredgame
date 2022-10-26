@@ -73,7 +73,7 @@
 
 <h1>Search Boardgames!</h1>
 <p style="margin: 1rem 0;">
-	Input your requirements to search for board game that match your criteria.
+	Input your requirements to search for board games that match your criteria.
 </p>
 <div class="game-search">
 	<form
