@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { ActionData } from './$types';
 	import { boredState } from '$lib/stores/boredState';
 
 	export let form: ActionData;

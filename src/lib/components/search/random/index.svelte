@@ -31,6 +31,7 @@
 	action="/search"
 	method="POST"
 	use:enhance={() => {
+		gameStore.removeAll();
 		boredState.update((n) => ({ ...n, loading: true }));
 		return async ({ result }) => {
 			boredState.update((n) => ({ ...n, loading: false }));
@@ -38,7 +39,6 @@
 			// `result` is an `ActionResult` object
 			if (result.type === 'success') {
 				console.log('In success');
-				gameStore.removeAll();
 				const resultGames = result?.data?.games;
 				if (resultGames?.length <= 0) {
 					toast.send('No results!', { duration: 3000, type: ToastType.INFO, dismissible: true });
