@@ -81,8 +81,6 @@
 	}
 
 	.game-container {
-		/* display: grid; */
-		/* grid-template-rows: minmax(25px, 50px) 1fr minmax(50px, 75px); */
 		display: flex;
 		flex-wrap: wrap;
 

@@ -124,19 +124,19 @@
 		max-width: 180px;
 	}
 
-	// @media (min-width: 650px) {
-	// 	.preferences {
-	// 		width: 500px;
-	// 	}
-
-	// 	.preferences .options > :global(*) {
-	// 		gap: var(--spacing-64);
-	// 	}
-	// }
-
 	@media (min-width: 480px) {
 		.preferences {
 			width: 500px;
+		}
+
+		.preferences .options > :global(*) {
+			gap: var(--spacing-32);
+		}
+	}
+
+	@media (min-width: 350px) {
+		.preferences {
+			width: 420px;
 		}
 
 		.preferences .options > :global(*) {

@@ -141,6 +141,10 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 2rem;
 		margin: 1rem;
+
+		@media (max-width: 650px) {
+			grid-template-columns: 1fr;
+		}
 	}
 
 	.details {
@@ -152,6 +156,10 @@
 		a,
 		p {
 			margin: 1rem;
+		}
+
+		@media (max-width: 650px) {
+			justify-content: center;
 		}
 	}
 
