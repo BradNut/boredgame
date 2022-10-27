@@ -47,7 +47,7 @@
 
 <h2>{game?.name}</h2>
 
-<section class="games">
+<section class="game">
 	<div>
 		<a class="thumbnail" href={game.url}>
 			<img src={game.image_url} alt={`Image of ${game.name}`} />
@@ -68,8 +68,10 @@
 			target="_blank"
 			rel="noreferrer"
 			aria-label={`Board Game Atlas Link for ${game.name}`}
-			>Board Game Atlas Link <ExternalLinkIcon width="24" height="24" /></a
+			>Board Game Atlas <ExternalLinkIcon width="24" height="24" /></a
 		>
+	</div>
+	<div>
 		{#if existsInCollection}
 			<button class="btn" type="button" on:click={() => removeGame()}
 				>Remove from collection <MinusCircleIcon width="24" height="24" /></button
@@ -136,14 +138,16 @@
 		background-color: var(--color-btn-primary-active);
 	}
 
-	.games {
+	.game {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: auto 1fr;
 		gap: 2rem;
 		margin: 1rem;
+		place-items: center;
 
 		@media (max-width: 650px) {
 			grid-template-columns: 1fr;
+			place-items: center;
 		}
 	}
 
@@ -159,7 +163,8 @@
 		}
 
 		@media (max-width: 650px) {
-			justify-content: center;
+			grid-template-columns: 1fr 1fr;
+			place-content: center;
 		}
 	}
 
@@ -171,6 +176,7 @@
 
 	.with-icon {
 		display: flex;
+		flex-wrap: wrap;
 		place-items: center;
 	}
 </style>
