@@ -2,6 +2,7 @@
 	import { fade } from 'svelte/transition';
 	import { Popover, PopoverButton, PopoverPanel } from '@rgossiaux/svelte-headlessui';
 	import { CogIcon } from '@rgossiaux/svelte-heroicons/outline';
+	import { collectionStore } from '$root/lib/stores/collectionStore';
 	import Themes from './themes.svelte';
 	import GameCollection from './gameCollection.svelte';
 </script>
@@ -40,7 +41,9 @@
 
 						<div class="options">
 							<Themes />
-							<GameCollection />
+							{#if $collectionStore.length > 0}
+								<GameCollection />
+							{/if}
 						</div>
 					</div>
 				</PopoverPanel>

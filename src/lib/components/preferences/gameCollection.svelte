@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { boredState } from '$root/lib/stores/boredState';
 	import { collectionStore } from '$root/lib/stores/collectionStore';
 	import { ToastType } from '$root/lib/types';
 	import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
+	import ClearCollectionDialog from '../dialog/ClearCollectionDialog.svelte';
 	import { toast } from '../toast/toast';
 
 	function saveCollection() {
@@ -27,9 +29,14 @@
 	}
 
 	function clearCollection() {
-		if (!browser) return;
-		localStorage.collection = [];
-		toast.send('Cleared collection', { duration: 3000, type: ToastType.INFO });
+		if ($collectionStore.length > 0) {
+			boredState.update((n) => ({
+				...n,
+				dialog: { isOpen: true, content: ClearCollectionDialog }
+			}));
+		} else {
+			toast.send('Nothing to clear', { duration: 3000, type: ToastType.ERROR });
+		}
 	}
 </script>
 
@@ -44,9 +51,9 @@
 		<button type="button" aria-label="Save Collection" on:click={() => saveCollection()}
 			><SaveIcon width="24" height="24" />Save</button
 		>
-		<button type="button" aria-label="Clear saved collection" on:click={() => clearCollection()}
-			><TrashIcon width="24" height="24" />Clear</button
-		>
+		<button type="button" aria-label="Clear saved collection" on:click={() => clearCollection()}>
+			<TrashIcon width="24" height="24" />Clear
+		</button>
 	</div>
 </div>
 
