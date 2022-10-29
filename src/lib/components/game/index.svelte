@@ -30,7 +30,9 @@
 
 	{#if !minimal}
 		<div class="game-details">
-			<p>{game.year_published}</p>
+			{#if game.year_published}
+				<p>{game.year_published}</p>
+			{/if}
 			<p>{game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
 			<p>{game.playtime} minutes</p>
 			<p>Minimum Age: {game.min_age}</p>
@@ -81,8 +83,10 @@
 	}
 
 	.game-container {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-rows: repeat(3, minmax(50px, 200px));
+		place-items: center;
+		max-width: 100px;
 
 		@media (max-width: 650px) {
 			max-width: none;
