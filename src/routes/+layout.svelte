@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import debounce from 'just-debounce-it';
 	import { Toy } from '@leveluptuts/svelte-toy';
+        import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/Header.svelte';
 	import Loading from '$lib/components/loading.svelte';
 	import Transition from '$lib/components/transition/index.svelte';
@@ -44,6 +45,7 @@
 	const dev = process.env.NODE_ENV !== 'production';
 </script>
 
+<Analytics />
 {#if dev}
 	<Toy register={{ boredState, collectionStore, gameStore, toast }} />
 {/if}
