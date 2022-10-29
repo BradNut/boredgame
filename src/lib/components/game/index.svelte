@@ -83,10 +83,8 @@
 	}
 
 	.game-container {
-		display: grid;
-		grid-template-rows: repeat(3, minmax(50px, 200px));
-		place-items: center;
-		max-width: 100px;
+		display: flex;
+		flex-wrap: wrap;
 
 		@media (max-width: 650px) {
 			max-width: none;
