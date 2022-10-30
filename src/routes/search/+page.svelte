@@ -11,8 +11,6 @@
 
 	export let data: PageData;
 	export let form: ActionData;
-	console.log('search page form', form);
-	console.log('search page data stuff', data);
 	let gameToRemove: GameType | SavedGameType;
 
 	$: if (data?.games) {
@@ -41,7 +39,7 @@
 
 <div class="game-search">
 	<form
-		action="?/search"
+		action="/search"
 		method="post"
 		use:enhance={() => {
 			boredState.update((n) => ({ ...n, loading: true }));
@@ -63,7 +61,7 @@
 			};
 		}}
 	>
-		<TextSearch showButton />
+		<TextSearch showButton {form} />
 	</form>
 </div>
 
@@ -76,6 +74,9 @@
 			{/each}
 		</div>
 	</div>
+{:else if form?.status !== 200}
+	<h1>There was an error searching for games!</h1>
+	<h2>Please try again later.</h2>
 {/if}
 
 <style lang="scss">

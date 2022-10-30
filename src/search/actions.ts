@@ -80,7 +80,7 @@ export const Games: Actions = {
       // };
     } catch (e) {
       console.log(`Error searching board games ${e}`);
-      invalid(400, { reason: 'Exception' })
+      return invalid(400, { reason: 'Exception' })
     }
   }
 

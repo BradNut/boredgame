@@ -10,7 +10,7 @@
 	export let form: ActionData;
 
 	let submitting = $boredState?.loading;
-	let name = '';
+	let name = form?.name || '';
 </script>
 
 <div class="search">

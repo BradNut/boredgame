@@ -43,7 +43,7 @@
 				if (resultGames?.length <= 0) {
 					toast.send('No results found 😿', {
 						duration: 3000,
-						type: ToastType.INFO,
+						type: ToastType.ERROR,
 						dismissible: true
 					});
 				}

@@ -138,6 +138,70 @@
       --large: 960px;
       --wide: 1200px;
     */
+
+  /* Light Theme Default */
+  /* Global */
+    --clr-primary: hsl(220 100% 50%);
+    --clr-txt: hsl(220 10% 10%);
+    --clr-bg: hsl(0 0% 98%);
+  
+    --bg: radial-gradient(hsl(0 0% 98%), var(--clr-bg));
+    --bg-opacity: 0.7;
+  
+    /* Menu */
+    --clr-menu-text: hsl(220 10% 10%);
+    --clr-menu-bg: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(0 0% 94%) 100%);
+    --clr-menu-arrow-bg: hsl(0 0% 98%);
+    --clr-menu-border: hsl(0 0% 80%);
+  
+    --clr-theme-txt: hsl(0 0% 98%);
+    --clr-theme-active: hsl(220 100% 60%);
+    --clr-switch-on-bg: hsl(220 40% 90%);
+    --clr-switch-off-bg: hsl(220 40% 80%);
+  
+    /* Hero */
+    --clr-hero-txt: hsl(220 10% 40%);
+    --clr-hero-bg: linear-gradient(270deg, hsl(0 0% 94%) 43%, hsl(0 0% 98%) 66%);
+    --clr-hero-divider-bg: hsl(0 0% 80%);
+    --clr-input-txt: hsl(220 10% 98%);
+    --clr-input-bg: hsl(0 0% 98%);
+    --clr-input-placeholder-txt: hsl(220 10% 60%);
+    --clr-input-border: hsl(0 0% 80%);
+  
+    /* Card */
+    --clr-card-bg: linear-gradient(180deg, hsl(0 0% 98%) 0%, hsl(0 0% 94%) 100%);
+    --clr-card-txt: hsl(220 10% 40%);
+  
+    /* Link */
+    --clr-link-txt: hsl(220 10% 10%);
+    --clr-link-background: hsl(0 0% 100%);
+  
+    /* Footer */
+    --clr-footer-txt: hsl(220 10% 10%);
+    --clr-footer-bg: hsl(0 0% 98%);
+  
+    /* Post */
+    --post-overlay-bg: radial-gradient(hsl(0 0% 100% / 60%), var(--clr-bg));
+    --post-blockquote-txt: hsl(0 0% 40%);
+    --post-blockquote-bg: hsl(0 0% 98%);
+    --post-blockquote-border: hsl(0 0% 84%);
+  
+    --clr-code-bg: hsl(0 0% 98%);
+    --clr-code-title: hsl(0 0% 40%);
+    --clr-code-border: hsl(0 0% 84%);
+    --clr-code-line-number: hsl(0 0% 60%);
+    --clr-code-line-highlight: hsl(0 0% 94%);
+    --clr-code-inline-txt: hsl(0 0% 98%);
+    --clr-code-inline-bg: hsl(0 0% 20%);
+  
+    --clr-token-1: hsl(220 100% 50%);
+    --clr-token-2: hsl(220 60% 50%);
+    --clr-token-3: hsl(220 100% 50%);
+    --clr-token-4: hsl(0 0% 20%);
+    --clr-token-5: hsl(0 0% 60%);
+  
+    /* Input Fields */
+    --input-bg: #181a1b;
 }
 
 html {

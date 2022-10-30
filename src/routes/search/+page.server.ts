@@ -1,17 +1,8 @@
 import type { Actions, PageServerLoad, RequestEvent } from '../$types';
 import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
-import { invalid } from '@sveltejs/kit';
+import { error, invalid, type ServerLoadEvent } from '@sveltejs/kit';
 import type { GameType, SearchQuery } from '$root/lib/types';
 import { mapAPIGameToBoredGame } from '$root/lib/util/gameMapper';
-
-export const load: PageServerLoad = (v) => {
-	console.log('page server load request', v)
-
-	return {
-    games: [],
-    totalCount: 0
-	};
-};
 
 export const actions: Actions = {
   default: async ({ request, locals }: RequestEvent): Promise<any> => {
@@ -28,6 +19,8 @@ export const actions: Actions = {
       fuzzy_match: true,
       name: ''
     };
+
+    // TODO: Check name length and not search if not advanced search
 
     const random = form.get('random') && form.get('random') === 'on';
 
@@ -95,9 +88,10 @@ export const actions: Actions = {
         }
       });
       console.log('board game response', response);
-      if (response.status !== 200) {
-        console.log('Status not 200', response.status)
-        invalid(response.status, {});
+
+      if (!response.ok) {
+        console.log('Status not 200', response.status);
+        throw error(response.status);
       }
 
       if (response.status === 200) {
