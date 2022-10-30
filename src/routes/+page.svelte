@@ -90,7 +90,11 @@
 					console.log('In success');
 					const resultGames = result?.data?.games;
 					if (resultGames?.length <= 0) {
-						toast.send('No results!', { duration: 3000, type: ToastType.INFO, dismissible: true });
+						toast.send('No results found 😿', {
+							duration: 3000,
+							type: ToastType.ERROR,
+							dismissible: true
+						});
 					}
 					gameStore.addAll(resultGames);
 					totalItems = result?.data?.totalCount;

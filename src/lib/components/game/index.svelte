@@ -24,11 +24,11 @@
 	<div class="game-info">
 		<h2>{game.name}</h2>
 		<a class="thumbnail" href={`/game/${game.id}`}>
-			<img width="140" height="140" src={game.thumb_url} alt={`Image of ${game.name}`} />
+			<img src={game.thumb_url} alt={`Image of ${game.name}`} />
 		</a>
 	</div>
 
-	{#if !minimal}
+	{#if !minimal && game?.players && game?.playtime}
 		<div class="game-details">
 			{#if game.year_published}
 				<p>{game.year_published}</p>
@@ -36,7 +36,7 @@
 			<p>{game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
 			<p>{game.playtime} minutes</p>
 			<p>Minimum Age: {game.min_age}</p>
-			<a href={`/game/${game.id}`}>View Game</a>
+			<!-- <a href={`/game/${game.id}`}>View Game</a> -->
 			{#if detailed}
 				<div class="description">{@html game.description}</div>
 			{/if}
@@ -68,7 +68,7 @@
 
 <style lang="scss">
 	img {
-		border-radius: 10px;
+		max-height: 200px;
 	}
 
 	button {
@@ -84,6 +84,7 @@
 
 	.game-container {
 		display: flex;
+		place-content: center;
 		flex-wrap: wrap;
 
 		@media (max-width: 650px) {
@@ -101,7 +102,8 @@
 
 		.game-info {
 			display: grid;
-			gap: 0.5rem;
+			place-items: center;
+			gap: 0.75rem;
 			margin: 0.2rem;
 		}
 

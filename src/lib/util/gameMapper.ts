@@ -1,4 +1,14 @@
-import type { GameType } from '$lib/types';
+import type { GameType, SavedGameType } from '$lib/types';
+
+export function mapSavedGameToGame(game: SavedGameType): GameType {
+  const { id, name, thumb_url } = game;
+  
+  return {
+    id,
+    name,
+    thumb_url
+  };
+}
 
 export function mapAPIGameToBoredGame(game): GameType {
   const {

@@ -127,6 +127,10 @@
 		margin-bottom: 3rem;
 	}
 
+	img {
+		max-width: 500px;
+	}
+
 	button {
 		display: flex;
 		justify-content: space-between;
