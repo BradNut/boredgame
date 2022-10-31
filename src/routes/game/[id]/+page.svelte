@@ -127,13 +127,6 @@
 		margin-bottom: 3rem;
 	}
 
-	img {
-		max-width: 500px;
-                @media (max-width: 450px) {
-			max-width: 300px;
-		}
-	}
-
 	button {
 		display: flex;
 		justify-content: space-between;
@@ -147,7 +140,6 @@
 
 	.game {
 		display: grid;
-		grid-template-columns: auto 1fr;
 		gap: 2rem;
 		margin: 1rem;
 		place-items: center;
@@ -160,18 +152,17 @@
 
 	.details {
 		display: grid;
+		grid-template-columns: 1fr 1fr;
 		gap: 0.5rem;
-		align-content: center;
-		justify-content: start;
+		place-content: center;
 		margin: 1rem;
 		a,
 		p {
 			margin: 1rem;
 		}
 
-		@media (max-width: 650px) {
-			grid-template-columns: 1fr 1fr;
-			place-content: center;
+		@media (max-width: 480px) {
+			grid-template-columns: 1fr;
 		}
 	}
 
