@@ -19,8 +19,12 @@
 </div>
 
 <style>
-    article {
+    .content, article {
         display: grid;
         gap: 1.5rem;
+    }
+
+    p {
+        line-height: 2;
     }
 </style>
