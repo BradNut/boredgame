@@ -1,10 +1,10 @@
 <script lang="ts">
 	import Game from '$lib/components/game/index.svelte';
-	import { collectionStore } from '$lib/stores/collectionStore';
+	import { wishlistStore } from '$lib/stores/wishlistStore';
 	import type { GameType, SavedGameType } from '$root/lib/types';
 	import { boredState } from '$root/lib/stores/boredState';
-	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
+	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
 
 	let isOpen: boolean = false;
 	let gameToRemove: GameType | SavedGameType;
@@ -15,8 +15,6 @@
 	}
 
 	function handleRemoveCollection(event: RemoveGameEvent) {
-		console.log('Remove collection event handler');
-		console.log('event', event);
 		gameToRemove = event?.detail;
 		boredState.update((n) => ({
 			...n,
@@ -25,8 +23,6 @@
 	}
 
 	function handleRemoveWishlist(event: RemoveGameEvent) {
-		console.log('Remove wishlist event handler');
-		console.log('event', event);
 		gameToRemove = event?.detail;
 		boredState.update((n) => ({
 			...n,
@@ -36,17 +32,17 @@
 </script>
 
 <svelte:head>
-	<title>Your Collection | Bored Game</title>
+	<title>Your Wishlist | Bored Game</title>
 </svelte:head>
 
-<h1>Your Collection</h1>
+<h1>Your Wishlist</h1>
 
 <div class="games">
 	<div class="games-list">
-		{#if $collectionStore.length === 0}
-			<h2>No games in your collection</h2>
+		{#if $wishlistStore.length === 0}
+			<h2>No games in your wishlist</h2>
 		{:else}
-			{#each $collectionStore as game}
+			{#each $wishlistStore as game}
 				<Game
 					on:handleRemoveWishlist={handleRemoveWishlist}
 					on:handleRemoveCollection={handleRemoveCollection}

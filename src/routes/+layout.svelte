@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { navigating } from '$app/stores';
-	import { fade } from 'svelte/transition';
 	import debounce from 'just-debounce-it';
 	import { Toy } from '@leveluptuts/svelte-toy';
 	import Analytics from '$lib/components/analytics.svelte';
@@ -11,6 +10,7 @@
 	import Portal from '$lib/Portal.svelte';
 	import { boredState } from '$lib/stores/boredState';
 	import { collectionStore } from '$lib/stores/collectionStore';
+	import { wishlistStore } from '$root/lib/stores/wishlistStore';
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
@@ -31,8 +31,13 @@
 
 	if (browser) {
 		let collectionEmpty = $collectionStore.length === 0 || false;
-		console.log('collectionEmpty', collectionEmpty);
-		console.log('localStorage.collection', localStorage.collection);
+		let wishlistEmpty = $wishlistStore.length === 0 || false;
+		if (wishlistEmpty && localStorage?.wishlist && localStorage?.wishlist?.length !== 0) {
+			const wishlist = JSON.parse(localStorage.wishlist);
+			if (wishlist?.length !== 0) {
+				wishlistStore.addAll(wishlist);
+			}
+		}
 		if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
 			const collection = JSON.parse(localStorage.collection);
 			console.log('collection', collection);
@@ -50,7 +55,7 @@
 {/if}
 
 {#if dev}
-	<Toy register={{ boredState, collectionStore, gameStore, toast }} />
+	<Toy register={{ boredState, collectionStore, wishlistStore, gameStore, toast }} />
 {/if}
 
 <Transition transition={{ type: 'fade', duration: 250 }}>

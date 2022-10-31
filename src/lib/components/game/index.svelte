@@ -4,7 +4,9 @@
 	import { MinusCircleIcon, PlusCircleIcon } from '@rgossiaux/svelte-heroicons/outline';
 	import type { GameType, SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
+	import { wishlistStore } from '$root/lib/stores/wishlistStore';
 	import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
+	import { addToWishlist } from '$lib/util/manipulateWishlist';
 	import { browser } from '$app/environment';
 
 	export let game: GameType | SavedGameType;
@@ -13,11 +15,16 @@
 
 	const dispatch = createEventDispatcher();
 
-	function removeGame() {
-		dispatch('removeGameEvent', game);
+	function removeGameFromWishlist() {
+		dispatch('handleRemoveWishlist', game);
+	}
+
+	function removeGameFromCollection() {
+		dispatch('handleRemoveCollection', game);
 	}
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
+	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
 </script>
 
 <article class="game-container" transition:fade>
@@ -48,8 +55,8 @@
 			class="btn"
 			type="button"
 			on:click={() => {
-				removeGame();
-			}}>Remove <MinusCircleIcon width="24" height="24" /></button
+				removeGameFromCollection();
+			}}>Remove from Collection <MinusCircleIcon width="24" height="24" /></button
 		>
 	{:else}
 		<button
@@ -62,6 +69,28 @@
 					localStorage.collection = JSON.stringify($collectionStore);
 				}
 			}}>Add to collection <PlusCircleIcon width="24" height="24" /></button
+		>
+	{/if}
+	{#if existsInWishlist}
+		<button
+			aria-label="Remove from wishlist"
+			class="btn"
+			type="button"
+			on:click={() => {
+				removeGameFromWishlist();
+			}}>Remove from Wishlist <MinusCircleIcon width="24" height="24" /></button
+		>
+	{:else}
+		<button
+			aria-label="Add to wishlist"
+			class="btn"
+			type="button"
+			on:click={() => {
+				addToWishlist(game);
+				if (browser) {
+					localStorage.wishlist = JSON.stringify($wishlistStore);
+				}
+			}}>Add to wishlist <PlusCircleIcon width="24" height="24" /></button
 		>
 	{/if}
 </article>

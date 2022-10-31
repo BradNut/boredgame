@@ -5,6 +5,7 @@
 	import { collectionStore } from '$root/lib/stores/collectionStore';
 	import Themes from './themes.svelte';
 	import GameCollection from './gameCollection.svelte';
+	import GameWishlist from './gameWishlist.svelte';
 </script>
 
 <div class="container">
@@ -41,9 +42,8 @@
 
 						<div class="options">
 							<Themes />
-							{#if $collectionStore.length > 0}
-								<GameCollection />
-							{/if}
+							<GameCollection />
+							<GameWishlist />
 						</div>
 					</div>
 				</PopoverPanel>

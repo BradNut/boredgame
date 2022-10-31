@@ -1,38 +1,38 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { boredState } from '$root/lib/stores/boredState';
-	import { collectionStore } from '$root/lib/stores/collectionStore';
+	import { wishlistStore } from '$root/lib/stores/wishlistStore';
 	import { ToastType } from '$root/lib/types';
 	import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
-	import ClearCollectionDialog from '../dialog/ClearCollectionDialog.svelte';
+	import ClearWishlistDialog from '../dialog/ClearWishlistDialog.svelte';
 	import { toast } from '../toast/toast';
 
-	function saveCollection() {
+	function saveWishlist() {
 		if (!browser) return;
-		localStorage.collection = JSON.stringify($collectionStore);
-		toast.send('Saved collection', { duration: 3000, type: ToastType.INFO });
+		localStorage.wishlist = JSON.stringify($wishlistStore);
+		toast.send('Saved wishlist', { duration: 3000, type: ToastType.INFO });
 	}
 
-	function exportCollection() {
+	function exportWishlist() {
 		if (!browser) return;
-		const collectionBlob = new Blob([JSON.stringify($collectionStore)], {
+		const wishlistBlob = new Blob([JSON.stringify($wishlistStore)], {
 			type: 'application/json;charset=utf-8'
 		});
 		let url = window.URL || window.webkitURL;
-		let link = url.createObjectURL(collectionBlob);
+		let link = url.createObjectURL(wishlistBlob);
 		let a = document.createElement('a');
-		a.setAttribute('download', `collection.json`);
+		a.setAttribute('download', `wishlist.json`);
 		a.setAttribute('href', link);
 		a.click();
 		document.body.removeChild(a);
-		toast.send('Exported collection', { duration: 3000, type: ToastType.INFO });
+		toast.send('Exported wishlist', { duration: 3000, type: ToastType.INFO });
 	}
 
-	function clearCollection() {
-		if ($collectionStore.length > 0) {
+	function clearWishlist() {
+		if ($wishlistStore.length > 0) {
 			boredState.update((n) => ({
 				...n,
-				dialog: { isOpen: true, content: ClearCollectionDialog }
+				dialog: { isOpen: true, content: ClearWishlistDialog }
 			}));
 		} else {
 			toast.send('Nothing to clear', { duration: 3000, type: ToastType.ERROR });
@@ -42,32 +42,32 @@
 
 <div>
 	<div>
-		<span class="collection-title"
-			><a href="/collection" title="Go to your collection">Your Collection</a></span
+		<span class="wishlist-title"
+			><a href="/wishlist" title="Go to your wishlist">Your Wishlist</a></span
 		>
 	</div>
-	<div class="collection-buttons">
-		<button type="button" aria-label="Export Collection" on:click={() => exportCollection()}
+	<div class="wishlist-buttons">
+		<button type="button" aria-label="Export Wishlist" on:click={() => exportWishlist()}
 			><ShareIcon width="24" height="24" />Export</button
 		>
-		<button type="button" aria-label="Save Collection" on:click={() => saveCollection()}
+		<button type="button" aria-label="Save Wishlist" on:click={() => saveWishlist()}
 			><SaveIcon width="24" height="24" />Save</button
 		>
-		<button type="button" aria-label="Clear saved collection" on:click={() => clearCollection()}>
+		<button type="button" aria-label="Clear saved wishlist" on:click={() => clearWishlist()}>
 			<TrashIcon width="24" height="24" />Clear
 		</button>
 	</div>
 </div>
 
 <style lang="scss">
-	:global(.collection-title) {
+	:global(.wishlist-title) {
 		padding-bottom: var(--spacing-8);
 		font-size: var(--font-24);
 		font-weight: 700;
 		line-height: 32px;
 	}
 
-	:global(.collection-buttons) {
+	:global(.wishlist-buttons) {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;

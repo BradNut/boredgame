@@ -58,6 +58,7 @@
 	}
 
 	function handleRemoveGame(event: RemoveGameEvent) {
+		console.log('Base Page handle remove');
 		console.log('event', event);
 		gameToRemove = event?.detail;
 		boredState.update((n) => ({
