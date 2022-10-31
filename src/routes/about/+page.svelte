@@ -5,9 +5,22 @@
 
 <div class="content">
 	<h1>About Bored Game</h1>
+        <article>
 	<p>
-		One day we were bored and wanted to play one of our board games. Our problem was that we didn't
-		know which one to play.
+		One day we were bored and wanted to play one of our board games.
 	</p>
-	<p>Rather than just pick one I decided to make this overcomplicated version of choice.</p>
+        <p>
+                Our problem was that we didn't know which one to play.
+        </p>
+	<p>
+                Rather than just pick one I decided to make this overcomplicated solution.
+        </p>
+        </article>
 </div>
+
+<style>
+    article {
+        display: grid;
+        gap: 1.5rem;
+    }
+</style>
