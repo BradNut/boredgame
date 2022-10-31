@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 	import {
 		ExternalLinkIcon,
 		MinusCircleIcon,
@@ -53,53 +53,56 @@
 			<img src={game.image_url} alt={`Image of ${game.name}`} />
 		</a>
 	</div>
-	<div class="details">
-		<p>Year Published: {game?.year_published}</p>
-		<p>Players: {game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
-		<p>Playtime: {game.playtime} minutes</p>
-		<p>Minimum Age: {game.min_age}</p>
-		{#if +game?.price !== 0.0}
-			<p>Price: ${game?.price}</p>
-		{/if}
-		<a
-			class="with-icon"
-			style="display: flex; gap: 1rem;"
-			href={game.url}
-			target="_blank"
-			rel="noreferrer"
-			aria-label={`Board Game Atlas Link for ${game.name}`}
-			>Board Game Atlas <ExternalLinkIcon width="24" height="24" /></a
-		>
-	</div>
-	<div>
-		{#if existsInCollection}
-			<button class="btn" type="button" on:click={() => removeGame()}
-				>Remove from collection <MinusCircleIcon width="24" height="24" /></button
+	<div style="display: grid; place-items: center;">
+		<div class="details">
+			<p>Year Published: {game?.year_published}</p>
+			<p>Players: {game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
+			<p>Playtime: {game.playtime} minutes</p>
+			<p>Minimum Age: {game.min_age}</p>
+			{#if +game?.price !== 0.0}
+				<p>Price: ${game?.price}</p>
+			{/if}
+			<a
+				class="with-icon"
+				href={game.url}
+				target="_blank"
+				rel="noreferrer"
+				aria-label={`Board Game Atlas Link for ${game.name}`}
+				>Board Game Atlas <ExternalLinkIcon width="24" height="24" /></a
 			>
-		{:else}
-			<button
-				class="btn"
-				type="button"
-				on:click={() => {
-					addToCollection(game);
-					if (browser) {
-						localStorage.collection = JSON.stringify($collectionStore);
-					}
-				}}>Add to collection <PlusCircleIcon width="24" height="24" /></button
-			>
-		{/if}
+		</div>
+		<div>
+			{#if existsInCollection}
+				<button class="btn button-icon" type="button" on:click={() => removeGame()}
+					>Remove from collection <MinusCircleIcon width="24" height="24" /></button
+				>
+			{:else}
+				<button
+					class="btn"
+					type="button"
+					on:click={() => {
+						addToCollection(game);
+						if (browser) {
+							localStorage.collection = JSON.stringify($collectionStore);
+						}
+					}}>Add to collection <PlusCircleIcon width="24" height="24" /></button
+				>
+			{/if}
+		</div>
 	</div>
 </section>
 {#if firstParagraphEnd > 0}
-	<section class="description first-paragraph">
+	<section class="description first-paragraph" style="margin-top: 2rem;">
 		{@html game?.description?.substring(0, firstParagraphEnd)}
 	</section>
 	{#if game?.description?.substring(firstParagraphEnd + 1) !== ''}
-		<section class="description" transition:fade>
+		<section class="description">
 			{#if seeMore}
-				{@html game?.description?.substring(firstParagraphEnd + 1)}
+				<div in:fly={{ opacity: 0, x: 100 }} out:fade>
+					{@html game?.description?.substring(firstParagraphEnd + 1)}
+				</div>
 			{/if}
-			<button class="btn" type="button" on:click={() => (seeMore = !seeMore)}
+			<button class="btn button-icon" type="button" on:click={() => (seeMore = !seeMore)}
 				>See
 				{#if !seeMore}
 					More <PlusIcon width="24" height="24" />
@@ -136,8 +139,15 @@
 		background-color: var(--color-btn-primary-active);
 	}
 
+	.button-icon {
+		display: grid;
+		grid-template-columns: repeat(2, auto);
+		gap: 1rem;
+	}
+
 	.game {
 		display: grid;
+		grid-template-columns: minmax(auto, 400px) 1fr;
 		gap: 2rem;
 		margin: 1rem;
 		place-items: center;
@@ -159,7 +169,7 @@
 			margin: 1rem;
 		}
 
-		@media (max-width: 480px) {
+		@media (max-width: 550px) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -175,5 +185,6 @@
 		display: flex;
 		flex-wrap: wrap;
 		place-items: center;
+		gap: 1rem;
 	}
 </style>
