@@ -40,7 +40,6 @@
 		}
 		if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
 			const collection = JSON.parse(localStorage.collection);
-			console.log('collection', collection);
 			if (collection?.length !== 0) {
 				collectionStore.addAll(collection);
 			}

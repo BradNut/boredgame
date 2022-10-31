@@ -11,6 +11,7 @@
 	import RandomSearch from '$lib/components/search/random/index.svelte';
 	import Random from '$lib/components/random/index.svelte';
 	import Pagination from '$lib/components/pagination/index.svelte';
+	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -57,13 +58,23 @@
 		detail: GameType | SavedGameType;
 	}
 
-	function handleRemoveGame(event: RemoveGameEvent) {
-		console.log('Base Page handle remove');
+	function handleRemoveCollection(event: RemoveGameEvent) {
+		console.log('Remove collection event handler');
 		console.log('event', event);
 		gameToRemove = event?.detail;
 		boredState.update((n) => ({
 			...n,
 			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
+		}));
+	}
+
+	function handleRemoveWishlist(event: RemoveGameEvent) {
+		console.log('Remove wishlist event handler');
+		console.log('event', event);
+		gameToRemove = event?.detail;
+		boredState.update((n) => ({
+			...n,
+			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
 		}));
 	}
 </script>
@@ -124,7 +135,12 @@
 		<h1>Games Found:</h1>
 		<div class="games-list">
 			{#each $gameStore as game (game.id)}
-				<Game on:removeGameEvent={handleRemoveGame} {game} />
+				<Game
+					on:handleRemoveWishlist={handleRemoveWishlist}
+					on:handleRemoveCollection={handleRemoveCollection}
+					minimal
+					{game}
+				/>
 			{/each}
 		</div>
 		<!-- <Pagination
@@ -162,15 +178,20 @@
 
 	.games-list {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(200px, 1fr));
+		--listColumns: 4;
+		grid-template-columns: repeat(var(--listColumns), minmax(200px, 1fr));
 		gap: 2rem;
 
+		@media (max-width: 1200px) {
+			--listColumns: 3;
+		}
+
 		@media (max-width: 800px) {
-			grid-template-columns: 1fr 1fr;
+			--listColumns: 2;
 		}
 
 		@media (max-width: 650px) {
-			grid-template-columns: 1fr;
+			--listColumns: 1;
 		}
 	}
 

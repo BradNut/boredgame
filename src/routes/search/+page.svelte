@@ -8,6 +8,7 @@
 	import { ToastType, type GameType, type SavedGameType } from '$root/lib/types';
 	import { boredState } from '$root/lib/stores/boredState';
 	import { toast } from '$root/lib/components/toast/toast';
+	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -27,12 +28,23 @@
 		detail: GameType | SavedGameType;
 	}
 
-	function handleRemoveGame(event: RemoveGameEvent) {
+	function handleRemoveCollection(event: RemoveGameEvent) {
+		console.log('Remove collection event handler');
 		console.log('event', event);
 		gameToRemove = event?.detail;
 		boredState.update((n) => ({
 			...n,
 			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
+		}));
+	}
+
+	function handleRemoveWishlist(event: RemoveGameEvent) {
+		console.log('Remove wishlist event handler');
+		console.log('event', event);
+		gameToRemove = event?.detail;
+		boredState.update((n) => ({
+			...n,
+			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
 		}));
 	}
 </script>
@@ -53,7 +65,7 @@
 				} else {
 					gameStore.removeAll();
 					gameStore.addAll(result?.data?.games);
-					totalItems = result?.data?.totalCount;
+					// totalItems = result?.data?.totalCount;
 					console.log(`Frontend result: ${JSON.stringify(result)}`);
 					toast.send('Sucess!', { duration: 3000, type: ToastType.INFO, dismissible: true });
 					await applyAction(result);
@@ -70,7 +82,12 @@
 		<h1>Games Found:</h1>
 		<div class="games-list">
 			{#each $gameStore as game (game.id)}
-				<Game on:removeGameEvent={handleRemoveGame} {game} />
+				<Game
+					on:handleRemoveWishlist={handleRemoveWishlist}
+					on:handleRemoveCollection={handleRemoveCollection}
+					minimal
+					{game}
+				/>
 			{/each}
 		</div>
 	</div>
