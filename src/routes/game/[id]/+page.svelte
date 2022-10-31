@@ -92,13 +92,13 @@
 	</div>
 </section>
 {#if firstParagraphEnd > 0}
-	<section class="description first-paragraph" style="margin-top: 2rem;">
+	<section class="description" style="margin-top: 2rem;">
 		{@html game?.description?.substring(0, firstParagraphEnd)}
 	</section>
 	{#if game?.description?.substring(firstParagraphEnd + 1) !== ''}
 		<section class="description">
 			{#if seeMore}
-				<div in:fly={{ opacity: 0, x: 100 }} out:fade>
+				<div class="overflow-description" in:fly={{ opacity: 0, x: 100 }} out:fade>
 					{@html game?.description?.substring(firstParagraphEnd + 1)}
 				</div>
 			{/if}
@@ -181,9 +181,15 @@
 		margin: 1rem;
 	}
 
+	.overflow-description {
+		display: grid;
+		gap: 1.5rem;
+	}
+
 	.with-icon {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: repeat(2, auto);
+		/* flex-wrap: wrap; */
 		place-items: center;
 		gap: 1rem;
 	}
