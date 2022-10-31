@@ -91,15 +91,13 @@
 	</div>
 </section>
 {#if firstParagraphEnd > 0}
-	<section class="description">
-		<span>
-			{@html game?.description?.substring(0, firstParagraphEnd)}
-		</span>
-		{#if game?.description?.substring(firstParagraphEnd + 1) !== ''}
+	<section class="description first-paragraph">
+		{@html game?.description?.substring(0, firstParagraphEnd)}
+	</section>
+	{#if game?.description?.substring(firstParagraphEnd + 1) !== ''}
+		<section class="description" transition:fade>
 			{#if seeMore}
-				<span transition:fade>
-					{@html game?.description?.substring(firstParagraphEnd + 1)}
-				</span>
+				{@html game?.description?.substring(firstParagraphEnd + 1)}
 			{/if}
 			<button class="btn" type="button" on:click={() => (seeMore = !seeMore)}
 				>See
@@ -109,8 +107,8 @@
 					Less <MinusIcon width="24" height="24" />
 				{/if}
 			</button>
-		{/if}
-	</section>
+		</section>
+	{/if}
 {:else}
 	<section class="description">
 		<span>
