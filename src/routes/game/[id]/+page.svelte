@@ -168,6 +168,7 @@
 
 	.description {
 		display: grid;
+		place-items: center;
 		gap: 1.5rem;
 		margin: 1rem;
 	}
