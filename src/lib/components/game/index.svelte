@@ -28,12 +28,12 @@
 </script>
 
 <article class="game-container" transition:fade>
-	<div class="game-info">
-		<h2>{game.name}</h2>
-		<a class="thumbnail" href={`/game/${game.id}`}>
-			<img src={game.thumb_url} alt={`Image of ${game.name}`} />
-		</a>
-	</div>
+	<!-- <div class="game-info"> -->
+	<h2>{game.name}</h2>
+	<a class="thumbnail" href={`/game/${game.id}`}>
+		<img src={game.thumb_url} alt={`Image of ${game.name}`} />
+	</a>
+	<!-- </div> -->
 
 	{#if !minimal && game?.players && game?.playtime}
 		<div class="game-details">
@@ -49,50 +49,52 @@
 			{/if}
 		</div>
 	{/if}
-	{#if existsInCollection}
-		<button
-			aria-label="Remove from collection"
-			class="btn remove"
-			type="button"
-			on:click={() => {
-				removeGameFromCollection();
-			}}>Remove from Collection <MinusCircleIcon width="24" height="24" /></button
-		>
-	{:else}
-		<button
-			aria-label="Add to collection"
-			class="btn"
-			type="button"
-			on:click={() => {
-				addToCollection(game);
-				if (browser) {
-					localStorage.collection = JSON.stringify($collectionStore);
-				}
-			}}>Add to collection <PlusCircleIcon width="24" height="24" /></button
-		>
-	{/if}
-	{#if existsInWishlist}
-		<button
-			aria-label="Remove from wishlist"
-			class="btn remove"
-			type="button"
-			on:click={() => {
-				removeGameFromWishlist();
-			}}>Remove from Wishlist <MinusCircleIcon width="24" height="24" /></button
-		>
-	{:else}
-		<button
-			aria-label="Add to wishlist"
-			class="btn"
-			type="button"
-			on:click={() => {
-				addToWishlist(game);
-				if (browser) {
-					localStorage.wishlist = JSON.stringify($wishlistStore);
-				}
-			}}>Add to wishlist <PlusCircleIcon width="24" height="24" /></button
-		>
-	{/if}
+	<div class="game-buttons">
+		{#if existsInCollection}
+			<button
+				aria-label="Remove from collection"
+				class="btn remove"
+				type="button"
+				on:click={() => {
+					removeGameFromCollection();
+				}}>Remove from Collection <MinusCircleIcon width="24" height="24" /></button
+			>
+		{:else}
+			<button
+				aria-label="Add to collection"
+				class="btn"
+				type="button"
+				on:click={() => {
+					addToCollection(game);
+					if (browser) {
+						localStorage.collection = JSON.stringify($collectionStore);
+					}
+				}}>Add to collection <PlusCircleIcon width="24" height="24" /></button
+			>
+		{/if}
+		{#if existsInWishlist}
+			<button
+				aria-label="Remove from wishlist"
+				class="btn remove"
+				type="button"
+				on:click={() => {
+					removeGameFromWishlist();
+				}}>Remove from Wishlist <MinusCircleIcon width="24" height="24" /></button
+			>
+		{:else}
+			<button
+				aria-label="Add to wishlist"
+				class="btn"
+				type="button"
+				on:click={() => {
+					addToWishlist(game);
+					if (browser) {
+						localStorage.wishlist = JSON.stringify($wishlistStore);
+					}
+				}}>Add to wishlist <PlusCircleIcon width="24" height="24" /></button
+			>
+		{/if}
+	</div>
 </article>
 
 <style lang="scss">
@@ -112,9 +114,10 @@
 	}
 
 	.game-container {
-		display: flex;
-		place-content: center;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-rows: repeat(auto-fill, 1fr);
+		place-items: center;
+		text-align: center;
 
 		@media (max-width: 650px) {
 			max-width: none;
@@ -129,12 +132,12 @@
 			background-color: hsla(222, 9%, 65%, 1);
 		}
 
-		.game-info {
+		/* .game-info {
 			display: grid;
 			place-items: center;
 			gap: 0.75rem;
 			margin: 0.2rem;
-		}
+		} */
 
 		.game-details {
 			p,
@@ -143,15 +146,20 @@
 			}
 		}
 
-		.btn {
-			max-height: 100px;
-		}
+		.game-buttons {
+			display: grid;
+			gap: 1rem;
 
-		.remove {
-			background-color: var(--warning);
+			.btn {
+				max-height: 100px;
+			}
 
-			&:hover {
-				background-color: var(--warning-hover);
+			.remove {
+				background-color: var(--warning);
+
+				&:hover {
+					background-color: var(--warning-hover);
+				}
 			}
 		}
 	}
