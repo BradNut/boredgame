@@ -44,7 +44,7 @@
 					<!-- Using `static`, `DisclosurePanel` is always rendered,
                 and ignores the `open` state -->
 					<DisclosurePanel static>
-						<AdvancedSearch form />
+						<AdvancedSearch {form} />
 					</DisclosurePanel>
 				</div>
 			{/if}

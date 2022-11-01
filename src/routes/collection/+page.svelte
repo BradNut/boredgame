@@ -46,7 +46,7 @@
 		{#if $collectionStore.length === 0}
 			<h2>No games in your collection</h2>
 		{:else}
-			{#each $collectionStore as game}
+			{#each $collectionStore as game (game.id)}
 				<Game
 					on:handleRemoveWishlist={handleRemoveWishlist}
 					on:handleRemoveCollection={handleRemoveCollection}

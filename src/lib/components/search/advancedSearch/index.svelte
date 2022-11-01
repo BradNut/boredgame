@@ -3,7 +3,7 @@
 	import { boredState } from '$lib/stores/boredState';
 
 	export let form: ActionData;
-	console.log('form', form);
+	console.log('advanced search form', form);
 	let submitting = $boredState?.loading;
 	let minAge = 1;
 	let minPlayers = 1;

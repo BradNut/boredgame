@@ -52,7 +52,7 @@
 	{#if existsInCollection}
 		<button
 			aria-label="Remove from collection"
-			class="btn"
+			class="btn remove"
 			type="button"
 			on:click={() => {
 				removeGameFromCollection();
@@ -74,7 +74,7 @@
 	{#if existsInWishlist}
 		<button
 			aria-label="Remove from wishlist"
-			class="btn"
+			class="btn remove"
 			type="button"
 			on:click={() => {
 				removeGameFromWishlist();

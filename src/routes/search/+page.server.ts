@@ -4,6 +4,13 @@ import { error, invalid, type ServerLoadEvent } from '@sveltejs/kit';
 import type { GameType, SearchQuery } from '$root/lib/types';
 import { mapAPIGameToBoredGame } from '$root/lib/util/gameMapper';
 
+export const load: PageServerLoad = () => {
+  return {
+    games: [],
+    totalCount: 0,
+  }
+}
+
 export const actions: Actions = {
   default: async ({ request, locals }: RequestEvent): Promise<any> => {
     console.log("In search action specific")
@@ -29,7 +36,9 @@ export const actions: Actions = {
     } else {
       const minAge = form.get('minAge');
       const minPlayers = form.get('minPlayers');
+      console.log('minPlayers', minPlayers);
       const maxPlayers = form.get('maxPlayers');
+      console.log('maxPlayers', maxPlayers);
       const exactMinAge = form.get('exactMinAge') || false;
       const exactMinPlayers = form.get('exactMinPlayers') || false;
       const exactMaxPlayers = form.get('exactMaxPlayers') || false;
@@ -43,7 +52,7 @@ export const actions: Actions = {
       }
 
       if (minPlayers && maxPlayers) {
-        if (minPlayers > maxPlayers) {
+        if (+minPlayers > +maxPlayers) {
           return invalid(400, { minPlayers, error: { id: 'minPlayers', message: 'Min must be less than max' } });
         } else if (maxPlayers < minPlayers) {
           return invalid(400, { maxPlayers, error: { id: 'maxPlayers', message: 'Max must be greater than min' } });

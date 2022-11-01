@@ -11,7 +11,9 @@
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
 
 	export let data: PageData;
+	console.log('search page data', data);
 	export let form: ActionData;
+	console.log('search page form', form);
 	let gameToRemove: GameType | SavedGameType;
 
 	$: if (data?.games) {
@@ -62,18 +64,20 @@
 				if (result.type === 'error') {
 					toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
 					await applyAction(result);
-				} else {
+				} else if (result.type === 'success') {
 					gameStore.removeAll();
 					gameStore.addAll(result?.data?.games);
 					// totalItems = result?.data?.totalCount;
 					console.log(`Frontend result: ${JSON.stringify(result)}`);
 					toast.send('Sucess!', { duration: 3000, type: ToastType.INFO, dismissible: true });
 					await applyAction(result);
+				} else {
+					await applyAction(result);
 				}
 			};
 		}}
 	>
-		<TextSearch showButton {form} />
+		<TextSearch showButton advancedSearch {form} />
 	</form>
 </div>
 
@@ -91,7 +95,7 @@
 			{/each}
 		</div>
 	</div>
-{:else if form?.status !== 200}
+{:else if form && form?.status && form.status !== 200}
 	<h1>There was an error searching for games!</h1>
 	<h2>Please try again later.</h2>
 {/if}
