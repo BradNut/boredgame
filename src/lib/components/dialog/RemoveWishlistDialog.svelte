@@ -38,7 +38,7 @@
 			<DialogDescription>Are you sure you want to remove from your wishlist?</DialogDescription>
 
 			<div class="dialog-footer">
-				<button on:click={removeGame}>Remove</button>
+				<button class="remove" on:click={removeGame}>Remove</button>
 				<button
 					on:click={() => {
 						boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
@@ -80,6 +80,14 @@
 
 				&:hover {
 					background-color: var(--color-btn-primary-active-hover);
+				}
+			}
+
+			.remove {
+				background-color: var(--warning);
+
+				&:hover {
+					background-color: var(--warning-hover);
 				}
 			}
 		}

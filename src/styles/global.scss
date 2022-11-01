@@ -18,7 +18,7 @@
   --clr-input-txt: hsl(177 100% 15%);
 
   --red: #990000;
-  --tomatoOrange: #e54b4b;
+  --tomatoOrange: hsla(0, 75%, 60%, 1);
   --redBrown: #633539;
   --blue: #336699;
   --black: #1f273a;
@@ -316,6 +316,14 @@ input {
   color: var(--color-text-muted);
   background-color: var(--color-btn-primary-inactive);
   cursor: not-allowed;
+}
+
+.remove {
+  background-color: var(--warning);
+
+  &:hover {
+    background-color: var(--warning-hover);
+  }
 }
 
 ul,

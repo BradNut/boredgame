@@ -73,7 +73,7 @@
 		</div>
 		<div>
 			{#if existsInCollection}
-				<button class="btn button-icon" type="button" on:click={() => removeGame()}
+				<button class="btn button-icon remove" type="button" on:click={() => removeGame()}
 					>Remove from collection <MinusCircleIcon width="24" height="24" /></button
 				>
 			{:else}
@@ -137,6 +137,14 @@
 		padding: 1rem;
 		max-width: 30rem;
 		background-color: var(--color-btn-primary-active);
+	}
+
+	.remove {
+		background-color: var(--warning);
+
+		&:hover {
+			background-color: var(--warning-hover);
+		}
 	}
 
 	.button-icon {

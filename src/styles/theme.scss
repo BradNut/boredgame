@@ -61,6 +61,10 @@ html[data-theme='🌛 Night'] {
 
   /* Input Fields */
   --input-bg: #181a1b;
+
+  /* Button */
+  --warning: hsla(0, 75%, 60%, 0.90);
+  --warning-hover: hsla(0, 75%, 60%, 1);
 }
 
 html[data-theme='☀️ Daylight'] {
@@ -126,4 +130,8 @@ html[data-theme='☀️ Daylight'] {
 
   /* Input Fields */
   --input-bg: #181a1b;
+
+  /* Button */
+  --warning: hsla(0, 75%, 60%, 0.90);
+  --warning-hover: hsla(0, 75%, 60%, 1);
 }

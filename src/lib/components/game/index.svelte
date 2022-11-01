@@ -144,7 +144,15 @@
 		}
 
 		.btn {
-			max-height: 50px;
+			max-height: 100px;
+		}
+
+		.remove {
+			background-color: var(--warning);
+
+			&:hover {
+				background-color: var(--warning-hover);
+			}
 		}
 	}
 </style>
