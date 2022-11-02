@@ -1,12 +1,15 @@
 import type { GameType, SavedGameType } from '$lib/types';
 
 export function mapSavedGameToGame(game: SavedGameType): GameType {
-  const { id, name, thumb_url } = game;
+  const { id, name, thumb_url, min_players, max_players, playtime } = game;
   
   return {
     id,
     name,
-    thumb_url
+    thumb_url,
+    min_players,
+    max_players,
+    playtime
   };
 }
 

@@ -28,27 +28,22 @@
 </script>
 
 <article class="game-container" transition:fade>
-	<!-- <div class="game-info"> -->
 	<h2>{game.name}</h2>
 	<a class="thumbnail" href={`/game/${game.id}`}>
 		<img src={game.thumb_url} alt={`Image of ${game.name}`} />
 	</a>
-	<!-- </div> -->
 
-	{#if !minimal && game?.players && game?.playtime}
-		<div class="game-details">
-			{#if game.year_published}
-				<p>{game.year_published}</p>
-			{/if}
-			<p>{game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
-			<p>{game.playtime} minutes</p>
-			<p>Minimum Age: {game.min_age}</p>
-			<!-- <a href={`/game/${game.id}`}>View Game</a> -->
-			{#if detailed}
-				<div class="description">{@html game.description}</div>
-			{/if}
-		</div>
-	{/if}
+	<div class="game-details">
+		<p>Players: {game.min_players} - {game.max_players}</p>
+		<p>Time: {game.playtime} minutes</p>
+		{#if game?.min_age}
+			<p>Min Age: {game.min_age}</p>
+		{/if}
+		{#if detailed}
+			<div class="description">{@html game.description}</div>
+		{/if}
+	</div>
+
 	<div class="game-buttons">
 		{#if existsInCollection}
 			<button

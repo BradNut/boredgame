@@ -41,7 +41,9 @@
 			/>
 		</label>
 		{#if form?.error?.id === 'minPlayers'}
-			{form.error.message}
+			<p aria-label={`Error: ${form.error.message}`} class="center error">
+				Error: {form.error.message}
+			</p>
 		{/if}
 	</div>
 	<div>
@@ -65,6 +67,11 @@
 				bind:checked={exactMaxPlayers}
 			/>
 		</label>
+		{#if form?.error?.id === 'maxPlayers'}
+			<p aria-label={`Error: ${form.error.message}`} class="center error">
+				Error: {form.error.message}
+			</p>
+		{/if}
 	</div>
 </fieldset>
 <!-- <button type="submit" disabled={submitting}>Submit</button> -->

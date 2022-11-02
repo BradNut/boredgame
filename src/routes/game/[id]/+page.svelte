@@ -9,11 +9,13 @@
 	} from '@rgossiaux/svelte-heroicons/outline';
 	import type { GameType, SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
+	import Button from '$lib/components/button/index.svelte';
 	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
 	import { addToCollection } from '$lib/util/manipulateCollection';
 	import type { PageData } from './$types';
 	import { boredState } from '$root/lib/stores/boredState';
 	import { browser } from '$app/environment';
+	import LinkWithIcon from '$root/lib/components/LinkWithIcon.svelte';
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 
@@ -55,38 +57,36 @@
 	</div>
 	<div style="display: grid; place-items: center;">
 		<div class="details">
-			<p>Year Published: {game?.year_published}</p>
-			<p>Players: {game.players} {game.max_players === 1 ? 'player' : 'players'}</p>
+			<p>Year: {game?.year_published}</p>
+			<p>Players: {game.players}</p>
 			<p>Playtime: {game.playtime} minutes</p>
 			<p>Minimum Age: {game.min_age}</p>
-			{#if +game?.price !== 0.0}
+			{#if game?.price !== 0.0}
 				<p>Price: ${game?.price}</p>
 			{/if}
-			<a
-				class="with-icon"
-				href={game.url}
-				target="_blank"
-				rel="noreferrer"
-				aria-label={`Board Game Atlas Link for ${game.name}`}
-				>Board Game Atlas <ExternalLinkIcon width="24" height="24" /></a
-			>
+			<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
+				Board Game Atlas <ExternalLinkIcon width="24" height="24" />
+			</LinkWithIcon>
 		</div>
 		<div>
 			{#if existsInCollection}
-				<button class="btn button-icon remove" type="button" on:click={() => removeGame()}
-					>Remove from collection <MinusCircleIcon width="24" height="24" /></button
-				>
+				<Button size="md" kind="danger" icon on:click={() => removeGame()}>
+					Remove from collection <MinusCircleIcon width="24" height="24" />
+				</Button>
 			{:else}
-				<button
-					class="btn"
-					type="button"
+				<Button
+					size="md"
+					kind="primary"
+					icon
 					on:click={() => {
 						addToCollection(game);
 						if (browser) {
 							localStorage.collection = JSON.stringify($collectionStore);
 						}
-					}}>Add to collection <PlusCircleIcon width="24" height="24" /></button
+					}}
 				>
+					Add to collection <PlusCircleIcon width="24" height="24" />
+				</Button>
 			{/if}
 		</div>
 	</div>
