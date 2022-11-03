@@ -50,9 +50,9 @@
 		<button type="button" aria-label="Export Collection" on:click={() => exportCollection()}
 			><ShareIcon width="24" height="24" />Export</button
 		>
-		<button type="button" aria-label="Save Collection" on:click={() => saveCollection()}
+		<!-- <button type="button" aria-label="Save Collection" on:click={() => saveCollection()}
 			><SaveIcon width="24" height="24" />Save</button
-		>
+		> -->
 		<button type="button" aria-label="Clear saved collection" on:click={() => clearCollection()}>
 			<TrashIcon width="24" height="24" />Clear
 		</button>

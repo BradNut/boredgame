@@ -50,9 +50,9 @@
 		<button type="button" aria-label="Export Wishlist" on:click={() => exportWishlist()}
 			><ShareIcon width="24" height="24" />Export</button
 		>
-		<button type="button" aria-label="Save Wishlist" on:click={() => saveWishlist()}
+		<!-- <button type="button" aria-label="Save Wishlist" on:click={() => saveWishlist()}
 			><SaveIcon width="24" height="24" />Save</button
-		>
+		> -->
 		<button type="button" aria-label="Clear saved wishlist" on:click={() => clearWishlist()}>
 			<TrashIcon width="24" height="24" />Clear
 		</button>
