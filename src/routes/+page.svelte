@@ -131,7 +131,7 @@
 	</section>
 </div>
 
-<SkeletonPlaceholder style="height: 12rem; width: 12rem; border-radius: 10px;" />
+<!-- <SkeletonPlaceholder style="height: 12rem; width: 12rem; border-radius: 10px;" /> -->
 {#if $gameStore?.length > 0}
 	<div class="games">
 		<h1>Games Found:</h1>
