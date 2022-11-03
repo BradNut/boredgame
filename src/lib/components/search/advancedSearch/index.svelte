@@ -5,11 +5,11 @@
 	export let form: ActionData;
 	console.log('advanced search form', form);
 	let submitting = $boredState?.loading;
-	let minAge = 1;
-	let minPlayers = 1;
-	let maxPlayers = 1;
-	let exactMinPlayers = false;
-	let exactMaxPlayers = false;
+	let minAge = form?.minAge || 1;
+	let minPlayers = form?.minPlayers || 1;
+	let maxPlayers = form?.maxPlayers || 1;
+	let exactMinPlayers = form?.exactMinPlayers || false;
+	let exactMaxPlayers = form?.exactMaxPlayers || false;
 </script>
 
 <fieldset class="advanced-search" aria-busy={submitting} disabled={submitting}>

@@ -20,7 +20,7 @@
 				// const responseData = await response.json();
 				// console.log('responseData', responseData);
 				// gameStore.add(responseData?.game);
-				const game = gameStore.add(mapSavedGameToGame(randomGame));
+				gameStore.add(mapSavedGameToGame(randomGame));
 				boredState.update((n) => ({ ...n, loading: false }));
 			} else {
 				toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });

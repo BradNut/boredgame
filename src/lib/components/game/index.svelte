@@ -10,7 +10,6 @@
 	import { browser } from '$app/environment';
 
 	export let game: GameType | SavedGameType;
-	export let minimal: boolean = false;
 	export let detailed: boolean = false;
 
 	const dispatch = createEventDispatcher();
@@ -23,6 +22,24 @@
 		dispatch('handleRemoveCollection', game);
 	}
 
+	// Naive and assumes description is only on our GameType at the moment
+	function isGameType(game: GameType | SavedGameType): game is GameType {
+		return (game as GameType).description !== undefined;
+	}
+
+	// function lazy(img: HTMLImageElement) {
+	// 	function loaded() {
+	// 		img.classList.add('loaded');
+	// 		img.classList.remove('loading');
+	// 	}
+	// 	if (img.complete) {
+	// 		loaded();
+	// 	} else {
+	// 		img.classList.add('loading');
+	// 		img.onload = () => loaded();
+	// 	}
+	// }
+
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
 </script>
@@ -31,15 +48,16 @@
 	<h2>{game.name}</h2>
 	<a class="thumbnail" href={`/game/${game.id}`}>
 		<img src={game.thumb_url} alt={`Image of ${game.name}`} />
+		<!-- loading="lazy" decoding="async" -->
 	</a>
 
 	<div class="game-details">
-		<p>Players: {game.min_players} - {game.max_players}</p>
+		<p>Players: {game.players}</p>
 		<p>Time: {game.playtime} minutes</p>
-		{#if game?.min_age}
+		{#if isGameType(game) && game?.min_age}
 			<p>Min Age: {game.min_age}</p>
 		{/if}
-		{#if detailed}
+		{#if detailed && isGameType(game) && game?.description}
 			<div class="description">{@html game.description}</div>
 		{/if}
 	</div>

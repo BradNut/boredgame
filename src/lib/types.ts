@@ -39,9 +39,8 @@ export type SavedGameType = {
   id: string;
   name: string;
   thumb_url: string;
-  min_players: number;
-  max_players: number;
-  playtime: string
+  players: string;
+  playtime: string;
 }
 
 export type GameType = {

@@ -1,14 +1,7 @@
 import { wishlistStore } from '$lib/stores/wishlistStore';
 import { toast } from '$lib/components/toast/toast';
 import { ToastType, type GameType, type SavedGameType } from '$lib/types';
-
-function convertToSavedGame(game: GameType | SavedGameType): SavedGameType {
-  return {
-    id: game.id,
-    name: game.name,
-    thumb_url: game.thumb_url,
-  };
-}
+import { convertToSavedGame } from './gameMapper';
 
 export function addToWishlist(game: GameType | SavedGameType) {
   wishlistStore.add(convertToSavedGame(game));

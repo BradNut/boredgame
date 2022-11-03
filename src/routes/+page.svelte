@@ -12,6 +12,7 @@
 	import Random from '$lib/components/random/index.svelte';
 	import Pagination from '$lib/components/pagination/index.svelte';
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
+	import SkeletonPlaceholder from '$root/lib/components/SkeletonPlaceholder.svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -130,6 +131,7 @@
 	</section>
 </div>
 
+<SkeletonPlaceholder style="height: 12rem; width: 12rem; border-radius: 10px;" />
 {#if $gameStore?.length > 0}
 	<div class="games">
 		<h1>Games Found:</h1>
@@ -138,7 +140,6 @@
 				<Game
 					on:handleRemoveWishlist={handleRemoveWishlist}
 					on:handleRemoveCollection={handleRemoveCollection}
-					minimal
 					{game}
 				/>
 			{/each}

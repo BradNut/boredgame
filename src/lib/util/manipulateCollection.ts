@@ -1,14 +1,7 @@
 import { collectionStore } from '$lib/stores/collectionStore';
 import { toast } from '$lib/components/toast/toast';
 import { ToastType, type GameType, type SavedGameType } from '$lib/types';
-
-function convertToSavedGame(game: GameType | SavedGameType): SavedGameType {
-  return {
-    id: game.id,
-    name: game.name,
-    thumb_url: game.thumb_url,
-  };
-}
+import { convertToSavedGame } from './gameMapper';
 
 export function addToCollection(game: GameType | SavedGameType) {
   collectionStore.add(convertToSavedGame(game));

@@ -9,6 +9,7 @@
 	} from '@rgossiaux/svelte-heroicons/outline';
 	import type { GameType, SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
+	import { wishlistStore } from '$lib/stores/wishlistStore';
 	import Button from '$lib/components/button/index.svelte';
 	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
 	import { addToCollection } from '$lib/util/manipulateCollection';
@@ -16,30 +17,34 @@
 	import { boredState } from '$root/lib/stores/boredState';
 	import { browser } from '$app/environment';
 	import LinkWithIcon from '$root/lib/components/LinkWithIcon.svelte';
+	import { addToWishlist } from '$root/lib/util/manipulateWishlist';
+	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
+	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
 
 	export let data: PageData;
 	export let game: GameType = data?.game;
-	console.log('page game', game);
 	let seeMore: boolean = false;
-	console.log(game?.description?.indexOf('</p>'));
 	let firstParagraphEnd = 0;
 	if (game?.description?.indexOf('</p>') > 0) {
 		firstParagraphEnd = game?.description?.indexOf('</p>') + 4;
 	} else if (game?.description?.indexOf('</ p>') > 0) {
 		firstParagraphEnd = game?.description?.indexOf('</ p>') + 5;
 	}
-	console.log('firstParagraphEnd', firstParagraphEnd);
 
-	function removeGame() {
+	function remoceFromCollection() {
 		boredState.update((n) => ({
 			...n,
 			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: game }
 		}));
-		if (browser) {
-			localStorage.collection = JSON.stringify($collectionStore);
-		}
+	}
+
+	function removeFromWishList() {
+		boredState.update((n) => ({
+			...n,
+			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: game }
+		}));
 	}
 </script>
 
@@ -55,7 +60,7 @@
 			<img src={game.image_url} alt={`Image of ${game.name}`} />
 		</a>
 	</div>
-	<div style="display: grid; place-items: center;">
+	<div style="display: grid; place-items: center; gap: 2rem;">
 		<div class="details">
 			<p>Year: {game?.year_published}</p>
 			<p>Players: {game.players}</p>
@@ -70,7 +75,7 @@
 		</div>
 		<div>
 			{#if existsInCollection}
-				<Button size="md" kind="danger" icon on:click={() => removeGame()}>
+				<Button size="md" kind="danger" icon on:click={() => remoceFromCollection()}>
 					Remove from collection <MinusCircleIcon width="24" height="24" />
 				</Button>
 			{:else}
@@ -86,6 +91,27 @@
 					}}
 				>
 					Add to collection <PlusCircleIcon width="24" height="24" />
+				</Button>
+			{/if}
+		</div>
+		<div>
+			{#if existsInWishlist}
+				<Button size="md" kind="danger" icon on:click={() => removeFromWishList()}>
+					Remove from wishlist <MinusCircleIcon width="24" height="24" />
+				</Button>
+			{:else}
+				<Button
+					size="md"
+					kind="primary"
+					icon
+					on:click={() => {
+						addToWishlist(game);
+						if (browser) {
+							localStorage.wishlist = JSON.stringify($wishlistStore);
+						}
+					}}
+				>
+					Add to wishlist <PlusCircleIcon width="24" height="24" />
 				</Button>
 			{/if}
 		</div>
