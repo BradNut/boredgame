@@ -55,7 +55,6 @@
 	<button class="btn" type="submit" disabled={submitting}>Submit</button>
 {/if}
 
-<!-- </form> -->
 <style lang="scss">
 	.search {
 		display: grid;

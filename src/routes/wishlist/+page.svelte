@@ -46,7 +46,6 @@
 				<Game
 					on:handleRemoveWishlist={handleRemoveWishlist}
 					on:handleRemoveCollection={handleRemoveCollection}
-					minimal
 					{game}
 				/>
 			{/each}

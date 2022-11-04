@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import { ToastType, type GameType, type SavedGameType } from '$root/lib/types';
 	import type { ActionData, PageData } from './$types';
 	import Game from '$lib/components/game/index.svelte';
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import TextSearch from '$lib/components/search/textSearch/index.svelte';
 	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
-	import { ToastType, type GameType, type SavedGameType } from '$root/lib/types';
 	import { boredState } from '$root/lib/stores/boredState';
 	import { toast } from '$root/lib/components/toast/toast';
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
@@ -89,7 +89,6 @@
 				<Game
 					on:handleRemoveWishlist={handleRemoveWishlist}
 					on:handleRemoveCollection={handleRemoveCollection}
-					minimal
 					{game}
 				/>
 			{/each}
