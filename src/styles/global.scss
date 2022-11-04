@@ -355,7 +355,11 @@ ol {
 }
 
 .error {
-  color: var(--tomatoOrange);
+  margin: 1rem;
+  padding: 0.5rem;
+  border-radius: var(--borderRadius);
+  background-color: var(--tomatoOrange);
+  font-weight: 700;
 }
 
 /* Base Dialog Styles */

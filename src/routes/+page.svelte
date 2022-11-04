@@ -20,6 +20,9 @@
 	console.log('Formed data:', JSON.stringify(data));
 	let pageSize: number;
 	let currentPage: number;
+	let submitting = $boredState?.loading;
+	console.log({ submitting });
+
 	$: totalItems = 0;
 	console.log('totalItems', totalItems);
 
@@ -51,9 +54,7 @@
 		}));
 	}
 
-	let isOpen: boolean = false;
 	let gameToRemove: GameType | SavedGameType;
-	console.log('isOpen', isOpen);
 
 	interface RemoveGameEvent extends Event {
 		detail: GameType | SavedGameType;
@@ -144,7 +145,21 @@
 				/>
 			{/each}
 		</div>
-		<!-- <Pagination
+	</div>
+{:else if $boredState.loading}
+	<div class="games">
+		<h1>Games Found:</h1>
+		<div class="games-list">
+			{#each [1, 2, 3, 4] as game, i}
+				<SkeletonPlaceholder
+					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
+				/>
+			{/each}
+		</div>
+	</div>
+{/if}
+
+<!-- <Pagination
 			{pageSize}
 			{currentPage}
 			{totalItems}
@@ -155,9 +170,6 @@
 			on:previousPageEvent={(event) => console.log('Prev page called', event)}
 			on:perPageEvent={(event) => console.log('Per page called', event)}
 		/> -->
-	</div>
-{/if}
-
 <style lang="scss">
 	.game-search {
 		display: grid;

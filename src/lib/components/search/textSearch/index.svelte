@@ -11,6 +11,10 @@
 
 	let submitting = $boredState?.loading;
 	let name = form?.name || '';
+	let disclosureOpen = false;
+	if (form?.error) {
+		disclosureOpen = true;
+	}
 </script>
 
 <div class="search">
@@ -28,18 +32,21 @@
 		</label>
 	</fieldset>
 	{#if advancedSearch}
-		<Disclosure let:open>
-			<DisclosureButton class="disclosure-button">
+		<Disclosure>
+			<DisclosureButton
+				class="disclosure-button"
+				on:click={() => (disclosureOpen = !disclosureOpen)}
+			>
 				<span>Advanced Search?</span>
 				<ChevronRightIcon
 					class="icon disclosure-icon"
-					style={open
+					style={disclosureOpen
 						? 'transform: rotate(90deg); transition: transform 0.5s ease;'
 						: 'transform: rotate(0deg); transition: transform 0.5s ease;'}
 				/>
 			</DisclosureButton>
 
-			{#if open}
+			{#if disclosureOpen}
 				<div transition:fade>
 					<!-- Using `static`, `DisclosurePanel` is always rendered,
                 and ignores the `open` state -->

@@ -3,11 +3,11 @@
 	import { boredState } from '$lib/stores/boredState';
 
 	export let form: ActionData;
-	console.log('advanced search form', form);
+	console.log('advanced search form data', form);
 	let submitting = $boredState?.loading;
-	let minAge = form?.minAge || 1;
-	let minPlayers = form?.minPlayers || 1;
-	let maxPlayers = form?.maxPlayers || 1;
+	let minAge = +form?.minAge || 1;
+	let minPlayers = +form?.minPlayers || 1;
+	let maxPlayers = +form?.maxPlayers || 1;
 	let exactMinPlayers = form?.exactMinPlayers || false;
 	let exactMaxPlayers = form?.exactMaxPlayers || false;
 </script>
@@ -41,9 +41,11 @@
 			/>
 		</label>
 		{#if form?.error?.id === 'minPlayers'}
-			<p aria-label={`Error: ${form.error.message}`} class="center error">
-				Error: {form.error.message}
-			</p>
+			<div id="minPlayers-error" class="error">
+				<p aria-label={`Error: ${form.error.message}`} class="center">
+					Error: {form.error.message}
+				</p>
+			</div>
 		{/if}
 	</div>
 	<div>
@@ -68,9 +70,11 @@
 			/>
 		</label>
 		{#if form?.error?.id === 'maxPlayers'}
-			<p aria-label={`Error: ${form.error.message}`} class="center error">
-				Error: {form.error.message}
-			</p>
+			<div id="maxPlayers-error" class="error">
+				<p aria-label={`Error: ${form.error.message}`} class="center">
+					Error: {form.error.message}
+				</p>
+			</div>
 		{/if}
 	</div>
 </fieldset>

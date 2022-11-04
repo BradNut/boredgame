@@ -74,6 +74,7 @@
 
 	.bx--skeleton__placeholder {
 		--cds-skeleton-01: #474747;
+		border-radius: var(--borderRadius);
 		position: relative;
 		padding: 0;
 		border: none;
@@ -94,6 +95,7 @@
 
 	.bx--skeleton__placeholder::before {
 		--cds-skeleton-02: #525252;
+		border-radius: var(--borderRadius);
 		position: absolute;
 		top: 0;
 		left: 0;
