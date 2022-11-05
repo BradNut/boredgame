@@ -13,6 +13,7 @@
 	import Pagination from '$lib/components/pagination/index.svelte';
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
 	import SkeletonPlaceholder from '$root/lib/components/SkeletonPlaceholder.svelte';
+	import { lg, md, sm, xl } from '$root/lib/stores/mediaQueryStore';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -21,6 +22,15 @@
 	let pageSize: number;
 	let currentPage: number;
 	let submitting = $boredState?.loading;
+	let numberOfGameSkeleton = 1;
+	if (xl) {
+		numberOfGameSkeleton = 8;
+	} else if (md) {
+		numberOfGameSkeleton = 3;
+	} else {
+		numberOfGameSkeleton = 1;
+	}
+
 	console.log({ submitting });
 
 	$: totalItems = 0;
@@ -150,7 +160,7 @@
 	<div class="games">
 		<h1>Games Found:</h1>
 		<div class="games-list">
-			{#each [1, 2, 3, 4] as game, i}
+			{#each [...Array(numberOfGameSkeleton).keys()] as game, i}
 				<SkeletonPlaceholder
 					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
 				/>

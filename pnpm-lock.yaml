@@ -26,6 +26,7 @@ specifiers:
   sass: ^1.55.0
   svelte: ^3.52.0
   svelte-check: ^2.9.2
+  svelte-media-query-store: ^1.0.0
   svelte-preprocess: ^4.10.7
   tslib: ^2.4.1
   typescript: ^4.8.4
@@ -41,6 +42,7 @@ dependencies:
   '@types/feather-icons': 4.7.0
   cookie: 0.5.0
   feather-icons: 4.29.0
+  svelte-media-query-store: 1.0.0
   zod: 3.19.1
   zod-to-json-schema: 3.18.1_zod@3.19.1
 
@@ -2278,6 +2280,16 @@ packages:
     dependencies:
       svelte: 3.52.0
     dev: true
+
+  /svelte-media-query-store/0.0.3:
+    resolution: {integrity: sha512-LxM2AEyE4BqVHNdEb8aZOwcSf5oyJcZWSRlSkQPxnQyp6ytGwQs3gsmaZ1udEBeL7jHldWwNrbaFwAG5W7eTXw==}
+    dev: false
+
+  /svelte-media-query-store/1.0.0:
+    resolution: {integrity: sha512-Mm7Aq04xrdW9XVA7jjR8nPvYdWf3oAz5QJYvwAno/wKgLbbjA5E1nfCvOu1dG85UhvM62u5Q/lfQI2ByKU37rg==}
+    dependencies:
+      svelte-media-query-store: 0.0.3
+    dev: false
 
   /svelte-preprocess/4.10.7_q7oepo4r57y5enzswpidbbgzsy:
     resolution: {integrity: sha512-sNPBnqYD6FnmdBrUmBCaqS00RyCsCpj2BG58A1JBswNF7b0OKviwxqVrOL/CKyJrLSClrSeqQv5BXNg2RUbPOw==}

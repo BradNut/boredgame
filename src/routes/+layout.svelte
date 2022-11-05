@@ -54,7 +54,15 @@
 {/if}
 
 {#if dev}
-	<Toy register={{ boredState, collectionStore, wishlistStore, gameStore, toast }} />
+	<Toy
+		register={{
+			boredState,
+			collectionStore,
+			wishlistStore,
+			gameStore,
+			toast
+		}}
+	/>
 {/if}
 
 <Transition transition={{ type: 'fade', duration: 250 }}>
