@@ -17,6 +17,7 @@
 
 	export let data: PageData;
 	export let form: ActionData;
+	let submitButton: HTMLElement;
 	console.log('form routesss', form);
 	console.log('Formed data:', JSON.stringify(data));
 
@@ -118,7 +119,7 @@
 			};
 		}}
 	>
-		<TextSearch showButton advancedSearch {form} />
+		<TextSearch showButton advancedSearch {submitButton} {form} />
 	</form>
 	<section>
 		<p>Or pick a random game!</p>

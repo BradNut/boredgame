@@ -28,6 +28,7 @@
 	console.log({ totalItems });
 	let submitting = $boredState?.loading;
 	let numberOfGameSkeleton = 1;
+	let submitButton: HTMLElement;
 	console.log('Search page total count: ', totalItems);
 
 	$: if (data?.games) {
@@ -73,53 +74,18 @@
 		}
 		console.log('New page value: ', page);
 		console.log('New skip value: ', skip);
-		document.getElementById('skip')?.setAttribute('value', `${page * pageSize}`);
+		// document.getElementById('skip')?.setAttribute('value', `${page * pageSize}`);
 		console.log('New skip value DOM: ', document.getElementById('skip')?.getAttribute('value'));
-		document.getElementById('search-submit')?.click();
+		submitButton.click();
+		// document.getElementById('search-submit')?.click();
 	}
 </script>
 
 <div class="game-search">
-	{skip}
-	<form
-		id="search-form"
-		action="/search"
-		method="post"
-		use:enhance={({ data }) => {
-			gameStore.removeAll();
-			// data.append('limit', pageSize.toString());
-			// data.append('skip', Math.floor(page * pageSize).toString());
-			boredState.update((n) => ({ ...n, loading: true }));
-			return async ({ result }) => {
-				boredState.update((n) => ({ ...n, loading: false }));
-				console.log(result);
-				// `result` is an `ActionResult` object
-				if (result.type === 'error') {
-					toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
-					await applyAction(result);
-				} else if (result.type === 'success') {
-					gameStore.removeAll();
-					gameStore.addAll(result?.data?.games);
-					// totalItems = result?.data?.totalCount;
-					console.log(`Frontend result search enhance: ${JSON.stringify(result)}`);
-					totalItems = result?.data?.totalCount;
-					// skip = result?.data?.skip || 0;
-					// page = skip / pageSize || 0;
-					// console.log('enhance', page, skip, totalItems);
-					toast.send('Sucess!', { duration: 3000, type: ToastType.INFO, dismissible: true });
-					await applyAction(result);
-				} else {
-					await applyAction(result);
-				}
-			};
-		}}
-	>
-		<input id="skip" type="hidden" name="skip" value={skip} />
-		<input id="limit" type="hidden" name="limit" value={pageSize} />
-		<TextSearch showButton advancedSearch {form} />
-	</form>
+	<TextSearch showButton advancedSearch />
 </div>
 
+{`Length: ${$gameStore?.length}`}
 {#if $gameStore?.length > 0}
 	<div class="games">
 		<h1>Games Found:</h1>
@@ -132,17 +98,6 @@
 				/>
 			{/each}
 		</div>
-		<Pagination
-			{pageSize}
-			{page}
-			{totalItems}
-			forwardText="Next"
-			backwardText="Prev"
-			pageSizes={[10, 25, 50, 100]}
-			on:nextPageEvent={handleNextPageEvent}
-			on:previousPageEvent={(event) => console.log('Prev page called', event)}
-			on:perPageEvent={(event) => console.log('Per page called', event)}
-		/>
 	</div>
 {:else if form && form?.status && form.status !== 200}
 	<h1>There was an error searching for games!</h1>

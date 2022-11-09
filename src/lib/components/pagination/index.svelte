@@ -48,9 +48,9 @@
 		<p>Per-page:</p>
 		<Listbox
 			class="list-box"
-			value={$boredState?.search?.pageSize || 10}
+			value={pageSize || 10}
 			on:change={(e) => {
-				dispatch('update', { pageSize: e.detail, page });
+				dispatch('perPageEvent', { pageSize: e.detail, page });
 			}}
 			let:open
 		>
