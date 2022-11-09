@@ -48,7 +48,7 @@
 					});
 				}
 				gameStore.addAll(resultGames);
-				console.log(`Frontend result: ${JSON.stringify(result)}`);
+				console.log(`Frontend result random: ${JSON.stringify(result)}`);
 				await applyAction(result);
 			} else {
 				console.log('Invalid');

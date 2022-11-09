@@ -5,6 +5,7 @@
 	import { toast } from '$root/lib/components/toast/toast';
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { boredState } from '$root/lib/stores/boredState';
+	// import { md, xl } from '$root/lib/stores/mediaQueryStore';
 	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
 	import Game from '$lib/components/game/index.svelte';
 	import TextSearch from '$lib/components/search/textSearch/index.svelte';
@@ -13,27 +14,28 @@
 	import Pagination from '$lib/components/pagination/index.svelte';
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
 	import SkeletonPlaceholder from '$root/lib/components/SkeletonPlaceholder.svelte';
-	import { lg, md, sm, xl } from '$root/lib/stores/mediaQueryStore';
 
 	export let data: PageData;
 	export let form: ActionData;
 	console.log('form routesss', form);
 	console.log('Formed data:', JSON.stringify(data));
-	let pageSize: number;
-	let currentPage: number;
+
+	let pageSize = 10;
+	let page = 0;
 	let submitting = $boredState?.loading;
 	let numberOfGameSkeleton = 1;
-	if (xl) {
-		numberOfGameSkeleton = 8;
-	} else if (md) {
-		numberOfGameSkeleton = 3;
-	} else {
-		numberOfGameSkeleton = 1;
-	}
+	// if ($xl) {
+	// 	numberOfGameSkeleton = 8;
+	// } else if ($md) {
+	// 	numberOfGameSkeleton = 3;
+	// } else {
+	// 	numberOfGameSkeleton = 1;
+	// }
 
 	console.log({ submitting });
-
-	$: totalItems = 0;
+	console.log('Form total count:' + form?.totalCount);
+	console.log('Data total count: ' + data?.totalCount);
+	let totalItems = form?.totalCount || data?.totalCount || 0;
 	console.log('totalItems', totalItems);
 
 	// async function handleItemsPerPageChange(event) {
@@ -42,26 +44,8 @@
 	// }
 	async function handleNextPageEvent(event: CustomEvent) {
 		console.log('Next page called', event);
-		boredState.update((n) => ({ ...n, loading: true }));
-		const form = event.target as HTMLFormElement;
-		console.log('form', form);
-		const response = await fetch('/api/game', {
-			method: 'POST',
-			headers: { accept: 'application/json' },
-			body: new FormData(form)
-		});
-		const responseData = await response.json();
-		boredState.update((n) => ({ ...n, loading: false }));
-		gameStore.removeAll();
-		gameStore.addAll(responseData?.games);
-		const skip = $boredState?.search?.skip;
-		const pageSize = $boredState?.search?.pageSize;
-		const currentPage = $boredState?.search?.currentPage;
-		const totalCount = responseData?.totalCount;
-		boredState.update((n) => ({
-			...n,
-			search: { totalCount, skip, pageSize, currentPage }
-		}));
+		page = event.detail || page;
+		document.getElementById('search-form')?.submit();
 	}
 
 	let gameToRemove: GameType | SavedGameType;
@@ -101,10 +85,13 @@
 </p>
 <div class="game-search">
 	<form
+		id="search-form"
 		action="/search"
 		method="post"
-		use:enhance={() => {
+		use:enhance={({ data }) => {
 			gameStore.removeAll();
+			data.append('limit', pageSize.toString());
+			data.append('skip', Math.floor(page * pageSize).toString());
 			boredState.update((n) => ({ ...n, loading: true }));
 			return async ({ result }) => {
 				boredState.update((n) => ({ ...n, loading: false }));
@@ -122,7 +109,7 @@
 					}
 					gameStore.addAll(resultGames);
 					totalItems = result?.data?.totalCount;
-					console.log(`Frontend result: ${JSON.stringify(result)}`);
+					console.log(`Frontend base page: ${JSON.stringify(result)}`);
 					await applyAction(result);
 				} else {
 					console.log('Invalid');
@@ -142,7 +129,6 @@
 	</section>
 </div>
 
-<!-- <SkeletonPlaceholder style="height: 12rem; width: 12rem; border-radius: 10px;" /> -->
 {#if $gameStore?.length > 0}
 	<div class="games">
 		<h1>Games Found:</h1>
@@ -155,6 +141,17 @@
 				/>
 			{/each}
 		</div>
+		<Pagination
+			{pageSize}
+			{page}
+			{totalItems}
+			forwardText="Next"
+			backwardText="Prev"
+			pageSizes={[10, 25, 50, 100]}
+			on:nextPageEvent={handleNextPageEvent}
+			on:previousPageEvent={(event) => console.log('Prev page called', event)}
+			on:perPageEvent={(event) => console.log('Per page called', event)}
+		/>
 	</div>
 {:else if $boredState.loading}
 	<div class="games">
@@ -169,17 +166,6 @@
 	</div>
 {/if}
 
-<!-- <Pagination
-			{pageSize}
-			{currentPage}
-			{totalItems}
-			forwardText="Next"
-			backwardText="Prev"
-			pageSizes={[10, 25, 50, 100]}
-			on:nextPageEvent={handleNextPageEvent}
-			on:previousPageEvent={(event) => console.log('Prev page called', event)}
-			on:perPageEvent={(event) => console.log('Per page called', event)}
-		/> -->
 <style lang="scss">
 	.game-search {
 		display: grid;

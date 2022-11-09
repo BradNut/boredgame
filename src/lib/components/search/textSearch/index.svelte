@@ -59,7 +59,7 @@
 	{/if}
 </div>
 {#if showButton}
-	<button class="btn" type="submit" disabled={submitting}>Submit</button>
+	<button id="search-submit" class="btn" type="submit" disabled={submitting}>Submit</button>
 {/if}
 
 <style lang="scss">
