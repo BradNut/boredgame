@@ -130,43 +130,6 @@
 	</section>
 </div>
 
-{#if $gameStore?.length > 0}
-	<div class="games">
-		<h1>Games Found:</h1>
-		<div class="games-list">
-			{#each $gameStore as game (game.id)}
-				<Game
-					on:handleRemoveWishlist={handleRemoveWishlist}
-					on:handleRemoveCollection={handleRemoveCollection}
-					{game}
-				/>
-			{/each}
-		</div>
-		<Pagination
-			{pageSize}
-			{page}
-			{totalItems}
-			forwardText="Next"
-			backwardText="Prev"
-			pageSizes={[10, 25, 50, 100]}
-			on:nextPageEvent={handleNextPageEvent}
-			on:previousPageEvent={(event) => console.log('Prev page called', event)}
-			on:perPageEvent={(event) => console.log('Per page called', event)}
-		/>
-	</div>
-{:else if $boredState.loading}
-	<div class="games">
-		<h1>Games Found:</h1>
-		<div class="games-list">
-			{#each [...Array(numberOfGameSkeleton).keys()] as game, i}
-				<SkeletonPlaceholder
-					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
-				/>
-			{/each}
-		</div>
-	</div>
-{/if}
-
 <style lang="scss">
 	.game-search {
 		display: grid;

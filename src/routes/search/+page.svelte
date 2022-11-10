@@ -41,30 +41,6 @@
 		gameStore.addAll(form?.games);
 	}
 
-	interface RemoveGameEvent extends Event {
-		detail: GameType | SavedGameType;
-	}
-
-	function handleRemoveCollection(event: RemoveGameEvent) {
-		console.log('Remove collection event handler');
-		console.log('event', event);
-		gameToRemove = event?.detail;
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
-		}));
-	}
-
-	function handleRemoveWishlist(event: RemoveGameEvent) {
-		console.log('Remove wishlist event handler');
-		console.log('event', event);
-		gameToRemove = event?.detail;
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
-		}));
-	}
-
 	function handleNextPageEvent(event: CustomEvent) {
 		console.log('Next page called', event.detail);
 		console.log('Current page: ', page);
@@ -85,8 +61,7 @@
 	<TextSearch showButton advancedSearch />
 </div>
 
-{`Length: ${$gameStore?.length}`}
-{#if $gameStore?.length > 0}
+<!-- {#if $gameStore?.length > 0}
 	<div class="games">
 		<h1>Games Found:</h1>
 		<div class="games-list">
@@ -102,28 +77,6 @@
 {:else if form && form?.status && form.status !== 200}
 	<h1>There was an error searching for games!</h1>
 	<h2>Please try again later.</h2>
-{/if}
-
+{/if} -->
 <style lang="scss">
-	.games {
-		margin: 2rem 0rem;
-
-		h1 {
-			margin-bottom: 2rem;
-		}
-	}
-
-	.games-list {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(200px, 1fr));
-		gap: 2rem;
-
-		@media (max-width: 800px) {
-			grid-template-columns: 1fr 1fr;
-		}
-
-		@media (max-width: 650px) {
-			grid-template-columns: 1fr;
-		}
-	}
 </style>

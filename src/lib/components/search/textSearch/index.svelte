@@ -10,26 +10,31 @@
 	import { gameStore } from '$root/lib/stores/gameSearchStore';
 	import { toast } from '../../toast/toast';
 	import Pagination from '$lib/components/pagination/index.svelte';
-	import { ToastType } from '$root/lib/types';
+	import Game from '$lib/components/game/index.svelte';
+	import { ToastType, type GameType, type SavedGameType } from '$root/lib/types';
+	import SkeletonPlaceholder from '../../SkeletonPlaceholder.svelte';
+	import RemoveCollectionDialog from '../../dialog/RemoveCollectionDialog.svelte';
+	import RemoveWishlistDialog from '../../dialog/RemoveWishlistDialog.svelte';
+
+	interface RemoveGameEvent extends Event {
+		detail: GameType | SavedGameType;
+	}
 
 	export let data: PageData;
-	console.log('search page data', data);
+	// console.log('search page data', data);
 	export let form: ActionData;
-	console.log('search page form', form);
+	// console.log('search page form', form);
 
 	export let showButton: boolean = false;
 	export let advancedSearch: boolean = false;
-	// export let form: ActionData;
+
+	let gameToRemove: GameType | SavedGameType;
+	let numberOfGameSkeleton = 1;
 	let submitButton: HTMLElement;
 	let pageSize = 10;
-	console.log('Form data page', +form?.data?.page);
 	let page = +form?.data?.page || 1;
-	$: skip = (page - 1) * pageSize;
-	console.log({ skip });
 	let totalItems = form?.totalCount || data?.totalCount || 0;
-	console.log({ pageSize });
-	console.log({ page });
-	console.log({ totalItems });
+	$: skip = (page - 1) * pageSize;
 	$: console.log('submit button', submitButton);
 
 	let submitting = $boredState?.loading;
@@ -40,17 +45,18 @@
 	}
 
 	async function handleNextPageEvent(event: CustomEvent) {
-		console.log('Next page called', event.detail);
-		console.log('Current page: ', page);
 		if (+event?.detail?.page === page + 1) {
-			console.log('Page equals plus one');
 			page += 1;
 		}
-		// skip = (page - 1) * pageSize;
 		await tick();
-		console.log('New Page Value', page);
-		console.log('New Skip value', skip);
-		console.log('New skip value DOM: ', document.getElementById('skip')?.getAttribute('value'));
+		submitButton.click();
+	}
+
+	async function handlePreviousPageEvent(event: CustomEvent) {
+		if (+event?.detail?.page === page - 1) {
+			page -= 1;
+		}
+		await tick();
 		submitButton.click();
 	}
 
@@ -59,8 +65,24 @@
 		page = 1;
 		pageSize = event.detail.pageSize;
 		await tick();
-		console.log('New limit value DOM: ', document.getElementById('limit')?.getAttribute('value'));
+		// console.log('New limit value DOM: ', document.getElementById('limit')?.getAttribute('value'));
 		submitButton.click();
+	}
+
+	function handleRemoveCollection(event: RemoveGameEvent) {
+		gameToRemove = event?.detail;
+		boredState.update((n) => ({
+			...n,
+			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
+		}));
+	}
+
+	function handleRemoveWishlist(event: RemoveGameEvent) {
+		gameToRemove = event?.detail;
+		boredState.update((n) => ({
+			...n,
+			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
+		}));
 	}
 </script>
 
@@ -68,10 +90,7 @@
 	id="search-form"
 	action="/search"
 	method="post"
-	use:enhance={({ data }) => {
-		gameStore.removeAll();
-		// data.append('limit', pageSize.toString());
-		// data.append('skip', Math.floor(page * pageSize).toString());
+	use:enhance={() => {
 		boredState.update((n) => ({ ...n, loading: true }));
 		return async ({ result }) => {
 			boredState.update((n) => ({ ...n, loading: false }));
@@ -83,12 +102,8 @@
 			} else if (result.type === 'success') {
 				gameStore.removeAll();
 				gameStore.addAll(result?.data?.games);
-				// totalItems = result?.data?.totalCount;
 				console.log(`Frontend result search enhance: ${JSON.stringify(result)}`);
 				totalItems = result?.data?.totalCount;
-				// skip = result?.data?.skip || 0;
-				// page = skip / pageSize || 0;
-				// console.log('enhance', page, skip, totalItems);
 				toast.send('Sucess!', { duration: 3000, type: ToastType.INFO, dismissible: true });
 				await applyAction(result);
 			} else {
@@ -140,30 +155,55 @@
 			</Disclosure>
 		{/if}
 	</div>
-	<!-- {#if showButton} -->
-	<button
-		id="search-submit"
-		class="btn"
-		type="submit"
-		disabled={submitting}
-		bind:this={submitButton}
-	>
-		Submit
-	</button>
-	<!-- {/if} -->
+	{#if showButton}
+		<button
+			id="search-submit"
+			class="btn"
+			type="submit"
+			disabled={submitting}
+			bind:this={submitButton}
+		>
+			Submit
+		</button>
+	{/if}
 </form>
 
-<Pagination
-	{pageSize}
-	{page}
-	{totalItems}
-	forwardText="Next"
-	backwardText="Prev"
-	pageSizes={[10, 25, 50, 100]}
-	on:nextPageEvent={handleNextPageEvent}
-	on:previousPageEvent={(event) => console.log('Prev page called', event)}
-	on:perPageEvent={handlePerPageEvent}
-/>
+{#if $gameStore?.length > 0}
+	<div class="games">
+		<h1>Games Found:</h1>
+		<div class="games-list">
+			{#each $gameStore as game (game.id)}
+				<Game
+					on:handleRemoveWishlist={handleRemoveWishlist}
+					on:handleRemoveCollection={handleRemoveCollection}
+					{game}
+				/>
+			{/each}
+		</div>
+		<Pagination
+			{pageSize}
+			{page}
+			{totalItems}
+			forwardText="Next"
+			backwardText="Prev"
+			pageSizes={[10, 25, 50, 100]}
+			on:nextPageEvent={handleNextPageEvent}
+			on:previousPageEvent={handlePreviousPageEvent}
+			on:perPageEvent={handlePerPageEvent}
+		/>
+	</div>
+{:else if $boredState.loading}
+	<div class="games">
+		<h1>Games Found:</h1>
+		<div class="games-list">
+			{#each [...Array(numberOfGameSkeleton).keys()] as game, i}
+				<SkeletonPlaceholder
+					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
+				/>
+			{/each}
+		</div>
+	</div>
+{/if}
 
 <style lang="scss">
 	.search {
@@ -192,6 +232,28 @@
 		@media (max-width: 850px) {
 			display: flex;
 			flex-wrap: wrap;
+		}
+	}
+
+	.games {
+		margin: 2rem 0rem;
+
+		h1 {
+			margin-bottom: 2rem;
+		}
+	}
+
+	.games-list {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(200px, 1fr));
+		gap: 2rem;
+
+		@media (max-width: 800px) {
+			grid-template-columns: 1fr 1fr;
+		}
+
+		@media (max-width: 650px) {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>

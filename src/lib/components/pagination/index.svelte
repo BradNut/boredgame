@@ -1,4 +1,5 @@
 <script lang="ts">
+	// Based on https://carbon-components-svelte.onrender.com/components/Pagination
 	import { afterUpdate, createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import {
@@ -12,10 +13,9 @@
 		ChevronLeftIcon,
 		ChevronRightIcon
 	} from '@rgossiaux/svelte-heroicons/outline';
-	import { boredState } from '$root/lib/stores/boredState';
 
 	const dispatch = createEventDispatcher();
-	// export let pageSize = 10;
+
 	export let pageSize: number; // Reactive, bind
 	export let page: number = 1; // Reactive, bind
 	export let totalItems: number;
@@ -31,16 +31,10 @@
 		}
 	});
 
-	console.log('Pagination info');
-	console.log({ pageSize, page, totalItems });
-
 	$: totalPages = Math.max(Math.ceil(totalItems / pageSize), 1);
 	$: backButtonDisabled = disabled || page === 1;
 	$: forwardButtonDisabled = disabled || page === totalPages;
 	$: itemsLeft = totalItems - page * pageSize >= 0 ? totalItems - page * pageSize : 0;
-	console.log('totalPages', totalPages);
-	const prevPage: number = page - 1;
-	const nextPage: number = page + 1;
 </script>
 
 <div class="container">
