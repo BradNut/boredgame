@@ -3,7 +3,6 @@
 	import { boredState } from '$lib/stores/boredState';
 
 	export let form: ActionData;
-	console.log('advanced search form data', form);
 	let submitting = $boredState?.loading;
 	let minAge = +form?.minAge || 1;
 	let minPlayers = +form?.minPlayers || 1;
@@ -78,9 +77,7 @@
 		{/if}
 	</div>
 </fieldset>
-<!-- <button type="submit" disabled={submitting}>Submit</button> -->
 
-<!-- </form> -->
 <style lang="scss">
 	fieldset {
 		display: grid;

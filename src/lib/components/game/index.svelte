@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+	import { Image } from 'svelte-lazy-loader';
 	import { fade } from 'svelte/transition';
 	import { MinusCircleIcon, PlusCircleIcon } from '@rgossiaux/svelte-heroicons/outline';
 	import type { GameType, SavedGameType } from '$lib/types';
@@ -46,8 +47,14 @@
 
 <article class="game-container" transition:fade>
 	<h2>{game.name}</h2>
-	<a class="thumbnail" href={`/game/${game.id}`}>
-		<img src={game.thumb_url} alt={`Image of ${game.name}`} />
+	<a
+		class="thumbnail"
+		href={`/game/${game.id}`}
+		title={`View ${game.name}`}
+		data-sveltekit-prefetch
+	>
+		<Image src={game.thumb_url} alt={`Image of ${game.name}`} />
+		<!-- <img src={game.thumb_url} alt={`Image of ${game.name}`} /> -->
 		<!-- loading="lazy" decoding="async" -->
 	</a>
 

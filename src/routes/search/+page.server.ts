@@ -16,12 +16,16 @@ export const actions: Actions = {
     console.log("In search action specific")
     // Do things in here
     const form = await request.formData();
+    console.log('passed in limit:', form.get('limit'))
+    console.log('passed in skip:', form.get('skip'))
+    const limit = form.get('limit') || 10;
+    const skip = form.get('skip') || 0;
     console.log('action form', form);
     const queryParams: SearchQuery = {
       order_by: 'rank',
       ascending: false,
-      limit: 10,
-      skip: 0,
+      limit: +limit,
+      skip: +skip,
       client_id: BOARD_GAME_ATLAS_CLIENT_ID,
       fuzzy_match: true,
       name: ''
@@ -54,9 +58,10 @@ export const actions: Actions = {
       if (minPlayers && maxPlayers) {
         if (+minPlayers > +maxPlayers) {
           return invalid(400, { minPlayers, error: { id: 'minPlayers', message: 'Min must be less than max' } });
-        } else if (maxPlayers < minPlayers) {
-          return invalid(400, { maxPlayers, error: { id: 'maxPlayers', message: 'Max must be greater than min' } });
         }
+        // else if (+maxPlayers < +minPlayers) {
+        //   return invalid(400, { maxPlayers, error: { id: 'maxPlayers', message: 'Max must be greater than min' } });
+        // }
         if (exactMinPlayers) {
           queryParams.min_players = +minPlayers;
         } else {
@@ -118,7 +123,9 @@ export const actions: Actions = {
 
         return {
           games,
-          totalCount: games.length
+          totalCount,
+          limit: +limit,
+          skip: +skip,
         };
       }
     } catch (e) {
@@ -126,7 +133,9 @@ export const actions: Actions = {
     }
     return {
       games: [],
-      totalCount: 0
+      totalCount: 0,
+      limit,
+      skip
     };
   }
 }
