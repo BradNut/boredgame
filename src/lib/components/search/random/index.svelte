@@ -35,7 +35,6 @@
 		boredState.update((n) => ({ ...n, loading: true }));
 		return async ({ result }) => {
 			boredState.update((n) => ({ ...n, loading: false }));
-			// console.log('result main page search', result);
 			// `result` is an `ActionResult` object
 			if (result.type === 'success') {
 				// console.log('In success');

@@ -45,6 +45,7 @@
     "@types/feather-icons": "^4.7.0",
     "cookie": "^0.5.0",
     "feather-icons": "^4.29.0",
+    "svelte-lazy-loader": "^1.0.0",
     "svelte-media-query-store": "^1.0.0",
     "zod": "^3.19.1",
     "zod-to-json-schema": "^3.18.1"

@@ -51,7 +51,6 @@
 	}
 
 	async function handlePerPageEvent(event: CustomEvent) {
-		console.log('Per Page Event called', event.detail);
 		page = 1;
 		pageSize = event.detail.pageSize;
 		await tick();

@@ -58,9 +58,10 @@ export const actions: Actions = {
       if (minPlayers && maxPlayers) {
         if (+minPlayers > +maxPlayers) {
           return invalid(400, { minPlayers, error: { id: 'minPlayers', message: 'Min must be less than max' } });
-        } else if (maxPlayers < minPlayers) {
-          return invalid(400, { maxPlayers, error: { id: 'maxPlayers', message: 'Max must be greater than min' } });
         }
+        // else if (+maxPlayers < +minPlayers) {
+        //   return invalid(400, { maxPlayers, error: { id: 'maxPlayers', message: 'Max must be greater than min' } });
+        // }
         if (exactMinPlayers) {
           queryParams.min_players = +minPlayers;
         } else {

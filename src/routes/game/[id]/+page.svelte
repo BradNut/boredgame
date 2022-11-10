@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
+	import { Image } from 'svelte-lazy-loader';
 	import {
 		ExternalLinkIcon,
 		MinusCircleIcon,
@@ -57,7 +58,8 @@
 <section class="game">
 	<div>
 		<a class="thumbnail" href={game.url}>
-			<img src={game.image_url} alt={`Image of ${game.name}`} />
+			<Image src={game.thumb_url} alt={`Image of ${game.name}`} />
+			<!-- <img src={game.image_url} alt={`Image of ${game.name}`} /> -->
 		</a>
 	</div>
 	<div style="display: grid; place-items: center; gap: 2rem;">

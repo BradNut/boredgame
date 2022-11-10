@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
 	import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
+	import { xl, md } from '$lib/stores/mediaQueryStore';
 	import { boredState } from '$lib/stores/boredState';
 	import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
 	import { applyAction, enhance } from '$app/forms';
@@ -34,13 +35,25 @@
 	let pageSize = 10;
 	let page = +form?.data?.page || 1;
 	let totalItems = form?.totalCount || data?.totalCount || 0;
+	let submitting = $boredState?.loading;
+	let name = form?.name || '';
+	let disclosureOpen = false;
+
 	$: skip = (page - 1) * pageSize;
 	$: console.log('submit button', submitButton);
 	$: showPagination = $gameStore?.length > 1;
 
-	let submitting = $boredState?.loading;
-	let name = form?.name || '';
-	let disclosureOpen = false;
+	if ($xl) {
+		numberOfGameSkeleton = 8;
+	} else if ($md) {
+		numberOfGameSkeleton = 3;
+	} else {
+		numberOfGameSkeleton = 1;
+	}
+
+	let placeholderList = [...Array(numberOfGameSkeleton).keys()];
+	console.log(placeholderList);
+
 	if (form?.error) {
 		disclosureOpen = true;
 	}
@@ -95,6 +108,7 @@
 	action="/search"
 	method="post"
 	use:enhance={() => {
+		gameStore.removeAll();
 		boredState.update((n) => ({ ...n, loading: true }));
 		return async ({ result }) => {
 			boredState.update((n) => ({ ...n, loading: false }));
@@ -200,7 +214,7 @@
 	<div class="games">
 		<h1>Games Found:</h1>
 		<div class="games-list">
-			{#each [...Array(numberOfGameSkeleton).keys()] as game, i}
+			{#each placeholderList as game, i}
 				<SkeletonPlaceholder
 					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
 				/>

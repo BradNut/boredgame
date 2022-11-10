@@ -6,13 +6,6 @@
 
 	export let data: PageData;
 	export let form: ActionData;
-	// if ($xl) {
-	// 	numberOfGameSkeleton = 8;
-	// } else if ($md) {
-	// 	numberOfGameSkeleton = 3;
-	// } else {
-	// 	numberOfGameSkeleton = 1;
-	// }
 </script>
 
 <svelte:head>
