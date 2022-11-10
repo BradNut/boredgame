@@ -84,6 +84,9 @@
 			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
 		}));
 	}
+
+	// TODO: Keep all Pagination Values on back and forth browser
+	// TODO: Add cache for certain number of pages so back and forth doesn't request data again
 </script>
 
 <form
@@ -94,7 +97,6 @@
 		boredState.update((n) => ({ ...n, loading: true }));
 		return async ({ result }) => {
 			boredState.update((n) => ({ ...n, loading: false }));
-			console.log(result);
 			// `result` is an `ActionResult` object
 			if (result.type === 'error') {
 				toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
@@ -102,9 +104,8 @@
 			} else if (result.type === 'success') {
 				gameStore.removeAll();
 				gameStore.addAll(result?.data?.games);
-				console.log(`Frontend result search enhance: ${JSON.stringify(result)}`);
 				totalItems = result?.data?.totalCount;
-				toast.send('Sucess!', { duration: 3000, type: ToastType.INFO, dismissible: true });
+				// toast.send('Sucess!', { duration: 3000, type: ToastType.INFO, dismissible: true });
 				await applyAction(result);
 			} else {
 				await applyAction(result);
@@ -245,15 +246,20 @@
 
 	.games-list {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(200px, 1fr));
+		--listColumns: 4;
+		grid-template-columns: repeat(var(--listColumns), minmax(200px, 1fr));
 		gap: 2rem;
 
+		@media (max-width: 1200px) {
+			--listColumns: 3;
+		}
+
 		@media (max-width: 800px) {
-			grid-template-columns: 1fr 1fr;
+			--listColumns: 2;
 		}
 
 		@media (max-width: 650px) {
-			grid-template-columns: 1fr;
+			--listColumns: 1;
 		}
 	}
 </style>
