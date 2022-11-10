@@ -62,11 +62,19 @@
 	</div>
 	<div style="display: grid; place-items: center; gap: 2rem;">
 		<div class="details">
-			<p>Year: {game?.year_published}</p>
-			<p>Players: {game.players}</p>
-			<p>Playtime: {game.playtime} minutes</p>
-			<p>Minimum Age: {game.min_age}</p>
-			{#if game?.price !== 0.0}
+			{#if game?.year_published}
+				<p>Year: {game?.year_published}</p>
+			{/if}
+			{#if game?.players}
+				<p>Players: {game.players}</p>
+			{/if}
+			{#if game?.playtime}
+				<p>Playtime: {game.playtime} minutes</p>
+			{/if}
+			{#if game?.min_age}
+				<p>Minimum Age: {game.min_age}</p>
+			{/if}
+			{#if +game?.price !== 0.0}
 				<p>Price: ${game?.price}</p>
 			{/if}
 			<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>

@@ -3,12 +3,18 @@
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import type { GameType, SavedGameType } from '$root/lib/types';
 	import { boredState } from '$root/lib/stores/boredState';
+	import Pagination from '$root/lib/components/pagination/index.svelte';
 	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
+	import { tick } from 'svelte';
 
-	let isOpen: boolean = false;
 	let gameToRemove: GameType | SavedGameType;
-	console.log('isOpen', isOpen);
+	let pageSize = 10;
+	let page = 1;
+
+	$: totalItems = $collectionStore.length;
+	$: skip = (page - 1) * pageSize;
+	$: gamesShown = $collectionStore.slice(skip, skip + pageSize);
 
 	interface RemoveGameEvent extends Event {
 		detail: GameType | SavedGameType;
@@ -33,6 +39,27 @@
 			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
 		}));
 	}
+
+	async function handleNextPageEvent(event: CustomEvent) {
+		if (+event?.detail?.page === page + 1) {
+			page += 1;
+		}
+		await tick();
+	}
+
+	async function handlePreviousPageEvent(event: CustomEvent) {
+		if (+event?.detail?.page === page - 1) {
+			page -= 1;
+		}
+		await tick();
+	}
+
+	async function handlePerPageEvent(event: CustomEvent) {
+		console.log('Per Page Event called', event.detail);
+		page = 1;
+		pageSize = event.detail.pageSize;
+		await tick();
+	}
 </script>
 
 <svelte:head>
@@ -46,13 +73,24 @@
 		{#if $collectionStore.length === 0}
 			<h2>No games in your collection</h2>
 		{:else}
-			{#each $collectionStore as game (game.id)}
+			{#each gamesShown as game (game.id)}
 				<Game
 					on:handleRemoveWishlist={handleRemoveWishlist}
 					on:handleRemoveCollection={handleRemoveCollection}
 					{game}
 				/>
 			{/each}
+			<Pagination
+				{pageSize}
+				{page}
+				{totalItems}
+				forwardText="Next"
+				backwardText="Prev"
+				pageSizes={[10, 25, 50, 100]}
+				on:nextPageEvent={handleNextPageEvent}
+				on:previousPageEvent={handlePreviousPageEvent}
+				on:perPageEvent={handlePerPageEvent}
+			/>
 		{/if}
 	</div>
 </div>
