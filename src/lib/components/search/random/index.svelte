@@ -35,10 +35,10 @@
 		boredState.update((n) => ({ ...n, loading: true }));
 		return async ({ result }) => {
 			boredState.update((n) => ({ ...n, loading: false }));
-			console.log('result main page search', result);
+			// console.log('result main page search', result);
 			// `result` is an `ActionResult` object
 			if (result.type === 'success') {
-				console.log('In success');
+				// console.log('In success');
 				const resultGames = result?.data?.games;
 				if (resultGames?.length <= 0) {
 					toast.send('No results found 😿', {
@@ -48,10 +48,10 @@
 					});
 				}
 				gameStore.addAll(resultGames);
-				console.log(`Frontend result random: ${JSON.stringify(result)}`);
+				// console.log(`Frontend result random: ${JSON.stringify(result)}`);
 				await applyAction(result);
 			} else {
-				console.log('Invalid');
+				// console.log('Invalid');
 				await applyAction(result);
 			}
 		};

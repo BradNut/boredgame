@@ -36,6 +36,7 @@
 	let totalItems = form?.totalCount || data?.totalCount || 0;
 	$: skip = (page - 1) * pageSize;
 	$: console.log('submit button', submitButton);
+	$: showPagination = $gameStore?.length > 1;
 
 	let submitting = $boredState?.loading;
 	let name = form?.name || '';
@@ -181,17 +182,19 @@
 				/>
 			{/each}
 		</div>
-		<Pagination
-			{pageSize}
-			{page}
-			{totalItems}
-			forwardText="Next"
-			backwardText="Prev"
-			pageSizes={[10, 25, 50, 100]}
-			on:nextPageEvent={handleNextPageEvent}
-			on:previousPageEvent={handlePreviousPageEvent}
-			on:perPageEvent={handlePerPageEvent}
-		/>
+		{#if showPagination}
+			<Pagination
+				{pageSize}
+				{page}
+				{totalItems}
+				forwardText="Next"
+				backwardText="Prev"
+				pageSizes={[10, 25, 50, 100]}
+				on:nextPageEvent={handleNextPageEvent}
+				on:previousPageEvent={handlePreviousPageEvent}
+				on:perPageEvent={handlePerPageEvent}
+			/>
+		{/if}
 	</div>
 {:else if $boredState.loading}
 	<div class="games">
