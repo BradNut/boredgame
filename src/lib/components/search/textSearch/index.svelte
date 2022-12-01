@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import type { ActionData, PageData } from './$types';
+	import { applyAction, enhance } from '$app/forms';
 	import { fade } from 'svelte/transition';
 	import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
 	import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
-	import { xl, md } from '$lib/stores/mediaQueryStore';
 	import { boredState } from '$lib/stores/boredState';
 	import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
-	import { applyAction, enhance } from '$app/forms';
+	import { xl, md, sm } from '$lib/stores/mediaQueryStore';
 	import { gameStore } from '$root/lib/stores/gameSearchStore';
 	import { toast } from '../../toast/toast';
 	import Pagination from '$lib/components/pagination/index.svelte';
@@ -44,10 +44,16 @@
 	$: showPagination = $gameStore?.length > 1;
 
 	if ($xl) {
+		console.log('Was xl');
 		numberOfGameSkeleton = 8;
 	} else if ($md) {
+		console.log('Was md');
 		numberOfGameSkeleton = 3;
+	} else if ($sm) {
+		console.log('Was sm');
+		numberOfGameSkeleton = 2;
 	} else {
+		console.log('Was none');
 		numberOfGameSkeleton = 1;
 	}
 
