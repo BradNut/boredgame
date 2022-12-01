@@ -14,7 +14,7 @@ export const load: PageServerLoad = () => {
 }
 
 export const actions: Actions = {
-  default: async ({ request }): Promise<any> => {
+  default: async ({ request }: RequestEvent): Promise<any> => {
     console.log("In search action specific")
     // Do things in here
     const formData = await request.formData();
@@ -27,8 +27,8 @@ export const actions: Actions = {
     const queryParams: SearchQuery = {
       order_by: 'rank',
       ascending: false,
-      limit: +limit,
-      skip: +skip,
+      limit: parseInt(limit),
+      skip: parseInt(skip),
       client_id: BOARD_GAME_ATLAS_CLIENT_ID,
       fuzzy_match: true,
       name: ''
@@ -135,8 +135,8 @@ export const actions: Actions = {
         return {
           games,
           totalCount,
-          limit: +limit,
-          skip: +skip,
+          limit: parseInt(limit),
+          skip: parseInt(skip),
         };
       }
     } catch (e) {
