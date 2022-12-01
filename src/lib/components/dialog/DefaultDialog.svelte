@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { type SvelteComponent, createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import {
 		Dialog,
@@ -8,23 +9,67 @@
 	} from '@rgossiaux/svelte-headlessui';
 	import { boredState } from '$root/lib/stores/boredState';
 
+	export let title: string;
+	export let description: string;
+	export let danger = false;
+	export let alert = false;
+	export let passive = false;
+	export let primaryButtonText = '';
+	export let primaryButtonDisabled = false;
+	export let primaryButtonIcon: typeof SvelteComponent = undefined;
+	export let primaryButtonIconDescription = '';
+	export let secondaryButtonText = '';
+
+	const dispatch = createEventDispatcher();
+
 	$: isOpen = $boredState?.dialog?.isOpen;
 </script>
 
 <Dialog
 	open={isOpen}
 	on:close={() => {
-		boredState.update((n) => ({ ...n, dialog: { ...n.dialog, isOpen: false } }));
+		dispatch('close');
 	}}
 	static
 >
 	<div transition:fade>
 		<DialogOverlay class="dialog-overlay" />
 		<div class="dialog">
-			<DialogTitle>Default Dialog</DialogTitle>
-			<DialogDescription>Dialog Description</DialogDescription>
+			<DialogTitle>{title}</DialogTitle>
+			{#if description}
+				<DialogDescription>{description}</DialogDescription>
+			{/if}
 
-			<div class="dialog-footer" />
+			<div class="dialog-footer">
+				<button
+					disabled={primaryButtonDisabled}
+					class={danger ? 'danger' : 'primary'}
+					on:click={() => {
+						dispatch('click:secondary');
+					}}
+				>
+					{#if primaryButtonIcon}
+						<svelte:component
+							this={primaryButtonIcon}
+							aria-hidden="true"
+							class="button-icon"
+							aria-label={primaryButtonIconDescription}
+						/>
+					{/if}
+					<span>
+						{primaryButtonText}
+					</span>
+				</button>
+
+				<button
+					on:click={() => {
+						dispatch('submit');
+						dispatch('click:primary');
+					}}
+				>
+					{secondaryButtonText}
+				</button>
+			</div>
 		</div>
 	</div>
 </Dialog>
@@ -34,7 +79,7 @@
 		display: grid;
 		gap: 1.5rem;
 		position: fixed;
-		top: 35%;
+		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
 		z-index: 101;
@@ -60,6 +105,14 @@
 
 				&:hover {
 					background-color: var(--color-btn-primary-active-hover);
+				}
+			}
+
+			.danger {
+				background-color: var(--warning);
+
+				&:hover {
+					background-color: var(--warning-hover);
 				}
 			}
 		}

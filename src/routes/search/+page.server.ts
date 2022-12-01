@@ -3,6 +3,8 @@ import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
 import { error, invalid, type ServerLoadEvent } from '@sveltejs/kit';
 import type { GameType, SearchQuery } from '$root/lib/types';
 import { mapAPIGameToBoredGame } from '$root/lib/util/gameMapper';
+import { search_schema } from '$root/lib/zodValidation';
+import { ZodError } from 'zod';
 
 export const load: PageServerLoad = () => {
   return {
@@ -12,15 +14,16 @@ export const load: PageServerLoad = () => {
 }
 
 export const actions: Actions = {
-  default: async ({ request, locals }: RequestEvent): Promise<any> => {
+  default: async ({ request }): Promise<any> => {
     console.log("In search action specific")
     // Do things in here
-    const form = await request.formData();
-    console.log('passed in limit:', form.get('limit'))
-    console.log('passed in skip:', form.get('skip'))
-    const limit = form.get('limit') || 10;
-    const skip = form.get('skip') || 0;
-    console.log('action form', form);
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData);
+    console.log('passed in limit:', data?.limit)
+    console.log('passed in skip:', data?.skip)
+    const limit = data?.limit || 10;
+    const skip = data?.skip || 0;
+    console.log('action form', data);
     const queryParams: SearchQuery = {
       order_by: 'rank',
       ascending: false,
@@ -33,52 +36,60 @@ export const actions: Actions = {
 
     // TODO: Check name length and not search if not advanced search
 
-    const random = form.get('random') && form.get('random') === 'on';
+    const random = data?.random === 'on';
 
     if (random) {
       queryParams.random = random;
     } else {
-      const minAge = form.get('minAge');
-      const minPlayers = form.get('minPlayers');
-      console.log('minPlayers', minPlayers);
-      const maxPlayers = form.get('maxPlayers');
-      console.log('maxPlayers', maxPlayers);
-      const exactMinAge = form.get('exactMinAge') || false;
-      const exactMinPlayers = form.get('exactMinPlayers') || false;
-      const exactMaxPlayers = form.get('exactMaxPlayers') || false;
+      // const minAge = form.get('minAge');
+      // const minPlayers = form.get('minPlayers');
+      // const maxPlayers = form.get('maxPlayers');
+      // const exactMinAge = form.get('exactMinAge') || false;
+      // const exactMinPlayers = form.get('exactMinPlayers') || false;
+      // const exactMaxPlayers = form.get('exactMaxPlayers') || false;
 
-      if (minAge) {
-        if (exactMinAge) {
-          queryParams.min_age = +minAge;
-        } else {
-          queryParams.gt_min_age = +minAge === 1 ? 0 : +minAge - 1;
-        }
-      }
-
-      if (minPlayers && maxPlayers) {
-        if (+minPlayers > +maxPlayers) {
-          return invalid(400, { minPlayers, error: { id: 'minPlayers', message: 'Min must be less than max' } });
-        }
-        // else if (+maxPlayers < +minPlayers) {
-        //   return invalid(400, { maxPlayers, error: { id: 'maxPlayers', message: 'Max must be greater than min' } });
-        // }
-        if (exactMinPlayers) {
-          queryParams.min_players = +minPlayers;
-        } else {
-          queryParams.gt_min_players = +minPlayers === 1 ? 0 : +minPlayers - 1;
+      try {
+        const {
+          name,
+          minAge,
+          minPlayers,
+          maxPlayers,
+          exactMinAge,
+          exactMinPlayers,
+          exactMaxPlayers
+        } = search_schema.parse(formData);
+        
+        if (minAge) {
+          if (exactMinAge) {
+            queryParams.min_age = minAge;
+          } else {
+            queryParams.gt_min_age = minAge === 1 ? 0 : minAge - 1;
+          }
         }
 
-        if (exactMaxPlayers) {
-          queryParams.max_players = +maxPlayers;
-        } else {
-          queryParams.lt_max_players = +maxPlayers + 1;
+        if (minPlayers) {
+          if (exactMinPlayers) {
+            queryParams.min_players = minPlayers;
+          } else {
+            queryParams.gt_min_players = minPlayers === 1 ? 0 : minPlayers - 1;
+          }
         }
-      }
+        if (maxPlayers) {
+          if (exactMaxPlayers) {
+            queryParams.max_players = maxPlayers;
+          } else {
+            queryParams.lt_max_players = maxPlayers + 1;
+          }
+        }
 
-      const name = form.has('name') ? form.get('name') : await request?.text();
-      console.log('name', name);
-      if (name) {
-        queryParams.name = `${name}`;
+        if (name) {
+          queryParams.name = name;
+        }
+      } catch (error: unknown) {
+        if (error instanceof ZodError) {
+          const { fieldErrors: errors } = error.flatten();
+          return invalid(400, { formData, errors });
+        }
       }
     }
 

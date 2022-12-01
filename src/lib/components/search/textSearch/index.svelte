@@ -40,7 +40,6 @@
 	let disclosureOpen = false;
 
 	$: skip = (page - 1) * pageSize;
-	$: console.log('submit button', submitButton);
 	$: showPagination = $gameStore?.length > 1;
 
 	if ($xl) {
@@ -223,7 +222,7 @@
 	</div>
 {/if}
 
-<style lang="scss">
+<style lang="postcss">
 	.search {
 		display: grid;
 		gap: 1rem;
@@ -267,15 +266,15 @@
 		grid-template-columns: repeat(var(--listColumns), minmax(200px, 1fr));
 		gap: 2rem;
 
-		@media (max-width: 1200px) {
+		@media screen and (800px < width <= 1200px) {
 			--listColumns: 3;
 		}
 
-		@media (max-width: 800px) {
+		@media screen and (650px < width <= 800px) {
 			--listColumns: 2;
 		}
 
-		@media (max-width: 650px) {
+		@media screen and (width <= 650px) {
 			--listColumns: 1;
 		}
 	}

@@ -34,6 +34,7 @@
 		gameStore.removeAll();
 		boredState.update((n) => ({ ...n, loading: true }));
 		return async ({ result }) => {
+			console.log('result', result);
 			boredState.update((n) => ({ ...n, loading: false }));
 			// `result` is an `ActionResult` object
 			if (result.type === 'success') {
