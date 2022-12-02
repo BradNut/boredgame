@@ -17,13 +17,12 @@ export const actions: Actions = {
   default: async ({ request }: RequestEvent): Promise<any> => {
     console.log("In search action specific")
     // Do things in here
-    const formData = await request.formData();
-    const data = Object.fromEntries(formData);
-    console.log('passed in limit:', data?.limit)
-    console.log('passed in skip:', data?.skip)
-    const limit = data?.limit || 10;
-    const skip = data?.skip || 0;
-    console.log('action form', data);
+    const formData = Object.fromEntries(await request.formData());
+    console.log('passed in limit:', formData?.limit)
+    console.log('passed in skip:', formData?.skip)
+    const limit = formData?.limit || 10;
+    const skip = formData?.skip || 0;
+
     const queryParams: SearchQuery = {
       order_by: 'rank',
       ascending: false,
@@ -36,7 +35,7 @@ export const actions: Actions = {
 
     // TODO: Check name length and not search if not advanced search
 
-    const random = data?.random === 'on';
+    const random = formData?.random === 'on';
 
     if (random) {
       queryParams.random = random;
@@ -58,6 +57,8 @@ export const actions: Actions = {
           exactMinPlayers,
           exactMaxPlayers
         } = search_schema.parse(formData);
+
+        console.log('Parsed', search_schema.parse(formData))
         
         if (minAge) {
           if (exactMinAge) {
@@ -86,9 +87,10 @@ export const actions: Actions = {
           queryParams.name = name;
         }
       } catch (error: unknown) {
+
         if (error instanceof ZodError) {
           const { fieldErrors: errors } = error.flatten();
-          return invalid(400, { formData, errors });
+          return invalid(400, { data: formData, errors });
         }
       }
     }
@@ -112,7 +114,7 @@ export const actions: Actions = {
           'content-type': 'application/json'
         }
       });
-      console.log('board game response', response);
+      // console.log('board game response', response);
 
       if (!response.ok) {
         console.log('Status not 200', response.status);
@@ -121,7 +123,7 @@ export const actions: Actions = {
 
       if (response.status === 200) {
         const gameResponse = await response.json();
-        console.log('gameResponse', gameResponse);
+        // console.log('gameResponse', gameResponse);
         const gameList = gameResponse?.games;
         const totalCount = gameResponse?.count;
         console.log('totalCount', totalCount);
@@ -130,7 +132,7 @@ export const actions: Actions = {
           games.push(mapAPIGameToBoredGame(game));
         });
 
-        console.log('returning from search', games)
+        // console.log('returning from search', games)
 
         return {
           games,

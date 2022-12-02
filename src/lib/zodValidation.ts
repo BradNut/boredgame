@@ -26,6 +26,7 @@ export const search_schema = z.object({
   exactMaxPlayers: z.boolean().optional(),
 })
   .superRefine(({ minPlayers, maxPlayers, minAge, exactMinAge, exactMinPlayers, exactMaxPlayers }, ctx) => {
+    console.log({ minPlayers, maxPlayers });
     if (minPlayers && maxPlayers && minPlayers > maxPlayers) {
       ctx.addIssue({
         code: 'custom',
