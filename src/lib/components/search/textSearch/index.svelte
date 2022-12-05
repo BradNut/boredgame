@@ -25,6 +25,7 @@
 	// console.log('search page data', data);
 	export let form: ActionData;
 	// console.log('search page form', form);
+	const errors = form?.errors;
 
 	export let showButton: boolean = false;
 	export let advancedSearch: boolean = false;
@@ -37,10 +38,9 @@
 	let totalItems = form?.totalCount || data?.totalCount || 0;
 	let submitting = $boredState?.loading;
 	let name = form?.name || '';
-	let disclosureOpen = false;
+	let disclosureOpen = errors || false;
 
 	$: skip = (page - 1) * pageSize;
-	$: console.log('submit button', submitButton);
 	$: showPagination = $gameStore?.length > 1;
 
 	if ($xl) {
@@ -229,7 +229,7 @@
 	</div>
 {/if}
 
-<style lang="scss">
+<style lang="postcss">
 	.search {
 		display: grid;
 		gap: 1rem;
@@ -273,15 +273,15 @@
 		grid-template-columns: repeat(var(--listColumns), minmax(200px, 1fr));
 		gap: 2rem;
 
-		@media (max-width: 1200px) {
+		@media screen and (800px < width <= 1200px) {
 			--listColumns: 3;
 		}
 
-		@media (max-width: 800px) {
+		@media screen and (650px < width <= 800px) {
 			--listColumns: 2;
 		}
 
-		@media (max-width: 650px) {
+		@media screen and (width <= 650px) {
 			--listColumns: 1;
 		}
 	}

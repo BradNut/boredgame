@@ -12,6 +12,8 @@ export function convertToSavedGame(game: GameType | SavedGameType): SavedGameTyp
 
 export function mapSavedGameToGame(game: SavedGameType): GameType {
   const { id, name, thumb_url, players, playtime } = game;
+  console.log({ id, name, thumb_url, players, playtime });
+  
   
   return {
     id,

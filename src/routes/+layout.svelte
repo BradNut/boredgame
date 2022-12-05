@@ -3,6 +3,7 @@
 	import { navigating } from '$app/stores';
 	import debounce from 'just-debounce-it';
 	import { Toy } from '@leveluptuts/svelte-toy';
+	// import '../app.postcss';
 	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/Header.svelte';
 	import Loading from '$lib/components/loading.svelte';
@@ -14,7 +15,7 @@
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
-	import '$root/styles/styles.scss';
+	import '$root/styles/styles.postcss';
 
 	$: {
 		if ($navigating) {
@@ -103,7 +104,7 @@
 	<Toast />
 </Transition>
 
-<style lang="scss">
+<style lang="postcss">
 	.loading {
 		position: fixed;
 		top: 50%;

@@ -1,14 +1,8 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
-	import {
-		Dialog,
-		DialogDescription,
-		DialogOverlay,
-		DialogTitle
-	} from '@rgossiaux/svelte-headlessui';
+	import { browser } from '$app/environment';
 	import { boredState } from '$root/lib/stores/boredState';
 	import { wishlistStore } from '$root/lib/stores/wishlistStore';
-	import { browser } from '$app/environment';
+	import DefaultDialog from './DefaultDialog.svelte';
 
 	function clearWishlist() {
 		if (browser) {
@@ -18,35 +12,23 @@
 		boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
 	}
 
-	$: isOpen = $boredState?.dialog?.isOpen;
+	function stopLoading() {
+		boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
+	}
 </script>
 
-<Dialog
-	open={isOpen}
-	on:close={() => {
-		boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
-	}}
-	static
->
-	<div transition:fade>
-		<DialogOverlay class="dialog-overlay" />
-		<div class="dialog">
-			<DialogTitle>Clear wishlist</DialogTitle>
-			<DialogDescription>Are you sure you want to clear your wishlist?</DialogDescription>
+<DefaultDialog
+	title="Clear wishlist"
+	description="Are you sure you want to clear your wishlist?"
+	danger
+	primaryButtonText="Clear"
+	secondaryButtonText="Cancel"
+	on:click:primary={clearWishlist}
+	on:click:secondary={stopLoading}
+	on:close={stopLoading}
+/>
 
-			<div class="dialog-footer">
-				<button class="remove" on:click={clearWishlist}>Clear</button>
-				<button
-					on:click={() => {
-						boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
-					}}>Cancel</button
-				>
-			</div>
-		</div>
-	</div>
-</Dialog>
-
-<style lang="scss">
+<style lang="postcss">
 	.dialog {
 		display: grid;
 		gap: 1.5rem;

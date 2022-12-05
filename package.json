@@ -22,10 +22,19 @@
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
+    "autoprefixer": "^10.4.13",
     "eslint": "^8.27.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "just-debounce-it": "^3.1.1",
+    "postcss": "^8.4.19",
+    "postcss-color-functional-notation": "^4.2.4",
+    "postcss-custom-media": "^9.0.1",
+    "postcss-env-function": "^4.0.6",
+    "postcss-import": "^15.0.0",
+    "postcss-load-config": "^4.0.1",
+    "postcss-media-minmax": "^5.0.0",
+    "postcss-nested": "^6.0.0",
     "prettier": "^2.7.1",
     "prettier-plugin-svelte": "^2.8.0",
     "sass": "^1.56.1",
@@ -47,6 +56,6 @@
     "feather-icons": "^4.29.0",
     "svelte-lazy-loader": "^1.0.0",
     "zod": "^3.19.1",
-    "zod-to-json-schema": "^3.18.1"
+    "zod-to-json-schema": "^3.19.3"
   }
 }

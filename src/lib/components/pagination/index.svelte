@@ -19,6 +19,7 @@
 	export let pageSize: number; // Reactive, bind
 	export let page: number = 1; // Reactive, bind
 	export let totalItems: number;
+	export let showItemsLeft = false;
 	export let pageSizeInputDisabled: boolean = false;
 	export let pageSizes: ReadonlyArray<Number> = [10];
 	export let forwardText: string;
@@ -74,9 +75,11 @@
 	<p>
 		Page {page || 1} of {totalPages || 1}
 	</p>
-	<p>
-		{itemsLeft} Item{itemsLeft > 1 || itemsLeft === 0 ? 's' : ''} Left
-	</p>
+	{#if showItemsLeft}
+		<p>
+			{itemsLeft} Item{itemsLeft > 1 || itemsLeft === 0 ? 's' : ''} Left
+		</p>
+	{/if}
 	<div style="display: flex; gap: 2rem;">
 		<button
 			type="button"
@@ -107,16 +110,12 @@
 
 <style lang="scss">
 	.container {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		display: flex;
+		flex: wrap;
+		justify-content: space-between;
 		align-items: center;
 		gap: 1rem;
 		margin: 3rem 0;
-
-		@media (max-width: 640px) {
-			grid-template-columns: repeat(2, 1fr);
-			grid-template-rows: repeat(2, 1fr);
-		}
 
 		.btn {
 			display: flex;
@@ -131,23 +130,7 @@
 		}
 	}
 
-	/* .list-container :global(.list-box) {
-		height: 100%;
-		position: relative;
-	}
-
-	.list-container :global(.list-options) {
-		position: absolute;
-	}
-
-	.list-container :global(.active) {
-		display: flex;
-		gap: 1rem;
-		padding: 1rem;
-	} */
-
 	button {
-		/* min-width: 50px; */
 		&[aria-current],
 		&.current {
 			color: black; // TODO: Fix these colors
