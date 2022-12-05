@@ -39,6 +39,7 @@ export const actions: Actions = {
     const random = formData?.random === 'on';
 
     if (random) {
+      console.log('Random');
       queryParams.random = random;
     } else {
       try {
@@ -82,6 +83,8 @@ export const actions: Actions = {
         }
       } catch (error: unknown) {
         if (error instanceof ZodError) {
+          console.log(error);
+          
           const { fieldErrors: errors } = error.flatten();
           return invalid(400, { data: formData, errors });
         }

@@ -17,26 +17,24 @@ export const saved_game_schema = z.object({
 });
 
 // https://github.com/colinhacks/zod/discussions/330
-// function IntegerString
-//   <schema extends (ZodNumber | ZodOptional<ZodNumber>)>
-//   (schema: schema)
-// {
-//   return (
-//     z.preprocess((value) => (
-//       ( (typeof value === "string") ? parseInt(value, 10)
-//       : (typeof value === "number") ? value
-//       :                               undefined
-//     )), schema)
-//   )
-// }
-
-// minPlayers: IntegerString(z.number().min(1).max(50).optional());
+function IntegerString
+  <schema extends (ZodNumber | ZodOptional<ZodNumber>)>
+  (schema: schema)
+{
+  return (
+    z.preprocess((value) => (
+      ( (typeof value === "string") ? parseInt(value, 10)
+      : (typeof value === "number") ? value
+      :                               undefined
+    )), schema)
+  )
+}
 
 export const search_schema = z.object({
   name: z.string().trim().optional(),
-  minAge: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().min(1).max(120).optional()),
-  minPlayers: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().min(1).max(50).optional()),
-  maxPlayers: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().min(1).max(50).optional()),
+  minAge: IntegerString(z.number().min(1).max(120).optional()),
+  minPlayers: IntegerString(z.number().min(1).max(50).optional()),
+  maxPlayers: IntegerString(z.number().min(1).max(50).optional()),
   exactMinAge: z.preprocess((a) => Boolean(a), z.boolean().optional()),
   exactMinPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
   exactMaxPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional())
