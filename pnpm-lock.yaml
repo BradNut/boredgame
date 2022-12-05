@@ -60,7 +60,7 @@ devDependencies:
   '@rgossiaux/svelte-headlessui': 1.0.2_svelte@3.53.1
   '@rgossiaux/svelte-heroicons': 0.1.2_svelte@3.53.1
   '@sveltejs/adapter-auto': 1.0.0-next.90
-  '@sveltejs/kit': 1.0.0-next.570_svelte@3.53.1+vite@3.2.4
+  '@sveltejs/kit': 1.0.0-next.571_svelte@3.53.1+vite@3.2.4
   '@types/cookie': 0.5.1
   '@types/node': 18.11.10
   '@typescript-eslint/eslint-plugin': 5.45.0_czs5uoqkd3podpy6vgtsxfc7au
@@ -268,8 +268,8 @@ packages:
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.570_svelte@3.53.1+vite@3.2.4:
-    resolution: {integrity: sha512-7CUoYidoWlKdTGxL/5RsPPkgGTb36TwFBnhSZmspHFeiIST5qQEXyzqicFk8+4M5qQhxvOZ0NuP8uy7Pc+xf/Q==}
+  /@sveltejs/kit/1.0.0-next.571_svelte@3.53.1+vite@3.2.4:
+    resolution: {integrity: sha512-J+J0UXBiAh569l4ZxKm6eIZJS4lbcP8MgF9fU+DbVplCJ8nqo9wUmirUHZkJoBoB0FUlZSgA0R7N471MnUNNBw==}
     engines: {node: '>=16.14'}
     hasBin: true
     requiresBuild: true
@@ -1836,6 +1836,7 @@ packages:
 
   /sourcemap-codec/1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
+    deprecated: Please use @jridgewell/sourcemap-codec instead
     dev: true
 
   /streamsearch/1.1.0:
