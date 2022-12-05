@@ -25,6 +25,7 @@
 	// console.log('search page data', data);
 	export let form: ActionData;
 	// console.log('search page form', form);
+	const errors = form?.errors;
 
 	export let showButton: boolean = false;
 	export let advancedSearch: boolean = false;
@@ -37,7 +38,7 @@
 	let totalItems = form?.totalCount || data?.totalCount || 0;
 	let submitting = $boredState?.loading;
 	let name = form?.name || '';
-	let disclosureOpen = false;
+	let disclosureOpen = errors || false;
 
 	$: skip = (page - 1) * pageSize;
 	$: showPagination = $gameStore?.length > 1;

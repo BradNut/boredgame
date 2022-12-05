@@ -18,6 +18,7 @@ export const actions: Actions = {
     console.log("In search action specific")
     // Do things in here
     const formData = Object.fromEntries(await request.formData());
+    console.log('formData', formData);
     console.log('passed in limit:', formData?.limit)
     console.log('passed in skip:', formData?.skip)
     const limit = formData?.limit || 10;
@@ -26,8 +27,8 @@ export const actions: Actions = {
     const queryParams: SearchQuery = {
       order_by: 'rank',
       ascending: false,
-      limit: parseInt(limit),
-      skip: parseInt(skip),
+      limit: +limit,
+      skip: +skip,
       client_id: BOARD_GAME_ATLAS_CLIENT_ID,
       fuzzy_match: true,
       name: ''
@@ -40,14 +41,8 @@ export const actions: Actions = {
     if (random) {
       queryParams.random = random;
     } else {
-      // const minAge = form.get('minAge');
-      // const minPlayers = form.get('minPlayers');
-      // const maxPlayers = form.get('maxPlayers');
-      // const exactMinAge = form.get('exactMinAge') || false;
-      // const exactMinPlayers = form.get('exactMinPlayers') || false;
-      // const exactMaxPlayers = form.get('exactMaxPlayers') || false;
-
       try {
+        console.log('Parsed', search_schema.parse(formData))
         const {
           name,
           minAge,
@@ -58,7 +53,6 @@ export const actions: Actions = {
           exactMaxPlayers
         } = search_schema.parse(formData);
 
-        console.log('Parsed', search_schema.parse(formData))
         
         if (minAge) {
           if (exactMinAge) {
@@ -87,7 +81,6 @@ export const actions: Actions = {
           queryParams.name = name;
         }
       } catch (error: unknown) {
-
         if (error instanceof ZodError) {
           const { fieldErrors: errors } = error.flatten();
           return invalid(400, { data: formData, errors });

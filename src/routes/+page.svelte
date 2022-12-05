@@ -5,7 +5,9 @@
 	import Random from '$lib/components/random/index.svelte';
 
 	export let data: PageData;
+	console.log('data', data);
 	export let form: ActionData;
+	console.log('form', form);
 </script>
 
 <svelte:head>
