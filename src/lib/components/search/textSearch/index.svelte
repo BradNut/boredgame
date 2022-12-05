@@ -44,12 +44,16 @@
 	$: showPagination = $gameStore?.length > 1;
 
 	if ($xl) {
+		console.log('Was xl');
 		numberOfGameSkeleton = 8;
 	} else if ($md) {
+		console.log('Was md');
 		numberOfGameSkeleton = 3;
 	} else if ($sm) {
+		console.log('Was sm');
 		numberOfGameSkeleton = 2;
 	} else {
+		console.log('Was none');
 		numberOfGameSkeleton = 1;
 	}
 
