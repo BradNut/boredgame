@@ -1,5 +1,5 @@
 import { z, ZodNumber, ZodOptional } from 'zod';
-import zodToJsonSchema from 'zod-to-json-schema';
+// import zodToJsonSchema from 'zod-to-json-schema';
 
 export const BoardGameSearch = z.object({
   minAge: z.number(),
@@ -152,8 +152,8 @@ export const game_schema = z.object({
   playtime: z.string()
 });
 
-export const game_raw_schema_json = zodToJsonSchema(game_schema, {
-  $refStrategy: 'none',
-});
+// export const game_raw_schema_json = zodToJsonSchema(game_schema, {
+//   $refStrategy: 'none',
+// });
 
 export type Game = z.infer<typeof game_schema>;
