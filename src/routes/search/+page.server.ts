@@ -43,7 +43,6 @@ export const actions: Actions = {
       queryParams.random = random;
     } else {
       try {
-        console.log('Parsed', search_schema.parse(formData))
         const {
           name,
           minAge,

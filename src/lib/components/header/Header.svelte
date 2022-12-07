@@ -11,8 +11,8 @@
 	</div>
 
 	<nav>
-		<a href="/collection" title="Go to your collection" data-sveltekit-prefetch>Collection</a>
-		<a href="/wishlist" title="Go to your collection" data-sveltekit-prefetch>Wishlist</a>
+		<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
+		<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
 		<Profile />
 	</nav>
 </header>

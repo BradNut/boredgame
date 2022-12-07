@@ -13,7 +13,7 @@ export const saved_game_schema = z.object({
   name: z.string(),
   thumb_url: z.string(),
   players: z.string(),
-  playtime: z.string()
+  playtime: IntegerString(z.number()),
 });
 
 // https://github.com/colinhacks/zod/discussions/330

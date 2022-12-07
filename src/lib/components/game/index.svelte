@@ -51,7 +51,7 @@
 		class="thumbnail"
 		href={`/game/${game.id}`}
 		title={`View ${game.name}`}
-		data-sveltekit-prefetch
+		data-sveltekit-preload-data
 	>
 		<Image src={game.thumb_url} alt={`Image of ${game.name}`} />
 		<!-- <img src={game.thumb_url} alt={`Image of ${game.name}`} /> -->
