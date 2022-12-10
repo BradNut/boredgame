@@ -1,7 +1,7 @@
 import type { Actions, PageServerLoad, RequestEvent } from '../$types';
 import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
 import { error, invalid, type ServerLoadEvent } from '@sveltejs/kit';
-import type { GameType, SearchQuery } from '$root/lib/types';
+import type { GameType, Search, SearchQuery } from '$root/lib/types';
 import { mapAPIGameToBoredGame } from '$root/lib/util/gameMapper';
 import { search_schema } from '$root/lib/zodValidation';
 import { ZodError } from 'zod';
@@ -17,7 +17,7 @@ export const actions: Actions = {
   default: async ({ request }: RequestEvent): Promise<any> => {
     console.log("In search action specific")
     // Do things in here
-    const formData = Object.fromEntries(await request.formData());
+    const formData = Object.fromEntries(await request.formData()) as Search;
     console.log('formData', formData);
     console.log('passed in limit:', formData?.limit)
     console.log('passed in skip:', formData?.skip)

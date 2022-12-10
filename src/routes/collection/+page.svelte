@@ -79,19 +79,21 @@
 					{game}
 				/>
 			{/each}
-			<Pagination
-				{pageSize}
-				{page}
-				{totalItems}
-				forwardText="Next"
-				backwardText="Prev"
-				pageSizes={[10, 25, 50, 100]}
-				on:nextPageEvent={handleNextPageEvent}
-				on:previousPageEvent={handlePreviousPageEvent}
-				on:perPageEvent={handlePerPageEvent}
-			/>
 		{/if}
 	</div>
+	{#if $collectionStore.length !== 0}
+		<Pagination
+			{pageSize}
+			{page}
+			{totalItems}
+			forwardText="Next"
+			backwardText="Prev"
+			pageSizes={[10, 25, 50, 100]}
+			on:nextPageEvent={handleNextPageEvent}
+			on:previousPageEvent={handlePreviousPageEvent}
+			on:perPageEvent={handlePerPageEvent}
+		/>
+	{/if}
 </div>
 
 <style lang="scss">

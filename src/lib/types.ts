@@ -7,16 +7,21 @@ export type Dialog = {
 }
 
 export type Search = {
-  totalCount: number;
-  pageSize: number;
+  name: string;
+  minAge: string;
+  minPlayers: string;
+  maxPlayers: string;
+  exactMinAge: string;
+  exactMinPlayers: string;
+  exactMaxPlayers: string;
   skip: number;
   currentPage: number;
+  limit: number;
 }
 
 export type BoredStore = {
   loading: boolean;
   dialog: Dialog;
-  search: Search;
 };
 
 export enum ToastType {

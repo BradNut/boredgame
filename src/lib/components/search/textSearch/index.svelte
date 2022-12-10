@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
 	import type { ActionData, PageData } from './$types';
-	import { applyAction, enhance } from '$app/forms';
 	import { fade } from 'svelte/transition';
 	import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
 	import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
@@ -105,15 +105,18 @@
 		}));
 	}
 
-	// TODO: Keep all Pagination Values on back and forth browser
-	// TODO: Add cache for certain number of pages so back and forth doesn't request data again
-</script>
+	const submitSearch: SubmitFunction = ({ form, data, action, cancel }) => {
+		const { name } = Object.fromEntries(data);
+		if (!disclosureOpen && name?.length === 0) {
+			toast.send('Please enter a search term', {
+				duration: 3000,
+				type: ToastType.ERROR,
+				dismissible: true
+			});
+			cancel();
+			return;
+		}
 
-<form
-	id="search-form"
-	action="/search"
-	method="post"
-	use:enhance={() => {
 		gameStore.removeAll();
 		boredState.update((n) => ({ ...n, loading: true }));
 		return async ({ result }) => {
@@ -126,14 +129,19 @@
 				gameStore.removeAll();
 				gameStore.addAll(result?.data?.games);
 				totalItems = result?.data?.totalCount;
-				// toast.send('Sucess!', { duration: 3000, type: ToastType.INFO, dismissible: true });
+				// toast.send('Success!', { duration: 3000, type: ToastType.INFO, dismissible: true });
 				await applyAction(result);
 			} else {
 				await applyAction(result);
 			}
 		};
-	}}
->
+	};
+
+	// TODO: Keep all Pagination Values on back and forth browser
+	// TODO: Add cache for certain number of pages so back and forth doesn't request data again
+</script>
+
+<form id="search-form" action="/search" method="post" use:enhance={submitSearch}>
 	<input id="skip" type="hidden" name="skip" bind:value={skip} />
 	<input id="limit" type="hidden" name="limit" bind:value={pageSize} />
 	<div class="search">
