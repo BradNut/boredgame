@@ -1,26 +1,31 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types'
+import type { PageServerLoad } from './$types';
 import { boardGameApi } from '../../api';
 
 type GamePageParams = {
-  params: {
-    id: string;
-  }
-}
+	params: {
+		id: string;
+	};
+};
 
-export const load: PageServerLoad = async ({ params }: GamePageParams) => {
-  const queryParams = {
-    ids: `${params?.id}`
-  };
-  
-  const response = await boardGameApi('get', `search`, queryParams);
+export const load: PageServerLoad = async ({ params, setHeaders }: GamePageParams) => {
+	const queryParams = {
+		ids: `${params?.id}`
+	};
 
-  if (response.status === 200) {
-    const gameResponse = await response.json();
-    return {
-      game: gameResponse?.games[0]
-    };
-  }
+	const response = await boardGameApi('get', `search`, queryParams);
 
-  throw error(response.status, 'not found');
+	if (response.status === 200) {
+		const gameResponse = await response.json();
+
+		setHeaders({
+			'Cache-Control': 'max-age=3600'
+		});
+
+		return {
+			game: gameResponse?.games[0]
+		};
+	}
+
+	throw error(response.status, 'not found');
 };

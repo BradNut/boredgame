@@ -25,7 +25,9 @@
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
 
 	export let data: PageData;
-	export let game: GameType = data?.game;
+	let game: GameType;
+	$: ({ game } = data);
+	// export let game: GameType = data?.game;
 	let seeMore: boolean = false;
 	let firstParagraphEnd = 0;
 	if (game?.description?.indexOf('</p>') > 0) {

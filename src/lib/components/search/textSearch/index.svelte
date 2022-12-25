@@ -25,7 +25,7 @@
 	// console.log('search page data', data);
 	export let form: ActionData;
 	// console.log('search page form', form);
-	const errors = form?.errors;
+	const errors = data?.errors;
 
 	export let showButton: boolean = false;
 	export let advancedSearch: boolean = false;
@@ -34,26 +34,22 @@
 	let numberOfGameSkeleton = 1;
 	let submitButton: HTMLElement;
 	let pageSize = 10;
-	let page = +form?.data?.page || 1;
-	let totalItems = form?.totalCount || data?.totalCount || 0;
+	let page = +data?.page || 1;
+	let totalItems = data?.totalCount || 0;
 	let submitting = $boredState?.loading;
-	let name = form?.name || '';
+	let name = data?.name || '';
 	let disclosureOpen = errors || false;
 
 	$: skip = (page - 1) * pageSize;
 	$: showPagination = $gameStore?.length > 1;
 
 	if ($xl) {
-		console.log('Was xl');
 		numberOfGameSkeleton = 8;
 	} else if ($md) {
-		console.log('Was md');
 		numberOfGameSkeleton = 3;
 	} else if ($sm) {
-		console.log('Was sm');
 		numberOfGameSkeleton = 2;
 	} else {
-		console.log('Was none');
 		numberOfGameSkeleton = 1;
 	}
 
@@ -141,22 +137,22 @@
 	// TODO: Add cache for certain number of pages so back and forth doesn't request data again
 </script>
 
-<form id="search-form" action="/search" method="post" use:enhance={submitSearch}>
-	<input id="skip" type="hidden" name="skip" bind:value={skip} />
-	<input id="limit" type="hidden" name="limit" bind:value={pageSize} />
+<form id="search-form" action="/search" method="get">
 	<div class="search">
 		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
-			<label for="name">
+			<label for="q">
 				Search
 				<input
-					id="name"
-					name="name"
+					id="q"
+					name="q"
 					bind:value={name}
 					type="text"
 					aria-label="Search boardgame"
 					placeholder="Search boardgame"
 				/>
 			</label>
+			<input id="skip" type="hidden" name="skip" bind:value={skip} />
+			<input id="limit" type="hidden" name="limit" bind:value={pageSize} />
 		</fieldset>
 		{#if advancedSearch}
 			<Disclosure>
@@ -178,7 +174,7 @@
 						<!-- Using `static`, `DisclosurePanel` is always rendered,
                 and ignores the `open` state -->
 						<DisclosurePanel static>
-							<AdvancedSearch {form} />
+							<AdvancedSearch {data} />
 						</DisclosurePanel>
 					</div>
 				{/if}
@@ -198,19 +194,34 @@
 	{/if}
 </form>
 
-{#if $gameStore?.length > 0}
+{#if $boredState.loading}
 	<div class="games">
 		<h1>Games Found:</h1>
 		<div class="games-list">
-			{#each $gameStore as game (game.id)}
-				<Game
-					on:handleRemoveWishlist={handleRemoveWishlist}
-					on:handleRemoveCollection={handleRemoveCollection}
-					{game}
+			{#each placeholderList as game, i}
+				<SkeletonPlaceholder
+					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
 				/>
 			{/each}
 		</div>
-		{#if showPagination}
+	</div>
+{:else}
+	<div class="games">
+		<h1>Games Found:</h1>
+		<div class="games-list">
+			{#if $gameStore?.length > 0}
+				{#each $gameStore as game (game.id)}
+					<Game
+						on:handleRemoveWishlist={handleRemoveWishlist}
+						on:handleRemoveCollection={handleRemoveCollection}
+						{game}
+					/>
+				{/each}
+			{:else}
+			 <h2>Sorry no games found!</h2>
+			{/if}
+		</div>
+		{#if showPagination && $gameStore?.length > 0}
 			<Pagination
 				{pageSize}
 				{page}
@@ -223,17 +234,6 @@
 				on:perPageEvent={handlePerPageEvent}
 			/>
 		{/if}
-	</div>
-{:else if $boredState.loading}
-	<div class="games">
-		<h1>Games Found:</h1>
-		<div class="games-list">
-			{#each placeholderList as game, i}
-				<SkeletonPlaceholder
-					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
-				/>
-			{/each}
-		</div>
 	</div>
 {/if}
 

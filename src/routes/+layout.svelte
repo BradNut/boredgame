@@ -15,7 +15,7 @@
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
-	import '$root/styles/styles.postcss';
+	import '$root/styles/styles.pcss';
 
 	$: {
 		if ($navigating) {
