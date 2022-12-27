@@ -33,9 +33,10 @@
 	let gameToRemove: GameType | SavedGameType;
 	let numberOfGameSkeleton = 1;
 	let submitButton: HTMLElement;
-	let pageSize = 10;
-	let page = +data?.page || 1;
-	let totalItems = data?.totalCount || 0;
+	let pageSize = +data?.limit || 10;
+	let totalItems = +data?.totalCount || 0;
+	let offset = +data?.skip || 0;
+	let page = Math.floor(offset / pageSize) + 1 || 1;
 	let submitting = $boredState?.loading;
 	let name = data?.name || '';
 	let disclosureOpen = errors || false;
@@ -77,11 +78,9 @@
 	}
 
 	async function handlePerPageEvent(event: CustomEvent) {
-		console.log('Per Page Event called', event.detail);
 		page = 1;
 		pageSize = event.detail.pageSize;
 		await tick();
-		// console.log('New limit value DOM: ', document.getElementById('limit')?.getAttribute('value'));
 		submitButton.click();
 	}
 

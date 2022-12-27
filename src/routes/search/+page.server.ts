@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad, RequestEvent } from '../$types';
 import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
-import { error, fail, type ServerLoadEvent } from '@sveltejs/kit';
+import { error, fail } from '@sveltejs/kit';
 import type { GameType, Search, SearchQuery } from '$root/lib/types';
 import { mapAPIGameToBoredGame } from '$root/lib/util/gameMapper';
 import { search_schema } from '$root/lib/zodValidation';
