@@ -5,30 +5,12 @@
 	import { ToastType } from '$root/lib/types';
 	import { toast } from '../../toast/toast';
 
-	// async function handleSubmit(event: SubmitEvent) {
-	// 	// submitting = true;
-	// 	boredState.update((n) => ({ ...n, loading: true }));
-	// 	const form = event.target as HTMLFormElement;
-	// 	console.log('form', form);
-	// 	const response = await fetch('/api/games', {
-	// 		method: 'POST',
-	// 		headers: { accept: 'application/json' },
-	// 		body: new FormData(form)
-	// 	});
-	// 	const responseData = await response.json();
-	// 	// submitting = false;
-	// 	boredState.update((n) => ({ ...n, loading: false }));
-	// 	gameStore.removeAll();
-	// 	gameStore.addAll(responseData?.games);
-	// 	// games = responseData?.games;
-	// }
-
 	let submitting = $boredState?.loading;
 	let checked = true;
 </script>
 
 <form
-	action="/search"
+	action="/search?/random"
 	method="POST"
 	use:enhance={() => {
 		gameStore.removeAll();
@@ -58,7 +40,7 @@
 	}}
 >
 	<fieldset aria-busy={submitting} disabled={submitting}>
-		<input type="checkbox" id="random" name="random" hidden {checked} />
+		<!-- <input type="checkbox" id="random" name="random" hidden {checked} /> -->
 		<button class="btn" type="submit" disabled={submitting}>Random Game 🎲</button>
 	</fieldset>
 </form>

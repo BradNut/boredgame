@@ -225,6 +225,7 @@
 		place-items: center;
 		gap: 1.5rem;
 		margin: 1rem;
+		line-height: 1.5em;
 	}
 
 	.overflow-description {
