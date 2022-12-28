@@ -1,8 +1,12 @@
 <!-- Taken from carbon design system svelte -->
 <!-- https://github.com/carbon-design-system/carbon-components-svelte/blob/master/src/SkeletonPlaceholder/SkeletonPlaceholder.svelte -->
+<script lang="ts">
+	export let style: string;
+</script>
 
 <!-- svelte-ignore a11y-mouse-events-have-key-events -->
 <div
+	{style}
 	class:bx--skeleton__placeholder={true}
 	{...$$restProps}
 	on:click
