@@ -27,6 +27,7 @@
     "eslint": "^8.30.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte3": "^4.0.0",
+    "just-clone": "^6.2.0",
     "just-debounce-it": "^3.2.0",
     "postcss": "^8.4.20",
     "postcss-color-functional-notation": "^4.2.4",

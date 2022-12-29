@@ -55,7 +55,7 @@
 					<ListboxOptions static class="options">
 						{#each pageSizes as size (size)}
 							<ListboxOption
-								value={size}
+								value={`${size}`}
 								disabled={pageSizeInputDisabled}
 								class={({ active }) => (active ? 'active option' : 'option')}
 								style="display: flex; gap: 1rem; padding: 1rem;"

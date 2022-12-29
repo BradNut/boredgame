@@ -2,6 +2,7 @@
 	import { browser } from '$app/environment';
 	import { navigating } from '$app/stores';
 	import debounce from 'just-debounce-it';
+	import clone from 'just-clone';
 	import { Toy } from '@leveluptuts/svelte-toy';
 	// import '../app.postcss';
 	import Analytics from '$lib/components/analytics.svelte';
@@ -16,6 +17,7 @@
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
 	import '$root/styles/styles.pcss';
+  import type { SavedGameType } from '$root/lib/types';
 
 	$: {
 		if ($navigating) {
@@ -34,14 +36,24 @@
 		let collectionEmpty = $collectionStore.length === 0 || false;
 		let wishlistEmpty = $wishlistStore.length === 0 || false;
 		if (wishlistEmpty && localStorage?.wishlist && localStorage?.wishlist?.length !== 0) {
-			const wishlist = JSON.parse(localStorage.wishlist);
+			const wishlist: SavedGameType[] = JSON.parse(localStorage.wishlist);
 			if (wishlist?.length !== 0) {
+				for (const item of wishlist) {
+					if (!item?.searchTerms) {
+						item.searchTerms = `${item?.name?.toLowerCase()}`;
+					}
+				}
 				wishlistStore.addAll(wishlist);
 			}
 		}
 		if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
-			const collection = JSON.parse(localStorage.collection);
+			const collection: SavedGameType[] = JSON.parse(localStorage.collection);
 			if (collection?.length !== 0) {
+				for (const item of collection) {
+					if (!item?.searchTerms) {
+						item.searchTerms = `${item?.name?.toLowerCase()}`;
+					}
+				}
 				collectionStore.addAll(collection);
 			}
 		}

@@ -22,6 +22,7 @@ specifiers:
   eslint-config-prettier: ^8.5.0
   eslint-plugin-svelte3: ^4.0.0
   feather-icons: ^4.29.0
+  just-clone: ^6.2.0
   just-debounce-it: ^3.2.0
   postcss: ^8.4.20
   postcss-color-functional-notation: ^4.2.4
@@ -72,6 +73,7 @@ devDependencies:
   eslint: 8.30.0
   eslint-config-prettier: 8.5.0_eslint@8.30.0
   eslint-plugin-svelte3: 4.0.0_khrjkzzv5v2x7orkj5o7sxbz3a
+  just-clone: 6.2.0
   just-debounce-it: 3.2.0
   postcss: 8.4.20
   postcss-color-functional-notation: 4.2.4_postcss@8.4.20
@@ -1564,6 +1566,10 @@ packages:
 
   /json-stable-stringify-without-jsonify/1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
+    dev: true
+
+  /just-clone/6.2.0:
+    resolution: {integrity: sha512-1IynUYEc/HAwxhi3WDpIpxJbZpMCvvrrmZVqvj9EhpvbH8lls7HhdhiByjL7DkAaWlLIzpC0Xc/VPvy/UxLNjA==}
     dev: true
 
   /just-debounce-it/3.2.0:

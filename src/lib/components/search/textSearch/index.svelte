@@ -136,7 +136,9 @@
 	// TODO: Add cache for certain number of pages so back and forth doesn't request data again
 </script>
 
-<form id="search-form" action="/search" method="get">
+<form id="search-form" action="/search" method="get" on:submit={() => {
+	skip = 0;
+}}>
 	<div class="search">
 		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
 			<label for="q">
