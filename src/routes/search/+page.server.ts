@@ -1,7 +1,7 @@
 import type { Actions, PageServerLoad, RequestEvent } from '../$types';
 import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
-import { error, fail } from '@sveltejs/kit';
-import type { GameType, RandomSearch, Search, SearchQuery } from '$root/lib/types';
+import { error } from '@sveltejs/kit';
+import type { GameType, SearchQuery } from '$root/lib/types';
 import { mapAPIGameToBoredGame } from '$root/lib/util/gameMapper';
 import { search_schema } from '$root/lib/zodValidation';
 import { ZodError } from 'zod';
@@ -56,9 +56,6 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	} catch (parsingError: unknown) {
 		let errors;
 		if (parsingError instanceof ZodError) {
-			// console.log('Parse error');
-
-			// console.log(parsingError);
 			const { fieldErrors } = parsingError.flatten();
 			console.log(`Errors with user input ${fieldErrors}}`);
 			errors = fieldErrors;
