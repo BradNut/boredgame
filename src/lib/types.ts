@@ -46,6 +46,7 @@ export type SavedGameType = {
 	thumb_url: string;
 	players: string;
 	playtime: string;
+	searchTerms: string;
 };
 
 export type GameType = {

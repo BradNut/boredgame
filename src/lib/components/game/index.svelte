@@ -53,8 +53,8 @@
 		title={`View ${game.name}`}
 		data-sveltekit-preload-data
 	>
-		<Image src={game.thumb_url} alt={`Image of ${game.name}`} />
-		<!-- <img src={game.thumb_url} alt={`Image of ${game.name}`} /> -->
+		<!-- <Image src={game.thumb_url} alt={`Image of ${game.name}`} /> -->
+		<img src={game.thumb_url} alt={`Image of ${game.name}`} loading="lazy" decoding="async" />
 		<!-- loading="lazy" decoding="async" -->
 	</a>
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick, onDestroy } from 'svelte';
 	import Game from '$lib/components/game/index.svelte';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
 	import type { GameType, SavedGameType } from '$root/lib/types';
@@ -6,15 +7,24 @@
 	import Pagination from '$root/lib/components/pagination/index.svelte';
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
 	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
-	import { tick } from 'svelte';
+  import { createSearchStore, searchHandler } from '$root/lib/stores/search';
 
 	let gameToRemove: GameType | SavedGameType;
 	let pageSize = 10;
 	let page = 1;
 
-	$: totalItems = $wishlistStore.length;
+	const searchStore = createSearchStore($wishlistStore);
+	console.log('searchStore', $searchStore);
+
+	const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
+
+	onDestroy(() => {
+		unsubscribe();
+	});
+
 	$: skip = (page - 1) * pageSize;
-	$: gamesShown = $wishlistStore.slice(skip, skip + pageSize);
+	$: gamesShown = $searchStore.filtered.slice(skip, skip + pageSize);
+	$: totalItems = $searchStore.search === '' ? $wishlistStore.length : $searchStore.filtered.length;
 
 	interface RemoveGameEvent extends Event {
 		detail: GameType | SavedGameType;
@@ -62,6 +72,7 @@
 </svelte:head>
 
 <h1>Your Wishlist</h1>
+<input type="text" id="search" name="search" bind:value={$searchStore.search} />
 
 <div class="games">
 	<div class="games-list">
