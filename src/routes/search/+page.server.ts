@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		fuzzy_match: true,
 		name: '',
 		fields:
-			'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
+			'id,name,price,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
 	};
 
 	try {
