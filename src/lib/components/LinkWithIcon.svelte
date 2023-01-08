@@ -20,6 +20,6 @@
 		display: grid;
 		grid-template-columns: repeat(2, auto);
 		place-items: center;
-		gap: 1rem;
+		gap: 0.25rem;
 	}
 </style>

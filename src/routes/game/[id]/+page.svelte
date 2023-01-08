@@ -2,6 +2,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { Image } from 'svelte-lazy-loader';
 	import {
+  ChevronRightIcon,
 		ExternalLinkIcon,
 		MinusCircleIcon,
 		MinusIcon,
@@ -81,9 +82,11 @@
 			{#if +game?.price !== 0.0}
 				<p>Price: ${game?.price}</p>
 			{/if}
-			<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
-				Board Game Atlas <ExternalLinkIcon width="24" height="24" />
-			</LinkWithIcon>
+			<p>
+				<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
+					Board Game Atlas <ExternalLinkIcon width="24" height="24" />
+				</LinkWithIcon>
+			</p>
 		</div>
 		<div>
 			{#if existsInCollection}
@@ -209,8 +212,6 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 0.5rem;
 		place-content: center;
-		margin: 1rem;
-		a,
 		p {
 			margin: 1rem;
 		}
@@ -225,7 +226,7 @@
 		place-items: center;
 		gap: 1.5rem;
 		margin: 1rem;
-		line-height: 1.5em;
+		line-height: 1.75em;
 	}
 
 	.overflow-description {
@@ -236,7 +237,6 @@
 	.with-icon {
 		display: grid;
 		grid-template-columns: repeat(2, auto);
-		/* flex-wrap: wrap; */
 		place-items: center;
 		gap: 1rem;
 	}
