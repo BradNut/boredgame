@@ -19,7 +19,9 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		skip,
 		client_id: BOARD_GAME_ATLAS_CLIENT_ID,
 		fuzzy_match: true,
-		name: ''
+		name: '',
+		fields:
+			'id,name,minAge,minPlayers,maxPlayers,exactMinPlayers,exactMaxPlayers,thumb_url,players,playtime,min_age,description'
 	};
 
 	try {
