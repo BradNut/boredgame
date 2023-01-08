@@ -6,8 +6,6 @@
 	export let data: PageData;
 	export let form: ActionData;
 
-	console.log('data limit', data?.limit);
-
 	$: if (data?.games) {
 		gameStore.removeAll();
 		gameStore.addAll(data?.games);

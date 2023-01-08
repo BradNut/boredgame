@@ -55,7 +55,6 @@
 	}
 
 	let placeholderList = [...Array(numberOfGameSkeleton).keys()];
-	console.log(placeholderList);
 
 	if (form?.error) {
 		disclosureOpen = true;

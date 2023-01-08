@@ -19,7 +19,9 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		skip,
 		client_id: BOARD_GAME_ATLAS_CLIENT_ID,
 		fuzzy_match: true,
-		name: ''
+		name: '',
+		fields:
+			'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
 	};
 
 	try {
@@ -111,6 +113,8 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 			console.log('totalCount', totalCount);
 			const games: GameType[] = [];
 			gameList.forEach((game) => {
+				game.players = `${game.min_players}-${game.max_players}`;
+				game.playtime = `${game.min_playtime}-${game.max_playtime}`;
 				games.push(mapAPIGameToBoredGame(game));
 			});
 
@@ -146,7 +150,9 @@ export const actions: Actions = {
 			order_by: 'rank',
 			ascending: false,
 			client_id: BOARD_GAME_ATLAS_CLIENT_ID,
-			random: true
+			random: true,
+			fields:
+				'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
 		};
 
 		const newQueryParams: Record<string, string> = {};
@@ -181,6 +187,8 @@ export const actions: Actions = {
 				console.log('totalCount', totalCount);
 				const games: GameType[] = [];
 				gameList.forEach((game) => {
+					game.players = `${game.min_players}-${game.max_players}`;
+					game.playtime = `${game.min_playtime}-${game.max_playtime}`;
 					games.push(mapAPIGameToBoredGame(game));
 				});
 

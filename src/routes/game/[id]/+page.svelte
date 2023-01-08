@@ -2,6 +2,7 @@
 	import { fade, fly } from 'svelte/transition';
 	import { Image } from 'svelte-lazy-loader';
 	import {
+  ChevronRightIcon,
 		ExternalLinkIcon,
 		MinusCircleIcon,
 		MinusIcon,
@@ -36,7 +37,7 @@
 		firstParagraphEnd = game?.description?.indexOf('</ p>') + 5;
 	}
 
-	function remoceFromCollection() {
+	function removeFromCollection() {
 		boredState.update((n) => ({
 			...n,
 			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: game }
@@ -64,7 +65,7 @@
 			<!-- <img src={game.image_url} alt={`Image of ${game.name}`} /> -->
 		</a>
 	</div>
-	<div style="display: grid; place-items: center; gap: 2rem;">
+	<div style="display: grid; place-items: center; gap: 3rem;">
 		<div class="details">
 			{#if game?.year_published}
 				<p>Year: {game?.year_published}</p>
@@ -81,13 +82,15 @@
 			{#if +game?.price !== 0.0}
 				<p>Price: ${game?.price}</p>
 			{/if}
-			<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
-				Board Game Atlas <ExternalLinkIcon width="24" height="24" />
-			</LinkWithIcon>
+			<p>
+				<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
+					Board Game Atlas <ExternalLinkIcon width="24" height="24" />
+				</LinkWithIcon>
+			</p>
 		</div>
-		<div>
+		<div style="display: grid; gap: 1.5rem; place-content: center;">
 			{#if existsInCollection}
-				<Button size="md" kind="danger" icon on:click={() => remoceFromCollection()}>
+				<Button size="md" kind="danger" icon on:click={() => removeFromCollection()}>
 					Remove from collection <MinusCircleIcon width="24" height="24" />
 				</Button>
 			{:else}
@@ -105,8 +108,6 @@
 					Add to collection <PlusCircleIcon width="24" height="24" />
 				</Button>
 			{/if}
-		</div>
-		<div>
 			{#if existsInWishlist}
 				<Button size="md" kind="danger" icon on:click={() => removeFromWishList()}>
 					Remove from wishlist <MinusCircleIcon width="24" height="24" />
@@ -173,7 +174,7 @@
 		border-radius: 4px;
 		margin: 0;
 		padding: 1rem;
-		max-width: 30rem;
+		max-width: 25rem;
 		background-color: var(--color-btn-primary-active);
 	}
 
@@ -209,8 +210,6 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 0.5rem;
 		place-content: center;
-		margin: 1rem;
-		a,
 		p {
 			margin: 1rem;
 		}
@@ -225,7 +224,7 @@
 		place-items: center;
 		gap: 1.5rem;
 		margin: 1rem;
-		line-height: 1.5em;
+		line-height: 1.75em;
 	}
 
 	.overflow-description {
@@ -236,7 +235,6 @@
 	.with-icon {
 		display: grid;
 		grid-template-columns: repeat(2, auto);
-		/* flex-wrap: wrap; */
 		place-items: center;
 		gap: 1rem;
 	}
