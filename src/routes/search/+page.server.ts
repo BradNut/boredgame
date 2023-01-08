@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		fuzzy_match: true,
 		name: '',
 		fields:
-			'id,name,minAge,minPlayers,maxPlayers,exactMinPlayers,exactMaxPlayers,thumb_url,players,playtime,min_age,description'
+			'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
 	};
 
 	try {
@@ -113,6 +113,8 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 			console.log('totalCount', totalCount);
 			const games: GameType[] = [];
 			gameList.forEach((game) => {
+				game.players = `${game.min_players}-${game.max_players}`;
+				game.playtime = `${game.min_playtime}-${game.max_playtime}`;
 				games.push(mapAPIGameToBoredGame(game));
 			});
 
@@ -183,6 +185,8 @@ export const actions: Actions = {
 				console.log('totalCount', totalCount);
 				const games: GameType[] = [];
 				gameList.forEach((game) => {
+					game.players = `${game.min_players}-${game.max_players}`;
+					game.playtime = `${game.min_playtime}-${game.max_playtime}`;
 					games.push(mapAPIGameToBoredGame(game));
 				});
 

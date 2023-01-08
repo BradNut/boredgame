@@ -77,7 +77,7 @@
 				type="button"
 				on:click={() => {
 					removeGameFromCollection();
-				}}>Remove from Collection <MinusCircleIcon width="24" height="24" /></button
+				}}><span>Remove from Collection</span> <MinusCircleIcon width="24" height="24" /></button
 			>
 		{:else}
 			<button
@@ -89,7 +89,7 @@
 					if (browser) {
 						localStorage.collection = JSON.stringify($collectionStore);
 					}
-				}}>Add to collection <PlusCircleIcon width="24" height="24" /></button
+				}}><span>Add to collection</span> <PlusCircleIcon width="24" height="24" /></button
 			>
 		{/if}
 		{#if existsInWishlist}
@@ -99,7 +99,7 @@
 				type="button"
 				on:click={() => {
 					removeGameFromWishlist();
-				}}>Remove from Wishlist <MinusCircleIcon width="24" height="24" /></button
+				}}><span>Remove from Wishlist</span> <MinusCircleIcon width="24" height="24" /></button
 			>
 		{:else}
 			<button
@@ -111,7 +111,7 @@
 					if (browser) {
 						localStorage.wishlist = JSON.stringify($wishlistStore);
 					}
-				}}>Add to wishlist <PlusCircleIcon width="24" height="24" /></button
+				}}><span>Add to wishlist</span> <PlusCircleIcon width="24" height="24" /></button
 			>
 		{/if}
 	</div>
@@ -172,6 +172,7 @@
 
 			.btn {
 				max-height: 100px;
+				text-align: start;
 			}
 
 			.remove {
