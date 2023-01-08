@@ -6,7 +6,7 @@ export const load: PageServerLoad = async ({ params, setHeaders }) => {
 	const queryParams = {
 		ids: `${params?.id}`,
 		fields:
-			'id,name,min_age,min_players,max_players,thumb_url,playtime,min_playtime,max_playtime,min_age,description,year_published,image_url'
+			'id,name,price,min_age,min_players,max_players,thumb_url,playtime,min_playtime,max_playtime,min_age,description,year_published,image_url'
 	};
 
 	const response = await boardGameApi('get', `search`, queryParams);

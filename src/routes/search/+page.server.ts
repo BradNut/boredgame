@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		fuzzy_match: true,
 		name: '',
 		fields:
-			'id,name,price,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
+			'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
 	};
 
 	try {
@@ -150,7 +150,9 @@ export const actions: Actions = {
 			order_by: 'rank',
 			ascending: false,
 			client_id: BOARD_GAME_ATLAS_CLIENT_ID,
-			random: true
+			random: true,
+			fields:
+				'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
 		};
 
 		const newQueryParams: Record<string, string> = {};
