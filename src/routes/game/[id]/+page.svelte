@@ -82,11 +82,9 @@
 			{#if +game?.price !== 0.0}
 				<p>Price: ${game?.price}</p>
 			{/if}
-			<p>
-				<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
-					Board Game Atlas <ExternalLinkIcon width="24" height="24" />
-				</LinkWithIcon>
-			</p>
+			<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
+				Board Game Atlas <ExternalLinkIcon width="24" height="24" />
+			</LinkWithIcon>
 		</div>
 		<div style="display: grid; gap: 1.5rem; place-content: center;">
 			{#if existsInCollection}
