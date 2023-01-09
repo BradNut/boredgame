@@ -1,6 +1,4 @@
 <script lang="ts">
-	import type { SvelteComponentTyped } from 'svelte';
-
 	export let url: string;
 	export let ariaLabel = `Link to ${url}`;
 	export let external = false;

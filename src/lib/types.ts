@@ -40,13 +40,21 @@ export type ToastData = {
 	message: string;
 };
 
+export type GameMechanic = {
+	id: string;
+	name: string;
+	boardGameAtlasLink: string;
+};
+
 export type SavedGameType = {
 	id: string;
 	name: string;
 	thumb_url: string;
 	players: string;
 	playtime: string;
+	mechanics: GameMechanic[];
 	searchTerms: string;
+	includeInRandom: boolean;
 };
 
 export type GameType = {
