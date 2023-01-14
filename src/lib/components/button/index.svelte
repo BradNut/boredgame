@@ -17,6 +17,7 @@
 		border-radius: 4px;
 		margin: 0;
 		padding: 1rem;
+		min-width: 20rem;
 		max-width: 30rem;
 		background-color: var(--color-btn-primary-active);
 	}

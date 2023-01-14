@@ -72,7 +72,7 @@
 </svelte:head>
 
 <h1>Your Wishlist</h1>
-<input type="text" id="search" name="search" bind:value={$searchStore.search} />
+<input type="text" id="search" name="search" placeholder="Search Your Wishlist" bind:value={$searchStore.search} />
 
 <div class="games">
 	<div class="games-list">
@@ -105,6 +105,7 @@
 
 <style lang="scss">
 	h1 {
+		margin: 1.5rem 0rem;
 		width: 100%;
 	}
 

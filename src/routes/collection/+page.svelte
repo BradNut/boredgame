@@ -8,6 +8,10 @@
 	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
 	import { createSearchStore, searchHandler } from '$root/lib/stores/search';
+  import type { PageData } from './$types';
+
+	export let data: PageData;
+	console.log(`Page data: ${JSON.stringify(data)}`)
 
 	let gameToRemove: GameType | SavedGameType;
 	let pageSize = 10;
@@ -76,7 +80,7 @@
 </svelte:head>
 
 <h1>Your Collection</h1>
-<input type="text" id="search" name="search" bind:value={$searchStore.search} />
+<input type="text" id="search" name="search" placeholder="Search Your Collection" bind:value={$searchStore.search} />
 
 <div class="games">
 	<div class="games-list">
@@ -109,6 +113,7 @@
 
 <style lang="scss">
 	h1 {
+		margin: 1.5rem 0rem;
 		width: 100%;
 	}
 

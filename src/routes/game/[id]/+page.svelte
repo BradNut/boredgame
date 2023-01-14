@@ -89,7 +89,7 @@
 		<div style="display: grid; gap: 1.5rem; place-content: center;">
 			{#if existsInCollection}
 				<Button size="md" kind="danger" icon on:click={() => removeFromCollection()}>
-					Remove from collection <MinusCircleIcon width="24" height="24" />
+					Remove from collection <iconify-icon icon="line-md:minus-circle" width="24" height="24"></iconify-icon>
 				</Button>
 			{:else}
 				<Button
@@ -103,12 +103,12 @@
 						}
 					}}
 				>
-					Add to collection <PlusCircleIcon width="24" height="24" />
+					Add to collection <iconify-icon icon="line-md:plus-circle" width="24" height="24"></iconify-icon>
 				</Button>
 			{/if}
 			{#if existsInWishlist}
 				<Button size="md" kind="danger" icon on:click={() => removeFromWishList()}>
-					Remove from wishlist <MinusCircleIcon width="24" height="24" />
+					Remove from wishlist <iconify-icon icon="line-md:minus-circle" width="24" height="24"></iconify-icon>
 				</Button>
 			{:else}
 				<Button
@@ -122,7 +122,7 @@
 						}
 					}}
 				>
-					Add to wishlist <PlusCircleIcon width="24" height="24" />
+					Add to wishlist n <iconify-icon icon="line-md:plus-circle" width="24" height="24"></iconify-icon>
 				</Button>
 			{/if}
 		</div>
@@ -197,7 +197,7 @@
 		margin: 1rem;
 		place-items: center;
 
-		@media (max-width: 650px) {
+		@media (max-width: env(--medium-viewport)) {
 			grid-template-columns: 1fr;
 			place-items: center;
 		}
@@ -208,11 +208,11 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 0.5rem;
 		place-content: center;
-		p {
+		a, p {
 			margin: 1rem;
 		}
 
-		@media (max-width: 550px) {
+		@media (max-width: env(--xsmall-viewport)) {
 			grid-template-columns: 1fr;
 		}
 	}

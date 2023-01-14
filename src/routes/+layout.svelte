@@ -4,6 +4,7 @@
 	import debounce from 'just-debounce-it';
 	import clone from 'just-clone';
 	import { Toy } from '@leveluptuts/svelte-toy';
+	import 'iconify-icon';
 	// import '../app.postcss';
 	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/Header.svelte';
@@ -41,6 +42,9 @@
 				for (const item of wishlist) {
 					if (!item?.searchTerms) {
 						item.searchTerms = `${item?.name?.toLowerCase()}`;
+					}
+					if (!item?.includeInRandom) {
+						item.includeInRandom = false;
 					}
 				}
 				wishlistStore.addAll(wishlist);

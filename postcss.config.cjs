@@ -6,14 +6,16 @@ const postcssNested = require('postcss-nested');
 const postcssEnvFunction = require('postcss-env-function');
 
 const config = {
-  plugins: [
-    autoprefixer(),
-    postcssMediaMinmax,
-    customMedia,
-    atImport(),
-    postcssNested,
-    postcssEnvFunction(),
-  ]
+	plugins: [
+		autoprefixer(),
+		postcssMediaMinmax,
+		customMedia,
+		atImport(),
+		postcssNested,
+		postcssEnvFunction({
+			importFrom: './environmentVariables.json'
+		})
+	]
 };
 
 module.exports = config;
