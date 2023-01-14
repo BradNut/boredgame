@@ -19,5 +19,6 @@
 		grid-template-columns: repeat(2, auto);
 		place-items: center;
 		gap: 0.25rem;
+		margin: 1rem;
 	}
 </style>
