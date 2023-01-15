@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@fontsource/fira-mono': ^4.5.10
+  '@iconify/svelte': ^3.0.1
   '@leveluptuts/svelte-side-menu': ^1.0.5
   '@leveluptuts/svelte-toy': ^2.0.3
   '@lukeed/uuid': ^2.0.0
@@ -61,6 +62,7 @@ dependencies:
   zod-to-json-schema: 3.20.2_zod@3.20.2
 
 devDependencies:
+  '@iconify/svelte': 3.0.1_svelte@3.55.1
   '@playwright/test': 1.29.2
   '@rgossiaux/svelte-headlessui': 1.0.2_svelte@3.55.1
   '@rgossiaux/svelte-heroicons': 0.1.2_svelte@3.55.1
@@ -362,9 +364,17 @@ packages:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
 
+  /@iconify/svelte/3.0.1_svelte@3.55.1:
+    resolution: {integrity: sha512-onjjl496hTXUBWJxeCxo/c5zmVHS3HnKUQv5Cqf1ZsUbY4d0wVJfSDaV1hw1m6b0BNlJCOmbpc23Q6AOO5qqKg==}
+    peerDependencies:
+      svelte: '>=3'
+    dependencies:
+      '@iconify/types': 2.0.0
+      svelte: 3.55.1
+    dev: true
+
   /@iconify/types/2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
-    dev: false
 
   /@jridgewell/resolve-uri/3.1.0:
     resolution: {integrity: sha512-F2msla3tad+Mfht5cJq7LSXcdudKTWCVYUgw6pLFOOHSTtZlj6SWNYAp+AhuqLmWdBO2X5hPrLcu8cVP8fy28w==}

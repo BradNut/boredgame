@@ -4,7 +4,7 @@
 	import debounce from 'just-debounce-it';
 	import clone from 'just-clone';
 	import { Toy } from '@leveluptuts/svelte-toy';
-	import 'iconify-icon';
+	// import 'iconify-icon';
 	// import '../app.postcss';
 	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/Header.svelte';

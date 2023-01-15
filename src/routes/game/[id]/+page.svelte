@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
 	import { Image } from 'svelte-lazy-loader';
+	import Icon from '@iconify/svelte';
 	import {
   ChevronRightIcon,
 		ExternalLinkIcon,
@@ -24,6 +25,8 @@
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
+	$: collectionText = existsInCollection ? 'Remove from collection' : 'Add to collection';
+	$: wishlistText = existsInWishlist ? 'Remove from wishlist' : 'Add to wishlist';
 
 	export let data: PageData;
 	let game: GameType;
@@ -35,6 +38,28 @@
 		firstParagraphEnd = game?.description?.indexOf('</p>') + 4;
 	} else if (game?.description?.indexOf('</ p>') > 0) {
 		firstParagraphEnd = game?.description?.indexOf('</ p>') + 5;
+	}
+
+	function onCollectionClick() {	
+		if (existsInCollection) {
+			removeFromCollection();
+		} else {
+			addToCollection(game);
+			if (browser) {
+				localStorage.collection = JSON.stringify($collectionStore);
+			}
+		}
+	}
+
+	function onWishlistClick() {
+		if (existsInWishlist) {
+			removeFromWishList();
+		} else {
+			addToWishlist(game);
+			if (browser) {
+				localStorage.wishlist = JSON.stringify($wishlistStore);
+			}
+		}
 	}
 
 	function removeFromCollection() {
@@ -87,44 +112,22 @@
 			</LinkWithIcon>
 		</div>
 		<div style="display: grid; gap: 1.5rem; place-content: center;">
+		<Button size="md" kind={existsInCollection ? 'danger' : 'primary'} icon on:click={onCollectionClick}>
+			{collectionText}
 			{#if existsInCollection}
-				<Button size="md" kind="danger" icon on:click={() => removeFromCollection()}>
-					Remove from collection <iconify-icon icon="line-md:minus-circle" width="24" height="24"></iconify-icon>
-				</Button>
+				<Icon icon="line-md:minus-circle" width="24" height="24" />
 			{:else}
-				<Button
-					size="md"
-					kind="primary"
-					icon
-					on:click={() => {
-						addToCollection(game);
-						if (browser) {
-							localStorage.collection = JSON.stringify($collectionStore);
-						}
-					}}
-				>
-					Add to collection <iconify-icon icon="line-md:plus-circle" width="24" height="24"></iconify-icon>
-				</Button>
+				<Icon icon="line-md:plus-circle" width="24" height="24" />
 			{/if}
+		</Button>
+		<Button size="md" kind={existsInWishlist ? 'danger' : 'primary'} icon on:click={onWishlistClick}>
+			{wishlistText}
 			{#if existsInWishlist}
-				<Button size="md" kind="danger" icon on:click={() => removeFromWishList()}>
-					Remove from wishlist <iconify-icon icon="line-md:minus-circle" width="24" height="24"></iconify-icon>
-				</Button>
+				<Icon icon="line-md:minus-circle" width="24" height="24" />
 			{:else}
-				<Button
-					size="md"
-					kind="primary"
-					icon
-					on:click={() => {
-						addToWishlist(game);
-						if (browser) {
-							localStorage.wishlist = JSON.stringify($wishlistStore);
-						}
-					}}
-				>
-					Add to wishlist n <iconify-icon icon="line-md:plus-circle" width="24" height="24"></iconify-icon>
-				</Button>
+				<Icon icon="line-md:plus-circle" width="24" height="24" />
 			{/if}
+		</Button>
 		</div>
 	</div>
 </section>
@@ -208,7 +211,7 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 0.5rem;
 		place-content: center;
-		a, p {
+		p {
 			margin: 1rem;
 		}
 
