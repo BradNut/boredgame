@@ -4,7 +4,6 @@ specifiers:
   '@fontsource/fira-mono': ^4.5.10
   '@iconify-icons/line-md': ^1.2.21
   '@iconify-icons/mdi': ^1.2.39
-  '@iconify/svelte': ^3.0.1
   '@leveluptuts/svelte-side-menu': ^1.0.5
   '@leveluptuts/svelte-toy': ^2.0.3
   '@lukeed/uuid': ^2.0.0
@@ -66,7 +65,6 @@ dependencies:
 devDependencies:
   '@iconify-icons/line-md': 1.2.21
   '@iconify-icons/mdi': 1.2.39
-  '@iconify/svelte': 3.0.1_svelte@3.55.1
   '@playwright/test': 1.29.2
   '@rgossiaux/svelte-headlessui': 1.0.2_svelte@3.55.1
   '@rgossiaux/svelte-heroicons': 0.1.2_svelte@3.55.1
@@ -378,15 +376,6 @@ packages:
     resolution: {integrity: sha512-fFYh21To6lmqyYy1w3ZahE3aTjoDxwiehI7KPYxDplmM7ZUfeP0sPeyuCHzwfJ/YlV8w8JTZWIgKGdpmmuqtCQ==}
     dependencies:
       '@iconify/types': 2.0.0
-    dev: true
-
-  /@iconify/svelte/3.0.1_svelte@3.55.1:
-    resolution: {integrity: sha512-onjjl496hTXUBWJxeCxo/c5zmVHS3HnKUQv5Cqf1ZsUbY4d0wVJfSDaV1hw1m6b0BNlJCOmbpc23Q6AOO5qqKg==}
-    peerDependencies:
-      svelte: '>=3'
-    dependencies:
-      '@iconify/types': 2.0.0
-      svelte: 3.55.1
     dev: true
 
   /@iconify/types/2.0.0:

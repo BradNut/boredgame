@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { Popover, PopoverButton, PopoverPanel } from '@rgossiaux/svelte-headlessui';
-	import Icon from '@iconify/svelte/dist/OfflineIcon.svelte';
 	import cogOutline from '@iconify-icons/mdi/cog-outline';
 	import Themes from './themes.svelte';
 	import GameCollection from './gameCollection.svelte';
@@ -19,7 +18,7 @@
 					: 'transform: rotate(0deg); transition: transform 0.5s ease;'
 				}
 				></iconify-icon> -->
-			<Icon
+			<iconify-icon
 				icon={cogOutline}
 				width="24" height="24"
 				style={open ?

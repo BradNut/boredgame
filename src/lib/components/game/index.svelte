@@ -2,7 +2,6 @@
 	import { createEventDispatcher } from 'svelte';
 	import { Image } from 'svelte-lazy-loader';
 	import { fade } from 'svelte/transition';
-	import Icon from '@iconify/svelte/dist/OfflineIcon.svelte';
 	import plusCircle from '@iconify-icons/line-md/plus-circle';
 	import minusCircle from '@iconify-icons/line-md/minus-circle';
 	import Button from '$lib/components/button/index.svelte';
@@ -100,17 +99,17 @@
 		<Button size="md" kind={existsInCollection ? 'danger' : 'primary'} icon on:click={onCollectionClick}>
 			{collectionText}
 			{#if existsInCollection}
-				<Icon icon={minusCircle} width="24" height="24" />
+				<iconify-icon icon={minusCircle} width="24" height="24" />
 			{:else}
-				<Icon icon={plusCircle} width="24" height="24" />
+				<iconify-icon icon={plusCircle} width="24" height="24" />
 			{/if}
 		</Button>
 		<Button size="md" kind={existsInWishlist ? 'danger' : 'primary'} icon on:click={onWishlistClick}>
 			{wishlistText}
 			{#if existsInWishlist}
-				<Icon icon={minusCircle} width="24" height="24" />
+				<iconify-icon icon={minusCircle} width="24" height="24" />
 			{:else}
-				<Icon icon={plusCircle} width="24" height="24" />
+				<iconify-icon icon={plusCircle} width="24" height="24" />
 			{/if}
 		</Button>
 	</div>
