@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { Popover, PopoverButton, PopoverPanel } from '@rgossiaux/svelte-headlessui';
-	import Icon from '@iconify/svelte';
+	import Icon from '@iconify/svelte/dist/OfflineIcon.svelte';
+	import cogOutline from '@iconify-icons/mdi/cog-outline';
 	import Themes from './themes.svelte';
 	import GameCollection from './gameCollection.svelte';
 	import GameWishlist from './gameWishlist.svelte';
@@ -11,8 +12,15 @@
 	<Popover let:open class="popover">
 		<PopoverButton aria-label="Preferences">
 			<!-- <CogIcon width="24" height="24" /> -->
+			<!-- <iconify-icon icon="mdi:cog-outline"
+				width="24" height="24"
+				style={open ?
+					'transform: rotate(90deg); transition: transform 0.5s ease;'
+					: 'transform: rotate(0deg); transition: transform 0.5s ease;'
+				}
+				></iconify-icon> -->
 			<Icon
-				icon="mdi:cog-outline"
+				icon={cogOutline}
 				width="24" height="24"
 				style={open ?
 					'transform: rotate(90deg); transition: transform 0.5s ease;'

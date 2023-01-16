@@ -15,6 +15,7 @@
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
 	import '$root/styles/styles.pcss';
+	// import 'iconify-icon';
 
 	import type { SavedGameType } from '$root/lib/types';
 

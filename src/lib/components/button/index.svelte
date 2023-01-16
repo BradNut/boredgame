@@ -9,7 +9,7 @@
 	<slot />
 </button>
 
-<style>
+<style lang="postcss">
 	button {
 		display: flex;
 		justify-content: space-between;
@@ -19,7 +19,13 @@
 		padding: 1rem;
 		min-width: 20rem;
 		max-width: 30rem;
+		min-height: 6.2rem;
+		text-align: start;
 		background-color: var(--color-btn-primary-active);
+
+		@media (min-width: env(--large-viewport)) {
+			min-width: 23.5rem;
+		}
 	}
 
 	.danger {

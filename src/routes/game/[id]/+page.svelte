@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
 	import { Image } from 'svelte-lazy-loader';
-	import Icon from '@iconify/svelte';
+	import Icon from '@iconify/svelte/dist/OfflineIcon.svelte';
+	import minusCircle from '@iconify-icons/line-md/minus-circle';
+	import plusCircle from '@iconify-icons/line-md/plus-circle';
 	import {
   ChevronRightIcon,
 		ExternalLinkIcon,
@@ -115,17 +117,17 @@
 		<Button size="md" kind={existsInCollection ? 'danger' : 'primary'} icon on:click={onCollectionClick}>
 			{collectionText}
 			{#if existsInCollection}
-				<Icon icon="line-md:minus-circle" width="24" height="24" />
+				<Icon icon={minusCircle} width="24" height="24" />
 			{:else}
-				<Icon icon="line-md:plus-circle" width="24" height="24" />
+				<Icon icon={plusCircle} width="24" height="24" />
 			{/if}
 		</Button>
 		<Button size="md" kind={existsInWishlist ? 'danger' : 'primary'} icon on:click={onWishlistClick}>
 			{wishlistText}
 			{#if existsInWishlist}
-				<Icon icon="line-md:minus-circle" width="24" height="24" />
+				<Icon icon={minusCircle} width="24" height="24" />
 			{:else}
-				<Icon icon="line-md:plus-circle" width="24" height="24" />
+				<Icon icon={plusCircle} width="24" height="24" />
 			{/if}
 		</Button>
 		</div>

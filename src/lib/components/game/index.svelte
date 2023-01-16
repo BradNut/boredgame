@@ -2,7 +2,10 @@
 	import { createEventDispatcher } from 'svelte';
 	import { Image } from 'svelte-lazy-loader';
 	import { fade } from 'svelte/transition';
-	import { MinusCircleIcon, PlusCircleIcon } from '@rgossiaux/svelte-heroicons/outline';
+	import Icon from '@iconify/svelte/dist/OfflineIcon.svelte';
+	import plusCircle from '@iconify-icons/line-md/plus-circle';
+	import minusCircle from '@iconify-icons/line-md/minus-circle';
+	import Button from '$lib/components/button/index.svelte';
 	import type { GameType, SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { wishlistStore } from '$root/lib/stores/wishlistStore';
@@ -21,6 +24,28 @@
 
 	function removeGameFromCollection() {
 		dispatch('handleRemoveCollection', game);
+	}
+
+	function onCollectionClick() {	
+		if (existsInCollection) {
+			removeGameFromCollection();
+		} else {
+			addToCollection(game);
+			if (browser) {
+				localStorage.collection = JSON.stringify($collectionStore);
+			}
+		}
+	}
+
+	function onWishlistClick() {
+		if (existsInWishlist) {
+			removeGameFromWishlist();
+		} else {
+			addToWishlist(game);
+			if (browser) {
+				localStorage.wishlist = JSON.stringify($wishlistStore);
+			}
+		}
 	}
 
 	// Naive and assumes description is only on our GameType at the moment
@@ -43,6 +68,8 @@
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
+	$: collectionText = existsInCollection ? 'Remove from collection' : 'Add to collection';
+	$: wishlistText = existsInWishlist ? 'Remove from wishlist' : 'Add to wishlist';
 </script>
 
 <article class="game-container" transition:fade>
@@ -70,50 +97,22 @@
 	</div>
 
 	<div class="game-buttons">
-		{#if existsInCollection}
-			<button
-				aria-label="Remove from collection"
-				class="btn remove"
-				type="button"
-				on:click={() => {
-					removeGameFromCollection();
-				}}><span>Remove from Collection</span> <MinusCircleIcon width="24" height="24" /></button
-			>
-		{:else}
-			<button
-				aria-label="Add to collection"
-				class="btn"
-				type="button"
-				on:click={() => {
-					addToCollection(game);
-					if (browser) {
-						localStorage.collection = JSON.stringify($collectionStore);
-					}
-				}}><span>Add to collection</span> <PlusCircleIcon width="24" height="24" /></button
-			>
-		{/if}
-		{#if existsInWishlist}
-			<button
-				aria-label="Remove from wishlist"
-				class="btn remove"
-				type="button"
-				on:click={() => {
-					removeGameFromWishlist();
-				}}><span>Remove from Wishlist</span> <MinusCircleIcon width="24" height="24" /></button
-			>
-		{:else}
-			<button
-				aria-label="Add to wishlist"
-				class="btn"
-				type="button"
-				on:click={() => {
-					addToWishlist(game);
-					if (browser) {
-						localStorage.wishlist = JSON.stringify($wishlistStore);
-					}
-				}}><span>Add to wishlist</span> <PlusCircleIcon width="24" height="24" /></button
-			>
-		{/if}
+		<Button size="md" kind={existsInCollection ? 'danger' : 'primary'} icon on:click={onCollectionClick}>
+			{collectionText}
+			{#if existsInCollection}
+				<Icon icon={minusCircle} width="24" height="24" />
+			{:else}
+				<Icon icon={plusCircle} width="24" height="24" />
+			{/if}
+		</Button>
+		<Button size="md" kind={existsInWishlist ? 'danger' : 'primary'} icon on:click={onWishlistClick}>
+			{wishlistText}
+			{#if existsInWishlist}
+				<Icon icon={minusCircle} width="24" height="24" />
+			{:else}
+				<Icon icon={plusCircle} width="24" height="24" />
+			{/if}
+		</Button>
 	</div>
 </article>
 
