@@ -2,10 +2,7 @@
 	import { browser } from '$app/environment';
 	import { navigating } from '$app/stores';
 	import debounce from 'just-debounce-it';
-	import clone from 'just-clone';
 	import { Toy } from '@leveluptuts/svelte-toy';
-	// import 'iconify-icon';
-	// import '../app.postcss';
 	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/Header.svelte';
 	import Loading from '$lib/components/loading.svelte';
@@ -18,7 +15,9 @@
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
 	import '$root/styles/styles.pcss';
-  import type { SavedGameType } from '$root/lib/types';
+
+	import type { SavedGameType } from '$root/lib/types';
+
 
 	$: {
 		if ($navigating) {
