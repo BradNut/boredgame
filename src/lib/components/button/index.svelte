@@ -14,7 +14,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-radius: 4px;
+		border-radius: 10px;
 		margin: 0;
 		padding: 1rem;
 		min-width: 20rem;

@@ -116,24 +116,10 @@
 </article>
 
 <style lang="scss">
-	img {
-		max-height: 200px;
-	}
-
-	button {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 1rem;
-		width: 100%;
-		border-radius: 10px;
-		padding: 1rem;
-		background-color: var(--color-btn-primary-active);
-	}
-
 	.game-container {
 		display: grid;
-		grid-template-rows: repeat(auto-fill, 1fr);
+		/* grid-template-rows: repeat(auto-fill, 1fr); */
+		grid-template-rows: 0.15fr minmax(250px, 1fr) 0.2fr 0.2fr;
 		place-items: center;
 		text-align: center;
 
@@ -167,19 +153,6 @@
 		.game-buttons {
 			display: grid;
 			gap: 1rem;
-
-			.btn {
-				max-height: 100px;
-				text-align: start;
-			}
-
-			.remove {
-				background-color: var(--warning);
-
-				&:hover {
-					background-color: var(--warning-hover);
-				}
-			}
 		}
 	}
 </style>

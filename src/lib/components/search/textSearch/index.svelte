@@ -278,18 +278,18 @@
 	.games-list {
 		display: grid;
 		--listColumns: 4;
-		grid-template-columns: repeat(var(--listColumns), minmax(200px, 1fr));
+		grid-template-columns: repeat(var(--listColumns), minmax(250px, 1fr));
 		gap: 2rem;
 
-		@media screen and (800px < width <= 1200px) {
+		@media screen and (env(--large-viewport) < width <= env(--xxlarge-viewport)) {
 			--listColumns: 3;
 		}
 
-		@media screen and (650px < width <= 800px) {
+		@media screen and (env(--small-viewport) < width <= env(--large-viewport)) {
 			--listColumns: 2;
 		}
 
-		@media screen and (width <= 650px) {
+		@media screen and (width <= env(--small-viewport)) {
 			--listColumns: 1;
 		}
 	}

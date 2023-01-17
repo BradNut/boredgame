@@ -1,0 +1,10 @@
+{
+	"environment-variables": {
+		"--xsmall-viewport": "500px",
+		"--small-viewport": "600px",
+		"--medium-viewport": "700px",
+		"--large-viewport": "1000px",
+		"--xlarge-viewport": "1200px",
+		"--xxlarge-viewport": "1500px"
+	}
+}

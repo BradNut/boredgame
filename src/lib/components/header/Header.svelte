@@ -9,7 +9,7 @@
 			<img src={logo} alt="Bored Game Home" />
 		</a>
 	</div>
-
+	<!-- <TextSearch /> -->
 	<nav>
 		<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
 		<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>

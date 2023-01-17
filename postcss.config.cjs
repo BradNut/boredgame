@@ -13,7 +13,7 @@ const config = {
 		atImport(),
 		postcssNested,
 		postcssEnvFunction({
-			importFrom: './environmentVariables.json'
+			importFrom: './src/lib/util/environmentVariables.json'
 		})
 	]
 };
