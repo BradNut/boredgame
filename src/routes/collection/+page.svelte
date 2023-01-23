@@ -27,7 +27,7 @@
 	});
 
 	$: skip = (page - 1) * pageSize;
-	$: gamesShown = $searchStore.filtered.slice(skip, skip + pageSize);
+	$: gamesShown = $searchStore.data.slice(skip, skip + pageSize);
 	$: totalItems = $searchStore.search === '' ? $collectionStore.length : $searchStore.filtered.length;
 
 	interface RemoveGameEvent extends Event {

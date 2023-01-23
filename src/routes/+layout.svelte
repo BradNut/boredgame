@@ -34,11 +34,14 @@
 	$: isOpen = $boredState?.dialog?.isOpen;
 
 	if (browser) {
+		const collator = new Intl.Collator('en');
+
 		let collectionEmpty = $collectionStore.length === 0 || false;
 		let wishlistEmpty = $wishlistStore.length === 0 || false;
 		if (wishlistEmpty && localStorage?.wishlist && localStorage?.wishlist?.length !== 0) {
 			const wishlist: SavedGameType[] = JSON.parse(localStorage.wishlist);
 			if (wishlist?.length !== 0) {
+				wishlist.sort((a, b) => collator.compare(a.name, b.name));
 				for (const item of wishlist) {
 					if (!item?.searchTerms) {
 						item.searchTerms = `${item?.name?.toLowerCase()}`;
@@ -53,6 +56,7 @@
 		if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
 			const collection: SavedGameType[] = JSON.parse(localStorage.collection);
 			if (collection?.length !== 0) {
+				collection.sort((a, b) => collator.compare(a.name, b.name));
 				for (const item of collection) {
 					if (!item?.searchTerms) {
 						item.searchTerms = `${item?.name?.toLowerCase()}`;

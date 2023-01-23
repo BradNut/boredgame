@@ -4,11 +4,15 @@ import { ToastType, type GameType, type SavedGameType } from '$lib/types';
 import { convertToSavedGame } from './gameMapper';
 import { saved_game_schema } from '../zodValidation';
 
-export function addToCollection(game: GameType | SavedGameType) {
+export function addToCollection(game: GameType | SavedGameType, index: number) {
 	try {
 		console.log(`Saving game: ${JSON.stringify(game)}`);
 		saved_game_schema.parse(game);
-		collectionStore.add(convertToSavedGame(game));
+		if (index === -1) {
+			collectionStore.add(convertToSavedGame(game));
+		} else {
+			collectionStore.addSorted(convertToSavedGame(game), index);
+		}
 		toast.send('Added to collection', { duration: 3000, type: ToastType.INFO });
 	} catch (error) {
 		console.log(error);

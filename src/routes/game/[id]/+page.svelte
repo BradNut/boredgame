@@ -23,6 +23,8 @@
 	import LinkWithIcon from '$root/lib/components/LinkWithIcon.svelte';
 	import { addToWishlist } from '$root/lib/util/manipulateWishlist';
 	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
+  import { binarySearchOnStore } from '$root/lib/util/binarySearchOnStore';
+  import { convertToSavedGame } from '$root/lib/util/gameMapper';
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
@@ -41,11 +43,13 @@
 		firstParagraphEnd = game?.description?.indexOf('</ p>') + 5;
 	}
 
-	function onCollectionClick() {	
+	function onCollectionClick() {
 		if (existsInCollection) {
 			removeFromCollection();
 		} else {
-			addToCollection(game);
+			let index = binarySearchOnStore($collectionStore, convertToSavedGame(game), 'en');
+			console.log(`Binary index: ${index}`)
+			addToCollection(game, index);
 			if (browser) {
 				localStorage.collection = JSON.stringify($collectionStore);
 			}

@@ -11,6 +11,8 @@
 	import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 	import { addToWishlist } from '$lib/util/manipulateWishlist';
 	import { browser } from '$app/environment';
+  import { binarySearchOnStore } from '$root/lib/util/binarySearchOnStore';
+  import { convertToSavedGame } from '$root/lib/util/gameMapper';
 
 	export let game: GameType | SavedGameType;
 	export let detailed: boolean = false;
@@ -29,7 +31,8 @@
 		if (existsInCollection) {
 			removeGameFromCollection();
 		} else {
-			addToCollection(game);
+			let index = binarySearchOnStore($collectionStore, convertToSavedGame(game), 'en');
+			addToCollection(game, index);
 			if (browser) {
 				localStorage.collection = JSON.stringify($collectionStore);
 			}
