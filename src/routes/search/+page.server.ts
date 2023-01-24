@@ -113,8 +113,10 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 			console.log('totalCount', totalCount);
 			const games: GameType[] = [];
 			gameList.forEach((game) => {
-				game.players = `${game.min_players}-${game.max_players}`;
-				game.playtime = `${game.min_playtime}-${game.max_playtime}`;
+				if (game?.min_players && game?.max_players) {
+					game.players = `${game.min_players}-${game.max_players}`;
+					game.playtime = `${game.min_playtime}-${game.max_playtime}`;
+				}
 				games.push(mapAPIGameToBoredGame(game));
 			});
 

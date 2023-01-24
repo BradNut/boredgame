@@ -4,7 +4,6 @@
   import type { PageData } from '.svelte-kit/types/src/routes/$types';
 
 	export let data: PageData;
-	console.log('advanced search data', data);
 
 	let submitting = $boredState?.loading;
 	let minAge = +data?.minAge || 1;

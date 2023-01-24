@@ -87,16 +87,18 @@
 		<!-- loading="lazy" decoding="async" -->
 	</a>
 
-	<div class="game-details">
-		<p>Players: {game.players}</p>
-		<p>Time: {game.playtime} minutes</p>
-		{#if isGameType(game) && game?.min_age}
-			<p>Min Age: {game.min_age}</p>
-		{/if}
-		{#if detailed && isGameType(game) && game?.description}
-			<div class="description">{@html game.description}</div>
-		{/if}
-	</div>
+		<div class="game-details">
+			{#if game?.players}
+				<p>Players: {game.players}</p>
+				<p>Time: {game.playtime} minutes</p>
+				{#if isGameType(game) && game?.min_age}
+					<p>Min Age: {game.min_age}</p>
+				{/if}
+				{#if detailed && isGameType(game) && game?.description}
+					<div class="description">{@html game.description}</div>
+				{/if}
+			{/if}
+		</div>
 
 	<div class="game-buttons">
 		<Button size="md" kind={existsInCollection ? 'danger' : 'primary'} icon on:click={onCollectionClick}>
