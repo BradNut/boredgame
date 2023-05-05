@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { fly } from 'svelte/transition';
-  import { page } from '$app/stores';
+  import { fade, fly } from 'svelte/transition';
 
   interface Transition {
     type: 'fade' | 'stagger' | 'page';
@@ -8,20 +7,23 @@
     delay?: number;
   }
 
+  export let url: string = "";
   export let transition: Transition;
 </script>
 
-{#if transition.type === 'page'}
-  {#key $page.url}
-    <div in:fly={{ y: -50, duration: 250 }}>
-      <slot />
-    </div>
-  {/key}
+{#if transition.type === 'page' && url}
+  <div class="transition" style="display: grid;">
+    {#key url}
+        <div style="grid-row: 1 / -1; grid-column: 1 / -1;" in:fade={{ duration: 400, delay: 400 }} out:fade={{ duration: 400}}>
+          <slot />
+        </div>
+    {/key}
+  </div>
 {/if}
 
 {#if transition.type === 'fade'}
   <div
-    class="fade"
+    class="fade transition"
     style:animation-duration="{transition.duration}ms"
     style:animation-delay="{transition.delay}ms"
   >
@@ -31,7 +33,7 @@
 
 {#if transition.type === 'stagger'}
   <div
-    class="stagger"
+    class="stagger transition"
     style:animation-duration="{transition.duration || 1 * 300}ms"
     style:animation-delay="{transition.delay}ms"
   >
@@ -40,7 +42,7 @@
 {/if}
 
 <style>
-  div {
+  .transition {
     height: 100%;
   }
 
