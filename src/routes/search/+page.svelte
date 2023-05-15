@@ -1,22 +1,17 @@
 <script lang="ts">
-	import type { ActionData, PageData } from './$types';
+	import { superForm } from 'sveltekit-superforms/client';
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import TextSearch from '$lib/components/search/textSearch/index.svelte';
 
-	export let data: PageData;
-	export let form: ActionData;
+	export let data;
+	const { form, errors, constraints } = superForm(data?.form);
 
-	$: if (data?.games) {
+	$: if (data?.searchData?.games) {
 		gameStore.removeAll();
-		gameStore.addAll(data?.games);
-	}
-
-	$: if (form?.games) {
-		gameStore.removeAll();
-		gameStore.addAll(form?.games);
+		gameStore.addAll(data?.searchData?.games);
 	}
 </script>
 
 <div class="game-search">
-	<TextSearch showButton advancedSearch {data} {form} />
+	<TextSearch showButton advancedSearch {form} {errors} {constraints} />
 </div>

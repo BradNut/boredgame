@@ -1,13 +1,11 @@
 <script lang="ts">
-	import type { ActionData, PageData } from './$types';
+	import { superForm } from 'sveltekit-superforms/client';
 	import TextSearch from '$lib/components/search/textSearch/index.svelte';
 	import RandomSearch from '$lib/components/search/random/index.svelte';
 	import Random from '$lib/components/random/index.svelte';
 
-	export let data: PageData;
-	// console.log('data', data);
-	export let form: ActionData;
-	// console.log('form', form);
+	export let data;
+	const { form, errors, constraints } = superForm(data?.form);
 </script>
 
 <svelte:head>
@@ -26,7 +24,7 @@
 			<Random />
 		</div>
 	</section>
-	<TextSearch showButton advancedSearch {data} {form} />
+	<TextSearch showButton advancedSearch {form} {errors} {constraints} />
 </div>
 
 <style lang="scss">

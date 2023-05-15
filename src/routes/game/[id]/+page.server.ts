@@ -1,8 +1,7 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
 import { boardGameApi } from '../../api';
 
-export const load: PageServerLoad = async ({ params, setHeaders }) => {
+export const load = async ({ params, setHeaders }) => {
 	const queryParams = {
 		ids: `${params?.id}`,
 		fields:

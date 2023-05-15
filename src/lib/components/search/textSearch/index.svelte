@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import type { ActionData, PageData } from './$types';
+	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { fade } from 'svelte/transition';
 	import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
 	import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
@@ -21,11 +21,9 @@
 		detail: GameType | SavedGameType;
 	}
 
-	export let data: PageData;
-	// console.log('search page data', data);
-	export let form: ActionData;
-	// console.log('search page form', form);
-	const errors = data?.errors;
+	export let form;
+	export let errors;
+	export let constraints;
 
 	export let showButton: boolean = false;
 	export let advancedSearch: boolean = false;
@@ -33,13 +31,13 @@
 	let gameToRemove: GameType | SavedGameType;
 	let numberOfGameSkeleton = 1;
 	let submitButton: HTMLElement;
-	let pageSize = +data?.limit || 10;
-	let totalItems = +data?.totalCount || 0;
-	let offset = +data?.skip || 0;
+	let pageSize = +form?.limit || 10;
+	let totalItems = +form?.searchData?.totalCount || 0;
+	let offset = +form?.skip || 0;
 	let page = Math.floor(offset / pageSize) + 1 || 1;
 	let submitting = $boredState?.loading;
-	let name = data?.name || '';
-	let disclosureOpen = errors || false;
+	let name = form?.name || '';
+	let disclosureOpen = $errors.length > 0 || false;
 
 	$: skip = (page - 1) * pageSize;
 	$: showPagination = $gameStore?.length > 1;
@@ -121,8 +119,8 @@
 				await applyAction(result);
 			} else if (result.type === 'success') {
 				gameStore.removeAll();
-				gameStore.addAll(result?.data?.games);
-				totalItems = result?.data?.totalCount;
+				gameStore.addAll(result?.data?.searchData?.games);
+				totalItems = result?.data?.searchData?.totalCount;
 				// toast.send('Success!', { duration: 3000, type: ToastType.INFO, dismissible: true });
 				await applyAction(result);
 			} else {
@@ -131,28 +129,36 @@
 		};
 	};
 
+	const dev = process.env.NODE_ENV !== 'production';
+
 	// TODO: Keep all Pagination Values on back and forth browser
 	// TODO: Add cache for certain number of pages so back and forth doesn't request data again
 </script>
 
-<form id="search-form" action="/search" method="get" on:submit={() => {
+{#if dev}
+	<SuperDebug data={$form} />
+{/if}
+
+<form id="search-form" action="/search" method="GET" on:submit={() => {
 	skip = 0;
 }}>
 	<div class="search">
 		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
-			<label for="q">
-				Search
-				<input
-					id="q"
-					name="q"
-					bind:value={name}
-					type="text"
-					aria-label="Search boardgame"
-					placeholder="Search boardgame"
-				/>
-			</label>
-			<input id="skip" type="hidden" name="skip" bind:value={skip} />
-			<input id="limit" type="hidden" name="limit" bind:value={pageSize} />
+			<label for="q">Search</label>
+			<input
+				id="q"
+				name="q"
+				bind:value={$form.q}
+				data-invalid={$errors?.q}
+				{...$constraints.q}
+				type="text"
+				aria-label="Search board games"
+				placeholder="Search board games"
+			/>
+			{#if $errors?.q}<span class="invalid">{$errors?.q}</span>{/if}
+
+			<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />
+			<input id="limit" type="hidden" name="limit" bind:value={$form.limit} />
 		</fieldset>
 		{#if advancedSearch}
 			<Disclosure>
@@ -174,7 +180,9 @@
 						<!-- Using `static`, `DisclosurePanel` is always rendered,
                 and ignores the `open` state -->
 						<DisclosurePanel static>
-							<AdvancedSearch {data} />
+							{#if disclosureOpen}
+								<AdvancedSearch {form} {errors} {constraints} />
+							{/if}
 						</DisclosurePanel>
 					</div>
 				{/if}

@@ -31,13 +31,15 @@ function IntegerString<schema extends ZodNumber | ZodOptional<ZodNumber>>(schema
 
 export const search_schema = z
 	.object({
-		name: z.string().trim().optional(),
+		q: z.string().trim().optional().default(''),
 		minAge: IntegerString(z.number().min(1).max(120).optional()),
 		minPlayers: IntegerString(z.number().min(1).max(50).optional()),
 		maxPlayers: IntegerString(z.number().min(1).max(50).optional()),
 		exactMinAge: z.preprocess((a) => Boolean(a), z.boolean().optional()),
 		exactMinPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
-		exactMaxPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional())
+		exactMaxPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
+		limit: z.number().min(10).max(100).default(10),
+		skip: z.number().min(0).default(0)
 	})
 	.superRefine(
 		({ minPlayers, maxPlayers, minAge, exactMinAge, exactMinPlayers, exactMaxPlayers }, ctx) => {

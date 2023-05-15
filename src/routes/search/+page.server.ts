@@ -1,93 +1,12 @@
-import type { Actions, PageServerLoad, RequestEvent } from '../$types';
+import type { Actions, RequestEvent } from '../$types';
 import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
 import { error } from '@sveltejs/kit';
-import type { GameType, SearchQuery } from '$root/lib/types';
-import { mapAPIGameToBoredGame } from '$root/lib/util/gameMapper';
-import { search_schema } from '$root/lib/zodValidation';
-import { ZodError } from 'zod';
+import { superValidate } from 'sveltekit-superforms/server';
+import type { GameType, SearchQuery } from '$lib/types';
+import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
+import { search_schema } from '$lib/zodValidation';
 
-export const load: PageServerLoad = async ({ fetch, url }) => {
-	const formData = Object.fromEntries(url?.searchParams);
-	formData.name = formData?.q;
-	const limit = parseInt(formData?.limit) || 10;
-	const skip = parseInt(formData?.skip) || 0;
-
-	const queryParams: SearchQuery = {
-		order_by: 'rank',
-		ascending: false,
-		limit,
-		skip,
-		client_id: BOARD_GAME_ATLAS_CLIENT_ID,
-		fuzzy_match: true,
-		name: '',
-		fields:
-			'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
-	};
-
-	try {
-		console.log('Parsing Search Schema');
-		const { name, minAge, minPlayers, maxPlayers, exactMinAge, exactMinPlayers, exactMaxPlayers } =
-			search_schema.parse(formData);
-
-		if (minAge) {
-			if (exactMinAge) {
-				queryParams.min_age = minAge;
-			} else {
-				queryParams.gt_min_age = minAge === 1 ? 0 : minAge - 1;
-			}
-		}
-
-		if (minPlayers) {
-			if (exactMinPlayers) {
-				queryParams.min_players = minPlayers;
-			} else {
-				queryParams.gt_min_players = minPlayers === 1 ? 0 : minPlayers - 1;
-			}
-		}
-		if (maxPlayers) {
-			if (exactMaxPlayers) {
-				queryParams.max_players = maxPlayers;
-			} else {
-				queryParams.lt_max_players = maxPlayers + 1;
-			}
-		}
-
-		if (name) {
-			queryParams.name = name;
-		}
-	} catch (parsingError: unknown) {
-		let errors;
-		if (parsingError instanceof ZodError) {
-			const { fieldErrors } = parsingError.flatten();
-			console.log(`Errors with user input ${fieldErrors}}`);
-			errors = fieldErrors;
-			//throw error(400, { message: 'There was an error searching for games!' }); // fail(400, { data: formData, errors });
-		}
-		return {
-			errors,
-			name: formData.name,
-			minAge: formData.minAge,
-			minPlayers: formData.minPlayers,
-			maxPlayers: formData.maxPlayers,
-			exactMinPlayers: formData.exactMinPlayers,
-			exactMaxPlayers: formData.exactMaxPlayers,
-			games: [],
-			totalCount: 0,
-			limit,
-			skip
-		};
-	}
-
-	const newQueryParams: Record<string, string> = {};
-	for (const key in queryParams) {
-		// console.log('key', key);
-		// console.log('queryParams[key]', queryParams[key as keyof SearchQuery]);
-		newQueryParams[key] = `${queryParams[key as keyof SearchQuery]}`;
-	}
-
-	const urlQueryParams = new URLSearchParams(newQueryParams);
-	console.log('urlQueryParams', urlQueryParams);
-
+async function searchForGames(urlQueryParams) {
 	try {
 		const url = `https://api.boardgameatlas.com/api/search${
 			urlQueryParams ? `?${urlQueryParams}` : ''
@@ -98,20 +17,19 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 				'content-type': 'application/json'
 			}
 		});
-		// console.log('board game response', response);
 
 		if (!response.ok) {
 			console.log('Status not 200', response.status);
 			throw error(response.status);
 		}
 
-		if (response.status === 200) {
+		const games: GameType[] = [];
+		let totalCount = 0;
+		if (response.ok) {
 			const gameResponse = await response.json();
-			// console.log('gameResponse', gameResponse);
 			const gameList = gameResponse?.games;
-			const totalCount = gameResponse?.count;
+			totalCount = gameResponse?.count;
 			console.log('totalCount', totalCount);
-			const games: GameType[] = [];
 			gameList.forEach((game) => {
 				if (game?.min_players && game?.max_players) {
 					game.players = `${game.min_players}-${game.max_players}`;
@@ -119,30 +37,75 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 				}
 				games.push(mapAPIGameToBoredGame(game));
 			});
-
-			// console.log('returning from search', games)
-
-			return {
-				name: formData.name,
-				minAge: formData.minAge,
-				minPlayers: formData.minPlayers,
-				maxPlayers: formData.maxPlayers,
-				exactMinPlayers: formData.exactMinPlayers,
-				exactMaxPlayers: formData.exactMaxPlayers,
-				games,
-				totalCount,
-				limit,
-				skip
-			};
 		}
+		return {
+			totalCount,
+			games
+		};
 	} catch (e) {
 		console.log(`Error searching board games ${e}`);
 	}
 	return {
-		games: [],
 		totalCount: 0,
-		limit,
-		skip
+		games: []
+	};
+}
+
+export const load = async ({ fetch, url }) => {
+	const defaults = {
+		limit: 10,
+		skip: 0
+	};
+	const searchParams = Object.fromEntries(url?.searchParams);
+	searchParams.limit = searchParams.limit || `${defaults.limit}`;
+	searchParams.skip = searchParams.skip || `${defaults.skip}`;
+	const form = await superValidate(searchParams, search_schema);
+
+	const queryParams: SearchQuery = {
+		order_by: 'rank',
+		ascending: false,
+		limit: form.data?.limit,
+		skip: form.data?.skip,
+		client_id: BOARD_GAME_ATLAS_CLIENT_ID,
+		fuzzy_match: true,
+		name: form.data?.q,
+		fields:
+			'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
+	};
+
+	if (form.data?.minAge) {
+		if (form.data?.exactMinAge) {
+			queryParams.min_age = form.data?.minAge;
+		} else {
+			queryParams.gt_min_age = form.data?.minAge === 1 ? 0 : form.data?.minAge - 1;
+		}
+	}
+
+	if (form.data?.minPlayers) {
+		if (form.data?.exactMinPlayers) {
+			queryParams.min_players = form.data?.minPlayers;
+		} else {
+			queryParams.gt_min_players = form.data?.minPlayers === 1 ? 0 : form.data?.minPlayers - 1;
+		}
+	}
+	if (form.data?.maxPlayers) {
+		if (form.data?.exactMaxPlayers) {
+			queryParams.max_players = form.data?.maxPlayers;
+		} else {
+			queryParams.lt_max_players = form.data?.maxPlayers + 1;
+		}
+	}
+
+	const newQueryParams: Record<string, string> = {};
+	for (const key in queryParams) {
+		newQueryParams[key] = `${queryParams[key as keyof SearchQuery]}`;
+	}
+
+	const urlQueryParams = new URLSearchParams(newQueryParams);
+
+	return {
+		form,
+		searchData: await searchForGames(urlQueryParams)
 	};
 };
 
