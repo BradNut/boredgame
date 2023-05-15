@@ -4,7 +4,8 @@
 	import debounce from 'just-debounce-it';
 	import { Toy } from '@leveluptuts/svelte-toy';
 	import Analytics from '$lib/components/analytics.svelte';
-	import Header from '$lib/components/header/Header.svelte';
+	import Header from '$root/lib/components/header/index.svelte';
+	import Footer from '$lib/components/footer.svelte';
 	import Loading from '$lib/components/loading.svelte';
 	import Transition from '$lib/components/transition/index.svelte';
 	import Portal from '$lib/Portal.svelte';
@@ -68,6 +69,8 @@
 	}
 
 	const dev = process.env.NODE_ENV !== 'production';
+
+	export let data;
 </script>
 
 {#if !dev}
@@ -86,33 +89,24 @@
 	/>
 {/if}
 
-<Transition transition={{ type: 'fade', duration: 250 }}>
+<!-- <Transition transition={{ type: 'fade', duration: 250 }}> -->
 	<div class="wrapper">
 		<Header />
-		<Transition transition={{ type: 'page' }}>
 			<main>
-				<slot />
+				<Transition url={data.url} transition={{ type: 'page' }}>
+					<slot />
+				</Transition>
 			</main>
-		</Transition>
-		<footer>
-			<p>Built by <a target="__blank" href="https://bradleyshellnut.com">Bradley Shellnut</a></p>
-			<p>
-				<a
-					target="__blank"
-					href="https://www.flaticon.com/free-icons/board-game"
-					title="board game icons">Board game icons created by Freepik - Flaticon</a
-				>
-			</p>
-		</footer>
+		<Footer />
 	</div>
 	{#if $boredState?.loading}
 		<Portal>
-			<Transition transition={{ type: 'fade', duration: 0 }}>
+			<!-- <Transition transition={{ type: 'fade', duration: 0 }}> -->
 				<div class="loading">
 					<Loading />
 					<h3>Loading...</h3>
 				</div>
-			</Transition>
+			<!-- </Transition> -->
 			<div class="background" />
 		</Portal>
 	{/if}
@@ -122,7 +116,7 @@
 		</div>
 	{/if}
 	<Toast />
-</Transition>
+<!-- </Transition> -->
 
 <style lang="postcss">
 	.loading {
@@ -169,24 +163,6 @@
 		}
 
 		box-sizing: border-box;
-	}
-
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 40px;
-	}
-
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 40px 0;
-		}
 	}
 
 	:global(.dialog-overlay) {
