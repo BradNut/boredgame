@@ -83,6 +83,8 @@ export const search_schema = z
 		}
 	);
 
+export type SearchSchema = typeof search_schema;
+
 export const search_result_schema = z.object({
 	client_id: z.string(),
 	limit: z.number(),

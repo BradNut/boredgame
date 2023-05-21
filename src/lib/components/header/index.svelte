@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Profile from '../preferences/profile.svelte';
 	import logo from './bored-game.png';
+
+	export let user: any;
 </script>
 
 <header>
@@ -14,6 +16,37 @@
 		<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
 		<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
 		<Profile />
+		{#if user}
+			<li>
+				<a href="/profile" on:click={drawerClose}>
+					<span><Contact2 /></span><span class="flex-auto">{i('profile')}</span></a
+				>
+			</li>
+			<li>
+				<form
+					use:enhance
+					action="/auth/sign-out"
+					method="post"
+					on:click={drawerClose}
+					on:keydown={drawerClose}
+				>
+					<button type="submit" class="btn"
+						><span><LogOut /></span><span>{i('signout')}</span></button
+					>
+				</form>
+			</li>
+		{/if}
+		{#if !user}
+			<li>
+				<a href="/auth/sign-in" on:click={drawerClose}>
+					<span><LogIn /></span><span class="flex-auto">{i('signin')}</span></a
+				>
+			</li>
+			<li>
+				<a href="/auth/sign-up" on:click={drawerClose}>
+					<span><UserCircle2 /></span><span class="flex-auto">{i('signup')}</span></a
+				>
+			</li>
 	</nav>
 </header>
 

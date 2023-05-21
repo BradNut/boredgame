@@ -6,7 +6,7 @@ import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
 import { search_schema } from '$lib/zodValidation';
 
-async function searchForGames(urlQueryParams) {
+async function searchForGames(urlQueryParams: SearchQuery) {
 	try {
 		const url = `https://api.boardgameatlas.com/api/search${
 			urlQueryParams ? `?${urlQueryParams}` : ''
@@ -27,7 +27,7 @@ async function searchForGames(urlQueryParams) {
 		let totalCount = 0;
 		if (response.ok) {
 			const gameResponse = await response.json();
-			const gameList = gameResponse?.games;
+			const gameList: GameType[] = gameResponse?.games;
 			totalCount = gameResponse?.count;
 			console.log('totalCount', totalCount);
 			gameList.forEach((game) => {
@@ -110,7 +110,8 @@ export const load = async ({ fetch, url }) => {
 };
 
 export const actions: Actions = {
-	random: async ({ request }: RequestEvent): Promise<any> => {
+	random: async ({ request }): Promise<any> => {
+		const form = await superValidate(request, search_schema);
 		const queryParams: SearchQuery = {
 			order_by: 'rank',
 			ascending: false,
@@ -127,47 +128,9 @@ export const actions: Actions = {
 
 		const urlQueryParams = new URLSearchParams(newQueryParams);
 
-		try {
-			const url = `https://api.boardgameatlas.com/api/search${
-				urlQueryParams ? `?${urlQueryParams}` : ''
-			}`;
-			const response = await fetch(url, {
-				method: 'get',
-				headers: {
-					'content-type': 'application/json'
-				}
-			});
-			// console.log('board game response', response);
-
-			if (!response.ok) {
-				console.log('Status not 200', response.status);
-				throw error(response.status);
-			}
-
-			if (response.status === 200) {
-				const gameResponse = await response.json();
-				// console.log('gameResponse', gameResponse);
-				const gameList = gameResponse?.games;
-				const totalCount = gameResponse?.count;
-				console.log('totalCount', totalCount);
-				const games: GameType[] = [];
-				gameList.forEach((game) => {
-					game.players = `${game.min_players}-${game.max_players}`;
-					game.playtime = `${game.min_playtime}-${game.max_playtime}`;
-					games.push(mapAPIGameToBoredGame(game));
-				});
-
-				// console.log('returning from search', games)
-
-				return {
-					games
-				};
-			}
-		} catch (e) {
-			console.log(`Error searching board games ${e}`);
-		}
 		return {
-			games: []
+			form,
+			searchData: await searchForGames(urlQueryParams)
 		};
 	}
 };

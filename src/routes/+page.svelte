@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms/client';
 	import TextSearch from '$lib/components/search/textSearch/index.svelte';
 	import RandomSearch from '$lib/components/search/random/index.svelte';
 	import Random from '$lib/components/random/index.svelte';
 
 	export let data;
-	const { form, errors, constraints } = superForm(data?.form);
 </script>
 
 <svelte:head>
@@ -20,11 +18,11 @@
 		</p>
 		<p>Or pick a random game!</p>
 		<div class="random-buttons">
-			<RandomSearch />
+			<RandomSearch data={data.form} />
 			<Random />
 		</div>
 	</section>
-	<TextSearch showButton advancedSearch {form} {errors} {constraints} />
+	<TextSearch showButton advancedSearch data={data.form} />
 </div>
 
 <style lang="scss">
