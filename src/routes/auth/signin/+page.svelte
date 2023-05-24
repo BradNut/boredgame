@@ -11,7 +11,7 @@
 	});
 </script>
 
-<form action="POST">
+<form method="POST" use:enhance>
 	{#if $errors._errors}
 		<aside class="alert">
 			<div class="alert-message">

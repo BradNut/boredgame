@@ -1,25 +1,25 @@
 <script lang="ts">
-  import { userSchema } from '$root/lib/config/zod-schemas.js';
-  import { superForm } from 'sveltekit-superforms/client';
-
+	import { superForm } from 'sveltekit-superforms/client';
+	//import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
+	import { userSchema } from '$lib/config/zod-schemas';
 	export let data;
 
-  const signUpSchema = userSchema.pick({
-    firstName: true,
-    lastName: true,
-    username: true,
-    email: true,
-    password: true
-  });
+	const signUpSchema = userSchema.pick({
+		firstName: true,
+		lastName: true,
+		username: true,
+		email: true,
+		password: true
+	});
 
-  const { form, errors, constraints, enhance, delayed } = superForm(data.form, {
-    taintedMessage: null,
-    validators: signUpSchema,
-    delayMs: 0,
-  });
+	const { form, errors, enhance, delayed } = superForm(data.form, {
+		taintedMessage: null,
+		validators: signUpSchema,
+		delayMs: 0
+	});
+	// $: termsValue = $form.terms as Writable<boolean>;
 </script>
 
-<div class="page">
 	<form method="POST" action="/auth/signup" use:enhance>
     <h1>Signup user</h1>
     <label class="label">
@@ -80,8 +80,7 @@
 				name="username"
 				type="username"
 				placeholder="Username"
-				autocomplete="email"
-				{...$constraints.username}
+				autocomplete="uername"
 				data-invalid={$errors.username}
 				bind:value={$form.username}
 				class="input"
@@ -98,7 +97,6 @@
 				name="password"
 				type="password"
 				placeholder="password"
-				{...$constraints.username}
 				data-invalid={$errors.password}
 				bind:value={$form.password}
 				class="input"
@@ -113,32 +111,3 @@
 
     <a class="back" href="/"> or Cancel </a>
   </form>
-</div>
-
-<style scoped>
-  .page {
-    padding: 3rem;
-    display: flex;
-    justify-content: center;
-  }
-
-  /* input[type="text"] {
-    width: 100%;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    border-radius: 0.25rem;
-    border: 0.125rem solid rgba(0, 0, 0, 0.2);
-  }
-
-  button[type="submit"] {
-    border: 0;
-    padding: 1rem 2rem;
-  } */
-
-  .back {
-    margin-left: 1rem;
-  }
-  .error {
-    color: red;
-  }
-</style>

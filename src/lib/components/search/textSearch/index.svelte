@@ -25,7 +25,7 @@
 	}
 
 	export let data: Validation<SearchSchema>;
-	const { form, constraints, errors, enhance } = superForm(data, {
+	const { form, constraints, errors } = superForm(data, {
 		onSubmit: () => {
 			boredState.update((n) => ({ ...n, loading: true }));
 		},
@@ -145,7 +145,7 @@
 	<SuperDebug data={$form} />
 {/if}
 
-<form id="search-form" action="/search" method="GET" use:enhance>
+<form id="search-form" action="/search" method="GET">
 	<div class="search">
 		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
 			<label for="q">Search</label>
