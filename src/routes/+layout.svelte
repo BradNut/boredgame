@@ -3,8 +3,11 @@
 	import { navigating } from '$app/stores';
 	import debounce from 'just-debounce-it';
 	import { Toy } from '@leveluptuts/svelte-toy';
+	// import '@skeletonlabs/skeleton/themes/theme-crimson.css';
+	// import '@skeletonlabs/skeleton/styles/skeleton.css';
+	// import "../app.postcss";
 	import Analytics from '$lib/components/analytics.svelte';
-	import Header from '$root/lib/components/header/index.svelte';
+	import Header from '$lib/components/header/index.svelte';
 	import Footer from '$lib/components/footer.svelte';
 	import Loading from '$lib/components/loading.svelte';
 	import Transition from '$lib/components/transition/index.svelte';
@@ -15,11 +18,9 @@
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
-	import '$root/styles/styles.pcss';
+	import '$styles/styles.pcss';
 	import 'iconify-icon';
-
-	import type { SavedGameType } from '$root/lib/types';
-
+	import type { SavedGameType } from '$lib/types';
 
 	$: {
 		if ($navigating) {
@@ -91,7 +92,7 @@
 
 <!-- <Transition transition={{ type: 'fade', duration: 250 }}> -->
 	<div class="wrapper">
-		<Header />
+		<Header user={data.user} />
 			<main>
 				<Transition url={data.url} transition={{ type: 'page' }}>
 					<slot />
