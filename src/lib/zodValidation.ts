@@ -136,6 +136,8 @@ export const search_result_schema = z.object({
 	fields: z.string()
 });
 
+export type SearchResultSchema = typeof search_result_schema;
+
 export const game_schema = z.object({
 	id: z.string(),
 	handle: z.string(),
@@ -156,6 +158,82 @@ export const game_schema = z.object({
 	description: z.string(),
 	players: z.string(),
 	playtime: z.string()
+});
+
+export const category_schema = z.object({
+	id: z.string(),
+	name: z.string()
+});
+
+export const mechanics_schema = z.object({
+	id: z.string(),
+	name: z.string(),
+	description: z.string().optional()
+});
+
+const gameSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	description: z.string().optional(),
+	year_published: z.number().optional(),
+	min_players: z.number().optional(),
+	max_players: z.number().optional(),
+	min_playtime: z.number().optional(),
+	max_playtime: z.number().optional(),
+	min_age: z.number().optional(),
+	image_url: z.string().optional(),
+	thumb_url: z.string().optional(),
+	url: z.string().optional(),
+	rules_url: z.string().optional(),
+	weight_amount: z.number().optional(),
+	weight_units: z.enum(['Medium', 'Heavy']).optional(),
+	categories: z.array(category_schema).optional(),
+	mechanics: z.array(mechanics_schema).optional(),
+	designers: z
+		.array(
+			z.object({
+				id: z.string(),
+				name: z.string()
+			})
+		)
+		.optional(),
+	publishers: z
+		.array(
+			z.object({
+				id: z.string(),
+				name: z.string()
+			})
+		)
+		.optional(),
+	artists: z
+		.array(
+			z.object({
+				id: z.string(),
+				name: z.string()
+			})
+		)
+		.optional(),
+	names: z.array(z.string()).optional(),
+	expansions: z
+		.array(
+			z.object({
+				id: z.string(),
+				name: z.string(),
+				year_published: z.number().optional()
+			})
+		)
+		.optional(),
+	primary_publisher: z
+		.object({
+			id: z.string(),
+			name: z.string()
+		})
+		.optional()
+});
+
+const searchResultSchema = z.object({
+	games: z.array(gameSchema),
+	count: z.number()
 });
 
 // export const game_raw_schema_json = zodToJsonSchema(game_schema, {
