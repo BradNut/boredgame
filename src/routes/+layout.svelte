@@ -3,9 +3,6 @@
 	import { navigating } from '$app/stores';
 	import debounce from 'just-debounce-it';
 	import { Toy } from '@leveluptuts/svelte-toy';
-	// import '@skeletonlabs/skeleton/themes/theme-crimson.css';
-	// import '@skeletonlabs/skeleton/styles/skeleton.css';
-	// import "../app.postcss";
 	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/index.svelte';
 	import Footer from '$lib/components/footer.svelte';
