@@ -148,17 +148,20 @@
 <form id="search-form" action="/search" method="GET">
 	<div class="search">
 		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
-			<label for="q">Search</label>
-			<input
-				id="q"
-				name="q"
-				bind:value={$form.q}
-				data-invalid={$errors?.q}
-				{...$constraints.q}
-				type="text"
-				aria-label="Search board games"
-				placeholder="Search board games"
+			<label class="label" for="q">
+				<span>Search</span>
+				<input
+					id="q"
+					class="input"
+					name="q"
+					bind:value={$form.q}
+					data-invalid={$errors?.q}
+					{...$constraints.q}
+					type="search"
+					aria-label="Search board games"
+					placeholder="Search board games"
 			/>
+			</label>
 			{#if $errors?.q}<span class="invalid">{$errors?.q}</span>{/if}
 
 			<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />

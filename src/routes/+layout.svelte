@@ -3,6 +3,7 @@
 	import { navigating } from '$app/stores';
 	import debounce from 'just-debounce-it';
 	import { Toy } from '@leveluptuts/svelte-toy';
+	import 'iconify-icon';
 	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/index.svelte';
 	import Footer from '$lib/components/footer.svelte';
@@ -16,7 +17,6 @@
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
 	import '$styles/styles.pcss';
-	import 'iconify-icon';
 	import type { SavedGameType } from '$lib/types';
 
 	$: {
@@ -87,34 +87,30 @@
 	/>
 {/if}
 
-<!-- <Transition transition={{ type: 'fade', duration: 250 }}> -->
-	<div class="wrapper">
-		<Header user={data.user} />
-			<main>
-				<Transition url={data.url} transition={{ type: 'page' }}>
-					<slot />
-				</Transition>
-			</main>
-		<Footer />
+<div class="wrapper">
+	<Header user={data.user} />
+		<main>
+			<Transition url={data.url} transition={{ type: 'page' }}>
+				<slot />
+			</Transition>
+		</main>
+	<Footer />
+</div>
+{#if $boredState?.loading}
+	<Portal>
+			<div class="loading">
+				<Loading />
+				<h3>Loading...</h3>
+			</div>
+		<div class="background" />
+	</Portal>
+{/if}
+{#if isOpen}
+	<div class="container">
+		<svelte:component this={$boredState?.dialog?.content} />
 	</div>
-	{#if $boredState?.loading}
-		<Portal>
-			<!-- <Transition transition={{ type: 'fade', duration: 0 }}> -->
-				<div class="loading">
-					<Loading />
-					<h3>Loading...</h3>
-				</div>
-			<!-- </Transition> -->
-			<div class="background" />
-		</Portal>
-	{/if}
-	{#if isOpen}
-		<div class="container">
-			<svelte:component this={$boredState?.dialog?.content} />
-		</div>
-	{/if}
-	<Toast />
-<!-- </Transition> -->
+{/if}
+<Toast />
 
 <style lang="postcss">
 	.loading {
