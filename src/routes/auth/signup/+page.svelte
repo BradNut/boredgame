@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { userSchema } from '$root/lib/config/zod-schemas.js';
+  import { userSchema } from '$lib/config/zod-schemas.js';
   import { superForm } from 'sveltekit-superforms/client';
 
 	export let data;

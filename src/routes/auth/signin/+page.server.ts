@@ -13,10 +13,10 @@ export const load = async (event) => {
 	if (session) {
 		throw redirect(302, '/');
 	}
-	const form = await superValidate(event, signInSchema);
-	return {
-		form
-	};
+	// const form = await superValidate(event, signInSchema);
+	// return {
+	// 	form
+	// };
 };
 
 export const actions = {
@@ -24,6 +24,7 @@ export const actions = {
 		const form = await superValidate(event, signInSchema);
 
 		if (!form.valid) {
+			form.data.password = '';
 			return fail(400, {
 				form
 			});
@@ -31,16 +32,17 @@ export const actions = {
 
 		// Adding user to the db
 		try {
-			console.log('sign in user');
 			const key = await auth.useKey('username', form.data.username, form.data.password);
 			const session = await auth.createSession(key.userId);
 			event.locals.auth.setSession(session);
 		} catch (e) {
 			// TODO: need to return error message to the client
 			console.error(e);
+			form.data.password = '';
 			return setError(form, null, 'The username or password is incorrect.');
 		}
-
+		form.data.username = '';
+		form.data.password = '';
 		return { form };
 	}
 };

@@ -10,11 +10,11 @@
 	import { boredState } from '$lib/stores/boredState';
 	import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
 	import { xl, md, sm } from '$lib/stores/mediaQueryStore';
-	import { gameStore } from '$root/lib/stores/gameSearchStore';
+	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { toast } from '../../toast/toast';
 	import Pagination from '$lib/components/pagination/index.svelte';
 	import Game from '$lib/components/game/index.svelte';
-	import { ToastType, type GameType, type SavedGameType } from '$root/lib/types';
+	import { ToastType, type GameType, type SavedGameType } from '$lib/types';
 	import SkeletonPlaceholder from '../../SkeletonPlaceholder.svelte';
 	import RemoveCollectionDialog from '../../dialog/RemoveCollectionDialog.svelte';
 	import RemoveWishlistDialog from '../../dialog/RemoveWishlistDialog.svelte';

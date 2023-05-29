@@ -7,6 +7,7 @@
 	const { form, errors, enhance, delayed } = superForm(data.form, {
 		taintedMessage: null,
 		validators: signInSchema,
+		validationMethod: 'oninput',
 		delayMs: 0,
 	});
 </script>

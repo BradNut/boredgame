@@ -12,7 +12,7 @@
 	import Portal from '$lib/Portal.svelte';
 	import { boredState } from '$lib/stores/boredState';
 	import { collectionStore } from '$lib/stores/collectionStore';
-	import { wishlistStore } from '$root/lib/stores/wishlistStore';
+	import { wishlistStore } from '$lib/stores/wishlistStore';
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';

@@ -21,15 +21,15 @@
 				cancel();
 			}
 		},
-		onUpdated: ({ form }) => {
-			if ($gameStore.length <= 0) {
-				toast.send('No results found 😿', {
-					duration: 3000,
-					type: ToastType.ERROR,
-					dismissible: true
-				});
-			}
-		}
+		// onUpdated: ({ form }) => {
+		// 	if ($gameStore.length <= 0) {
+		// 		toast.send('No results found 😿', {
+		// 			duration: 3000,
+		// 			type: ToastType.ERROR,
+		// 			dismissible: true
+		// 		});
+		// 	}
+		// }
 	});
 
 	let submitting = $boredState?.loading;

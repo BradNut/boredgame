@@ -56,3 +56,98 @@ enum Role {
   USER
   ADMIN
 }
+
+model Game {
+  id            String  @id
+  name          String
+  description   String?
+  yearPublished Int?
+  minPlayers    Int?
+  maxPlayers    Int?
+  minPlaytime   Int?
+  maxPlaytime   Int?
+  minAge        Int?
+  imageUrl      String?
+  thumbUrl      String?
+  url           String?
+  rulesUrl      String?
+  weightAmount  Float?
+  weightUnits   String?
+  bggId         String?
+  bggUrl        String?
+  primaryPublisher Publisher?
+  categories    Category[]
+  mechanics     Mechanic[]
+  designers     Designer[]
+  publishers    Publisher[]
+  artists       Artist[]
+  names         String[]       @db.Array
+  expansions    Expansion[]
+
+  @@index([game_id])
+  @@map("games")
+}
+
+model Publisher {
+  id        String  @id
+  name      String
+  games     Game[]   @relation(references: [id], fields: [game_id])
+  primaryPublisher Game[] @relation("PrimaryPublisher")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("publishers")
+}
+
+model Category {
+  id        String  @id
+  name      String
+  slug      String
+  games     Game[]  @relation("GameCategories")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Mechanic {
+  id        String  @id
+  name      String
+  games     Game[]  @relation("GameMechanics")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("mechanics")
+}
+
+model Designer {
+  id        String  @id
+  name      String
+  games     Game[]  @relation("GameDesigners")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("designers")
+}
+
+model Artist {
+  id        String  @id
+  name      String
+  games     Game[]  @relation("GameArtists")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("artists")
+}
+
+model Expansion {
+  id            String  @id
+  name          String
+  yearPublished Int?
+  baseGame      Game?   @relation("Expansions", fields: [baseGameId], references: [id])
+  baseGameId    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("expansions")
+}

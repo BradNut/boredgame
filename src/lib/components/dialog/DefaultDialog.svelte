@@ -7,7 +7,7 @@
 		DialogOverlay,
 		DialogTitle
 	} from '@rgossiaux/svelte-headlessui';
-	import { boredState } from '$root/lib/stores/boredState';
+	import { boredState } from '$lib/stores/boredState';
 
 	export let title: string;
 	export let description: string;

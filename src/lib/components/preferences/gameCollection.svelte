@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { boredState } from '$root/lib/stores/boredState';
-	import { collectionStore } from '$root/lib/stores/collectionStore';
-	import { ToastType } from '$root/lib/types';
+	import { boredState } from '$lib/stores/boredState';
+	import { collectionStore } from '$lib/stores/collectionStore';
+	import { ToastType } from '$lib/types';
 	import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
 	import ClearCollectionDialog from '../dialog/ClearCollectionDialog.svelte';
 	import { toast } from '../toast/toast';

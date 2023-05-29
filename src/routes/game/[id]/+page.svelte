@@ -15,16 +15,16 @@
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
 	import Button from '$lib/components/button/index.svelte';
-	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
+	import RemoveCollectionDialog from '$lib/components/dialog/RemoveCollectionDialog.svelte';
 	import { addToCollection } from '$lib/util/manipulateCollection';
 	import type { PageData } from './$types';
-	import { boredState } from '$root/lib/stores/boredState';
+	import { boredState } from '$lib/stores/boredState';
 	import { browser } from '$app/environment';
-	import LinkWithIcon from '$root/lib/components/LinkWithIcon.svelte';
-	import { addToWishlist } from '$root/lib/util/manipulateWishlist';
-	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
-  import { binarySearchOnStore } from '$root/lib/util/binarySearchOnStore';
-  import { convertToSavedGame } from '$root/lib/util/gameMapper';
+	import LinkWithIcon from '$lib/components/LinkWithIcon.svelte';
+	import { addToWishlist } from '$lib/util/manipulateWishlist';
+	import RemoveWishlistDialog from '$lib/components/dialog/RemoveWishlistDialog.svelte';
+  import { binarySearchOnStore } from '$lib/util/binarySearchOnStore';
+  import { convertToSavedGame } from '$lib/util/gameMapper';
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);

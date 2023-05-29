@@ -7,12 +7,12 @@
 	import Button from '$lib/components/button/index.svelte';
 	import type { GameType, SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
-	import { wishlistStore } from '$root/lib/stores/wishlistStore';
+	import { wishlistStore } from '$lib/stores/wishlistStore';
 	import { addToCollection, removeFromCollection } from '$lib/util/manipulateCollection';
 	import { addToWishlist } from '$lib/util/manipulateWishlist';
 	import { browser } from '$app/environment';
-  import { binarySearchOnStore } from '$root/lib/util/binarySearchOnStore';
-  import { convertToSavedGame } from '$root/lib/util/gameMapper';
+  import { binarySearchOnStore } from '$lib/util/binarySearchOnStore';
+  import { convertToSavedGame } from '$lib/util/gameMapper';
 
 	export let game: GameType | SavedGameType;
 	export let detailed: boolean = false;

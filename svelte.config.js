@@ -14,20 +14,16 @@ const config = {
 			postcss: true
 		})
 	],
+	vitePlugin: {
+		inspector: true,
+	},
 	kit: {
 		adapter: adapter(),
 		alias: {
-			$root: './src',
+			$lib: './src/lib',
 			$styles: './src/styles',
 		}
 	},
-	vitePlugin: {
-		experimental: {
-			inspector: {
-				toggleKeyCombo: 'control-alt-shift'
-			}
-		}
-	}
 };
 
 export default config;

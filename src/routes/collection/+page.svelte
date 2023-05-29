@@ -2,12 +2,12 @@
 	import { tick, onDestroy } from 'svelte';
 	import Game from '$lib/components/game/index.svelte';
 	import { collectionStore } from '$lib/stores/collectionStore';
-	import type { GameType, SavedGameType } from '$root/lib/types';
-	import { boredState } from '$root/lib/stores/boredState';
-	import Pagination from '$root/lib/components/pagination/index.svelte';
-	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
-	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
-	import { createSearchStore, searchHandler } from '$root/lib/stores/search';
+	import type { GameType, SavedGameType } from '$lib/types';
+	import { boredState } from '$lib/stores/boredState';
+	import Pagination from '$lib/components/pagination/index.svelte';
+	import RemoveCollectionDialog from '$lib/components/dialog/RemoveCollectionDialog.svelte';
+	import RemoveWishlistDialog from '$lib/components/dialog/RemoveWishlistDialog.svelte';
+	import { createSearchStore, searchHandler } from '$lib/stores/search';
   import type { PageData } from './$types';
 
 	export let data: PageData;

@@ -4,7 +4,7 @@
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { toast } from '$lib/components/toast/toast';
 	import { ToastType, type SavedGameType } from '$lib/types';
-	import { mapSavedGameToGame } from '$root/lib/util/gameMapper';
+	import { mapSavedGameToGame } from '$lib/util/gameMapper';
 
 	async function getRandomCollectionGame() {
 		if ($collectionStore.length > 0) {
