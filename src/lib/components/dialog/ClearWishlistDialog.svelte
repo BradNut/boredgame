@@ -48,7 +48,7 @@
 			gap: 2rem;
 			margin: 1rem 0;
 
-			button {
+			& button {
 				display: flex;
 				place-content: center;
 				gap: 1rem;

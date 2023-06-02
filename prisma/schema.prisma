@@ -21,8 +21,10 @@ model AuthUser {
     verified      Boolean       @default(false)
     receiveEmail  Boolean       @default(false)
     token         String?       @unique
-    createdAt      DateTime          @default(now()) @db.Timestamp(6)
-    updatedAt       DateTime        @updatedAt @db.Timestamp(6)
+    collection    Collection?
+    wishlist      Wishlist[]
+    createdAt     DateTime          @default(now()) @db.Timestamp(6)
+    updatedAt     DateTime        @updatedAt @db.Timestamp(6)
     auth_session  AuthSession[]
     auth_key      AuthKey[]
 
@@ -57,8 +59,52 @@ enum Role {
   ADMIN
 }
 
+model Collection {
+  id String @id @default(cuid())
+  user_id String @unique
+  auth_user AuthUser @relation(references: [id], fields: [user_id])
+  items CollectionItem[]
+
+  @@index([user_id])
+  @@map("collections")
+}
+
+model CollectionItem {
+  id String @id @default(cuid())
+  collection_id String
+  collection Collection @relation(references: [id], fields: [collection_id])
+  game_id String
+  game Game @relation(references: [id], fields: [game_id])
+  times_played Int
+
+  @@index([game_id, collection_id])
+  @@map("collection_items")
+}
+
+model Wishlist {
+  id String @id @default(cuid())
+  name String
+  user_id String
+  auth_user AuthUser @relation(references: [id], fields: [user_id])
+  items WishlistItem[]
+
+  @@index([user_id])
+  @@map("wishlists")
+}
+
+model WishlistItem {
+  id String @id @default(cuid())
+  wishlist_id String
+  wishlist Wishlist @relation(references: [id], fields: [wishlist_id])
+  game_id String
+  game Game @relation(references: [id], fields: [game_id])
+
+  @@index([game_id, wishlist_id])
+  @@map("wishlist_items")
+}
+
 model Game {
-  id            String  @id
+  id            String  @id @default(cuid())
   name          String
   description   String?
   yearPublished Int?
@@ -75,24 +121,43 @@ model Game {
   weightUnits   String?
   bggId         String?
   bggUrl        String?
-  primaryPublisher Publisher?
+  primary_publisher_id String
+  primaryPublisher Publisher? @relation("PrimaryPublishers", references: [id], fields: [primary_publisher_id])
   categories    Category[]
   mechanics     Mechanic[]
   designers     Designer[]
   publishers    Publisher[]
   artists       Artist[]
-  names         String[]       @db.Array
+  names         GameName[]
   expansions    Expansion[]
+  collection_items CollectionItem[]
+  wishlist_items WishlistItem[]
+  external_id String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([game_id])
+  @@index([primary_publisher_id])
   @@map("games")
 }
 
+model GameName {
+  id String @id @default(cuid())
+  name String
+  game_id String
+  game Game @relation(references: [id], fields: [game_id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([game_id])
+  @@map("game_names")
+}
+
 model Publisher {
-  id        String  @id
+  id        String  @id @default(cuid())
   name      String
-  games     Game[]   @relation(references: [id], fields: [game_id])
-  primaryPublisher Game[] @relation("PrimaryPublisher")
+  games     Game[]
+  primaryPublisher Game[] @relation("PrimaryPublishers")
+  external_id String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -100,10 +165,11 @@ model Publisher {
 }
 
 model Category {
-  id        String  @id
+  id        String  @id @default(cuid())
   name      String
   slug      String
-  games     Game[]  @relation("GameCategories")
+  games     Game[]
+  external_id String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -111,9 +177,10 @@ model Category {
 }
 
 model Mechanic {
-  id        String  @id
+  id        String  @id @default(cuid())
   name      String
-  games     Game[]  @relation("GameMechanics")
+  games     Game[]
+  external_id String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -121,9 +188,10 @@ model Mechanic {
 }
 
 model Designer {
-  id        String  @id
+  id        String  @id @default(cuid())
   name      String
-  games     Game[]  @relation("GameDesigners")
+  games     Game[]
+  external_id String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -131,9 +199,10 @@ model Designer {
 }
 
 model Artist {
-  id        String  @id
+  id        String  @id @default(cuid())
   name      String
-  games     Game[]  @relation("GameArtists")
+  games     Game[]
+  external_id String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -141,13 +210,15 @@ model Artist {
 }
 
 model Expansion {
-  id            String  @id
+  id            String  @id @default(cuid())
   name          String
   yearPublished Int?
-  baseGame      Game?   @relation("Expansions", fields: [baseGameId], references: [id])
-  baseGameId    String?
+  baseGame      Game?   @relation(fields: [base_game_id], references: [id])
+  base_game_id    String?
+  external_id String @unique
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
+  @@index([base_game_id])
   @@map("expansions")
 }

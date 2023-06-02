@@ -285,7 +285,7 @@
 	.games {
 		margin: 2rem 0rem;
 
-		h1 {
+		& h1 {
 			margin-bottom: 2rem;
 		}
 	}
@@ -296,15 +296,19 @@
 		grid-template-columns: repeat(var(--listColumns), minmax(250px, 1fr));
 		gap: 2rem;
 
-		@media screen and (env(--large-viewport) < width <= env(--xxlarge-viewport)) {
+		@media (width >= 1500px) {
 			--listColumns: 3;
 		}
 
-		@media screen and (env(--small-viewport) < width <= env(--large-viewport)) {
+		@media (1000px < width <= 1500px) {
+			--listColumns: 3;
+		}
+
+		@media (600px < width <= 1000px) {
 			--listColumns: 2;
 		}
 
-		@media screen and (width <= env(--small-viewport)) {
+		@media (width <= 600px) {
 			--listColumns: 1;
 		}
 	}

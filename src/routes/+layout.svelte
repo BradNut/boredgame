@@ -123,7 +123,7 @@
 		place-items: center;
 		gap: 1rem;
 
-		h3 {
+		& h3 {
 			color: white;
 		}
 	}

@@ -1,4 +1,3 @@
-import type { Actions, RequestEvent } from '../$types';
 import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
@@ -109,7 +108,7 @@ export const load = async ({ fetch, url }) => {
 	};
 };
 
-export const actions: Actions = {
+export const actions = {
 	random: async ({ request }): Promise<any> => {
 		const form = await superValidate(request, search_schema);
 		const queryParams: SearchQuery = {

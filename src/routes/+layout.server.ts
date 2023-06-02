@@ -1,6 +1,6 @@
-export const load = async (event: { locals: { user: any }; url: URL }) => {
+export const load = async ({ url, locals }) => {
 	return {
-		url: event.url.pathname,
-		user: event.locals.user
+		url: url.pathname,
+		user: locals.user
 	};
 };
