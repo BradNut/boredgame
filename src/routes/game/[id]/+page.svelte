@@ -205,7 +205,7 @@
 		margin: 1rem;
 		place-items: center;
 
-		@media (max-width: env(--medium-viewport)) {
+		@media (max-width: 700px) {
 			grid-template-columns: 1fr;
 			place-items: center;
 		}
@@ -220,7 +220,7 @@
 			margin: 1rem;
 		}
 
-		@media (max-width: env(--xsmall-viewport)) {
+		@media (max-width: 500px) {
 			grid-template-columns: 1fr;
 		}
 	}

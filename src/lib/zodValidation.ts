@@ -16,6 +16,13 @@ export const saved_game_schema = z.object({
 	playtime: IntegerString(z.number())
 });
 
+export const list_game_request_schema = z.object({
+	id: z.string(),
+	externalId: z.string()
+});
+
+export type ListGameSchema = typeof list_game_request_schema;
+
 // https://github.com/colinhacks/zod/discussions/330
 function IntegerString<schema extends ZodNumber | ZodOptional<ZodNumber>>(schema: schema) {
 	return z.preprocess(

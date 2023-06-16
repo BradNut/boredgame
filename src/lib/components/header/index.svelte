@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Profile from '../preferences/profile.svelte';
+	// import Profile from '../preferences/profile.svelte';
 	import logo from './bored-game.png';
 
 	export let user: any;
@@ -15,9 +15,9 @@
 	</div>
 	<!-- <TextSearch /> -->
 	<nav>
-		<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
-		<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
 		{#if user}
+			<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
+			<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
 			<form
 				use:enhance
 				action="/auth/signout"
@@ -36,11 +36,11 @@
 				<span class="flex-auto">Sign Up</span></a
 			>
 		{/if}
-		<Profile />
+		<!-- <Profile /> -->
 	</nav>
 </header>
 
-<style lang="scss">
+<style lang="postcss">
 	header {
 		display: flex;
 		justify-content: space-between;
@@ -88,7 +88,6 @@
 		padding: 0 1em;
 		color: var(--heading-color);
 		font-weight: 700;
-		/* font-size: 0.8rem; */
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		text-decoration: none;

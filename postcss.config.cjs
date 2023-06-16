@@ -5,7 +5,7 @@ const config = {
 	plugins: [
 		atImport(),
 		postcssPresetEnv({
-			stage: 3,
+			stage: 2,
 			features: {
 				'nesting-rules': true,
 				'custom-media-queries': true,

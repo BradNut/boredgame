@@ -11,20 +11,39 @@ datasource db {
   relationMode = "prisma"
 }
 
+model Role {
+  id        String @id @default(cuid())
+  name      String @unique
+  userRoles UserRole[]
+}
+
+model UserRole {
+  id      String    @id @default(cuid())
+  user    AuthUser  @relation(fields: [userId], references: [id])
+  userId  String
+  role    Role      @relation(fields: [roleId], references: [id])
+  roleId  String
+
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+}
+
 model AuthUser {
     id            String        @id @default(cuid())
     username      String        @unique
-    email         String?        @unique
+    email         String?       @unique
     firstName     String?
     lastName      String?
-    role          Role          @default(USER)
+    roles         UserRole[]
     verified      Boolean       @default(false)
     receiveEmail  Boolean       @default(false)
     token         String?       @unique
     collection    Collection?
     wishlist      Wishlist[]
-    createdAt     DateTime          @default(now()) @db.Timestamp(6)
-    updatedAt     DateTime        @updatedAt @db.Timestamp(6)
+    theme         String        @default("system")
+    createdAt     DateTime      @default(now()) @db.Timestamp(6)
+    updatedAt     DateTime      @updatedAt @db.Timestamp(6)
     auth_session  AuthSession[]
     auth_key      AuthKey[]
 
@@ -52,11 +71,6 @@ model AuthKey {
 
   @@index([user_id])
   @@map("auth_key")
-}
-
-enum Role {
-  USER
-  ADMIN
 }
 
 model Collection {

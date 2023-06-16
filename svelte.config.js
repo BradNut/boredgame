@@ -6,22 +6,18 @@ import { vitePreprocess } from '@sveltejs/kit/vite';
 const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
-	preprocess: [
-		vitePreprocess({
-			postcss: true
-		}),
-		preprocess({
-			postcss: true
-		})
-	],
+	preprocess: [vitePreprocess()],
 	vitePlugin: {
 		inspector: true,
 	},
 	kit: {
 		adapter: adapter(),
 		alias: {
+			$db: './src/db',
+			$assets: './src/assets',
 			$lib: './src/lib',
 			$styles: './src/styles',
+			$themes: './src/themes'
 		}
 	},
 };

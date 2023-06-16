@@ -3,6 +3,7 @@
 	import { userSchema } from '$lib/config/zod-schemas.js';
 
 	export let data;
+
 	const signInSchema = userSchema.pick({ username: true, password: true });
 	const { form, errors, enhance, delayed } = superForm(data.form, {
 		taintedMessage: null,

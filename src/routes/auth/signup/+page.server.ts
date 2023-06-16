@@ -2,6 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
+import { add_user_to_role } from '$db/roles';
 
 const signUpSchema = userSchema.pick({
 	firstName: true,
@@ -55,6 +56,7 @@ export const actions = {
 					token
 				}
 			});
+			add_user_to_role(user.id, 'user');
 
 			console.log('User', user);
 

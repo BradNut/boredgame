@@ -4,6 +4,8 @@
 	import Random from '$lib/components/random/index.svelte';
 
 	export let data;
+	export let formData;
+	console.log('formData', formData);
 </script>
 
 <svelte:head>

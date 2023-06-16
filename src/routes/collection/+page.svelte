@@ -1,78 +1,78 @@
 <script lang="ts">
-	import { tick, onDestroy } from 'svelte';
-	import Game from '$lib/components/game/index.svelte';
-	import { collectionStore } from '$lib/stores/collectionStore';
-	import type { GameType, SavedGameType } from '$lib/types';
-	import { boredState } from '$lib/stores/boredState';
-	import Pagination from '$lib/components/pagination/index.svelte';
-	import RemoveCollectionDialog from '$lib/components/dialog/RemoveCollectionDialog.svelte';
-	import RemoveWishlistDialog from '$lib/components/dialog/RemoveWishlistDialog.svelte';
-	import { createSearchStore, searchHandler } from '$lib/stores/search';
-  import type { PageData } from './$types';
+	// import { tick, onDestroy } from 'svelte';
+	// import Game from '$lib/components/game/index.svelte';
+	// import { collectionStore } from '$lib/stores/collectionStore';
+	// import type { GameType, SavedGameType } from '$lib/types';
+	// import { boredState } from '$lib/stores/boredState';
+	// import Pagination from '$lib/components/pagination/index.svelte';
+	// import RemoveCollectionDialog from '$lib/components/dialog/RemoveCollectionDialog.svelte';
+	// import RemoveWishlistDialog from '$lib/components/dialog/RemoveWishlistDialog.svelte';
+	// import { createSearchStore, searchHandler } from '$lib/stores/search';
 
-	export let data: PageData;
-	console.log(`Page data: ${JSON.stringify(data)}`)
+	export let data;
+	console.log(`Page data: ${JSON.stringify(data)}`);
+	// let collectionItems = data?.collection?.collectionItems;
 
-	let gameToRemove: GameType | SavedGameType;
-	let pageSize = 10;
-	let page = 1;
+	// let gameToRemove: GameType | SavedGameType;
+	// let pageSize = 10;
+	// let page = 1;
 
-	const searchStore = createSearchStore($collectionStore);
-	console.log('searchStore', $searchStore);
+	// const searchStore = createSearchStore($collectionStore);
+	// console.log('searchStore', $searchStore);
 
-	const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
+	// const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
 
-	onDestroy(() => {
-		unsubscribe();
-	});
+	// onDestroy(() => {
+	// 	unsubscribe();
+	// });
 
-	$: skip = (page - 1) * pageSize;
-	$: gamesShown = $searchStore.data.slice(skip, skip + pageSize);
-	$: totalItems = $searchStore.search === '' ? $collectionStore.length : $searchStore.filtered.length;
+	// $: skip = (page - 1) * pageSize;
+	// $: gamesShown = $searchStore.data.slice(skip, skip + pageSize);
+	// $: totalItems = $searchStore.search === '' ? $collectionStore.length : $searchStore.filtered.length;
 
-	interface RemoveGameEvent extends Event {
-		detail: GameType | SavedGameType;
-	}
+	// interface RemoveGameEvent extends Event {
+	// 	detail: GameType | SavedGameType;
+	// }
 
-	function handleRemoveCollection(event: RemoveGameEvent) {
-		console.log('Remove collection event handler');
-		console.log('event', event);
-		gameToRemove = event?.detail;
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
-		}));
-	}
+	// function handleRemoveCollection(event: RemoveGameEvent) {
+	// 	console.log('Remove collection event handler');
+	// 	console.log('event', event);
+	// 	gameToRemove = event?.detail;
+	// 	boredState.update((n) => ({
+	// 		...n,
+	// 		dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
+	// 	}));
+	// }
 
-	function handleRemoveWishlist(event: RemoveGameEvent) {
-		console.log('Remove wishlist event handler');
-		console.log('event', event);
-		gameToRemove = event?.detail;
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
-		}));
-	}
+	// function handleRemoveWishlist(event: RemoveGameEvent) {
+	// 	console.log('Remove wishlist event handler');
+	// 	console.log('event', event);
+	// 	gameToRemove = event?.detail;
+	// 	boredState.update((n) => ({
+	// 		...n,
+	// 		dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
+	// 	}));
+	// }
 
-	async function handleNextPageEvent(event: CustomEvent) {
-		if (+event?.detail?.page === page + 1) {
-			page += 1;
-		}
-		await tick();
-	}
+	// async function handleNextPageEvent(event: CustomEvent) {
+	// 	if (+event?.detail?.page === page + 1) {
+	// 		page += 1;
+	// 	}
+	// 	await tick();
+	// }
 
-	async function handlePreviousPageEvent(event: CustomEvent) {
-		if (+event?.detail?.page === page - 1) {
-			page -= 1;
-		}
-		await tick();
-	}
+	// async function handlePreviousPageEvent(event: CustomEvent) {
+	// 	if (+event?.detail?.page === page - 1) {
+	// 		page -= 1;
+	// 	}
+	// 	await tick();
+	// }
 
-	async function handlePerPageEvent(event: CustomEvent) {
-		page = 1;
-		pageSize = event.detail.pageSize;
-		await tick();
-	}
+	// async function handlePerPageEvent(event: CustomEvent) {
+	// 	page = 1;
+	// 	pageSize = event.detail.pageSize;
+	// 	await tick();
+	// }
 </script>
 
 <svelte:head>
@@ -80,9 +80,9 @@
 </svelte:head>
 
 <h1>Your Collection</h1>
-<input type="text" id="search" name="search" placeholder="Search Your Collection" bind:value={$searchStore.search} />
+<!-- <input type="text" id="search" name="search" placeholder="Search Your Collection" bind:value={$searchStore.search} /> -->
 
-<div class="games">
+<!-- <div class="games">
 	<div class="games-list">
 		{#if $collectionStore.length === 0}
 			<h2>No games in your collection</h2>
@@ -109,9 +109,9 @@
 			on:perPageEvent={handlePerPageEvent}
 		/>
 	{/if}
-</div>
+</div> -->
 
-<style lang="scss">
+<style lang="postcss">
 	h1 {
 		margin: 1.5rem 0rem;
 		width: 100%;

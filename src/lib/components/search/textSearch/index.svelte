@@ -4,7 +4,7 @@
 	import { applyAction, type SubmitFunction } from '$app/forms';
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import type { Validation } from 'sveltekit-superforms/index';
+	import type { SuperValidated } from 'sveltekit-superforms/index';
 	import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
 	import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
 	import { boredState } from '$lib/stores/boredState';
@@ -15,7 +15,7 @@
 	import Pagination from '$lib/components/pagination/index.svelte';
 	import Game from '$lib/components/game/index.svelte';
 	import { ToastType, type GameType, type SavedGameType } from '$lib/types';
-	import SkeletonPlaceholder from '../../SkeletonPlaceholder.svelte';
+	// import SkeletonPlaceholder from '../../SkeletonPlaceholder.svelte';
 	import RemoveCollectionDialog from '../../dialog/RemoveCollectionDialog.svelte';
 	import RemoveWishlistDialog from '../../dialog/RemoveWishlistDialog.svelte';
   import type { SearchSchema } from '$lib/zodValidation';
@@ -24,7 +24,7 @@
 		detail: GameType | SavedGameType;
 	}
 
-	export let data: Validation<SearchSchema>;
+	export let data: SuperValidated<SearchSchema>;
 	const { form, constraints, errors } = superForm(data, {
 		onSubmit: () => {
 			boredState.update((n) => ({ ...n, loading: true }));
@@ -213,11 +213,11 @@
 	<div class="games">
 		<h1>Games Found:</h1>
 		<div class="games-list">
-			{#each placeholderList as game, i}
+			<!-- {#each placeholderList as game, i}
 				<SkeletonPlaceholder
 					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
 				/>
-			{/each}
+			{/each} -->
 		</div>
 	</div>
 {:else}

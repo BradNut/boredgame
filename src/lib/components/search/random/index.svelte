@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Validation } from 'sveltekit-superforms/index';
+	import type { SuperValidated } from 'sveltekit-superforms/index';
 	import type { SearchSchema } from '$lib/zodValidation';
 	import { boredState } from '$lib/stores/boredState';
 	import { gameStore } from '$lib/stores/gameSearchStore';
@@ -7,7 +7,7 @@
   import { superForm } from 'sveltekit-superforms/client';
 	import { toast } from '../../toast/toast';
 
-	export let data: Validation<SearchSchema>;
+	export let data: SuperValidated<SearchSchema>;
 	const { enhance } = superForm(data, {
 		onSubmit: () => {
 			gameStore.removeAll();

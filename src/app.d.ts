@@ -9,6 +9,7 @@ declare global {
 		}
 		interface Locals {
 			auth: import('lucia-auth').AuthRequest;
+			prisma: PrismaClient;
 			user: Lucia.UserAttributes;
 			startTimer: number;
 			error: string;

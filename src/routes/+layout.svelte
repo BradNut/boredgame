@@ -75,7 +75,7 @@
 	<Analytics />
 {/if}
 
-{#if dev}
+<!-- {#if dev}
 	<Toy
 		register={{
 			boredState,
@@ -85,7 +85,7 @@
 			toast
 		}}
 	/>
-{/if}
+{/if} -->
 
 <div class="wrapper">
 	<Header user={data.user} />
