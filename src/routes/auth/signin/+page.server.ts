@@ -49,10 +49,6 @@ export const actions = {
 					}
 				}
 			});
-
-			if (user && user.roles.length === 0) {
-				add_user_to_role(user.id, 'user');
-			}
 		} catch (e) {
 			// TODO: need to return error message to the client
 			console.error(e);
