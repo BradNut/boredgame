@@ -6,8 +6,8 @@
 		DialogOverlay,
 		DialogTitle
 	} from '@rgossiaux/svelte-headlessui';
-	import { boredState } from '$root/lib/stores/boredState';
-	import { collectionStore } from '$root/lib/stores/collectionStore';
+	import { boredState } from '$lib/stores/boredState';
+	import { collectionStore } from '$lib/stores/collectionStore';
 	import { browser } from '$app/environment';
 
 	function clearCollection() {

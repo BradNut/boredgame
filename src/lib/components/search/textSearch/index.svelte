@@ -1,29 +1,35 @@
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { fade } from 'svelte/transition';
+	import { applyAction, type SubmitFunction } from '$app/forms';
+	import { superForm } from 'sveltekit-superforms/client';
+	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
+	import type { SuperValidated } from 'sveltekit-superforms/index';
 	import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
 	import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
 	import { boredState } from '$lib/stores/boredState';
 	import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
 	import { xl, md, sm } from '$lib/stores/mediaQueryStore';
-	import { gameStore } from '$root/lib/stores/gameSearchStore';
+	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { toast } from '../../toast/toast';
 	import Pagination from '$lib/components/pagination/index.svelte';
 	import Game from '$lib/components/game/index.svelte';
-	import { ToastType, type GameType, type SavedGameType } from '$root/lib/types';
-	import SkeletonPlaceholder from '../../SkeletonPlaceholder.svelte';
+	import { ToastType, type GameType, type SavedGameType } from '$lib/types';
+	// import SkeletonPlaceholder from '../../SkeletonPlaceholder.svelte';
 	import RemoveCollectionDialog from '../../dialog/RemoveCollectionDialog.svelte';
 	import RemoveWishlistDialog from '../../dialog/RemoveWishlistDialog.svelte';
+  import type { SearchSchema } from '$lib/zodValidation';
 
 	interface RemoveGameEvent extends Event {
 		detail: GameType | SavedGameType;
 	}
 
-	export let form;
-	export let errors;
-	export let constraints;
+	export let data: SuperValidated<SearchSchema>;
+	const { form, constraints, errors } = superForm(data, {
+		onSubmit: () => {
+			boredState.update((n) => ({ ...n, loading: true }));
+		},
+	});
 
 	export let showButton: boolean = false;
 	export let advancedSearch: boolean = false;
@@ -139,22 +145,23 @@
 	<SuperDebug data={$form} />
 {/if}
 
-<form id="search-form" action="/search" method="GET" on:submit={() => {
-	skip = 0;
-}}>
+<form id="search-form" action="/search" method="GET">
 	<div class="search">
 		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
-			<label for="q">Search</label>
-			<input
-				id="q"
-				name="q"
-				bind:value={$form.q}
-				data-invalid={$errors?.q}
-				{...$constraints.q}
-				type="text"
-				aria-label="Search board games"
-				placeholder="Search board games"
+			<label class="label" for="q">
+				<span>Search</span>
+				<input
+					id="q"
+					class="input"
+					name="q"
+					bind:value={$form.q}
+					data-invalid={$errors?.q}
+					{...$constraints.q}
+					type="search"
+					aria-label="Search board games"
+					placeholder="Search board games"
 			/>
+			</label>
 			{#if $errors?.q}<span class="invalid">{$errors?.q}</span>{/if}
 
 			<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />
@@ -206,11 +213,11 @@
 	<div class="games">
 		<h1>Games Found:</h1>
 		<div class="games-list">
-			{#each placeholderList as game, i}
+			<!-- {#each placeholderList as game, i}
 				<SkeletonPlaceholder
 					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
 				/>
-			{/each}
+			{/each} -->
 		</div>
 	</div>
 {:else}
@@ -278,7 +285,7 @@
 	.games {
 		margin: 2rem 0rem;
 
-		h1 {
+		& h1 {
 			margin-bottom: 2rem;
 		}
 	}
@@ -289,15 +296,19 @@
 		grid-template-columns: repeat(var(--listColumns), minmax(250px, 1fr));
 		gap: 2rem;
 
-		@media screen and (env(--large-viewport) < width <= env(--xxlarge-viewport)) {
+		@media (width >= 1500px) {
 			--listColumns: 3;
 		}
 
-		@media screen and (env(--small-viewport) < width <= env(--large-viewport)) {
+		@media (1000px < width <= 1500px) {
+			--listColumns: 3;
+		}
+
+		@media (600px < width <= 1000px) {
 			--listColumns: 2;
 		}
 
-		@media screen and (width <= env(--small-viewport)) {
+		@media (width <= 600px) {
 			--listColumns: 1;
 		}
 	}

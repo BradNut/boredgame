@@ -4,7 +4,6 @@
 	import TextSearch from '$lib/components/search/textSearch/index.svelte';
 
 	export let data;
-	const { form, errors, constraints } = superForm(data?.form);
 
 	$: if (data?.searchData?.games) {
 		gameStore.removeAll();
@@ -13,5 +12,5 @@
 </script>
 
 <div class="game-search">
-	<TextSearch showButton advancedSearch {form} {errors} {constraints} />
+	<TextSearch showButton advancedSearch data={data.form} />
 </div>

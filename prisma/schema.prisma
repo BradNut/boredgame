@@ -1,0 +1,238 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Role {
+  id        String @id @default(cuid())
+  name      String @unique
+  userRoles UserRole[]
+}
+
+model UserRole {
+  id      String    @id @default(cuid())
+  user    AuthUser  @relation(fields: [userId], references: [id])
+  userId  String
+  role    Role      @relation(fields: [roleId], references: [id])
+  roleId  String
+
+  @@unique([userId, roleId])
+  @@index([userId])
+  @@index([roleId])
+}
+
+model AuthUser {
+    id            String        @id @default(cuid())
+    username      String        @unique
+    email         String?       @unique
+    firstName     String?
+    lastName      String?
+    roles         UserRole[]
+    verified      Boolean       @default(false)
+    receiveEmail  Boolean       @default(false)
+    token         String?       @unique
+    collection    Collection?
+    wishlist      Wishlist[]
+    theme         String        @default("system")
+    createdAt     DateTime      @default(now()) @db.Timestamp(6)
+    updatedAt     DateTime      @updatedAt @db.Timestamp(6)
+    auth_session  AuthSession[]
+    auth_key      AuthKey[]
+
+  @@map("auth_user")
+}
+
+model AuthSession {
+  id             String   @id @unique
+  user_id        String
+  active_expires BigInt
+  idle_expires   BigInt
+  auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("auth_session")
+}
+
+model AuthKey {
+  id              String   @id @unique
+  hashed_password String?
+  user_id         String
+  primary_key     Boolean
+  expires         BigInt?
+  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@map("auth_key")
+}
+
+model Collection {
+  id String @id @default(cuid())
+  user_id String @unique
+  auth_user AuthUser @relation(references: [id], fields: [user_id])
+  items CollectionItem[]
+
+  @@index([user_id])
+  @@map("collections")
+}
+
+model CollectionItem {
+  id String @id @default(cuid())
+  collection_id String
+  collection Collection @relation(references: [id], fields: [collection_id])
+  game_id String
+  game Game @relation(references: [id], fields: [game_id])
+  times_played Int
+
+  @@index([game_id, collection_id])
+  @@map("collection_items")
+}
+
+model Wishlist {
+  id String @id @default(cuid())
+  name String
+  user_id String
+  auth_user AuthUser @relation(references: [id], fields: [user_id])
+  items WishlistItem[]
+
+  @@index([user_id])
+  @@map("wishlists")
+}
+
+model WishlistItem {
+  id String @id @default(cuid())
+  wishlist_id String
+  wishlist Wishlist @relation(references: [id], fields: [wishlist_id])
+  game_id String
+  game Game @relation(references: [id], fields: [game_id])
+
+  @@index([game_id, wishlist_id])
+  @@map("wishlist_items")
+}
+
+model Game {
+  id            String  @id @default(cuid())
+  name          String
+  description   String?
+  yearPublished Int?
+  minPlayers    Int?
+  maxPlayers    Int?
+  minPlaytime   Int?
+  maxPlaytime   Int?
+  minAge        Int?
+  imageUrl      String?
+  thumbUrl      String?
+  url           String?
+  rulesUrl      String?
+  weightAmount  Float?
+  weightUnits   String?
+  bggId         String?
+  bggUrl        String?
+  primary_publisher_id String
+  primaryPublisher Publisher? @relation("PrimaryPublishers", references: [id], fields: [primary_publisher_id])
+  categories    Category[]
+  mechanics     Mechanic[]
+  designers     Designer[]
+  publishers    Publisher[]
+  artists       Artist[]
+  names         GameName[]
+  expansions    Expansion[]
+  collection_items CollectionItem[]
+  wishlist_items WishlistItem[]
+  external_id String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([primary_publisher_id])
+  @@map("games")
+}
+
+model GameName {
+  id String @id @default(cuid())
+  name String
+  game_id String
+  game Game @relation(references: [id], fields: [game_id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([game_id])
+  @@map("game_names")
+}
+
+model Publisher {
+  id        String  @id @default(cuid())
+  name      String
+  games     Game[]
+  primaryPublisher Game[] @relation("PrimaryPublishers")
+  external_id String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("publishers")
+}
+
+model Category {
+  id        String  @id @default(cuid())
+  name      String
+  slug      String
+  games     Game[]
+  external_id String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Mechanic {
+  id        String  @id @default(cuid())
+  name      String
+  games     Game[]
+  external_id String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("mechanics")
+}
+
+model Designer {
+  id        String  @id @default(cuid())
+  name      String
+  games     Game[]
+  external_id String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("designers")
+}
+
+model Artist {
+  id        String  @id @default(cuid())
+  name      String
+  games     Game[]
+  external_id String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("artists")
+}
+
+model Expansion {
+  id            String  @id @default(cuid())
+  name          String
+  yearPublished Int?
+  baseGame      Game?   @relation(fields: [base_game_id], references: [id])
+  base_game_id    String?
+  external_id String @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([base_game_id])
+  @@map("expansions")
+}

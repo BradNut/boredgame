@@ -1,19 +1,16 @@
-const autoprefixer = require('autoprefixer');
-const postcssMediaMinmax = require('postcss-media-minmax');
-const customMedia = require('postcss-custom-media');
+const postcssPresetEnv = require('postcss-preset-env');
 const atImport = require('postcss-import');
-const postcssNested = require('postcss-nested');
-const postcssEnvFunction = require('postcss-env-function');
 
 const config = {
 	plugins: [
-		autoprefixer(),
-		postcssMediaMinmax,
-		customMedia,
 		atImport(),
-		postcssNested,
-		postcssEnvFunction({
-			importFrom: './src/lib/util/environmentVariables.json'
+		postcssPresetEnv({
+			stage: 2,
+			features: {
+				'nesting-rules': true,
+				'custom-media-queries': true,
+				'media-query-ranges': true,
+			}
 		})
 	]
 };

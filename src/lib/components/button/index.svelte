@@ -23,7 +23,7 @@
 		text-align: start;
 		background-color: var(--color-btn-primary-active);
 
-		@media (min-width: env(--large-viewport)) {
+		@media (min-width: 1000px) {
 			min-width: 23.5rem;
 		}
 	}

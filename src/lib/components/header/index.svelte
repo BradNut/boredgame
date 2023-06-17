@@ -1,6 +1,10 @@
 <script lang="ts">
-	import Profile from '../preferences/profile.svelte';
+	import { enhance } from '$app/forms';
+	// import Profile from '../preferences/profile.svelte';
 	import logo from './bored-game.png';
+
+	export let user: any;
+	console.log('User', user);
 </script>
 
 <header>
@@ -11,13 +15,32 @@
 	</div>
 	<!-- <TextSearch /> -->
 	<nav>
-		<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
-		<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
-		<Profile />
+		{#if user}
+			<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
+			<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
+			<form
+				use:enhance
+				action="/auth/signout"
+				method="POST"
+			>
+				<button type="submit" class="btn"
+					><span>Sign out</span></button
+				>
+			</form>
+		{/if}
+		{#if !user}
+			<a href="/auth/signin">
+				<span class="flex-auto">Sign In</span></a
+			>
+			<a href="/auth/signup">
+				<span class="flex-auto">Sign Up</span></a
+			>
+		{/if}
+		<!-- <Profile /> -->
 	</nav>
 </header>
 
-<style lang="scss">
+<style lang="postcss">
 	header {
 		display: flex;
 		justify-content: space-between;
@@ -65,7 +88,6 @@
 		padding: 0 1em;
 		color: var(--heading-color);
 		font-weight: 700;
-		/* font-size: 0.8rem; */
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		text-decoration: none;

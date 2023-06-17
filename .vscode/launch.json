@@ -1,17 +1,27 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Launch Vite DEV server",
-      "request": "launch",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["vite"],
-      "type": "node",
-      "serverReadyAction": {
-        "action": "debugWithChrome",
-        "pattern": "Local: http://localhost:([0-9]+)",
-        "uriFormat": "http://localhost:%s"
-      }
-    }
-  ]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Launch server",
+			"request": "launch",
+			"runtimeArgs": ["dev"],
+			"runtimeExecutable": "pnpm",
+			"skipFiles": ["<node_internals>/**"],
+			"type": "node",
+			"console": "integratedTerminal"
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Launch browser",
+			"url": "http://localhost:5173",
+			"webRoot": "${workspaceFolder}"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Both",
+			"configurations": ["Launch server", "Launch browser"]
+		}
+	]
 }

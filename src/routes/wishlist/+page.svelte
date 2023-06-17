@@ -1,70 +1,72 @@
 <script lang="ts">
-	import { tick, onDestroy } from 'svelte';
-	import Game from '$lib/components/game/index.svelte';
-	import { wishlistStore } from '$lib/stores/wishlistStore';
-	import type { GameType, SavedGameType } from '$root/lib/types';
-	import { boredState } from '$root/lib/stores/boredState';
-	import Pagination from '$root/lib/components/pagination/index.svelte';
-	import RemoveWishlistDialog from '$root/lib/components/dialog/RemoveWishlistDialog.svelte';
-	import RemoveCollectionDialog from '$root/lib/components/dialog/RemoveCollectionDialog.svelte';
-  import { createSearchStore, searchHandler } from '$root/lib/stores/search';
+	// import { tick, onDestroy } from 'svelte';
+	// import Game from '$lib/components/game/index.svelte';
+	// import { wishlistStore } from '$lib/stores/wishlistStore';
+	// import type { GameType, SavedGameType } from '$lib/types';
+	// import { boredState } from '$lib/stores/boredState';
+	// import Pagination from '$lib/components/pagination/index.svelte';
+	// import RemoveWishlistDialog from '$lib/components/dialog/RemoveWishlistDialog.svelte';
+	// import RemoveCollectionDialog from '$lib/components/dialog/RemoveCollectionDialog.svelte';
+  // import { createSearchStore, searchHandler } from '$lib/stores/search';
 
-	let gameToRemove: GameType | SavedGameType;
-	let pageSize = 10;
-	let page = 1;
+	// let gameToRemove: GameType | SavedGameType;
+	// let pageSize = 10;
+	// let page = 1;
 
-	const searchStore = createSearchStore($wishlistStore);
-	console.log('searchStore', $searchStore);
+	// const searchStore = createSearchStore($wishlistStore);
+	// console.log('searchStore', $searchStore);
 
-	const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
+	// const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
 
-	onDestroy(() => {
-		unsubscribe();
-	});
+	// onDestroy(() => {
+	// 	unsubscribe();
+	// });
 
-	$: skip = (page - 1) * pageSize;
-	$: gamesShown = $searchStore.filtered.slice(skip, skip + pageSize);
-	$: totalItems = $searchStore.search === '' ? $wishlistStore.length : $searchStore.filtered.length;
+	// $: skip = (page - 1) * pageSize;
+	// $: gamesShown = $searchStore.filtered.slice(skip, skip + pageSize);
+	// $: totalItems = $searchStore.search === '' ? $wishlistStore.length : $searchStore.filtered.length;
 
-	interface RemoveGameEvent extends Event {
-		detail: GameType | SavedGameType;
-	}
+	// interface RemoveGameEvent extends Event {
+	// 	detail: GameType | SavedGameType;
+	// }
 
-	function handleRemoveCollection(event: RemoveGameEvent) {
-		gameToRemove = event?.detail;
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
-		}));
-	}
+	// function handleRemoveCollection(event: RemoveGameEvent) {
+	// 	gameToRemove = event?.detail;
+	// 	boredState.update((n) => ({
+	// 		...n,
+	// 		dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
+	// 	}));
+	// }
 
-	function handleRemoveWishlist(event: RemoveGameEvent) {
-		gameToRemove = event?.detail;
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
-		}));
-	}
+	// function handleRemoveWishlist(event: RemoveGameEvent) {
+	// 	gameToRemove = event?.detail;
+	// 	boredState.update((n) => ({
+	// 		...n,
+	// 		dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
+	// 	}));
+	// }
 
-	async function handleNextPageEvent(event: CustomEvent) {
-		if (+event?.detail?.page === page + 1) {
-			page += 1;
-		}
-		await tick();
-	}
+	// async function handleNextPageEvent(event: CustomEvent) {
+	// 	if (+event?.detail?.page === page + 1) {
+	// 		page += 1;
+	// 	}
+	// 	await tick();
+	// }
 
-	async function handlePreviousPageEvent(event: CustomEvent) {
-		if (+event?.detail?.page === page - 1) {
-			page -= 1;
-		}
-		await tick();
-	}
+	// async function handlePreviousPageEvent(event: CustomEvent) {
+	// 	if (+event?.detail?.page === page - 1) {
+	// 		page -= 1;
+	// 	}
+	// 	await tick();
+	// }
 
-	async function handlePerPageEvent(event: CustomEvent) {
-		page = 1;
-		pageSize = event.detail.pageSize;
-		await tick();
-	}
+	// async function handlePerPageEvent(event: CustomEvent) {
+	// 	page = 1;
+	// 	pageSize = event.detail.pageSize;
+	// 	await tick();
+	// }
+	export let data;
+	const wishlists = data.wishlists || [];
 </script>
 
 <svelte:head>
@@ -72,7 +74,10 @@
 </svelte:head>
 
 <h1>Your Wishlist</h1>
-<input type="text" id="search" name="search" placeholder="Search Your Wishlist" bind:value={$searchStore.search} />
+{#each wishlists as wishlist}
+	<h2>{wishlist.name}</h2>
+{/each}
+<!-- <input type="text" id="search" name="search" placeholder="Search Your Wishlist" bind:value={$searchStore.search} />
 
 <div class="games">
 	<div class="games-list">
@@ -101,7 +106,7 @@
 			on:perPageEvent={handlePerPageEvent}
 		/>
 	{/if}
-</div>
+</div> -->
 
 <style lang="scss">
 	h1 {
