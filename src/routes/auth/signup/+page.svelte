@@ -9,7 +9,8 @@
     lastName: true,
     username: true,
     email: true,
-    password: true
+    password: true,
+		confirm_password: true
   });
 
   const { form, errors, constraints, enhance, delayed } = superForm(data.form, {
@@ -92,12 +93,12 @@
 			{/if}
 		</label>
     <label class="label">
-			<span class="sr-only">password</span>
+			<span class="sr-only">Password</span>
 			<input
 				id="password"
 				name="password"
 				type="password"
-				placeholder="password"
+				placeholder="Password"
 				{...$constraints.username}
 				data-invalid={$errors.password}
 				bind:value={$form.password}
@@ -106,6 +107,23 @@
 			/>
 			{#if $errors.password}
 				<small>{$errors.password}</small>
+			{/if}
+		</label>
+		<label class="label">
+			<span class="sr-only">Confirm Password</span>
+			<input
+				id="confirm_password"
+				name="confirm_password"
+				type="password"
+				placeholder="Confirm your password"
+				{...$constraints.confirm_password}
+				data-invalid={$errors.confirm_password}
+				bind:value={$form.confirm_password}
+				class="input"
+				class:input-error={$errors.confirm_password}
+			/>
+			{#if $errors.confirm_password}
+				<small>{$errors.confirm_password}</small>
 			{/if}
 		</label>
     

@@ -14,7 +14,7 @@ export const userSchema = z.object({
 		.trim()
 		.min(8, { message: 'Password must be at least 8 characters' })
 		.max(128, { message: 'Password must be less than 128 characters' }),
-	confirmPassword: z
+	confirm_password: z
 		.string({ required_error: 'Confirm Password is required' })
 		.trim()
 		.min(8, { message: 'Confirm Password must be at least 8 characters' }),
@@ -27,9 +27,9 @@ export const userSchema = z.object({
 });
 
 export const updateUserPasswordSchema = userSchema
-	.pick({ password: true, confirmPassword: true })
-	.superRefine(({ confirmPassword, password }, ctx) => {
-		if (confirmPassword !== password) {
+	.pick({ password: true, confirm_password: true })
+	.superRefine(({ confirm_password, password }, ctx) => {
+		if (confirm_password !== password) {
 			ctx.addIssue({
 				code: 'custom',
 				message: 'Password and Confirm Password must match',
@@ -38,7 +38,7 @@ export const updateUserPasswordSchema = userSchema
 			ctx.addIssue({
 				code: 'custom',
 				message: 'Password and Confirm Password must match',
-				path: ['confirmPassword']
+				path: ['confirm_password']
 			});
 		}
 	});

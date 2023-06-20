@@ -67,10 +67,10 @@ export const load = async ({ fetch, url }) => {
 		skip: form.data?.skip,
 		client_id: BOARD_GAME_ATLAS_CLIENT_ID,
 		fuzzy_match: true,
-		name: form.data?.q,
-		fields:
-			'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
+		name: form.data?.q
 	};
+
+	// fields: ('id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description');
 
 	if (form.data?.minAge) {
 		if (form.data?.exactMinAge) {

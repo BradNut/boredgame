@@ -4,14 +4,30 @@ import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$db/roles';
 
-const signUpSchema = userSchema.pick({
-	firstName: true,
-	lastName: true,
-	email: true,
-	username: true,
-	password: true,
-	terms: true
-});
+const signUpSchema = userSchema
+	.pick({
+		firstName: true,
+		lastName: true,
+		email: true,
+		username: true,
+		password: true,
+		confirm_password: true,
+		terms: true
+	})
+	.superRefine(({ confirm_password, password }, ctx) => {
+		if (confirm_password !== password) {
+			// ctx.addIssue({
+			// 	code: 'custom',
+			// 	message: 'Password and Confirm Password must match',
+			// 	path: ['password']
+			// });
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Password and Confirm Password must match',
+				path: ['confirm_password']
+			});
+		}
+	});
 
 export const load = async (event) => {
 	const session = await event.locals.auth.validate();
@@ -50,9 +66,9 @@ export const actions = {
 					username: form.data.username,
 					firstName: form.data.firstName || '',
 					lastName: form.data.lastName || '',
-					role: 'USER',
 					verified: false,
 					receiveEmail: false,
+					theme: 'system',
 					token
 				}
 			});
@@ -60,11 +76,11 @@ export const actions = {
 
 			console.log('User', user);
 
-			const session = await auth.createSession(user.userId);
+			const session = await auth.createSession(user.id);
 			event.locals.auth.setSession(session);
 		} catch (error) {
 			console.log(error);
-			return setError(form, 'email', 'Unable to create your account. Please try again.');
+			return setError(form, '', 'Unable to create your account. Please try again.');
 		}
 
 		return { form };
