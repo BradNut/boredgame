@@ -15,37 +15,42 @@ model Role {
   id        String @id @default(cuid())
   name      String @unique
   userRoles UserRole[]
+
+  @@map("roles")
 }
 
 model UserRole {
-  id      String    @id @default(cuid())
-  user    AuthUser  @relation(fields: [userId], references: [id])
-  userId  String
-  role    Role      @relation(fields: [roleId], references: [id])
-  roleId  String
+  id          String    @id @default(cuid())
+  user        AuthUser  @relation(fields: [user_id], references: [id])
+  user_id      String
+  role        Role      @relation(fields: [role_id], references: [id])
+  role_id      String
+  created_at  DateTime  @default(now()) @db.Timestamp(6)
+  updated_at  DateTime  @updatedAt  @db.Timestamp(6)
 
-  @@unique([userId, roleId])
-  @@index([userId])
-  @@index([roleId])
+  @@unique([user_id, role_id])
+  @@index([user_id])
+  @@index([role_id])
+  @@map("user_roles")
 }
 
 model AuthUser {
-    id            String        @id @default(cuid())
-    username      String        @unique
-    email         String?       @unique
-    firstName     String?
-    lastName      String?
-    roles         UserRole[]
-    verified      Boolean       @default(false)
-    receiveEmail  Boolean       @default(false)
-    token         String?       @unique
-    collection    Collection?
-    wishlist      Wishlist[]
-    theme         String        @default("system")
-    createdAt     DateTime      @default(now()) @db.Timestamp(6)
-    updatedAt     DateTime      @updatedAt @db.Timestamp(6)
-    auth_session  AuthSession[]
-    auth_key      AuthKey[]
+  id            String        @id @default(cuid())
+  username      String        @unique
+  email         String?       @unique
+  firstName     String?
+  lastName      String?
+  roles         UserRole[]
+  verified      Boolean       @default(false)
+  receiveEmail  Boolean       @default(false)
+  token         String?       @unique
+  collection    Collection?
+  wishlist      Wishlist[]
+  theme         String        @default("system")
+  created_at    DateTime      @default(now()) @db.Timestamp(6)
+  updated_at    DateTime      @updatedAt @db.Timestamp(6)
+  auth_session  AuthSession[]
+  auth_key      AuthKey[]
 
   @@map("auth_user")
 }
@@ -86,7 +91,7 @@ model Collection {
 model CollectionItem {
   id String @id @default(cuid())
   collection_id String
-  collection Collection @relation(references: [id], fields: [collection_id])
+  collection Collection @relation(references: [id], fields: [collection_id], onDelete: Cascade)
   game_id String
   game Game @relation(references: [id], fields: [game_id])
   times_played Int
@@ -109,9 +114,11 @@ model Wishlist {
 model WishlistItem {
   id String @id @default(cuid())
   wishlist_id String
-  wishlist Wishlist @relation(references: [id], fields: [wishlist_id])
+  wishlist Wishlist @relation(references: [id], fields: [wishlist_id], onDelete: Cascade)
   game_id String
   game Game @relation(references: [id], fields: [game_id])
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
 
   @@index([game_id, wishlist_id])
   @@map("wishlist_items")
@@ -120,23 +127,24 @@ model WishlistItem {
 model Game {
   id            String  @id @default(cuid())
   name          String
+  slug          String
   description   String?
-  yearPublished Int?
-  minPlayers    Int?
-  maxPlayers    Int?
-  minPlaytime   Int?
-  maxPlaytime   Int?
-  minAge        Int?
-  imageUrl      String?
-  thumbUrl      String?
+  year_published Int?
+  min_players    Int?
+  max_players    Int?
+  min_playtime   Int?
+  max_playtime   Int?
+  min_age        Int?
+  image_url      String?
+  thumb_url      String?
   url           String?
-  rulesUrl      String?
-  weightAmount  Float?
-  weightUnits   String?
+  rules_url      String?
+  weight_amount  Float?
+  weight_units   String?
   bggId         String?
   bggUrl        String?
   primary_publisher_id String
-  primaryPublisher Publisher? @relation("PrimaryPublishers", references: [id], fields: [primary_publisher_id])
+  primary_publisher Publisher? @relation("PrimaryPublishers", references: [id], fields: [primary_publisher_id])
   categories    Category[]
   mechanics     Mechanic[]
   designers     Designer[]
@@ -147,8 +155,8 @@ model Game {
   collection_items CollectionItem[]
   wishlist_items WishlistItem[]
   external_id String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
 
   @@index([primary_publisher_id])
   @@map("games")
@@ -159,8 +167,8 @@ model GameName {
   name String
   game_id String
   game Game @relation(references: [id], fields: [game_id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
 
   @@index([game_id])
   @@map("game_names")
@@ -170,10 +178,10 @@ model Publisher {
   id        String  @id @default(cuid())
   name      String
   games     Game[]
-  primaryPublisher Game[] @relation("PrimaryPublishers")
+  primary_publisher Game[] @relation("PrimaryPublishers")
   external_id String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
   
   @@map("publishers")
 }
@@ -184,8 +192,8 @@ model Category {
   slug      String
   games     Game[]
   external_id String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
 
   @@map("categories")
 }
@@ -195,8 +203,8 @@ model Mechanic {
   name      String
   games     Game[]
   external_id String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
 
   @@map("mechanics")
 }
@@ -206,8 +214,8 @@ model Designer {
   name      String
   games     Game[]
   external_id String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
 
   @@map("designers")
 }
@@ -217,8 +225,8 @@ model Artist {
   name      String
   games     Game[]
   external_id String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
 
   @@map("artists")
 }
@@ -226,12 +234,12 @@ model Artist {
 model Expansion {
   id            String  @id @default(cuid())
   name          String
-  yearPublished Int?
+  year_published Int?
   baseGame      Game?   @relation(fields: [base_game_id], references: [id])
   base_game_id    String?
   external_id String @unique
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  created_at     DateTime @default(now()) @db.Timestamp(6)
+  updated_at     DateTime @updatedAt @db.Timestamp(6)
 
   @@index([base_game_id])
   @@map("expansions")

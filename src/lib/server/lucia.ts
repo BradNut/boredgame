@@ -11,12 +11,11 @@ export const auth = lucia({
 	middleware: sveltekit(),
 	transformDatabaseUser: (userData) => {
 		return {
-			userId: userData.id,
+			id: userData.id,
 			username: userData.username,
 			email: userData.email,
 			firstName: userData.firstName,
 			lastName: userData.lastName,
-			role: userData.role,
 			verified: userData.verified,
 			receiveEmail: userData.receiveEmail,
 			token: userData.token

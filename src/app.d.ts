@@ -1,6 +1,11 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 // and what to do when importing types
+
+import type { AuthUser } from '@prisma/client';
+
+type User = Omit<AuthUser, 'id' | 'created_at' | 'updated_at'>;
+
 // src/app.d.ts
 declare global {
 	namespace App {
@@ -33,16 +38,7 @@ declare global {
 declare global {
 	namespace Lucia {
 		type Auth = import('$lib/lucia').Auth;
-		type UserAttributes = {
-			email: string;
-			username: string;
-			firstName: string;
-			lastName: string;
-			role: string;
-			verified: boolean;
-			receiveEmail: boolean;
-			token: string;
-		};
+		type UserAttributes = User;
 	}
 }
 
