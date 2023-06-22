@@ -126,39 +126,37 @@ model WishlistItem {
 }
 
 model Game {
-  id            String  @id @default(cuid())
-  name          String
-  slug          String
-  description   String?
-  year_published Int?
-  min_players    Int?
-  max_players    Int?
-  min_playtime   Int?
-  max_playtime   Int?
-  min_age        Int?
-  image_url      String?
-  thumb_url      String?
-  url           String?
-  rules_url      String?
-  weight_amount  Float?
-  weight_units   String?
-  bggId         String?
-  bggUrl        String?
-  primary_publisher_id String
-  primary_publisher Publisher? @relation("PrimaryPublishers", references: [id], fields: [primary_publisher_id])
-  categories    Category[]
-  mechanics     Mechanic[]
-  designers     Designer[]
-  publishers    Publisher[]
-  artists       Artist[]
-  names         GameName[]
-  expansions    Expansion[]
-  collection_items CollectionItem[]
-  wishlist_items WishlistItem[]
-  external_id String @unique
-  created_at DateTime @default(now()) @db.Timestamp(6)
-  updated_at DateTime @updatedAt @db.Timestamp(6)
+  id                      String  @id @default(cuid())
+  name                    String
+  slug                    String
+  description             String?
+  description_preview     String?
+  year_published          Int?
+  min_players             Int?
+  max_players             Int?
+  min_playtime            Int?
+  max_playtime            Int?
+  min_age                 Int?
+  image_url               String?
+  thumb_url               String?
+  url                     String?
+  rules_url               String?
+  primary_publisher_id    String?
+  primary_publisher       Publisher? @relation("PrimaryPublishers", references: [id], fields: [primary_publisher_id])
+  categories              Category[]
+  mechanics               Mechanic[]
+  designers               Designer[]
+  publishers              Publisher[]
+  artists                 Artist[]
+  names                   GameName[]
+  expansions              Expansion[]
+  collection_items        CollectionItem[]
+  wishlist_items          WishlistItem[]
+  external_id             String @unique
+  created_at              DateTime @default(now()) @db.Timestamp(6)
+  updated_at              DateTime @updatedAt @db.Timestamp(6)
 
+  @@fulltext([name])
   @@index([primary_publisher_id])
   @@map("games")
 }
@@ -180,10 +178,10 @@ model Publisher {
   name      String
   games     Game[]
   primary_publisher Game[] @relation("PrimaryPublishers")
-  external_id String @unique
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @updatedAt @db.Timestamp(6)
   
+  @@fulltext([name])
   @@map("publishers")
 }
 
@@ -196,17 +194,20 @@ model Category {
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @updatedAt @db.Timestamp(6)
 
+  @@fulltext([name])
   @@map("categories")
 }
 
 model Mechanic {
   id        String  @id @default(cuid())
   name      String
+  slug      String
   games     Game[]
   external_id String @unique
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @updatedAt @db.Timestamp(6)
 
+  @@fulltext([name])
   @@map("mechanics")
 }
 
@@ -214,10 +215,10 @@ model Designer {
   id        String  @id @default(cuid())
   name      String
   games     Game[]
-  external_id String @unique
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @updatedAt @db.Timestamp(6)
 
+  @@fulltext([name])
   @@map("designers")
 }
 
@@ -225,10 +226,10 @@ model Artist {
   id        String  @id @default(cuid())
   name      String
   games     Game[]
-  external_id String @unique
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @updatedAt @db.Timestamp(6)
 
+  @@fulltext([name])
   @@map("artists")
 }
 
@@ -242,6 +243,7 @@ model Expansion {
   created_at     DateTime @default(now()) @db.Timestamp(6)
   updated_at     DateTime @updatedAt @db.Timestamp(6)
 
+  @@fulltext([name])
   @@index([base_game_id])
   @@map("expansions")
 }

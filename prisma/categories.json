@@ -1,0 +1,859 @@
+{
+	"categories": [
+		{
+			"id": "2bdFPJUvFo",
+			"name": "18XX",
+			"url": "https://www.boardgameatlas.com/category/2bdFPJUvFo/18xx"
+		},
+		{
+			"id": "85OKv8p5Ow",
+			"name": "4x",
+			"url": "https://www.boardgameatlas.com/category/85OKv8p5Ow/4x"
+		},
+		{
+			"id": "FMKgeuNEII",
+			"name": "80s",
+			"url": "https://www.boardgameatlas.com/category/FMKgeuNEII/80s"
+		},
+		{
+			"id": "hBqZ3Ar4RJ",
+			"name": "Abstract",
+			"url": "https://www.boardgameatlas.com/category/hBqZ3Ar4RJ/abstract"
+		},
+		{
+			"id": "GtuMb7ei27",
+			"name": "Accessory",
+			"url": "https://www.boardgameatlas.com/category/GtuMb7ei27/accessory"
+		},
+		{
+			"id": "OE07lsfVqf",
+			"name": "Adult",
+			"url": "https://www.boardgameatlas.com/category/OE07lsfVqf/adult"
+		},
+		{
+			"id": "KUBCKBkGxV",
+			"name": "Adventure",
+			"url": "https://www.boardgameatlas.com/category/KUBCKBkGxV/adventure"
+		},
+		{
+			"id": "DjAhqEHOD0",
+			"name": "Aerial Warfare",
+			"url": "https://www.boardgameatlas.com/category/DjAhqEHOD0/aerial-warfare"
+		},
+		{
+			"id": "20iDvpbh7A",
+			"name": "Age of Reason",
+			"url": "https://www.boardgameatlas.com/category/20iDvpbh7A/age-of-reason"
+		},
+		{
+			"id": "tJxatX2ZbW",
+			"name": "Aliens",
+			"url": "https://www.boardgameatlas.com/category/tJxatX2ZbW/aliens"
+		},
+		{
+			"id": "nWDac9tQzt",
+			"name": "Alternate History",
+			"url": "https://www.boardgameatlas.com/category/nWDac9tQzt/alternate-history"
+		},
+		{
+			"id": "dghLhwyxVb",
+			"name": "American History",
+			"url": "https://www.boardgameatlas.com/category/dghLhwyxVb/american-history"
+		},
+		{
+			"id": "4mOtRRwSoj",
+			"name": "American West",
+			"url": "https://www.boardgameatlas.com/category/4mOtRRwSoj/american-west"
+		},
+		{
+			"id": "a8NM5cugJX",
+			"name": "Ancient",
+			"url": "https://www.boardgameatlas.com/category/a8NM5cugJX/ancient"
+		},
+		{
+			"id": "MWoxgHrOJD",
+			"name": "Animals",
+			"url": "https://www.boardgameatlas.com/category/MWoxgHrOJD/animals"
+		},
+		{
+			"id": "eFaACC6y2c",
+			"name": "Apocalyptic",
+			"url": "https://www.boardgameatlas.com/category/eFaACC6y2c/apocalyptic"
+		},
+		{
+			"id": "CBboNLI1Uj",
+			"name": "Arabian",
+			"url": "https://www.boardgameatlas.com/category/CBboNLI1Uj/arabian"
+		},
+		{
+			"id": "k0dglq5j6N",
+			"name": "Art",
+			"url": "https://www.boardgameatlas.com/category/k0dglq5j6N/art"
+		},
+		{
+			"id": "Bq6M0TJyg7",
+			"name": "Asymmetric",
+			"url": "https://www.boardgameatlas.com/category/Bq6M0TJyg7/asymmetric"
+		},
+		{
+			"id": "QB4sEpx1Uu",
+			"name": "Aviation",
+			"url": "https://www.boardgameatlas.com/category/QB4sEpx1Uu/aviation"
+		},
+		{
+			"id": "wpItJuRDiz",
+			"name": "Banking",
+			"url": "https://www.boardgameatlas.com/category/wpItJuRDiz/banking"
+		},
+		{
+			"id": "pwt9HAzEa6",
+			"name": "Battle Royale",
+			"url": "https://www.boardgameatlas.com/category/pwt9HAzEa6/battle-royale"
+		},
+		{
+			"id": "PinhJrhnxU",
+			"name": "Bluffing",
+			"url": "https://www.boardgameatlas.com/category/PinhJrhnxU/bluffing"
+		},
+		{
+			"id": "wLpYxHBexW",
+			"name": "Book",
+			"url": "https://www.boardgameatlas.com/category/wLpYxHBexW/book"
+		},
+		{
+			"id": "fW5vusE96B",
+			"name": "Campaign",
+			"url": "https://www.boardgameatlas.com/category/fW5vusE96B/campaign"
+		},
+		{
+			"id": "eX8uuNlQkQ",
+			"name": "Card Game",
+			"url": "https://www.boardgameatlas.com/category/eX8uuNlQkQ/card-game"
+		},
+		{
+			"id": "HKaYVNIxAJ",
+			"name": "Children's Game",
+			"url": "https://www.boardgameatlas.com/category/HKaYVNIxAJ/childrens-game"
+		},
+		{
+			"id": "36WFElclV3",
+			"name": "Christian",
+			"url": "https://www.boardgameatlas.com/category/36WFElclV3/christian"
+		},
+		{
+			"id": "3Y1dIDLCRw",
+			"name": "Christmas",
+			"url": "https://www.boardgameatlas.com/category/3Y1dIDLCRw/christmas"
+		},
+		{
+			"id": "ODWOjWAJj3",
+			"name": "City Building",
+			"url": "https://www.boardgameatlas.com/category/ODWOjWAJj3/city-building"
+		},
+		{
+			"id": "w8XD66FUZ2",
+			"name": "Civil War",
+			"url": "https://www.boardgameatlas.com/category/w8XD66FUZ2/civil-war"
+		},
+		{
+			"id": "329DxyFL9D",
+			"name": "Civilization",
+			"url": "https://www.boardgameatlas.com/category/329DxyFL9D/civilization"
+		},
+		{
+			"id": "bVMxJo31bS",
+			"name": "Cold war",
+			"url": "https://www.boardgameatlas.com/category/bVMxJo31bS/cold-war"
+		},
+		{
+			"id": "vXxLT0FDTZ",
+			"name": "Collectible Components",
+			"url": "https://www.boardgameatlas.com/category/vXxLT0FDTZ/collectible-components"
+		},
+		{
+			"id": "bSzUpE5oOZ",
+			"name": "Colonial",
+			"url": "https://www.boardgameatlas.com/category/bSzUpE5oOZ/colonial"
+		},
+		{
+			"id": "gscaL52VDG",
+			"name": "Combat",
+			"url": "https://www.boardgameatlas.com/category/gscaL52VDG/combat"
+		},
+		{
+			"id": "G5kfqnPBP6",
+			"name": "Comic Book / Strip",
+			"url": "https://www.boardgameatlas.com/category/G5kfqnPBP6/comic-book--strip"
+		},
+		{
+			"id": "pacCjl7His",
+			"name": "Competitive",
+			"url": "https://www.boardgameatlas.com/category/pacCjl7His/competitive"
+		},
+		{
+			"id": "ge8pIhEUGE",
+			"name": "Cooperative",
+			"url": "https://www.boardgameatlas.com/category/ge8pIhEUGE/cooperative"
+		},
+		{
+			"id": "7DfHn28Pcf",
+			"name": "Crime",
+			"url": "https://www.boardgameatlas.com/category/7DfHn28Pcf/crime"
+		},
+		{
+			"id": "nfQONtMbDU",
+			"name": "Cube Rail",
+			"url": "https://www.boardgameatlas.com/category/nfQONtMbDU/cube-rail"
+		},
+		{
+			"id": "Ef4oYLHNhI",
+			"name": "Cyberpunk",
+			"url": "https://www.boardgameatlas.com/category/Ef4oYLHNhI/cyberpunk"
+		},
+		{
+			"id": "bCBXJy9qDw",
+			"name": "Deduction",
+			"url": "https://www.boardgameatlas.com/category/bCBXJy9qDw/deduction"
+		},
+		{
+			"id": "fh4V5SOLFj",
+			"name": "Deluxe Edition",
+			"url": "https://www.boardgameatlas.com/category/fh4V5SOLFj/deluxe-edition"
+		},
+		{
+			"id": "bKrxqD9mYc",
+			"name": "Dexterity",
+			"url": "https://www.boardgameatlas.com/category/bKrxqD9mYc/dexterity"
+		},
+		{
+			"id": "mavSOM8vjH",
+			"name": "Dice",
+			"url": "https://www.boardgameatlas.com/category/mavSOM8vjH/dice"
+		},
+		{
+			"id": "o7Macrb9q7",
+			"name": "Dice Tower Combat",
+			"url": "https://www.boardgameatlas.com/category/o7Macrb9q7/dice-tower-combat"
+		},
+		{
+			"id": "42pmul4oHH",
+			"name": "Dinosaurs",
+			"url": "https://www.boardgameatlas.com/category/42pmul4oHH/dinosaurs"
+		},
+		{
+			"id": "zoOGfQ9rK3",
+			"name": "Dogs",
+			"url": "https://www.boardgameatlas.com/category/zoOGfQ9rK3/dogs"
+		},
+		{
+			"id": "JMM0TG2MSe",
+			"name": "Drawing",
+			"url": "https://www.boardgameatlas.com/category/JMM0TG2MSe/drawing"
+		},
+		{
+			"id": "We3MM46qBr",
+			"name": "Drinking",
+			"url": "https://www.boardgameatlas.com/category/We3MM46qBr/drinking"
+		},
+		{
+			"id": "g2Hwv8t0Y5",
+			"name": "Dungeon Crawl",
+			"url": "https://www.boardgameatlas.com/category/g2Hwv8t0Y5/dungeon-crawl"
+		},
+		{
+			"id": "N0TkEGfEsF",
+			"name": "Economic",
+			"url": "https://www.boardgameatlas.com/category/N0TkEGfEsF/economic"
+		},
+		{
+			"id": "B3NRLMK4xD",
+			"name": "Educational",
+			"url": "https://www.boardgameatlas.com/category/B3NRLMK4xD/educational"
+		},
+		{
+			"id": "crxgUzJSEz",
+			"name": "Electronic",
+			"url": "https://www.boardgameatlas.com/category/crxgUzJSEz/electronic"
+		},
+		{
+			"id": "gsekjrPJz0",
+			"name": "Environmental",
+			"url": "https://www.boardgameatlas.com/category/gsekjrPJz0/environmental"
+		},
+		{
+			"id": "pflvcNyHPe",
+			"name": "Escape Room",
+			"url": "https://www.boardgameatlas.com/category/pflvcNyHPe/escape-room"
+		},
+		{
+			"id": "u5ZiYctU6T",
+			"name": "Espionage",
+			"url": "https://www.boardgameatlas.com/category/u5ZiYctU6T/espionage"
+		},
+		{
+			"id": "v4SfYtS2Lr",
+			"name": "Expansion",
+			"url": "https://www.boardgameatlas.com/category/v4SfYtS2Lr/expansion"
+		},
+		{
+			"id": "yq6hVlbM2R",
+			"name": "Exploration",
+			"url": "https://www.boardgameatlas.com/category/yq6hVlbM2R/exploration"
+		},
+		{
+			"id": "7rV11PKqME",
+			"name": "Family Game",
+			"url": "https://www.boardgameatlas.com/category/7rV11PKqME/family-game"
+		},
+		{
+			"id": "ctumBZyj5l",
+			"name": "Fan Made",
+			"url": "https://www.boardgameatlas.com/category/ctumBZyj5l/fan-made"
+		},
+		{
+			"id": "ZTneo8TaIO",
+			"name": "Fantasy",
+			"url": "https://www.boardgameatlas.com/category/ZTneo8TaIO/fantasy"
+		},
+		{
+			"id": "Wr8uXcoR9p",
+			"name": "Farming",
+			"url": "https://www.boardgameatlas.com/category/Wr8uXcoR9p/farming"
+		},
+		{
+			"id": "upXZ8vNfNO",
+			"name": "Fighting",
+			"url": "https://www.boardgameatlas.com/category/upXZ8vNfNO/fighting"
+		},
+		{
+			"id": "ELg06sncRX",
+			"name": "Finance",
+			"url": "https://www.boardgameatlas.com/category/ELg06sncRX/finance"
+		},
+		{
+			"id": "YrDuNj8lvr",
+			"name": "Food",
+			"url": "https://www.boardgameatlas.com/category/YrDuNj8lvr/food"
+		},
+		{
+			"id": "JvIs75sWte",
+			"name": "Game System",
+			"url": "https://www.boardgameatlas.com/category/JvIs75sWte/game-system"
+		},
+		{
+			"id": "cQnyClrGPU",
+			"name": "Gamefound",
+			"url": "https://www.boardgameatlas.com/category/cQnyClrGPU/gamefound"
+		},
+		{
+			"id": "Eyuf8PzjDo",
+			"name": "Gulf War",
+			"url": "https://www.boardgameatlas.com/category/Eyuf8PzjDo/gulf-war"
+		},
+		{
+			"id": "KzEQIwIub7",
+			"name": "Historic",
+			"url": "https://www.boardgameatlas.com/category/KzEQIwIub7/historic"
+		},
+		{
+			"id": "cAIkk5aLdQ",
+			"name": "Horror",
+			"url": "https://www.boardgameatlas.com/category/cAIkk5aLdQ/horror"
+		},
+		{
+			"id": "TYnxiuiI3X",
+			"name": "Humor",
+			"url": "https://www.boardgameatlas.com/category/TYnxiuiI3X/humor"
+		},
+		{
+			"id": "zqFmdU4Fp2",
+			"name": "Industry/Manufacturing",
+			"url": "https://www.boardgameatlas.com/category/zqFmdU4Fp2/industrymanufacturing"
+		},
+		{
+			"id": "rrvd68LjOR",
+			"name": "Kickstarter",
+			"url": "https://www.boardgameatlas.com/category/rrvd68LjOR/kickstarter"
+		},
+		{
+			"id": "3souLOXUqI",
+			"name": "Korean War",
+			"url": "https://www.boardgameatlas.com/category/3souLOXUqI/korean-war"
+		},
+		{
+			"id": "AGKGd3txp9",
+			"name": "Law",
+			"url": "https://www.boardgameatlas.com/category/AGKGd3txp9/law"
+		},
+		{
+			"id": "XeYUw9159M",
+			"name": "Legacy",
+			"url": "https://www.boardgameatlas.com/category/XeYUw9159M/legacy"
+		},
+		{
+			"id": "HZ7kUiqEbs",
+			"name": "Letters",
+			"url": "https://www.boardgameatlas.com/category/HZ7kUiqEbs/letters"
+		},
+		{
+			"id": "GCwXmvBCvA",
+			"name": "Mad Scientist",
+			"url": "https://www.boardgameatlas.com/category/GCwXmvBCvA/mad-scientist"
+		},
+		{
+			"id": "pIMmuVYnQp",
+			"name": "Mafia",
+			"url": "https://www.boardgameatlas.com/category/pIMmuVYnQp/mafia"
+		},
+		{
+			"id": "POlqwScVxD",
+			"name": "Math",
+			"url": "https://www.boardgameatlas.com/category/POlqwScVxD/math"
+		},
+		{
+			"id": "ZhlfIPxYsw",
+			"name": "Mature / Adult",
+			"url": "https://www.boardgameatlas.com/category/ZhlfIPxYsw/mature--adult"
+		},
+		{
+			"id": "ruQAhyLfum",
+			"name": "Maze",
+			"url": "https://www.boardgameatlas.com/category/ruQAhyLfum/maze"
+		},
+		{
+			"id": "AeWXMxbm91",
+			"name": "Medical",
+			"url": "https://www.boardgameatlas.com/category/AeWXMxbm91/medical"
+		},
+		{
+			"id": "QAYkTHK1Dd",
+			"name": "Medieval",
+			"url": "https://www.boardgameatlas.com/category/QAYkTHK1Dd/medieval"
+		},
+		{
+			"id": "AujCle9cUq",
+			"name": "Memory",
+			"url": "https://www.boardgameatlas.com/category/AujCle9cUq/memory"
+		},
+		{
+			"id": "Cc10AY9UX5",
+			"name": "Mental Health",
+			"url": "https://www.boardgameatlas.com/category/Cc10AY9UX5/mental-health"
+		},
+		{
+			"id": "FC6ElKI9tk",
+			"name": "Miniatures",
+			"url": "https://www.boardgameatlas.com/category/FC6ElKI9tk/miniatures"
+		},
+		{
+			"id": "L6NUwNdblq",
+			"name": "Modern Warfare",
+			"url": "https://www.boardgameatlas.com/category/L6NUwNdblq/modern-warfare"
+		},
+		{
+			"id": "Sod2YBWMKi",
+			"name": "Movies / TV / Radio theme",
+			"url": "https://www.boardgameatlas.com/category/Sod2YBWMKi/movies--tv--radio-theme"
+		},
+		{
+			"id": "1e709CZ42V",
+			"name": "Murder",
+			"url": "https://www.boardgameatlas.com/category/1e709CZ42V/murder"
+		},
+		{
+			"id": "Kk70K0524Z",
+			"name": "Murder/Mystery",
+			"url": "https://www.boardgameatlas.com/category/Kk70K0524Z/murdermystery"
+		},
+		{
+			"id": "herNFAxMdz",
+			"name": "Music",
+			"url": "https://www.boardgameatlas.com/category/herNFAxMdz/music"
+		},
+		{
+			"id": "BBZb2d0ePt",
+			"name": "Mystery",
+			"url": "https://www.boardgameatlas.com/category/BBZb2d0ePt/mystery"
+		},
+		{
+			"id": "MHkqIVxwtx",
+			"name": "Mythology",
+			"url": "https://www.boardgameatlas.com/category/MHkqIVxwtx/mythology"
+		},
+		{
+			"id": "IpcJzp0TVC",
+			"name": "Napoleonic",
+			"url": "https://www.boardgameatlas.com/category/IpcJzp0TVC/napoleonic"
+		},
+		{
+			"id": "o5dH2ssbuu",
+			"name": "Nature",
+			"url": "https://www.boardgameatlas.com/category/o5dH2ssbuu/nature"
+		},
+		{
+			"id": "vqZ5XzGWQD",
+			"name": "Nautical",
+			"url": "https://www.boardgameatlas.com/category/vqZ5XzGWQD/nautical"
+		},
+		{
+			"id": "jZEDOpx07e",
+			"name": "Negotiation",
+			"url": "https://www.boardgameatlas.com/category/jZEDOpx07e/negotiation"
+		},
+		{
+			"id": "rtslXnT90O",
+			"name": "Ninjas",
+			"url": "https://www.boardgameatlas.com/category/rtslXnT90O/ninjas"
+		},
+		{
+			"id": "dO9HVl2TW7",
+			"name": "Novel-based",
+			"url": "https://www.boardgameatlas.com/category/dO9HVl2TW7/novelbased"
+		},
+		{
+			"id": "9r6mtYVCAZ",
+			"name": "Number",
+			"url": "https://www.boardgameatlas.com/category/9r6mtYVCAZ/number"
+		},
+		{
+			"id": "i9YgN1u0Al",
+			"name": "Objectives",
+			"url": "https://www.boardgameatlas.com/category/i9YgN1u0Al/objectives"
+		},
+		{
+			"id": "TCYEfWLB8c",
+			"name": "One vs Many",
+			"url": "https://www.boardgameatlas.com/category/TCYEfWLB8c/one-vs-many"
+		},
+		{
+			"id": "SE2CndXU4V",
+			"name": "Paranormal",
+			"url": "https://www.boardgameatlas.com/category/SE2CndXU4V/paranormal"
+		},
+		{
+			"id": "X8J7RM6dxX",
+			"name": "Party Game",
+			"url": "https://www.boardgameatlas.com/category/X8J7RM6dxX/party-game"
+		},
+		{
+			"id": "B70QTH9k5o",
+			"name": "Path building",
+			"url": "https://www.boardgameatlas.com/category/B70QTH9k5o/path-building"
+		},
+		{
+			"id": "UL3b9M86gA",
+			"name": "Pike and Shot",
+			"url": "https://www.boardgameatlas.com/category/UL3b9M86gA/pike-and-shot"
+		},
+		{
+			"id": "9EIayX6n5a",
+			"name": "Pirates",
+			"url": "https://www.boardgameatlas.com/category/9EIayX6n5a/pirates"
+		},
+		{
+			"id": "vRbkg1W0AB",
+			"name": "Plants/Gardening",
+			"url": "https://www.boardgameatlas.com/category/vRbkg1W0AB/plants-gardening"
+		},
+		{
+			"id": "3EjfGzCuWE",
+			"name": "Point Salad",
+			"url": "https://www.boardgameatlas.com/category/3EjfGzCuWE/point-salad"
+		},
+		{
+			"id": "TKQncFVX74",
+			"name": "Political",
+			"url": "https://www.boardgameatlas.com/category/TKQncFVX74/political"
+		},
+		{
+			"id": "8Z7nWG2kOw",
+			"name": "Post-Apocalyptic",
+			"url": "https://www.boardgameatlas.com/category/8Z7nWG2kOw/postapocalyptic"
+		},
+		{
+			"id": "5APB1MWk6X",
+			"name": "Post-Napoleonic",
+			"url": "https://www.boardgameatlas.com/category/5APB1MWk6X/postnapoleonic"
+		},
+		{
+			"id": "YyszHun1HP",
+			"name": "Prehistoric",
+			"url": "https://www.boardgameatlas.com/category/YyszHun1HP/prehistoric"
+		},
+		{
+			"id": "ov6sEmlkiC",
+			"name": "Print & Play",
+			"url": "https://www.boardgameatlas.com/category/ov6sEmlkiC/print--play"
+		},
+		{
+			"id": "dAyk5NtNTV",
+			"name": "Prison Escape",
+			"url": "https://www.boardgameatlas.com/category/dAyk5NtNTV/prison-escape"
+		},
+		{
+			"id": "AlrfWcR5aT",
+			"name": "Promo",
+			"url": "https://www.boardgameatlas.com/category/AlrfWcR5aT/promo"
+		},
+		{
+			"id": "WVMOS3s2pb",
+			"name": "Puzzle",
+			"url": "https://www.boardgameatlas.com/category/WVMOS3s2pb/puzzle"
+		},
+		{
+			"id": "2Gu62aKdma",
+			"name": "RPG",
+			"url": "https://www.boardgameatlas.com/category/2Gu62aKdma/rpg"
+		},
+		{
+			"id": "tQGLgwdbYH",
+			"name": "Racing",
+			"url": "https://www.boardgameatlas.com/category/tQGLgwdbYH/racing"
+		},
+		{
+			"id": "PzWI2uaif0",
+			"name": "Real-time",
+			"url": "https://www.boardgameatlas.com/category/PzWI2uaif0/realtime"
+		},
+		{
+			"id": "DRqeVkXWqX",
+			"name": "Religious",
+			"url": "https://www.boardgameatlas.com/category/DRqeVkXWqX/religious"
+		},
+		{
+			"id": "nuHYRFmMjU",
+			"name": "Renaissance",
+			"url": "https://www.boardgameatlas.com/category/nuHYRFmMjU/renaissance"
+		},
+		{
+			"id": "zyj9ZK3mHB",
+			"name": "Resource Management",
+			"url": "https://www.boardgameatlas.com/category/zyj9ZK3mHB/resource-management"
+		},
+		{
+			"id": "oojGpMQQ2l",
+			"name": "Robots",
+			"url": "https://www.boardgameatlas.com/category/oojGpMQQ2l/robots"
+		},
+		{
+			"id": "KSBdPfxs6F",
+			"name": "Roman Empire",
+			"url": "https://www.boardgameatlas.com/category/KSBdPfxs6F/roman-empire"
+		},
+		{
+			"id": "E5rYwP0Ybr",
+			"name": "Romance",
+			"url": "https://www.boardgameatlas.com/category/E5rYwP0Ybr/romance"
+		},
+		{
+			"id": "SzUZdSjCN2",
+			"name": "Route Building",
+			"url": "https://www.boardgameatlas.com/category/SzUZdSjCN2/route-building"
+		},
+		{
+			"id": "UH3xvKjaCQ",
+			"name": "Safari",
+			"url": "https://www.boardgameatlas.com/category/UH3xvKjaCQ/safari"
+		},
+		{
+			"id": "2m6sfYeeGI",
+			"name": "Sandbox",
+			"url": "https://www.boardgameatlas.com/category/2m6sfYeeGI/sandbox"
+		},
+		{
+			"id": "3B3QpKvXD3",
+			"name": "Sci-Fi",
+			"url": "https://www.boardgameatlas.com/category/3B3QpKvXD3/scifi"
+		},
+		{
+			"id": "UjUO40mmeL",
+			"name": "Screen Printed Meeples",
+			"url": "https://www.boardgameatlas.com/category/UjUO40mmeL/screen-printed-meeples"
+		},
+		{
+			"id": "WCMkyAqVlf",
+			"name": "Semi-Cooperative",
+			"url": "https://www.boardgameatlas.com/category/WCMkyAqVlf/semicooperative"
+		},
+		{
+			"id": "VzyslQJGrG",
+			"name": "Solo / Solitaire",
+			"url": "https://www.boardgameatlas.com/category/VzyslQJGrG/solo--solitaire"
+		},
+		{
+			"id": "0MdRqhkNpw",
+			"name": "Space Exploration",
+			"url": "https://www.boardgameatlas.com/category/0MdRqhkNpw/space-exploration"
+		},
+		{
+			"id": "Hc6vcim5DS",
+			"name": "Spies/Secret Agents",
+			"url": "https://www.boardgameatlas.com/category/Hc6vcim5DS/spiessecret-agents"
+		},
+		{
+			"id": "hShsL2DktG",
+			"name": "Sports",
+			"url": "https://www.boardgameatlas.com/category/hShsL2DktG/sports"
+		},
+		{
+			"id": "4hZlqoitAY",
+			"name": "Steampunk",
+			"url": "https://www.boardgameatlas.com/category/4hZlqoitAY/steampunk"
+		},
+		{
+			"id": "jGXefW0E2i",
+			"name": "Storytelling",
+			"url": "https://www.boardgameatlas.com/category/jGXefW0E2i/storytelling"
+		},
+		{
+			"id": "alkjFhA58S",
+			"name": "Strategic-Level",
+			"url": "https://www.boardgameatlas.com/category/alkjFhA58S/strategic-level"
+		},
+		{
+			"id": "loGUMKV9K9",
+			"name": "Tactical-Level",
+			"url": "https://www.boardgameatlas.com/category/loGUMKV9K9/tactical-level"
+		},
+		{
+			"id": "knFtS8LntM",
+			"name": "Technology",
+			"url": "https://www.boardgameatlas.com/category/knFtS8LntM/technology"
+		},
+		{
+			"id": "buDTYyPw4D",
+			"name": "Territory Building",
+			"url": "https://www.boardgameatlas.com/category/buDTYyPw4D/territory-building"
+		},
+		{
+			"id": "XN9Byxf3MK",
+			"name": "Theme Park",
+			"url": "https://www.boardgameatlas.com/category/XN9Byxf3MK/theme-park"
+		},
+		{
+			"id": "BHxvD7ZjfA",
+			"name": "Tile Placement",
+			"url": "https://www.boardgameatlas.com/category/BHxvD7ZjfA/tile-placement"
+		},
+		{
+			"id": "L18sB21wyi",
+			"name": "Tile drafting",
+			"url": "https://www.boardgameatlas.com/category/L18sB21wyi/tile-drafting"
+		},
+		{
+			"id": "2KVQJ2k60k",
+			"name": "Time Travel",
+			"url": "https://www.boardgameatlas.com/category/2KVQJ2k60k/time-travel"
+		},
+		{
+			"id": "JwHcKqxh33",
+			"name": "Trains",
+			"url": "https://www.boardgameatlas.com/category/JwHcKqxh33/trains"
+		},
+		{
+			"id": "CWYOF9xu7O",
+			"name": "Transportation",
+			"url": "https://www.boardgameatlas.com/category/CWYOF9xu7O/transportation"
+		},
+		{
+			"id": "TR4CiP8Huj",
+			"name": "Travel",
+			"url": "https://www.boardgameatlas.com/category/TR4CiP8Huj/travel"
+		},
+		{
+			"id": "NYSQmZLSOS",
+			"name": "Treasure Hunt",
+			"url": "https://www.boardgameatlas.com/category/NYSQmZLSOS/treasure-hunt"
+		},
+		{
+			"id": "YGHGDjahKY",
+			"name": "Trivia",
+			"url": "https://www.boardgameatlas.com/category/YGHGDjahKY/trivia"
+		},
+		{
+			"id": "a2eMKxxlVW",
+			"name": "Two player Only Game",
+			"url": "https://www.boardgameatlas.com/category/a2eMKxxlVW/two-player-only-game"
+		},
+		{
+			"id": "oHSL7C6i9y",
+			"name": "Undersea",
+			"url": "https://www.boardgameatlas.com/category/oHSL7C6i9y/undersea"
+		},
+		{
+			"id": "djokexoK0U",
+			"name": "Video Game Theme",
+			"url": "https://www.boardgameatlas.com/category/djokexoK0U/video-game-theme"
+		},
+		{
+			"id": "jS8aA9kDFW",
+			"name": "Vietnam War",
+			"url": "https://www.boardgameatlas.com/category/jS8aA9kDFW/vietnam-war"
+		},
+		{
+			"id": "muDQil3Mkb",
+			"name": "Viking",
+			"url": "https://www.boardgameatlas.com/category/muDQil3Mkb/viking"
+		},
+		{
+			"id": "jX8asGGR6o",
+			"name": "Wargame",
+			"url": "https://www.boardgameatlas.com/category/jX8asGGR6o/wargame"
+		},
+		{
+			"id": "uJgSEPT6zE",
+			"name": "Werewolves",
+			"url": "https://www.boardgameatlas.com/category/uJgSEPT6zE/werewolves"
+		},
+		{
+			"id": "mw3nPNWqs0",
+			"name": "Western",
+			"url": "https://www.boardgameatlas.com/category/mw3nPNWqs0/western"
+		},
+		{
+			"id": "rHvAx4hH2f",
+			"name": "Word Game",
+			"url": "https://www.boardgameatlas.com/category/rHvAx4hH2f/word-game"
+		},
+		{
+			"id": "wTLJSVEbm6",
+			"name": "World War I",
+			"url": "https://www.boardgameatlas.com/category/wTLJSVEbm6/world-war-i"
+		},
+		{
+			"id": "fl3TogdUzX",
+			"name": "World War II",
+			"url": "https://www.boardgameatlas.com/category/fl3TogdUzX/world-war-ii"
+		},
+		{
+			"id": "OlkGBmu4Va",
+			"name": "World War III",
+			"url": "https://www.boardgameatlas.com/category/OlkGBmu4Va/world-war-iii"
+		},
+		{
+			"id": "djZWzjCZhM",
+			"name": "Writing / Dry Erase",
+			"url": "https://www.boardgameatlas.com/category/djZWzjCZhM/writing--dry-erase"
+		},
+		{
+			"id": "30B899LSDs",
+			"name": "Zodiac",
+			"url": "https://www.boardgameatlas.com/category/30B899LSDs/zodiac"
+		},
+		{
+			"id": "FmGV9rVu1c",
+			"name": "Zombies",
+			"url": "https://www.boardgameatlas.com/category/FmGV9rVu1c/zombies"
+		},
+		{
+			"id": "B1N2QOByCl",
+			"name": "Zone Control",
+			"url": "https://www.boardgameatlas.com/category/B1N2QOByCl/zone-control"
+		},
+		{
+			"id": "0q1ZbW8FjH",
+			"name": "treasure hunt",
+			"url": "https://www.boardgameatlas.com/category/0q1ZbW8FjH/treasure-hunt"
+		}
+	]
+}
