@@ -48,15 +48,20 @@ export const actions = {
 			throw redirect(302, '/auth/signin');
 		}
 
-		const game = await prisma.game.findUnique({
+		let game = await prisma.game.findUnique({
 			where: {
 				id: form.id
 			}
 		});
 
-		// if (!game) {
-		// 	throw redirect(302, '/404');
-		// }
+		if (!game) {
+			game = await prisma.game.create({
+				data: {
+					name: form.name
+				}
+			});
+			throw redirect(302, '/404');
+		}
 
 		if (game) {
 			const wishlist = await prisma.wishlist.create({

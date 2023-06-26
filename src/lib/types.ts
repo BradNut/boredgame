@@ -57,6 +57,24 @@ export type SavedGameType = {
 	includeInRandom: boolean;
 };
 
+export type MechanicType = {
+	id: string;
+};
+
+export type CategoryType = {
+	id: string;
+};
+
+export type PublisherType = {
+	id: string;
+	name: string;
+};
+
+export type DesignerType = {
+	id: string;
+	name: string;
+};
+
 export type GameType = {
 	id: string;
 	handle: string;
@@ -71,6 +89,14 @@ export type GameType = {
 	price_au: number;
 	msrp: number;
 	year_published: number;
+	categories: CategoryType[];
+	mechanics: MechanicType[];
+	primary_publisher: PublisherType;
+	publishers: PublisherType[];
+	primary_designer: DesignerType;
+	designers: DesignerType[];
+	developers: String[];
+	artists: String[];
 	min_players: number;
 	max_players: number;
 	min_playtime: number;

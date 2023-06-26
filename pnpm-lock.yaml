@@ -70,7 +70,7 @@ dependencies:
     version: 0.2.1(svelte@3.59.2)
   sveltekit-flash-message:
     specifier: ^0.11.3
-    version: 0.11.3(@sveltejs/kit@1.20.4)(svelte@3.59.2)
+    version: 0.11.3(@sveltejs/kit@1.20.5)(svelte@3.59.2)
   zod-to-json-schema:
     specifier: ^3.21.2
     version: 3.21.2(zod@3.21.4)
@@ -87,13 +87,13 @@ devDependencies:
     version: 0.1.2(svelte@3.59.2)
   '@sveltejs/adapter-auto':
     specifier: ^1.0.3
-    version: 1.0.3(@sveltejs/kit@1.20.4)
+    version: 1.0.3(@sveltejs/kit@1.20.5)
   '@sveltejs/adapter-vercel':
     specifier: ^1.0.6
-    version: 1.0.6(@sveltejs/kit@1.20.4)
+    version: 1.0.6(@sveltejs/kit@1.20.5)
   '@sveltejs/kit':
-    specifier: ^1.20.4
-    version: 1.20.4(svelte@3.59.2)(vite@4.3.9)
+    specifier: ^1.20.5
+    version: 1.20.5(svelte@3.59.2)(vite@4.3.9)
   '@types/cookie':
     specifier: ^0.5.1
     version: 0.5.1
@@ -116,8 +116,8 @@ devDependencies:
     specifier: ^8.8.0
     version: 8.8.0(eslint@8.43.0)
   eslint-plugin-svelte:
-    specifier: ^2.31.0
-    version: 2.31.0(eslint@8.43.0)(svelte@3.59.2)(ts-node@10.9.1)
+    specifier: ^2.31.1
+    version: 2.31.1(eslint@8.43.0)(svelte@3.59.2)(ts-node@10.9.1)
   just-clone:
     specifier: ^6.2.0
     version: 6.2.0
@@ -158,8 +158,8 @@ devDependencies:
     specifier: ^5.0.4
     version: 5.0.4(postcss-load-config@4.0.1)(postcss@8.4.24)(sass@1.63.6)(svelte@3.59.2)(typescript@4.9.5)
   sveltekit-superforms:
-    specifier: ^1.1.1
-    version: 1.1.1(@sveltejs/kit@1.20.4)(svelte@3.59.2)(zod@3.21.4)
+    specifier: ^1.1.2
+    version: 1.1.2(@sveltejs/kit@1.20.5)(svelte@3.59.2)(zod@3.21.4)
   ts-node:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@18.16.18)(typescript@4.9.5)
@@ -1123,7 +1123,7 @@ packages:
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.5.2
+      semver: 7.5.3
       tar: 6.1.13
     transitivePeerDependencies:
       - encoding
@@ -1211,21 +1211,21 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /@sveltejs/adapter-auto@1.0.3(@sveltejs/kit@1.20.4):
+  /@sveltejs/adapter-auto@1.0.3(@sveltejs/kit@1.20.5):
     resolution: {integrity: sha512-hc7O12YQqvZ1CD4fo1gMJuPzBZvuoG5kwxb2RRoz4fVoB8B2vuPO2cY751Ln0G6T/HMrAf8kCqw6Pg+wbxcstw==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.20.4(svelte@3.59.2)(vite@4.3.9)
+      '@sveltejs/kit': 1.20.5(svelte@3.59.2)(vite@4.3.9)
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/adapter-vercel@1.0.6(@sveltejs/kit@1.20.4):
+  /@sveltejs/adapter-vercel@1.0.6(@sveltejs/kit@1.20.5):
     resolution: {integrity: sha512-fo6aaEygPd/6B5Jms4Ff7R4jbADnppuLvKOWBNTGe5MGB7ZRUkl+gxHWMQx2av2knyEZkA6V8y5M6R3ML5yN4g==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.20.4(svelte@3.59.2)(vite@4.3.9)
+      '@sveltejs/kit': 1.20.5(svelte@3.59.2)(vite@4.3.9)
       '@vercel/nft': 0.22.6
       esbuild: 0.16.8
     transitivePeerDependencies:
@@ -1233,8 +1233,8 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/kit@1.20.4(svelte@3.59.2)(vite@4.3.9):
-    resolution: {integrity: sha512-MmAzIuMrP7A+8fqDVbxm6ekGHRHL/+Fk8sQPAzPG4G2TxUDtHdn/WcIxeEqHzARMf0OtGSC+VPyOSFuw2Cy2Mg==}
+  /@sveltejs/kit@1.20.5(svelte@3.59.2)(vite@4.3.9):
+    resolution: {integrity: sha512-8rJYZ2boRlO75lwpbpB+DlSzIwmTuamXTpVlDtw4dBk86o3UaDe/+Ro4xCsV/4FtTw2U8xPHyV83edAWbQHG0w==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
     requiresBuild: true
@@ -1446,7 +1446,7 @@ packages:
       debug: 4.3.4
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.2
+      semver: 7.5.3
       tsutils: 3.21.0(typescript@4.9.5)
       typescript: 4.9.5
     transitivePeerDependencies:
@@ -2027,8 +2027,8 @@ packages:
       eslint: 8.43.0
     dev: true
 
-  /eslint-plugin-svelte@2.31.0(eslint@8.43.0)(svelte@3.59.2)(ts-node@10.9.1):
-    resolution: {integrity: sha512-Q70jPFRraTkc/giPSfY7yuatmJcb5fPelWNplevqd45gfaJDjc3qXRtWQ6m9U5tWVVYERU9dcdUod294vwD8Gw==}
+  /eslint-plugin-svelte@2.31.1(eslint@8.43.0)(svelte@3.59.2)(ts-node@10.9.1):
+    resolution: {integrity: sha512-08v+DqzHiwIVEbi+266D7+BDhayp9OSqCwa/lHaZlZOlFY0vZLYs/h7SkkUPzA5fTVt8OUJBtvCxFiWEYOvvGg==}
     engines: {node: ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0-0
@@ -2047,6 +2047,7 @@ packages:
       postcss-load-config: 3.1.4(postcss@8.4.24)(ts-node@10.9.1)
       postcss-safe-parser: 6.0.0(postcss@8.4.24)
       postcss-selector-parser: 6.0.13
+      semver: 7.5.3
       svelte: 3.59.2
       svelte-eslint-parser: 0.31.0(svelte@3.59.2)
     transitivePeerDependencies:
@@ -3447,8 +3448,8 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
-  /semver@7.5.2:
-    resolution: {integrity: sha512-SoftuTROv/cRjCze/scjGyiDtcUyxw1rgYQSZY7XTmtR5hX+dm76iDbTH8TkLPHCQmlbQVSSbNZCPM2hb0knnQ==}
+  /semver@7.5.3:
+    resolution: {integrity: sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -3764,24 +3765,24 @@ packages:
     resolution: {integrity: sha512-vzSyuGr3eEoAtT/A6bmajosJZIUWySzY2CzB3w2pgPvnkUjGqlDnsNnA0PMO+mMAhuyMul6C2uuZzY6ELSkzyA==}
     engines: {node: '>= 8'}
 
-  /sveltekit-flash-message@0.11.3(@sveltejs/kit@1.20.4)(svelte@3.59.2):
+  /sveltekit-flash-message@0.11.3(@sveltejs/kit@1.20.5)(svelte@3.59.2):
     resolution: {integrity: sha512-tMKBobVFLYth0z2Kq9M+pi7Ip2OBhOrzivzx64v9+D2bWRwnZ3pmdWStYfQYxlz5CayozRQsmtipNg1vM+JN9Q==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
       svelte: ^3
     dependencies:
-      '@sveltejs/kit': 1.20.4(svelte@3.59.2)(vite@4.3.9)
+      '@sveltejs/kit': 1.20.5(svelte@3.59.2)(vite@4.3.9)
       svelte: 3.59.2
     dev: false
 
-  /sveltekit-superforms@1.1.1(@sveltejs/kit@1.20.4)(svelte@3.59.2)(zod@3.21.4):
-    resolution: {integrity: sha512-lD3ov06C/O8hD7mCzEQZ7CTsbHrh6kWhRP3njI9ZSwvG5DW6vhfi6Re/cyYy//cS0oMONI0xBieWyr9s24Y9jA==}
+  /sveltekit-superforms@1.1.2(@sveltejs/kit@1.20.5)(svelte@3.59.2)(zod@3.21.4):
+    resolution: {integrity: sha512-oWW3+Phcs/CkUKGEx0IsCr6Dw3a22/MVs4Tvi8k/jh66pqwP/jOZu3/dT367pkbIh5T7NK20yrnbHu8nm2E7pQ==}
     peerDependencies:
       '@sveltejs/kit': 1.x
-      svelte: 3.x
+      svelte: 3.x || 4.x
       zod: 3.x
     dependencies:
-      '@sveltejs/kit': 1.20.4(svelte@3.59.2)(vite@4.3.9)
+      '@sveltejs/kit': 1.20.5(svelte@3.59.2)(vite@4.3.9)
       svelte: 3.59.2
       zod: 3.21.4
     dev: true
