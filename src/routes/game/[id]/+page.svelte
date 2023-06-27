@@ -32,16 +32,19 @@
 	$: wishlistText = existsInWishlist ? 'Remove from wishlist' : 'Add to wishlist';
 
 	export let data: PageData;
-	let game: GameType;
-	$: ({ game } = data);
+	console.log('data', data);
+	// let game: GameType;
+	$: ({ game, user } = data);
+	// let game = data?.game;
 	// export let game: GameType = data?.game;
 	let seeMore: boolean = false;
-	let firstParagraphEnd = 0;
-	if (game?.description?.indexOf('</p>') > 0) {
-		firstParagraphEnd = game?.description?.indexOf('</p>') + 4;
-	} else if (game?.description?.indexOf('</ p>') > 0) {
-		firstParagraphEnd = game?.description?.indexOf('</ p>') + 5;
-	}
+	console.log('game', game);
+	// let firstParagraphEnd = 0;
+	// if (game?.description?.indexOf('</p>') > 0) {
+	// 	firstParagraphEnd = game?.description?.indexOf('</p>') + 4;
+	// } else if (game?.description?.indexOf('</ p>') > 0) {
+	// 	firstParagraphEnd = game?.description?.indexOf('</ p>') + 5;
+	// }
 
 	function onCollectionClick() {
 		if (existsInCollection) {
@@ -100,8 +103,8 @@
 			{#if game?.year_published}
 				<p>Year: {game?.year_published}</p>
 			{/if}
-			{#if game?.players}
-				<p>Players: {game.players}</p>
+			{#if game?.min_players && game?.max_players}
+				<p>Players: {game.min_players} - {game.max_players}</p>
 			{/if}
 			{#if game?.playtime}
 				<p>Playtime: {game.playtime} minutes</p>
@@ -109,54 +112,55 @@
 			{#if game?.min_age}
 				<p>Minimum Age: {game.min_age}</p>
 			{/if}
-			{#if +game?.price !== 0.0}
-				<p>Price: ${game?.price}</p>
-			{/if}
 			<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
 				Board Game Atlas <ExternalLinkIcon width="24" height="24" />
 			</LinkWithIcon>
 		</div>
-		<div style="display: grid; gap: 1.5rem; place-content: center;">
-		<Button size="md" kind={existsInCollection ? 'danger' : 'primary'} icon on:click={onCollectionClick}>
-			{collectionText}
-			{#if existsInCollection}
-				<iconify-icon icon={minusCircle} width="24" height="24" />
-			{:else}
-				<iconify-icon icon={plusCircle} width="24" height="24" />
-			{/if}
-		</Button>
-		<Button size="md" kind={existsInWishlist ? 'danger' : 'primary'} icon on:click={onWishlistClick}>
-			{wishlistText}
-			{#if existsInWishlist}
-				<iconify-icon icon={minusCircle} width="24" height="24" />
-			{:else}
-				<iconify-icon icon={plusCircle} width="24" height="24" />
-			{/if}
-		</Button>
-		</div>
+		{#if user?.username}
+			<div style="display: grid; gap: 1.5rem; place-content: center;">
+				<Button size="md" kind={existsInCollection ? 'danger' : 'primary'} icon on:click={onCollectionClick}>
+					{collectionText}
+					{#if existsInCollection}
+						<iconify-icon icon={minusCircle} width="24" height="24" />
+					{:else}
+						<iconify-icon icon={plusCircle} width="24" height="24" />
+					{/if}
+				</Button>
+				<Button size="md" kind={existsInWishlist ? 'danger' : 'primary'} icon on:click={onWishlistClick}>
+					{wishlistText}
+					{#if existsInWishlist}
+						<iconify-icon icon={minusCircle} width="24" height="24" />
+					{:else}
+						<iconify-icon icon={plusCircle} width="24" height="24" />
+					{/if}
+				</Button>
+			</div>
+		{:else}
+			<span>
+				<a href="/auth/signup">Sign Up</a> or <a href="/auth/signin">Sign In</a> to collect this game
+			</span>
+		{/if}
 	</div>
 </section>
-{#if firstParagraphEnd > 0}
-	<section class="description" style="margin-top: 2rem;">
-		{@html game?.description?.substring(0, firstParagraphEnd)}
-	</section>
-	{#if game?.description?.substring(firstParagraphEnd + 1) !== ''}
-		<section class="description">
-			{#if seeMore}
-				<div class="overflow-description" in:fly={{ opacity: 0, x: 100 }} out:fade>
-					{@html game?.description?.substring(firstParagraphEnd + 1)}
-				</div>
-			{/if}
-			<button class="btn button-icon" type="button" on:click={() => (seeMore = !seeMore)}
-				>See
-				{#if !seeMore}
-					More <PlusIcon width="24" height="24" />
-				{:else}
-					Less <MinusIcon width="24" height="24" />
-				{/if}
-			</button>
+{#if game?.description_preview}
+	{#if !seeMore}
+		<section class="description" style="margin-top: 2rem;" in:fly={{ opacity: 0, x: 100 }} out:fly={{ opacity: 0, x: -100 }}>
+			{`${game?.description_preview.substring(0, 250)}...`}
 		</section>
 	{/if}
+	{#if seeMore}
+		<div class="overflow-description" in:fly={{ opacity: 0, x: 100 }} out:fade>
+			{@html game?.description}
+		</div>
+	{/if}
+	<button class="btn button-icon" type="button" on:click={() => (seeMore = !seeMore)}
+		>See
+		{#if !seeMore}
+			More <PlusIcon width="24" height="24" />
+		{:else}
+			Less <MinusIcon width="24" height="24" />
+		{/if}
+	</button>
 {:else}
 	<section class="description">
 		<span>

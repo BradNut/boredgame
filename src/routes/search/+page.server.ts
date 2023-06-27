@@ -27,7 +27,7 @@ async function searchForGames(urlQueryParams: SearchQuery) {
 					lte: urlQueryParams?.max_playtime || 5000
 				},
 				min_age: {
-					gte: urlQueryParams?.min_age || 130
+					gte: urlQueryParams?.min_age || 0
 				}
 			},
 			skip: urlQueryParams?.skip,
@@ -79,7 +79,7 @@ async function searchForGames(urlQueryParams: SearchQuery) {
 		} else {
 			return {
 				totalCount: dbGames.length,
-				dbGames
+				games: dbGames
 			};
 		}
 	} catch (e) {
@@ -98,6 +98,8 @@ async function createOrUpdateGame(game: GameType) {
 	const mechanicIds = game.mechanics.map((mechanic) => ({
 		external_id: mechanic.id
 	}));
+	console.log('categoryIds', categoryIds);
+	console.log('mechanicIds', mechanicIds);
 	return await prisma.game.upsert({
 		where: {
 			external_id: game.id
@@ -154,7 +156,8 @@ async function createOrUpdateGame(game: GameType) {
 					},
 					create: {
 						external_id: game.primary_publisher.id,
-						name: game.primary_publisher.name
+						name: game.primary_publisher.name,
+						slug: kebabCase(game.primary_publisher.name)
 					}
 				}
 			},
