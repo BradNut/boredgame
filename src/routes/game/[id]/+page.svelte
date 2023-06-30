@@ -3,14 +3,14 @@
 	import { Image } from 'svelte-lazy-loader';
 	import minusCircle from '@iconify-icons/line-md/minus-circle';
 	import plusCircle from '@iconify-icons/line-md/plus-circle';
-	import {
-  ChevronRightIcon,
-		ExternalLinkIcon,
-		MinusCircleIcon,
-		MinusIcon,
-		PlusCircleIcon,
-		PlusIcon
-	} from '@rgossiaux/svelte-heroicons/outline';
+	// import {
+  // ChevronRightIcon,
+	// 	ExternalLinkIcon,
+	// 	MinusCircleIcon,
+	// 	MinusIcon,
+	// 	PlusCircleIcon,
+	// 	PlusIcon
+	// } from '@rgossiaux/svelte-heroicons/outline';
 	import type { GameType, SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
@@ -113,7 +113,8 @@
 				<p>Minimum Age: {game.min_age}</p>
 			{/if}
 			<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
-				Board Game Atlas <ExternalLinkIcon width="24" height="24" />
+				Board Game Atlas
+				<!-- <ExternalLinkIcon width="24" height="24" /> -->
 			</LinkWithIcon>
 		</div>
 		{#if user?.username}
@@ -156,9 +157,11 @@
 	<button class="btn button-icon" type="button" on:click={() => (seeMore = !seeMore)}
 		>See
 		{#if !seeMore}
-			More <PlusIcon width="24" height="24" />
+			More
+			<!-- <PlusIcon width="24" height="24" /> -->
 		{:else}
-			Less <MinusIcon width="24" height="24" />
+			Less
+			<!-- <MinusIcon width="24" height="24" /> -->
 		{/if}
 	</button>
 {:else}

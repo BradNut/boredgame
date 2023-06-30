@@ -1,11 +1,11 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import {
-    Listbox,
-    ListboxButton,
-    ListboxOptions,
-    ListboxOption
-  } from '@rgossiaux/svelte-headlessui';
+  // import {
+  //   Listbox,
+  //   ListboxButton,
+  //   ListboxOptions,
+  //   ListboxOption
+  // } from '@rgossiaux/svelte-headlessui';
 
   const shows = [
     { id: 1, name: 'Cowboy Bebop', completed: false },
@@ -22,8 +22,8 @@
 <h4>Listbox</h4>
 
 <div class="listbox">
-  <Listbox value={selected} on:change={(event) => (selected = event.detail)} let:open>
-    <ListboxButton class="button">
+  <!-- <Listbox value={selected} on:change={(event) => (selected = event.detail)} let:open> -->
+    <!-- <ListboxButton class="button"> -->
       <span>{selected.name}</span>
       <svg
         width="20"
@@ -40,25 +40,25 @@
           clip-rule="evenodd"
         />
       </svg>
-    </ListboxButton>
+    <!-- </ListboxButton> -->
     {#if open}
       <div transition:fade={{ duration: 200 }}>
-        <ListboxOptions class="options">
+        <!-- <ListboxOptions class="options"> -->
           {#each shows as anime (anime.id)}
-            <ListboxOption
+            <!-- <ListboxOption
               class="option"
               value={anime}
               disabled={anime.completed}
               let:active
               let:selected
-            >
+            > -->
               <span class:active class:selected>{anime.name}</span>
-            </ListboxOption>
+            <!-- </ListboxOption> -->
           {/each}
-        </ListboxOptions>
+        <!-- </ListboxOptions> -->
       </div>
     {/if}
-  </Listbox>
+  <!-- </Listbox> -->
 </div>
 
 <!-- ... -->

@@ -5,8 +5,8 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import type { SuperValidated } from 'sveltekit-superforms/index';
-	import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
-	import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
+	// import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
+	// import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
 	import { boredState } from '$lib/stores/boredState';
 	import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
 	import { xl, md, sm } from '$lib/stores/mediaQueryStore';
@@ -168,32 +168,32 @@
 			<input id="limit" type="hidden" name="limit" bind:value={$form.limit} />
 		</fieldset>
 		{#if advancedSearch}
-			<Disclosure>
-				<DisclosureButton
+			<!-- <Disclosure> -->
+				<!-- <DisclosureButton
 					class="disclosure-button"
 					on:click={() => (disclosureOpen = !disclosureOpen)}
-				>
+				> -->
 					<span>Advanced Search?</span>
-					<ChevronRightIcon
+					<!-- <ChevronRightIcon
 						class="icon disclosure-icon"
 						style={disclosureOpen
 							? 'transform: rotate(90deg); transition: transform 0.5s ease;'
 							: 'transform: rotate(0deg); transition: transform 0.5s ease;'}
-					/>
-				</DisclosureButton>
+					/> -->
+				<!-- </DisclosureButton> -->
 
 				{#if disclosureOpen}
 					<div transition:fade>
 						<!-- Using `static`, `DisclosurePanel` is always rendered,
                 and ignores the `open` state -->
-						<DisclosurePanel static>
+						<!-- <DisclosurePanel static> -->
 							{#if disclosureOpen}
 								<AdvancedSearch {form} {errors} {constraints} />
 							{/if}
-						</DisclosurePanel>
+						<!-- </DisclosurePanel> -->
 					</div>
 				{/if}
-			</Disclosure>
+			<!-- </Disclosure> -->
 		{/if}
 	</div>
 	{#if showButton}

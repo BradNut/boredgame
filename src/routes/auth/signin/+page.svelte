@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
 	import { userSchema } from '$lib/config/zod-schemas.js';
+	import Label from '$components/ui/label/Label.svelte';
+	import Input from '$components/ui/input/Input.svelte';
+	import Button from '$components/ui/button/Button.svelte';
 
 	export let data;
 
@@ -22,45 +25,22 @@
 			</div>
 		</aside>
 	{/if}
-	<div>
-		<label class="label">
-			<span class="sr-only">Username</span>
-			<input
-				id="username"
-				name="username"
-				type="text"
-				placeholder="Username"
-				autocomplete="username"
-				data-invalid={$form.username}
-				bind:value={$form.username}
-				class="input"
-				class:input-error={$errors.username}
-			/>
+	<div class="grid w-full max-w-sm items-center gap-2">
+			<h2
+				class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+			>
+				Sign into your account
+			</h2>
+			<Label for="username">Username</Label>
+			<Input type="text" id="username" name="username" placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} />
 			{#if $errors.username}
-				<small>{$errors.username}</small>
+				<p class="text-sm text-muted-foreground">{$errors.username}</p>
 			{/if}
-		</label>
-	</div>
-	<div>
-		<label class="label">
-			<span class="sr-only">Password</span>
-			<input
-				id="password"
-				name="password"
-				type="password"
-				placeholder="Password"
-				data-invalid={$form.password}
-				bind:value={$form.password}
-				class="input"
-				class:input-error={$errors.password}
-			/>
+			<Label for="password">Password</Label>
+			<Input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" data-invalid={$errors.password} bind:value={$form.password} />
 			{#if $errors.password}
-				<small>{$errors.password}</small>
+				<p class="text-sm text-muted-foreground">{$errors.password}</p>
 			{/if}
-		</label>
-	</div>
-
-	<div>
-		<button type="submit" class="button">Sign In</button>
+			<Button type="submit">Sign In</Button>
 	</div>
 </form>

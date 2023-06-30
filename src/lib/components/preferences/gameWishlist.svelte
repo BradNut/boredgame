@@ -3,7 +3,7 @@
 	import { boredState } from '$lib/stores/boredState';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
 	import { ToastType } from '$lib/types';
-	import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
+	// import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
 	import ClearWishlistDialog from '../dialog/ClearWishlistDialog.svelte';
 	import { toast } from '../toast/toast';
 
@@ -48,13 +48,15 @@
 	</div>
 	<div class="wishlist-buttons">
 		<button type="button" aria-label="Export Wishlist" on:click={() => exportWishlist()}
-			><ShareIcon width="24" height="24" />Export</button
+			>
+			<!-- <ShareIcon width="24" height="24" /> -->
+			Export</button
 		>
 		<!-- <button type="button" aria-label="Save Wishlist" on:click={() => saveWishlist()}
 			><SaveIcon width="24" height="24" />Save</button
 		> -->
 		<button type="button" aria-label="Clear saved wishlist" on:click={() => clearWishlist()}>
-			<TrashIcon width="24" height="24" />Clear
+			<!-- <TrashIcon width="24" height="24" />Clear -->
 		</button>
 	</div>
 </div>

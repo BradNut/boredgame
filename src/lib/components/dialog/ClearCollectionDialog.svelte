@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import {
-		Dialog,
-		DialogDescription,
-		DialogOverlay,
-		DialogTitle
-	} from '@rgossiaux/svelte-headlessui';
+	// import {
+	// 	Dialog,
+	// 	DialogDescription,
+	// 	DialogOverlay,
+	// 	DialogTitle
+	// } from '@rgossiaux/svelte-headlessui';
 	import { boredState } from '$lib/stores/boredState';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { browser } from '$app/environment';
@@ -21,18 +21,18 @@
 	$: isOpen = $boredState?.dialog?.isOpen;
 </script>
 
-<Dialog
+<!-- <Dialog
 	open={isOpen}
 	on:close={() => {
 		boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
 	}}
 	static
->
+> -->
 	<div transition:fade>
-		<DialogOverlay class="dialog-overlay" />
+		<!-- <DialogOverlay class="dialog-overlay" /> -->
 		<div class="dialog">
-			<DialogTitle>Clear collection</DialogTitle>
-			<DialogDescription>Are you sure you want to clear your collection?</DialogDescription>
+			<!-- <DialogTitle>Clear collection</DialogTitle> -->
+			<!-- <DialogDescription>Are you sure you want to clear your collection?</DialogDescription> -->
 
 			<div class="dialog-footer">
 				<button class="remove" on:click={clearCollection}>Clear</button>
@@ -44,7 +44,7 @@
 			</div>
 		</div>
 	</div>
-</Dialog>
+<!-- </Dialog> -->
 
 <style lang="scss">
 	.dialog {

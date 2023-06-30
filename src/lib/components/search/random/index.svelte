@@ -6,6 +6,7 @@
 	import { ToastType } from '$lib/types';
   import { superForm } from 'sveltekit-superforms/client';
 	import { toast } from '../../toast/toast';
+	import Button from '$components/ui/button/Button.svelte';
 
 	export let data: SuperValidated<SearchSchema>;
 	const { enhance } = superForm(data, {
@@ -41,7 +42,8 @@
 	use:enhance
 >
 	<fieldset aria-busy={submitting} disabled={submitting}>
-		<button class="btn" type="submit" disabled={submitting}>Random Game 🎲</button>
+		<Button type="submit" disabled={submitting}>Random Game 🎲</Button>
+		<!-- <button class="btn" type="submit" disabled={submitting}>Random Game 🎲</button> -->
 	</fieldset>
 </form>
 

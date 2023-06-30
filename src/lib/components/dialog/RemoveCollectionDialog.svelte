@@ -1,11 +1,16 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
+	// import { Button, buttonVariants } from '$components/ui/button';
+	import { Button, buttonVariants } from '$components/ui/button';
 	import {
 		Dialog,
-		DialogDescription,
-		DialogOverlay,
-		DialogTitle
-	} from '@rgossiaux/svelte-headlessui';
+		DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+	} from '$components/ui/dialog';
 	import { boredState } from '$lib/stores/boredState';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { removeFromCollection } from '$lib/util/manipulateCollection';
@@ -24,7 +29,35 @@
 	$: isOpen = $boredState?.dialog?.isOpen;
 </script>
 
-<Dialog
+<Dialog modal={true}>
+  <DialogTrigger class={buttonVariants({ variant: "outline" })}>
+    Remove from collection
+  </DialogTrigger>
+  <DialogContent class="sm:max-w-[425px]">
+    <DialogHeader>
+      <DialogTitle>Remove from collection</DialogTitle>
+      <DialogDescription>
+        Are you sure you want to remove from your collection?
+      </DialogDescription>
+    </DialogHeader>
+    <div class="grid gap-4 py-4">
+      <div class="grid grid-cols-4 items-center gap-4">
+        <Label class="text-right">Name</Label>
+        <Input id="name" value="Pedro Duarte" class="col-span-3" />
+      </div>
+      <div class="grid grid-cols-4 items-center gap-4">
+        <Label class="text-right">Username</Label>
+        <Input id="username" value="@peduarte" class="col-span-3" />
+      </div>
+    </div>
+    <DialogFooter>
+      <Button type="submit">Remove</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
+
+<!-- <Dialog
 	open={isOpen}
 	on:close={() => {
 		boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
@@ -47,7 +80,7 @@
 			</div>
 		</div>
 	</div>
-</Dialog>
+</Dialog> -->
 
 <style lang="scss">
 	.dialog {

@@ -3,7 +3,7 @@
 	import { boredState } from '$lib/stores/boredState';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { ToastType } from '$lib/types';
-	import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
+	// import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
 	import ClearCollectionDialog from '../dialog/ClearCollectionDialog.svelte';
 	import { toast } from '../toast/toast';
 
@@ -48,13 +48,15 @@
 	</div>
 	<div class="collection-buttons">
 		<button type="button" aria-label="Export Collection" on:click={() => exportCollection()}
-			><ShareIcon width="24" height="24" />Export</button
+			>
+			<!-- <ShareIcon width="24" height="24" /> -->
+			Export</button
 		>
 		<!-- <button type="button" aria-label="Save Collection" on:click={() => saveCollection()}
 			><SaveIcon width="24" height="24" />Save</button
 		> -->
 		<button type="button" aria-label="Clear saved collection" on:click={() => clearCollection()}>
-			<TrashIcon width="24" height="24" />Clear
+			<!-- <TrashIcon width="24" height="24" />Clear -->
 		</button>
 	</div>
 </div>

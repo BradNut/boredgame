@@ -1,4 +1,5 @@
 <script lang="ts">
+	import "../app.postcss";
 	import { browser } from '$app/environment';
 	import { navigating } from '$app/stores';
 	import debounce from 'just-debounce-it';
@@ -16,7 +17,7 @@
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
-	import '$styles/styles.pcss';
+	// import '$styles/styles.pcss';
 	import type { SavedGameType } from '$lib/types';
 
 	$: {
@@ -33,38 +34,38 @@
 	$: isOpen = $boredState?.dialog?.isOpen;
 
 	if (browser) {
-		const collator = new Intl.Collator('en');
+	const collator = new Intl.Collator('en');
 
-		let collectionEmpty = $collectionStore.length === 0 || false;
-		let wishlistEmpty = $wishlistStore.length === 0 || false;
-		if (wishlistEmpty && localStorage?.wishlist && localStorage?.wishlist?.length !== 0) {
-			const wishlist: SavedGameType[] = JSON.parse(localStorage.wishlist);
-			if (wishlist?.length !== 0) {
-				wishlist.sort((a, b) => collator.compare(a.name, b.name));
-				for (const item of wishlist) {
-					if (!item?.searchTerms) {
-						item.searchTerms = `${item?.name?.toLowerCase()}`;
-					}
-					if (!item?.includeInRandom) {
-						item.includeInRandom = false;
-					}
+	let collectionEmpty = $collectionStore.length === 0 || false;
+	let wishlistEmpty = $wishlistStore.length === 0 || false;
+	if (wishlistEmpty && localStorage?.wishlist && localStorage?.wishlist?.length !== 0) {
+		const wishlist: SavedGameType[] = JSON.parse(localStorage.wishlist);
+		if (wishlist?.length !== 0) {
+			wishlist.sort((a, b) => collator.compare(a.name, b.name));
+			for (const item of wishlist) {
+				if (!item?.searchTerms) {
+					item.searchTerms = `${item?.name?.toLowerCase()}`;
 				}
-				wishlistStore.addAll(wishlist);
-			}
-		}
-		if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
-			const collection: SavedGameType[] = JSON.parse(localStorage.collection);
-			if (collection?.length !== 0) {
-				collection.sort((a, b) => collator.compare(a.name, b.name));
-				for (const item of collection) {
-					if (!item?.searchTerms) {
-						item.searchTerms = `${item?.name?.toLowerCase()}`;
-					}
+				if (!item?.includeInRandom) {
+					item.includeInRandom = false;
 				}
-				collectionStore.addAll(collection);
 			}
+			wishlistStore.addAll(wishlist);
 		}
 	}
+	if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
+		const collection: SavedGameType[] = JSON.parse(localStorage.collection);
+		if (collection?.length !== 0) {
+			collection.sort((a, b) => collator.compare(a.name, b.name));
+			for (const item of collection) {
+				if (!item?.searchTerms) {
+					item.searchTerms = `${item?.name?.toLowerCase()}`;
+				}
+			}
+			collectionStore.addAll(collection);
+		}
+	}
+}
 
 	const dev = process.env.NODE_ENV !== 'production';
 
@@ -72,7 +73,7 @@
 </script>
 
 {#if !dev}
-	<Analytics />
+	<Analytics></Analytics>
 {/if}
 
 <!-- {#if dev}
@@ -88,10 +89,10 @@
 {/if} -->
 
 <div class="wrapper">
-	<Header user={data.user} />
+	<Header user="{data.user}"></Header>
 		<main>
 			<Transition url={data.url} transition={{ type: 'page' }}>
-				<slot />
+				<slot></slot>
 			</Transition>
 		</main>
 	<Footer />
@@ -99,18 +100,18 @@
 {#if $boredState?.loading}
 	<Portal>
 			<div class="loading">
-				<Loading />
+				<Loading></Loading>
 				<h3>Loading...</h3>
 			</div>
-		<div class="background" />
+		<div class="background"></div>
 	</Portal>
 {/if}
 {#if isOpen}
 	<div class="container">
-		<svelte:component this={$boredState?.dialog?.content} />
+		<svelte:component this={$boredState?.dialog?.content}></svelte:component>
 	</div>
 {/if}
-<Toast />
+<Toast></Toast>
 
 <style lang="postcss">
 	.loading {

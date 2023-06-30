@@ -2,17 +2,17 @@
 	// Based on https://carbon-components-svelte.onrender.com/components/Pagination
 	import { afterUpdate, createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import {
-		Listbox,
-		ListboxButton,
-		ListboxOption,
-		ListboxOptions
-	} from '@rgossiaux/svelte-headlessui';
-	import {
-		CheckIcon,
-		ChevronLeftIcon,
-		ChevronRightIcon
-	} from '@rgossiaux/svelte-heroicons/outline';
+	// import {
+	// 	Listbox,
+	// 	ListboxButton,
+	// 	ListboxOption,
+	// 	ListboxOptions
+	// } from '@rgossiaux/svelte-headlessui';
+	// import {
+	// 	CheckIcon,
+	// 	ChevronLeftIcon,
+	// 	ChevronRightIcon
+	// } from '@rgossiaux/svelte-heroicons/outline';
 
 	const dispatch = createEventDispatcher();
 
@@ -41,36 +41,36 @@
 <div class="container">
 	<div class="listbox">
 		<p>Per-page:</p>
-		<Listbox
+		<!-- <Listbox
 			class="list-box"
 			value={pageSize || 10}
 			on:change={(e) => {
 				dispatch('perPageEvent', { pageSize: e.detail, page });
 			}}
 			let:open
-		>
-			<ListboxButton>{pageSize || 10}</ListboxButton>
-			{#if open}
+		> -->
+			<!-- <ListboxButton>{pageSize || 10}</ListboxButton> -->
+			<!-- {#if open} -->
 				<div transition:fade={{ duration: 100 }}>
-					<ListboxOptions static class="options">
+					<!-- <ListboxOptions static class="options"> -->
 						{#each pageSizes as size (size)}
-							<ListboxOption
+							<!-- <ListboxOption
 								value={`${size}`}
 								disabled={pageSizeInputDisabled}
 								class={({ active }) => (active ? 'active option' : 'option')}
 								style="display: flex; gap: 1rem; padding: 1rem;"
 								let:selected
-							>
-								{#if selected}
-									<CheckIcon height="24" width="24" />
-								{/if}
-								<span class="size-option" class:selected>{size.toString()}</span>
-							</ListboxOption>
+							> -->
+								<!-- {#if selected} -->
+									<!-- <CheckIcon height="24" width="24" /> -->
+								<!-- {/if} -->
+								<!-- <span class="size-option" class:selected>{size.toString()}</span> -->
+							<!-- </ListboxOption> -->
 						{/each}
-					</ListboxOptions>
+					<!-- </ListboxOptions> -->
 				</div>
-			{/if}
-		</Listbox>
+			<!-- {/if} -->
+		<!-- </Listbox> -->
 	</div>
 	<p>
 		Page {page || 1} of {totalPages || 1}
@@ -90,7 +90,7 @@
 				dispatch('previousPageEvent', { page });
 			}}
 		>
-			<ChevronLeftIcon width="24" height="24" />
+			<!-- <ChevronLeftIcon width="24" height="24" /> -->
 			<p class="word">{backwardText || 'Prev'}</p>
 		</button>
 		<button
@@ -103,7 +103,7 @@
 			}}
 		>
 			<p class="word">{forwardText || 'Next'}</p>
-			<ChevronRightIcon width="24" height="24" />
+			<!-- <ChevronRightIcon width="24" height="24" /> -->
 		</button>
 	</div>
 </div>

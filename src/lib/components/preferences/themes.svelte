@@ -1,12 +1,12 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import { browser } from '$app/environment';
-  import {
-    Listbox,
-    ListboxButton,
-    ListboxOption,
-    ListboxOptions
-  } from '@rgossiaux/svelte-headlessui';
+  // import {
+  //   Listbox,
+  //   ListboxButton,
+  //   ListboxOption,
+  //   ListboxOptions
+  // } from '@rgossiaux/svelte-headlessui';
 
   type Themes = Record<string, { name: string }>;
 
@@ -61,8 +61,8 @@
 
 <div class="theme">
   <div class="listbox">
-    <Listbox value={selectedTheme} on:change={handleChange} let:open>
-      <ListboxButton class="button">
+    <!-- <Listbox value={selectedTheme} on:change={handleChange} let:open> -->
+      <!-- <ListboxButton class="button"> -->
         <span>{selectedTheme.name}</span>
 
         <span>
@@ -82,22 +82,22 @@
             />
           </svg>
         </span>
-      </ListboxButton>
+      <!-- </ListboxButton> -->
 
       {#if open}
         <div transition:fade={{ duration: 100 }}>
-          <ListboxOptions class="options" static>
+          <!-- <ListboxOptions class="options" static> -->
             {#each Object.entries(themes) as [key, theme] (key)}
-              <ListboxOption value={theme} let:active let:selected>
+              <!-- <ListboxOption value={theme} let:active let:selected> -->
                 <span class="option" class:active class:selected>
                   {theme.name}
                 </span>
-              </ListboxOption>
+              <!-- </ListboxOption> -->
             {/each}
-          </ListboxOptions>
+          <!-- </ListboxOptions> -->
         </div>
       {/if}
-    </Listbox>
+    <!-- </Listbox> -->
   </div>
 </div>
 

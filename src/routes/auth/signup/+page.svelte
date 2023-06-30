@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { userSchema } from '$lib/config/zod-schemas.js';
+	import Button from '$components/ui/button/Button.svelte';
+  import Input from '$components/ui/input/Input.svelte';
+import Label from '$components/ui/label/Label.svelte';
+import { userSchema } from '$lib/config/zod-schemas.js';
   import { superForm } from 'sveltekit-superforms/client';
 
 	export let data;
@@ -22,141 +25,49 @@
 
 <div class="page">
 	<form method="POST" action="/auth/signup" use:enhance>
-    <h1>Signup user</h1>
-    <label class="label">
-			<span class="sr-only">First Name</span>
-			<input
-				id="firstName"
-				name="firstName"
-				type="text"
-				placeholder="First Name"
-				autocomplete="given-name"
-				data-invalid={$errors.firstName}
-				bind:value={$form.firstName}
-				class="input"
-				class:input-error={$errors.firstName}
-			/>
+		<div class="grid w-full max-w-sm items-center gap-2">
+			<h2
+				class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+			>
+				Signup for an account
+			</h2>
+			<Label for="firstName">First Name</Label>
+			<Input type="text" id="firstName" name="firstName" placeholder="First Name" autocomplete="given-name" data-invalid={$errors.firstName} bind:value={$form.firstName} />
 			{#if $errors.firstName}
-				<small>{$errors.firstName}</small>
+				<p class="text-sm text-muted-foreground">{$errors.firstName}</p>
 			{/if}
-		</label>
-    <label class="label">
-			<span class="sr-only">Last Name</span>
-			<input
-				id="lastName"
-				name="lastName"
-				type="text"
-				placeholder="Last Name"
-				autocomplete="family-name"
-				data-invalid={$errors.lastName}
-				bind:value={$form.lastName}
-				class="input"
-				class:input-error={$errors.lastName}
-			/>
+			<Label for="firstName">Last Name</Label>
+			<Input type="text" id="lastName" name="lastName" placeholder="Last Name" autocomplete="family-name" data-invalid={$errors.lastName} bind:value={$form.lastName} />
 			{#if $errors.lastName}
-				<small>{$errors.lastName}</small>
+				<p class="text-sm text-muted-foreground">{$errors.lastName}</p>
 			{/if}
-		</label>
-    <label class="label">
-			<span class="sr-only">Email</span>
-			<input
-				id="email"
-				name="email"
-				type="email"
-				placeholder="Email"
-				autocomplete="email"
-				data-invalid={$errors.email}
-				bind:value={$form.email}
-				class="input"
-				class:input-error={$errors.email}
-			/>
+			<Label for="email">Email</Label>
+			<Input type="email" id="email" name="email" placeholder="Email" autocomplete="email" data-invalid={$errors.email} bind:value={$form.email} />
 			{#if $errors.email}
-				<small>{$errors.email}</small>
+				<p class="text-sm text-muted-foreground">{$errors.email}</p>
 			{/if}
-		</label>
-    <label class="label">
-			<span class="sr-only">Username</span>
-			<input
-				id="username"
-				name="username"
-				type="username"
-				placeholder="Username"
-				autocomplete="email"
-				{...$constraints.username}
-				data-invalid={$errors.username}
-				bind:value={$form.username}
-				class="input"
-				class:input-error={$errors.username}
-			/>
+			<Label for="username">Username</Label>
+			<Input type="text" id="username" name="username" placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} />
 			{#if $errors.username}
-				<small>{$errors.username}</small>
+				<p class="text-sm text-muted-foreground">{$errors.username}</p>
 			{/if}
-		</label>
-    <label class="label">
-			<span class="sr-only">Password</span>
-			<input
-				id="password"
-				name="password"
-				type="password"
-				placeholder="Password"
-				{...$constraints.username}
-				data-invalid={$errors.password}
-				bind:value={$form.password}
-				class="input"
-				class:input-error={$errors.password}
-			/>
+			<Label for="password">Password</Label>
+			<Input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" data-invalid={$errors.password} bind:value={$form.password} />
 			{#if $errors.password}
-				<small>{$errors.password}</small>
+				<p class="text-sm text-muted-foreground">{$errors.password}</p>
 			{/if}
-		</label>
-		<label class="label">
-			<span class="sr-only">Confirm Password</span>
-			<input
-				id="confirm_password"
-				name="confirm_password"
-				type="password"
-				placeholder="Confirm your password"
-				{...$constraints.confirm_password}
-				data-invalid={$errors.confirm_password}
-				bind:value={$form.confirm_password}
-				class="input"
-				class:input-error={$errors.confirm_password}
-			/>
+			<Label for="confirm_password">Confirm Password</Label>
+			<Input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" autocomplete="new-password" data-invalid={$errors.confirm_password} bind:value={$form.confirm_password} />
 			{#if $errors.confirm_password}
-				<small>{$errors.confirm_password}</small>
+				<p class="text-sm text-muted-foreground">{$errors.confirm_password}</p>
 			{/if}
-		</label>
-    
-    <button type="submit">Signup</button>
-
-    <a class="back" href="/"> or Cancel </a>
+			<div class="flex place-content-">
+				<Button type="submit">Signup</Button>
+				<Button variant="link" href="/">or Cancel</Button>
+			</div>
+		</div>
   </form>
 </div>
 
 <style scoped>
-  .page {
-    padding: 3rem;
-    display: flex;
-    justify-content: center;
-  }
-
-  /* input[type="text"] {
-    width: 100%;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    border-radius: 0.25rem;
-    border: 0.125rem solid rgba(0, 0, 0, 0.2);
-  }
-
-  button[type="submit"] {
-    border: 0;
-    padding: 1rem 2rem;
-  } */
-
-  .back {
-    margin-left: 1rem;
-  }
-  .error {
-    color: red;
-  }
 </style>

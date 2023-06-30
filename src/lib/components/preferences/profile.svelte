@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { Popover, PopoverButton, PopoverPanel } from '@rgossiaux/svelte-headlessui';
+	// import { Popover, PopoverButton, PopoverPanel } from '@rgossiaux/svelte-headlessui';
 	import cogOutline from '@iconify-icons/mdi/cog-outline';
 	import Themes from './themes.svelte';
 	import GameCollection from './gameCollection.svelte';
@@ -8,8 +8,8 @@
 </script>
 
 <div class="container">
-	<Popover let:open class="popover">
-		<PopoverButton aria-label="Preferences">
+	<!-- <Popover let:open class="popover">
+		<PopoverButton aria-label="Preferences"> -->
 			<!-- <CogIcon width="24" height="24" /> -->
 			<!-- <iconify-icon icon="mdi:cog-outline"
 				width="24" height="24"
@@ -26,11 +26,11 @@
 					: 'transform: rotate(0deg); transition: transform 0.5s ease;'
 				}
 			/>
-		</PopoverButton>
+		<!-- </PopoverButton> -->
 
 		{#if open}
 			<div transition:fade={{ duration: 100 }}>
-				<PopoverPanel class="popover-panel" static>
+				<!-- <PopoverPanel class="popover-panel" static> -->
 					<div class="preferences">
 						<svg
 							width="24"
@@ -60,10 +60,10 @@
 							<GameWishlist />
 						</div>
 					</div>
-				</PopoverPanel>
+				<!-- </PopoverPanel> -->
 			</div>
 		{/if}
-	</Popover>
+	<!-- </Popover> -->
 </div>
 
 <style lang="scss">
