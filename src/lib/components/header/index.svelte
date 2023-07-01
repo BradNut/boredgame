@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { LogOut } from 'lucide-svelte';
+	import Button from '$components/ui/button/Button.svelte';
 	// import Profile from '../preferences/profile.svelte';
 	import logo from './bored-game.png';
 
@@ -23,9 +25,10 @@
 				action="/auth/signout"
 				method="POST"
 			>
-				<button type="submit" class="btn"
-					><span>Sign out</span></button
-				>
+				<Button type="submit">
+					<LogOut class="mr-2 h-4 w-4"/>
+					Sign out
+				</Button>
 			</form>
 		{/if}
 		{#if !user}

@@ -52,7 +52,7 @@ export const actions = {
 			// TODO: need to return error message to the client
 			console.error(e);
 			form.data.password = '';
-			return setError(form, '', 'The username or password is incorrect.');
+			return setError(form, '', 'Your username or password is incorrect.');
 		}
 		form.data.username = '';
 		form.data.password = '';
