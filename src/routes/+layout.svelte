@@ -17,8 +17,10 @@
 	import { gameStore } from '$lib/stores/gameSearchStore';
 	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
+	import { theme } from '$state/theme';
 	// import '$styles/styles.pcss';
 	import type { SavedGameType } from '$lib/types';
+	import { onMount } from "svelte";
 
 	$: {
 		if ($navigating) {
@@ -70,10 +72,17 @@
 	const dev = process.env.NODE_ENV !== 'production';
 
 	export let data;
+	$: ({ user } = data);
+
+	onMount(() => {
+		// set the theme to the user's active theme
+		$theme = user?.theme || 'system';
+		document.querySelector('html')?.setAttribute('data-theme', $theme);
+	});
 </script>
 
 {#if !dev}
-	<Analytics></Analytics>
+	<Analytics />
 {/if}
 
 <!-- {#if dev}

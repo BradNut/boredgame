@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import plusCircle from '@iconify-icons/line-md/plus-circle';
 	import minusCircle from '@iconify-icons/line-md/minus-circle';
-	import Button from '$lib/components/button/index.svelte';
+	// import Button from '$lib/components/button/index.svelte';
 	import type { GameType, SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
@@ -13,6 +13,8 @@
 	import { browser } from '$app/environment';
   import { binarySearchOnStore } from '$lib/util/binarySearchOnStore';
   import { convertToSavedGame } from '$lib/util/gameMapper';
+	import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '$components/ui/card';
+	import { Button } from '$components/ui/button';
 
 	export let game: GameType | SavedGameType;
 	export let detailed: boolean = false;
@@ -27,7 +29,7 @@
 		dispatch('handleRemoveCollection', game);
 	}
 
-	function onCollectionClick() {	
+	function onCollectionClick() {
 		if (existsInCollection) {
 			removeGameFromCollection();
 		} else {
@@ -74,7 +76,51 @@
 	$: wishlistText = existsInWishlist ? 'Remove from wishlist' : 'Add to wishlist';
 </script>
 
-<article class="game-container" transition:fade>
+<article class="grid grid-template-cols-2 gap-4" transition:fade>
+	<Card>
+		<CardHeader>
+			<CardTitle>{game.name}</CardTitle>
+			<!-- <CardDescription>Card Description</CardDescription> -->
+		</CardHeader>
+		<CardContent>
+			<img src={game.thumb_url} alt={`Image of ${game.name}`} loading="lazy" decoding="async" />
+			<div class="game-details">
+			{#if game?.players}
+				<p>Players: {game.players}</p>
+				<p>Time: {game.playtime} minutes</p>
+				{#if isGameType(game) && game?.min_age}
+					<p>Min Age: {game.min_age}</p>
+				{/if}
+				{#if detailed && isGameType(game) && game?.description}
+					<div class="description">{@html game.description}</div>
+				{/if}
+			{/if}
+		</div>
+		</CardContent>
+		<CardFooter>
+	<div class="flex gap-2">
+		<Button variant={existsInCollection ? 'destructive' : 'default'} on:click={onCollectionClick}>
+			{collectionText}
+			{#if existsInCollection}
+				<iconify-icon class="ml-2" icon={minusCircle} width="24" height="24" />
+			{:else}
+				<iconify-icon class="ml-2" icon={plusCircle} width="24" height="24" />
+			{/if}
+		</Button>
+		<Button variant={existsInCollection ? 'destructive' : 'default'} on:click={onWishlistClick}>
+			{wishlistText}
+			{#if existsInWishlist}
+				<iconify-icon class="ml-2" icon={minusCircle} width="24" height="24" />
+			{:else}
+				<iconify-icon class="ml-2" icon={plusCircle} width="24" height="24" />
+			{/if}
+		</Button>
+	</div>
+		</CardFooter>
+	</Card>
+</article>
+
+<!-- <article class="game-container" transition:fade>
 	<h2>{game.name}</h2>
 	<a
 		class="thumbnail"
@@ -83,11 +129,11 @@
 		data-sveltekit-preload-data
 	>
 		<!-- <Image src={game.thumb_url} alt={`Image of ${game.name}`} /> -->
-		<img src={game.thumb_url} alt={`Image of ${game.name}`} loading="lazy" decoding="async" />
+		<!-- <img src={game.thumb_url} alt={`Image of ${game.name}`} loading="lazy" decoding="async" /> -->
 		<!-- loading="lazy" decoding="async" -->
-	</a>
+	<!-- </a> -->
 
-		<div class="game-details">
+		<!-- <div class="game-details">
 			{#if game?.players}
 				<p>Players: {game.players}</p>
 				<p>Time: {game.playtime} minutes</p>
@@ -117,8 +163,8 @@
 				<iconify-icon icon={plusCircle} width="24" height="24" />
 			{/if}
 		</Button>
-	</div>
-</article>
+	</div> -->
+<!-- </article> -->
 
 <style lang="scss">
 	.game-container {
@@ -137,9 +183,9 @@
 		transition: all 0.3s;
 		border-radius: 8px;
 		background-color: var(--primary);
-		&:hover {
+		/* &:hover {
 			background-color: hsla(222, 9%, 65%, 1);
-		}
+		} */
 
 		/* .game-info {
 			display: grid;

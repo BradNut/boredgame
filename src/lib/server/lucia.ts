@@ -18,7 +18,8 @@ export const auth = lucia({
 			lastName: userData.lastName,
 			verified: userData.verified,
 			receiveEmail: userData.receiveEmail,
-			token: userData.token
+			token: userData.token,
+			theme: userData.theme
 		};
 	},
 	experimental: {

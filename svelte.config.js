@@ -16,6 +16,7 @@ const config = {
 			'$components/*': 'src/lib/components/*',
 			$db: './src/db',
 			$lib: './src/lib',
+			$state: './src/state',
 			$styles: './src/styles',
 			$themes: './src/themes'
 		}
