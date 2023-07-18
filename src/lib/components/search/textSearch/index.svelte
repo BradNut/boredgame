@@ -181,7 +181,7 @@
 				<!-- </DisclosureButton> -->
 
 				{#if disclosureOpen}
-					<div transition:fade>
+					<div transition:fade|global>
 						<!-- Using `static`, `DisclosurePanel` is always rendered,
                 and ignores the `open` state -->
 						<!-- <DisclosurePanel static> -->

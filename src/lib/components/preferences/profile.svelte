@@ -29,7 +29,7 @@
 		<!-- </PopoverButton> -->
 
 		{#if open}
-			<div transition:fade={{ duration: 100 }}>
+			<div transition:fade|global={{ duration: 100 }}>
 				<!-- <PopoverPanel class="popover-panel" static> -->
 					<div class="preferences">
 						<svg

@@ -85,7 +85,7 @@
       <!-- </ListboxButton> -->
 
       {#if open}
-        <div transition:fade={{ duration: 100 }}>
+        <div transition:fade|global={{ duration: 100 }}>
           <!-- <ListboxOptions class="options" static> -->
             {#each Object.entries(themes) as [key, theme] (key)}
               <!-- <ListboxOption value={theme} let:active let:selected> -->

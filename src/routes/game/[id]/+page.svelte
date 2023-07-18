@@ -145,12 +145,12 @@
 </section>
 {#if game?.description_preview}
 	{#if !seeMore}
-		<section class="description" style="margin-top: 2rem;" in:fly={{ opacity: 0, x: 100 }} out:fly={{ opacity: 0, x: -100 }}>
+		<section class="description" style="margin-top: 2rem;" in:fly|global={{ opacity: 0, x: 100 }} out:fly|global={{ opacity: 0, x: -100 }}>
 			{`${game?.description_preview.substring(0, 250)}...`}
 		</section>
 	{/if}
 	{#if seeMore}
-		<div class="overflow-description" in:fly={{ opacity: 0, x: 100 }} out:fade>
+		<div class="overflow-description" in:fly|global={{ opacity: 0, x: 100 }} out:fade|global>
 			{@html game?.description}
 		</div>
 	{/if}

@@ -13,8 +13,8 @@
 				aria-label={toastData.dismissible ? 'Click to dismiss' : `${toastData.message}`}
 				on:click={() => toastData.dismissible && toast.remove(toastData.id)}
 				on:keydown={() => toastData.dismissible && toast.remove(toastData.id)}
-				in:fly={{ opacity: 0, x: 100 }}
-				out:fade
+				in:fly|global={{ opacity: 0, x: 100 }}
+				out:fade|global
 				animate:flip
 				class={`toast ${toastData.type.toLowerCase()}`}
 			>

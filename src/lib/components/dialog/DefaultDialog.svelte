@@ -16,7 +16,7 @@
 	export let passive = false;
 	export let primaryButtonText = '';
 	export let primaryButtonDisabled = false;
-	export let primaryButtonIcon: typeof SvelteComponent = undefined;
+	export let primaryButtonIcon: typeof SvelteComponent<any> = undefined;
 	export let primaryButtonIconDescription = '';
 	export let secondaryButtonText = '';
 
@@ -32,7 +32,7 @@
 	}}
 	static
 > -->
-	<div transition:fade>
+	<div transition:fade|global>
 		<!-- <DialogOverlay class="dialog-overlay" /> -->
 		<div class="dialog">
 			<!-- <DialogTitle>{title}</DialogTitle> -->

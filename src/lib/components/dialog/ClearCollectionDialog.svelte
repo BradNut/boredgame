@@ -28,7 +28,7 @@
 	}}
 	static
 > -->
-	<div transition:fade>
+	<div transition:fade|global>
 		<!-- <DialogOverlay class="dialog-overlay" /> -->
 		<div class="dialog">
 			<!-- <DialogTitle>Clear collection</DialogTitle> -->

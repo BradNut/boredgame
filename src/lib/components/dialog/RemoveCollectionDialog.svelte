@@ -64,7 +64,7 @@
 	}}
 	static
 >
-	<div transition:fade>
+	<div transition:fade|global>
 		<DialogOverlay class="dialog-overlay" />
 		<div class="dialog">
 			<DialogTitle>Remove from collection</DialogTitle>

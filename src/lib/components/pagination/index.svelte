@@ -51,7 +51,7 @@
 		> -->
 			<!-- <ListboxButton>{pageSize || 10}</ListboxButton> -->
 			<!-- {#if open} -->
-				<div transition:fade={{ duration: 100 }}>
+				<div transition:fade|global={{ duration: 100 }}>
 					<!-- <ListboxOptions static class="options"> -->
 						{#each pageSizes as size (size)}
 							<!-- <ListboxOption

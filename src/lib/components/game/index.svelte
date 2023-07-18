@@ -85,7 +85,7 @@
 	$: wishlistText = existsInWishlist ? 'Remove from wishlist' : 'Add to wishlist';
 </script>
 
-<article class="grid grid-template-cols-2 gap-4" transition:fade>
+<article class="grid grid-template-cols-2 gap-4" transition:fade|global>
 	<Card>
 		<CardHeader>
 			<CardTitle>{game.game_name}</CardTitle>
@@ -141,7 +141,7 @@
 	</Card>
 </article>
 
-<!-- <article class="game-container" transition:fade>
+<!-- <article class="game-container" transition:fade|global>
 	<h2>{game.name}</h2>
 	<a
 		class="thumbnail"

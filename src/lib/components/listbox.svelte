@@ -42,7 +42,7 @@
       </svg>
     <!-- </ListboxButton> -->
     {#if open}
-      <div transition:fade={{ duration: 200 }}>
+      <div transition:fade|global={{ duration: 200 }}>
         <!-- <ListboxOptions class="options"> -->
           {#each shows as anime (anime.id)}
             <!-- <ListboxOption

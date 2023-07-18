@@ -17,7 +17,7 @@ export type CollectionItemWithGame = Prisma.CollectionItemGetPayload<{
 
 export type Dialog = {
 	isOpen: boolean;
-	content?: typeof SvelteComponent;
+	content?: typeof SvelteComponent<any>;
 	additionalData?: SavedGameType | GameType;
 };
 

@@ -7,12 +7,12 @@ import { search_schema } from '$lib/zodValidation.js';
 
 // Search a user's collection
 export const GET = async ({ url, locals, params, request }) => {
-	try {
-		z.parse;
-	} catch (e) {
-		console.error(e);
-		return error(500, { message: 'Something went wrong' });
-	}
+	// try {
+	// 	z.parse;
+	// } catch (e) {
+	// 	console.error(e);
+	// 	return error(500, { message: 'Something went wrong' });
+	// }
 
 	const searchParams = Object.fromEntries(url.searchParams);
 	const q = searchParams?.q || '';

@@ -14,7 +14,7 @@
 {#if transition.type === 'page' && url}
   <div class="transition" style="display: grid;">
     {#key url}
-        <div style="grid-row: 1 / -1; grid-column: 1 / -1;" in:fade={{ duration: 400, delay: 400 }} out:fade={{ duration: 400}}>
+        <div style="grid-row: 1 / -1; grid-column: 1 / -1;" in:fade|global={{ duration: 400, delay: 400 }} out:fade|global={{ duration: 400}}>
           <slot />
         </div>
     {/key}
