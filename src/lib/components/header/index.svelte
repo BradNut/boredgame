@@ -6,7 +6,6 @@
 	import logo from './bored-game.png';
 
 	export let user: any;
-	console.log('User', user);
 </script>
 
 <header>

@@ -18,21 +18,19 @@
 	// import SkeletonPlaceholder from '../../SkeletonPlaceholder.svelte';
 	import RemoveCollectionDialog from '../../dialog/RemoveCollectionDialog.svelte';
 	import RemoveWishlistDialog from '../../dialog/RemoveWishlistDialog.svelte';
-  import type { SearchSchema } from '$lib/zodValidation';
+  import type { ListGameSchema, SearchSchema } from '$lib/zodValidation';
 
 	interface RemoveGameEvent extends Event {
 		detail: GameType | SavedGameType;
 	}
 
-	export let data: SuperValidated<SearchSchema>;
-	const { form, constraints, errors } = superForm(data, {
-		onSubmit: () => {
-			boredState.update((n) => ({ ...n, loading: true }));
-		},
-	});
-
+	export let data;
+	console.log("text search data", data);
 	export let showButton: boolean = false;
 	export let advancedSearch: boolean = false;
+
+	const { form, errors, enhance, constraints, message }: SuperValidated<SearchSchema> = superForm(data.form);
+	const { form: modifyListForm, errors: listErrors, constraints: listConstraints, enhance: listEnhance, message: listMessage } : SuperValidated<ListGameSchema> = superForm(data.modifyListForm);
 
 	let gameToRemove: GameType | SavedGameType;
 	let numberOfGameSkeleton = 1;
@@ -58,11 +56,11 @@
 		numberOfGameSkeleton = 1;
 	}
 
-	let placeholderList = [...Array(numberOfGameSkeleton).keys()];
+	// let placeholderList = [...Array(numberOfGameSkeleton).keys()];
 
-	if (form?.error) {
-		disclosureOpen = true;
-	}
+	// if (form?.error) {
+	// 	disclosureOpen = true;
+	// }
 
 	async function handleNextPageEvent(event: CustomEvent) {
 		if (+event?.detail?.page === page + 1) {
@@ -87,53 +85,53 @@
 		submitButton.click();
 	}
 
-	function handleRemoveCollection(event: RemoveGameEvent) {
-		gameToRemove = event?.detail;
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
-		}));
-	}
+	// function handleRemoveCollection(event: RemoveGameEvent) {
+	// 	gameToRemove = event?.detail;
+	// 	boredState.update((n) => ({
+	// 		...n,
+	// 		dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
+	// 	}));
+	// }
 
-	function handleRemoveWishlist(event: RemoveGameEvent) {
-		gameToRemove = event?.detail;
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
-		}));
-	}
+	// function handleRemoveWishlist(event: RemoveGameEvent) {
+	// 	gameToRemove = event?.detail;
+	// 	boredState.update((n) => ({
+	// 		...n,
+	// 		dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
+	// 	}));
+	// }
 
-	const submitSearch: SubmitFunction = ({ form, data, action, cancel }) => {
-		const { name } = Object.fromEntries(data);
-		if (!disclosureOpen && name?.length === 0) {
-			toast.send('Please enter a search term', {
-				duration: 3000,
-				type: ToastType.ERROR,
-				dismissible: true
-			});
-			cancel();
-			return;
-		}
+	// const submitSearch: SubmitFunction = ({ form, data, action, cancel }) => {
+	// 	const { name } = Object.fromEntries(data);
+	// 	if (!disclosureOpen && name?.length === 0) {
+	// 		toast.send('Please enter a search term', {
+	// 			duration: 3000,
+	// 			type: ToastType.ERROR,
+	// 			dismissible: true
+	// 		});
+	// 		cancel();
+	// 		return;
+	// 	}
 
-		gameStore.removeAll();
-		boredState.update((n) => ({ ...n, loading: true }));
-		return async ({ result }) => {
-			boredState.update((n) => ({ ...n, loading: false }));
-			// `result` is an `ActionResult` object
-			if (result.type === 'error') {
-				toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
-				await applyAction(result);
-			} else if (result.type === 'success') {
-				gameStore.removeAll();
-				gameStore.addAll(result?.data?.searchData?.games);
-				totalItems = result?.data?.searchData?.totalCount;
-				// toast.send('Success!', { duration: 3000, type: ToastType.INFO, dismissible: true });
-				await applyAction(result);
-			} else {
-				await applyAction(result);
-			}
-		};
-	};
+	// 	gameStore.removeAll();
+	// 	boredState.update((n) => ({ ...n, loading: true }));
+	// 	return async ({ result }) => {
+	// 		boredState.update((n) => ({ ...n, loading: false }));
+	// 		// `result` is an `ActionResult` object
+	// 		if (result.type === 'error') {
+	// 			toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
+	// 			await applyAction(result);
+	// 		} else if (result.type === 'success') {
+	// 			gameStore.removeAll();
+	// 			gameStore.addAll(result?.data?.searchData?.games);
+	// 			totalItems = result?.data?.searchData?.totalCount;
+	// 			// toast.send('Success!', { duration: 3000, type: ToastType.INFO, dismissible: true });
+	// 			await applyAction(result);
+	// 		} else {
+	// 			await applyAction(result);
+	// 		}
+	// 	};
+	// };
 
 	const dev = process.env.NODE_ENV !== 'production';
 
@@ -226,11 +224,7 @@
 		<div class="games-list">
 			{#if $gameStore?.length > 0}
 				{#each $gameStore as game (game.id)}
-					<Game
-						on:handleRemoveWishlist={handleRemoveWishlist}
-						on:handleRemoveCollection={handleRemoveCollection}
-						{game}
-					/>
+					<Game {game} data={modifyListForm} />
 				{/each}
 			{:else}
 			 <h2>Sorry no games found!</h2>

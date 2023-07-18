@@ -1,4 +1,19 @@
+import { Prisma } from '@prisma/client';
 import type { SvelteComponent } from 'svelte';
+
+export const gameInclude = Prisma.validator<Prisma.CollectionItemInclude>()({
+	game: {
+		select: {
+			id: true,
+			name: true,
+			thumb_url: true
+		}
+	}
+});
+
+export type CollectionItemWithGame = Prisma.CollectionItemGetPayload<{
+	include: typeof gameInclude;
+}>;
 
 export type Dialog = {
 	isOpen: boolean;
@@ -55,6 +70,15 @@ export type SavedGameType = {
 	mechanics: GameMechanic[];
 	searchTerms: string;
 	includeInRandom: boolean;
+};
+
+export type ListGameType = {
+	id: string;
+	game_id: string;
+	collection_id: string | undefined;
+	wishlist_id: string | undefined;
+	times_played: number;
+	thumb_url: string;
 };
 
 export type MechanicType = {

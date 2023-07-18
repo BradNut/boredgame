@@ -36,6 +36,20 @@ function IntegerString<schema extends ZodNumber | ZodOptional<ZodNumber>>(schema
 	);
 }
 
+const Search = z.object({
+	q: z.string().trim().optional().default(''),
+	minAge: IntegerString(z.number().min(1).max(120).optional()),
+	minPlayers: IntegerString(z.number().min(1).max(50).optional()),
+	maxPlayers: IntegerString(z.number().min(1).max(50).optional()),
+	exactMinAge: z.preprocess((a) => Boolean(a), z.boolean().optional()),
+	exactMinPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
+	exactMaxPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
+	sort: z.enum(['asc', 'desc']).optional(),
+	sortBy: z.enum(['name', 'min_players', 'max_players', 'min_age', 'times_played']).optional(),
+	limit: z.number().min(10).max(100).default(10),
+	skip: z.number().min(0).default(0)
+});
+
 export const search_schema = z
 	.object({
 		q: z.string().trim().optional().default(''),
@@ -45,6 +59,8 @@ export const search_schema = z
 		exactMinAge: z.preprocess((a) => Boolean(a), z.boolean().optional()),
 		exactMinPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
 		exactMaxPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
+		sort: z.enum(['asc', 'desc']).optional(),
+		sortBy: z.enum(['name', 'min_players', 'max_players', 'min_age', 'times_played']).optional(),
 		limit: z.number().min(10).max(100).default(10),
 		skip: z.number().min(0).default(0)
 	})
@@ -91,6 +107,12 @@ export const search_schema = z
 	);
 
 export type SearchSchema = typeof search_schema;
+
+export const collection_search_schema = Search.extend({
+	collection_id: z.string()
+});
+
+export type CollectionSearchSchema = typeof collection_search_schema;
 
 export const search_result_schema = z.object({
 	client_id: z.string(),

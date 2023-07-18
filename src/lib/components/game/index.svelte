@@ -4,6 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import plusCircle from '@iconify-icons/line-md/plus-circle';
 	import minusCircle from '@iconify-icons/line-md/minus-circle';
+	import { superForm } from 'sveltekit-superforms/client';
 	// import Button from '$lib/components/button/index.svelte';
 	import type { GameType, SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
@@ -15,9 +16,15 @@
   import { convertToSavedGame } from '$lib/util/gameMapper';
 	import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '$components/ui/card';
 	import { Button } from '$components/ui/button';
+	import type { SuperValidated } from 'sveltekit-superforms';
+	import type { ListGameSchema } from '$lib/zodValidation';
+	import type { CollectionItem } from '@prisma/client';
 
-	export let game: GameType | SavedGameType;
+	export let data: SuperValidated<ListGameSchema>;
+	export let game: GameType | CollectionItem;
 	export let detailed: boolean = false;
+
+	const { form, errors, enhance, delayed } = superForm(data);
 
 	const dispatch = createEventDispatcher();
 
@@ -70,8 +77,10 @@
 	// 	}
 	// }
 
-	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
-	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
+	// $: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
+	// $: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
+	$: existsInCollection = game.in_collection;
+	$: existsInWishlist = game.in_wishlist;
 	$: collectionText = existsInCollection ? 'Remove from collection' : 'Add to collection';
 	$: wishlistText = existsInWishlist ? 'Remove from wishlist' : 'Add to wishlist';
 </script>
@@ -79,43 +88,55 @@
 <article class="grid grid-template-cols-2 gap-4" transition:fade>
 	<Card>
 		<CardHeader>
-			<CardTitle>{game.name}</CardTitle>
-			<!-- <CardDescription>Card Description</CardDescription> -->
+			<CardTitle>{game.game_name}</CardTitle>
 		</CardHeader>
 		<CardContent>
-			<img src={game.thumb_url} alt={`Image of ${game.name}`} loading="lazy" decoding="async" />
-			<div class="game-details">
-			{#if game?.players}
-				<p>Players: {game.players}</p>
-				<p>Time: {game.playtime} minutes</p>
-				{#if isGameType(game) && game?.min_age}
-					<p>Min Age: {game.min_age}</p>
-				{/if}
-				{#if detailed && isGameType(game) && game?.description}
-					<div class="description">{@html game.description}</div>
-				{/if}
-			{/if}
-		</div>
+			<a
+				class="thumbnail"
+				href={`/game/${game.game_id}`}
+				title={`View ${game.game_name}`}
+				data-sveltekit-preload-data
+			>
+				<img src={game.thumb_url} alt={`Image of ${game.game_name}`} loading="lazy" decoding="async" />
+				<div class="game-details">
+					{#if game?.players}
+						<p>Players: {game.players}</p>
+						<p>Time: {game.playtime} minutes</p>
+						{#if isGameType(game) && game?.min_age}
+							<p>Min Age: {game.min_age}</p>
+						{/if}
+						{#if detailed && isGameType(game) && game?.description}
+							<div class="description">{@html game.description}</div>
+						{/if}
+					{/if}
+				</div>
+			</a>
 		</CardContent>
 		<CardFooter>
-	<div class="flex gap-2">
-		<Button variant={existsInCollection ? 'destructive' : 'default'} on:click={onCollectionClick}>
-			{collectionText}
-			{#if existsInCollection}
-				<iconify-icon class="ml-2" icon={minusCircle} width="24" height="24" />
-			{:else}
-				<iconify-icon class="ml-2" icon={plusCircle} width="24" height="24" />
-			{/if}
-		</Button>
-		<Button variant={existsInCollection ? 'destructive' : 'default'} on:click={onWishlistClick}>
-			{wishlistText}
-			{#if existsInWishlist}
-				<iconify-icon class="ml-2" icon={minusCircle} width="24" height="24" />
-			{:else}
-				<iconify-icon class="ml-2" icon={plusCircle} width="24" height="24" />
-			{/if}
-		</Button>
-	</div>
+			<div class="grid gap-2 place-items-center">
+				<form method="POST" use:enhance action={`/collection?/${existsInCollection ? 'remove' : 'add'}`}>
+					<input type="hidden" name="id" value={game.id} />
+					<Button variant={existsInCollection ? 'destructive' : 'default'} on:click={onCollectionClick}>
+						{collectionText}
+						{#if existsInCollection}
+							<iconify-icon class="ml-2" icon={minusCircle} width="24" height="24" />
+						{:else}
+							<iconify-icon class="ml-2" icon={plusCircle} width="24" height="24" />
+						{/if}
+					</Button>
+				</form>
+				<form method="POST" use:enhance action={`/wishlist?/${existsInWishlist ? 'remove' : 'add'}`}>
+					<input type="hidden" name="id" value={game.id} />
+					<Button variant={existsInWishlist ? 'destructive' : 'default'} on:click={onWishlistClick}>
+						{wishlistText}
+						{#if existsInWishlist}
+							<iconify-icon class="ml-2" icon={minusCircle} width="24" height="24" />
+						{:else}
+							<iconify-icon class="ml-2" icon={plusCircle} width="24" height="24" />
+						{/if}
+					</Button>
+				</form>
+			</div>
 		</CardFooter>
 	</Card>
 </article>

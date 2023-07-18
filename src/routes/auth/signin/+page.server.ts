@@ -48,6 +48,32 @@ export const actions = {
 					}
 				}
 			});
+			if (user) {
+				await prisma.collection.upsert({
+					where: {
+						user_id: user.id
+					},
+					create: {
+						user_id: user.id
+					},
+					update: {
+						user_id: user.id
+					}
+				});
+				await prisma.wishlist.upsert({
+					where: {
+						user_id: user.id
+					},
+					create: {
+						user_id: user.id,
+						name: 'My Wishlist'
+					},
+					update: {
+						user_id: user.id,
+						name: 'My Wishlist'
+					}
+				});
+			}
 		} catch (e) {
 			// TODO: need to return error message to the client
 			console.error(e);

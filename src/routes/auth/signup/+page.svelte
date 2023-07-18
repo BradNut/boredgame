@@ -32,9 +32,7 @@ import { userSchema } from '$lib/config/zod-schemas.js';
 				Signup for an account
 			</h2>
 			<Label for="firstName">First Name</Label>
-			<Input
-				type="text"
-				id="firstName" class={$errors.firstName && "outline outline-destructive"} name="firstName" placeholder="First Name" autocomplete="given-name" data-invalid={$errors.firstName} bind:value={$form.firstName} />
+			<Input type="text" id="firstName" class={$errors.firstName && "outline outline-destructive"} name="firstName" placeholder="First Name" autocomplete="given-name" data-invalid={$errors.firstName} bind:value={$form.firstName} />
 			{#if $errors.firstName}
 				<p class="text-sm text-destructive">{$errors.firstName}</p>
 			{/if}

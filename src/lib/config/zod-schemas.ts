@@ -1,5 +1,23 @@
 import { z } from 'zod';
 
+export type ListGame = {
+	id: string;
+	game_name: string;
+	game_id: string;
+	collection_id: string;
+	wishlist_id: string;
+	times_played: number;
+	thumb_url: string | null;
+	in_collection: boolean;
+	in_wishlist: boolean;
+};
+
+export const modifyListGameSchema = z.object({
+	id: z.string()
+});
+
+export type ModifyListGame = typeof modifyListGameSchema;
+
 export const userSchema = z.object({
 	firstName: z.string().trim().optional(),
 	lastName: z.string().trim().optional(),

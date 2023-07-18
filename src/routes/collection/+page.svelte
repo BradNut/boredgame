@@ -1,6 +1,10 @@
 <script lang="ts">
 	// import { tick, onDestroy } from 'svelte';
-	// import Game from '$lib/components/game/index.svelte';
+	import Game from '$lib/components/game/index.svelte';
+	import type { SearchSchema } from '$lib/zodValidation.js';
+	import { superForm } from 'sveltekit-superforms/client';
+	import type { SuperValidated } from 'sveltekit-superforms';
+	import type { ModifyListGame } from '$lib/config/zod-schemas.js';
 	// import { collectionStore } from '$lib/stores/collectionStore';
 	// import type { GameType, SavedGameType } from '$lib/types';
 	// import { boredState } from '$lib/stores/boredState';
@@ -11,7 +15,8 @@
 
 	export let data;
 	console.log(`Page data: ${JSON.stringify(data)}`);
-	// let collectionItems = data?.collection?.collectionItems;
+	let collectionItems = data?.collection || [];
+	console.log('collectionItems', collectionItems);
 
 	// let gameToRemove: GameType | SavedGameType;
 	// let pageSize = 10;
@@ -82,21 +87,17 @@
 <h1>Your Collection</h1>
 <!-- <input type="text" id="search" name="search" placeholder="Search Your Collection" bind:value={$searchStore.search} /> -->
 
-<!-- <div class="games">
+<div class="games">
 	<div class="games-list">
-		{#if $collectionStore.length === 0}
+		{#if collectionItems.length === 0}
 			<h2>No games in your collection</h2>
 		{:else}
-			{#each gamesShown as game (game.id)}
-				<Game
-					on:handleRemoveWishlist={handleRemoveWishlist}
-					on:handleRemoveCollection={handleRemoveCollection}
-					{game}
-				/>
+			{#each collectionItems as game (game.game_id)}
+				<Game {game} data={data.listManageForm} />
 			{/each}
 		{/if}
 	</div>
-	{#if $collectionStore.length !== 0}
+	<!-- {#if $collectionStore.length !== 0}
 		<Pagination
 			{pageSize}
 			{page}
@@ -108,8 +109,8 @@
 			on:previousPageEvent={handlePreviousPageEvent}
 			on:perPageEvent={handlePerPageEvent}
 		/>
-	{/if}
-</div> -->
+	{/if} -->
+</div>
 
 <style lang="postcss">
 	h1 {

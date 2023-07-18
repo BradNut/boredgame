@@ -4,13 +4,14 @@
 	import TextSearch from '$lib/components/search/textSearch/index.svelte';
 
 	export let data;
+	console.log("search page data", data);
 
-	$: if (data?.searchData?.games) {
-		gameStore.removeAll();
-		gameStore.addAll(data?.searchData?.games);
-	}
+	// $: if (data?.searchData?.games) {
+	// 	gameStore.removeAll();
+	// 	gameStore.addAll(data?.searchData?.games);
+	// }
 </script>
 
 <div class="game-search">
-	<TextSearch showButton advancedSearch data={data.form} />
+	<TextSearch showButton advancedSearch {data} />
 </div>

@@ -6,10 +6,11 @@ import prisma from '$lib/prisma.js';
 import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
 import { search_schema } from '$lib/zodValidation';
+import { listGameSchema } from '$lib/config/zod-schemas.js';
 
-async function searchForGames(urlQueryParams: SearchQuery) {
+async function searchForGames(urlQueryParams: SearchQuery, locals) {
 	try {
-		let dbGames = await prisma.game.findMany({
+		let games = await prisma.game.findMany({
 			where: {
 				name: {
 					search: urlQueryParams?.name
@@ -36,9 +37,10 @@ async function searchForGames(urlQueryParams: SearchQuery) {
 				name: 'asc'
 			}
 		});
-		console.log('dbGames', dbGames);
+		console.log('games from DB', games);
+		let totalCount = games?.length || 0;
 
-		if (!dbGames || dbGames.length === 0) {
+		if (!games || games.length === 0) {
 			const url = new URL(
 				`https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''}`
 			);
@@ -55,8 +57,8 @@ async function searchForGames(urlQueryParams: SearchQuery) {
 				throw error(response.status);
 			}
 
-			const games: GameType[] = [];
-			let totalCount = 0;
+			// const games: GameType[] = [];
+			// let totalCount = 0;
 			if (response.ok) {
 				const gameResponse = await response.json();
 				const gameList: GameType[] = gameResponse?.games;
@@ -72,16 +74,57 @@ async function searchForGames(urlQueryParams: SearchQuery) {
 					games.push(boredGame);
 				});
 			}
-			return {
-				totalCount,
-				games
-			};
-		} else {
-			return {
-				totalCount: dbGames.length,
-				games: dbGames
-			};
 		}
+
+		if (locals?.user) {
+			const game_ids = games.map((game) => game.id);
+			console.log('game_ids', game_ids);
+			const collections = await prisma.collection.findMany({
+				where: {
+					user_id: locals.user.id
+				},
+				include: {
+					items: {
+						where: {
+							game_id: {
+								in: game_ids
+							}
+						}
+					}
+				}
+			});
+			console.log('collections', collections);
+			const wishlists = await prisma.wishlist.findMany({
+				where: {
+					user_id: locals.user.id
+				},
+				include: {
+					items: {
+						where: {
+							id: {
+								in: game_ids
+							}
+						}
+					}
+				}
+			});
+			// console.log('wishlist_items', wishlist_items);
+			for (const game of games) {
+				console.log(
+					'Checking collection',
+					collections.findIndex((item) => item.items.some((i) => i.game_id === game.id))
+				);
+				game.in_collection =
+					collections.findIndex((item) => item.items.some((i) => i.game_id === game.id)) === 0;
+				game.in_wishlist =
+					wishlists.findIndex((item) => item.items.some((i) => i.game_id === game.id)) === 0;
+			}
+		}
+
+		return {
+			totalCount,
+			games
+		};
 	} catch (e) {
 		console.log(`Error searching board games ${e}`);
 	}
@@ -178,9 +221,12 @@ export const load = async (event) => {
 		skip: 0
 	};
 	const searchParams = Object.fromEntries(url?.searchParams);
+	console.log('searchParams', searchParams);
 	searchParams.limit = searchParams.limit || `${defaults.limit}`;
 	searchParams.skip = searchParams.skip || `${defaults.skip}`;
+	searchParams.order = searchParams.order || 'asc';
 	const form = await superValidate(searchParams, search_schema);
+	const modifyListForm = await superValidate(listGameSchema);
 
 	const queryParams: SearchQuery = {
 		order_by: 'rank',
@@ -223,10 +269,12 @@ export const load = async (event) => {
 	}
 
 	const urlQueryParams = new URLSearchParams(newQueryParams);
+	const searchData = await searchForGames(urlQueryParams, locals);
 
 	return {
 		form,
-		searchData: await searchForGames(urlQueryParams)
+		modifyListForm,
+		searchData
 	};
 };
 

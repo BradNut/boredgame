@@ -3,6 +3,7 @@ import { setError, superValidate } from 'sveltekit-superforms/server';
 import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$db/roles';
+import prisma from '$lib/prisma.js';
 
 const signUpSchema = userSchema
 	.pick({
@@ -73,6 +74,17 @@ export const actions = {
 				}
 			});
 			add_user_to_role(user.id, 'user');
+			await prisma.collection.create({
+				data: {
+					user_id: user.id
+				}
+			});
+			await prisma.wishlist.create({
+				data: {
+					user_id: user.id,
+					name: 'My Wishlist'
+				}
+			});
 
 			console.log('User', user);
 

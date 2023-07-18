@@ -91,9 +91,9 @@ model Collection {
 
 model CollectionItem {
   id String @id @default(cuid())
-  collection_id String
+  collection_id String @unique
   collection Collection @relation(references: [id], fields: [collection_id], onDelete: Cascade)
-  game_id String
+  game_id String @unique
   game Game @relation(references: [id], fields: [game_id])
   times_played Int
 
@@ -104,7 +104,7 @@ model CollectionItem {
 model Wishlist {
   id String @id @default(cuid())
   name String
-  user_id String
+  user_id String @unique
   auth_user AuthUser @relation(references: [id], fields: [user_id])
   items WishlistItem[]
 
@@ -114,9 +114,9 @@ model Wishlist {
 
 model WishlistItem {
   id String @id @default(cuid())
-  wishlist_id String
+  wishlist_id String @unique
   wishlist Wishlist @relation(references: [id], fields: [wishlist_id], onDelete: Cascade)
-  game_id String
+  game_id String @unique
   game Game @relation(references: [id], fields: [game_id])
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @updatedAt @db.Timestamp(6)
@@ -184,7 +184,7 @@ model Publisher {
   primary_publisher Game[]    @relation("PrimaryPublishers")
   created_at        DateTime  @default(now()) @db.Timestamp(6)
   updated_at        DateTime  @updatedAt @db.Timestamp(6)
-  
+
   @@fulltext([name])
   @@map("publishers")
 }

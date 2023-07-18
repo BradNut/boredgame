@@ -4,7 +4,7 @@
 
 import type { AuthUser } from '@prisma/client';
 
-type User = Omit<AuthUser, 'id' | 'created_at' | 'updated_at'>;
+type User = Omit<AuthUser, 'created_at' | 'updated_at'>;
 
 // src/app.d.ts
 declare global {
