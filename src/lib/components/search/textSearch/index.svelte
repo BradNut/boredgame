@@ -45,7 +45,7 @@
 	let disclosureOpen = $errors.length > 0 || false;
 
 	// $: skip = (page - 1) * pageSize;
-	// $: showPagination = $gameStore?.length > 1;
+	$: showPagination = totalCount > pageSize;
 
 	if ($xl) {
 		numberOfGameSkeleton = 8;

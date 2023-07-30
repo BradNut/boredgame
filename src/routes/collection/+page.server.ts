@@ -31,7 +31,7 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	try {
 		let collection = await prisma.collection.findUnique({
 			where: {
-				user_id: session.userId
+				user_id: session.user.userId
 			}
 		});
 		console.log('collection', collection);
