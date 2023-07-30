@@ -1,5 +1,6 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
+import { redirect } from 'sveltekit-flash-message/server';
 import { auth } from '$lib/server/lucia';
 import prisma from '$lib/prisma.js';
 import { userSchema } from '$lib/config/zod-schemas';
@@ -13,7 +14,8 @@ export const load = async (event) => {
 	console.log('sign in load event', event);
 	const session = await event.locals.auth.validate();
 	if (session) {
-		throw redirect(302, '/');
+		const message = { type: 'info', message: 'You are already signed in' };
+		throw redirect('/', message, event);
 	}
 	const form = await superValidate(event, signInSchema);
 	return {
@@ -40,9 +42,9 @@ export const actions = {
 			});
 			event.locals.auth.setSession(session);
 
-			const user = await prisma.authUser.findUnique({
+			const user = await prisma.user.findUnique({
 				where: {
-					id: session.userId
+					id: session.user.userId
 				},
 				include: {
 					roles: {
@@ -86,6 +88,8 @@ export const actions = {
 		}
 		form.data.username = '';
 		form.data.password = '';
-		return { form };
+		const message = { type: 'success', message: 'Signed In!' };
+		// return { form, message };
+		throw redirect('/', message, event);
 	}
 };

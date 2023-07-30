@@ -1,9 +1,12 @@
 <script lang="ts">
+	import { page } from '$app/stores';
+	import { superForm } from 'sveltekit-superforms/client';
+	import * as flashModule from 'sveltekit-flash-message/client';
 	import Button from '$components/ui/button/Button.svelte';
   import Input from '$components/ui/input/Input.svelte';
-import Label from '$components/ui/label/Label.svelte';
-import { userSchema } from '$lib/config/zod-schemas.js';
-  import { superForm } from 'sveltekit-superforms/client';
+	import Label from '$components/ui/label/Label.svelte';
+	import { userSchema } from '$lib/config/zod-schemas.js';
+	import toast from 'svelte-french-toast';
 
 	export let data;
 
@@ -17,11 +20,34 @@ import { userSchema } from '$lib/config/zod-schemas.js';
   });
 
   const { form, errors, constraints, enhance, delayed } = superForm(data.form, {
+		flashMessage: {
+			module: flashModule,
+			onError: ({ result, message }) => {
+				const errorMessage = result.error.message;
+				message.set({ type: 'error', message: errorMessage });
+			}
+		},
     taintedMessage: null,
     validators: signUpSchema,
     delayMs: 0,
   });
+
+	const flash = flashModule.getFlash(page);
+
+	$: {
+		if ($flash) {
+			toast.error($flash.message, {
+				duration: 5000
+			});
+		}
+	}
+
 </script>
+
+<!-- {#if $flash}
+  {@const bg = $flash.type == 'success' ? '#3D9970' : '#FF4136'}
+  <div style:background-color={bg} class="flash">{$flash.message}</div>
+{/if} -->
 
 <div class="page">
 	<form method="POST" action="/auth/signup" use:enhance>

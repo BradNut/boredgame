@@ -17,12 +17,6 @@ dependencies:
   '@iconify-icons/mdi':
     specifier: ^1.2.47
     version: 1.2.47
-  '@leveluptuts/svelte-side-menu':
-    specifier: ^1.0.5
-    version: 1.0.5
-  '@leveluptuts/svelte-toy':
-    specifier: ^2.0.3
-    version: 2.0.3
   '@lucia-auth/adapter-mysql':
     specifier: ^1.1.1
     version: 1.1.1(lucia-auth@1.8.0)
@@ -71,6 +65,9 @@ dependencies:
   radix-svelte:
     specifier: ^0.8.0
     version: 0.8.0(svelte@4.1.1)
+  svelte-french-toast:
+    specifier: ^1.2.0
+    version: 1.2.0(svelte@4.1.1)
   svelte-lazy:
     specifier: ^1.2.1
     version: 1.2.1(svelte@4.1.1)
@@ -1142,16 +1139,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.15
-
-  /@leveluptuts/svelte-side-menu@1.0.5:
-    resolution: {integrity: sha512-czPmr0LEjVhr7qXYZtH4PrUrfHPYg9nS7ZHH+xDINKoajkERWlHlsBtdoJC5ZTMzGvdhLCLfF70q4xeMzJgS7w==}
-    dev: false
-
-  /@leveluptuts/svelte-toy@2.0.3:
-    resolution: {integrity: sha512-A2pjSG4UQbWLffD3r3cC8zaNwtTmBoNJJ2TIlNzVtdlUXk1xrYtscMopB+N2ztHnfjlKWyIee4TEnF3OBVwIfQ==}
-    dependencies:
-      lodash.set: 4.3.2
-    dev: false
 
   /@lucia-auth/adapter-mysql@1.1.1(lucia-auth@1.8.0):
     resolution: {integrity: sha512-br+/OBDNJ+eRc6RrZnnC20ef+2VEMrXFxNYvsbryPw64ito7vg40STblpENdjJF0o4R10mjWTO43wQ+56jyXLA==}
@@ -2719,10 +2706,6 @@ packages:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: true
 
-  /lodash.set@4.3.2:
-    resolution: {integrity: sha512-4hNPN5jlm/N/HLMCO43v8BXKq9Z7QdAGc/VGrRD61w8gN9g/6jF9A4L1pbUgBLCffi0w9VsXfTOij5x8iTyFvg==}
-    dev: false
-
   /logform@2.5.1:
     resolution: {integrity: sha512-9FyqAm9o9NKKfiAKfZoYo9bGXXuwMkxQiQttkT4YjjVtQVIQtK6LmVtlxmCaFswo6N4AfEkHqZTV0taDtPotNg==}
     dependencies:
@@ -3857,6 +3840,15 @@ packages:
       svelte: 4.1.1
     dev: true
 
+  /svelte-french-toast@1.2.0(svelte@4.1.1):
+    resolution: {integrity: sha512-5PW+6RFX3xQPbR44CngYAP1Sd9oCq9P2FOox4FZffzJuZI2mHOB7q5gJBVnOiLF5y3moVGZ7u2bYt7+yPAgcEQ==}
+    peerDependencies:
+      svelte: ^3.57.0 || ^4.0.0
+    dependencies:
+      svelte: 4.1.1
+      svelte-writable-derived: 3.1.0(svelte@4.1.1)
+    dev: false
+
   /svelte-hmr@0.15.2(svelte@4.1.1):
     resolution: {integrity: sha512-q/bAruCvFLwvNbeE1x3n37TYFb3mTBJ6TrCq6p2CoFbSTNhDE9oAtEfpy+wmc9So8AG0Tja+X0/mJzX9tSfvIg==}
     engines: {node: ^12.20 || ^14.13.1 || >= 16}
@@ -3938,6 +3930,14 @@ packages:
       svelte: 4.1.1
       typescript: 5.1.6
     dev: true
+
+  /svelte-writable-derived@3.1.0(svelte@4.1.1):
+    resolution: {integrity: sha512-cTvaVFNIJ036vSDIyPxJYivKC7ZLtcFOPm1Iq6qWBDo1fOHzfk6ZSbwaKrxhjgy52Rbl5IHzRcWgos6Zqn9/rg==}
+    peerDependencies:
+      svelte: ^3.2.1 || ^4.0.0-next.1
+    dependencies:
+      svelte: 4.1.1
+    dev: false
 
   /svelte@4.1.1:
     resolution: {integrity: sha512-Enick5fPFISLoVy0MFK45cG+YlQt6upw8skEK9zzTpJnH1DqEv8xOZwizCGSo3Q6HZ7KrZTM0J18poF7aQg5zw==}

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import "../app.postcss";
 	import { onMount } from "svelte";
-	// import { getFlash } from 'sveltekit-flash-message/client';
+	import { getFlash } from 'sveltekit-flash-message/client';
+	import toast, { Toaster } from 'svelte-french-toast';
   import { navigating, page } from '$app/stores';
 	import { browser } from '$app/environment';
 	import debounce from 'just-debounce-it';
-	// import { Toy } from '@leveluptuts/svelte-toy';
 	import 'iconify-icon';
 	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/index.svelte';
@@ -16,9 +16,7 @@
 	import { boredState } from '$lib/stores/boredState';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
-	import Toast from '$lib/components/toast/Toast.svelte';
 	import { theme } from '$state/theme';
-	// import '$styles/styles.pcss';
 	import type { SavedGameType } from '$lib/types';
 
 	$: {
@@ -33,7 +31,6 @@
 	}
 
 	$: isOpen = $boredState?.dialog?.isOpen;
-	// const flash = getFlash(page);
 
 	if (browser) {
 	const collator = new Intl.Collator('en');
@@ -74,6 +71,27 @@
 	export let data;
 	$: ({ user } = data);
 
+	const flash = getFlash(page);
+	let flashType;
+	let flashMessage;
+	$: flashType = $flash?.type;
+	$: flashMessage = $flash?.message;
+	console.log('flashType', flashType);
+	console.log('flashMessage', flashMessage);
+
+	// if ($flash && flashType && flashMessage) {
+	// 	switch (flashType) {
+	// 		case 'success':
+	// 			toast.success(flashMessage);
+	// 			break;
+	// 		case 'error':
+	// 			toast.error(flashMessage);
+	// 			break;
+	// 		default:
+	// 			toast.error(flashMessage);
+	// 	}
+	// }
+
 	onMount(() => {
 		// set the theme to the user's active theme
 		$theme = user?.theme || 'system';
@@ -85,27 +103,29 @@
 	<Analytics />
 {/if}
 
-<!-- {#if dev}
-	<Toy
-		register={{
-			boredState,
-			collectionStore,
-			wishlistStore,
-			gameStore,
-			toast
-		}}
-	/>
-{/if} -->
-
 <div class="wrapper">
-	<Header user="{data.user}"></Header>
-		<main>
-			<Transition url={data.url} transition={{ type: 'page' }}>
-				<slot></slot>
-			</Transition>
-		</main>
+	<Header user={data.user} />
+
+	<main>
+		<Transition url={data.url} transition={{ type: 'page' }}>
+			<slot />
+		</Transition>
+	</main>
+
 	<Footer />
 </div>
+
+{#if $flash}
+  <div class="status"
+    class:error={$flash.type == 'error'}
+    class:success={$flash.type == 'success'}
+  >
+    {$flash.message}
+  </div>
+{/if}
+
+<Toaster />
+
 {#if $boredState?.loading}
 	<Portal>
 			<div class="loading">
@@ -120,13 +140,16 @@
 		<svelte:component this={$boredState?.dialog?.content}></svelte:component>
 	</div>
 {/if}
-<Toast></Toast>
-<!-- {#if $flash}
-  {@const bg = $flash.type == 'success' ? '#3D9970' : '#FF4136'}
-  <div style:background-color={bg} class="flash">{$flash.message}</div>
-{/if} -->
 
 <style lang="postcss">
+	.flash {
+		display: inline-block;
+		position: absolute;
+		place-items: center;
+		padding: 0.5rem;
+		border-radius: 2px;
+	}
+
 	.loading {
 		position: fixed;
 		top: 50%;

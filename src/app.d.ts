@@ -10,7 +10,7 @@ type User = Omit<User, 'created_at' | 'updated_at'>;
 declare global {
 	namespace App {
 		interface PageData {
-			flash?: { type: 'success' | 'error'; message: string };
+			flash?: { type: 'success' | 'error' | 'info'; message: string };
 		}
 		interface Locals {
 			auth: import('lucia').AuthRequest;

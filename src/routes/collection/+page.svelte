@@ -5,6 +5,8 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import type { ModifyListGame } from '$lib/config/zod-schemas.js';
+	import { onMount } from 'svelte';
+	import toast from 'svelte-french-toast';
 	// import { collectionStore } from '$lib/stores/collectionStore';
 	// import type { GameType, SavedGameType } from '$lib/types';
 	// import { boredState } from '$lib/stores/boredState';

@@ -14,7 +14,7 @@ const config = {
 			$assets: './src/assets',
 			$components: './src/components',
 			'$components/*': 'src/lib/components/*',
-			$db: './src/db',
+			$server: './src/server',
 			$lib: './src/lib',
 			$state: './src/state',
 			$styles: './src/styles',

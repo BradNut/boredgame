@@ -1,11 +1,13 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, redirect, error } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect as flashRedirect } from 'sveltekit-flash-message/server';
 import { LuciaError } from 'lucia';
 import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
-import { add_user_to_role } from '$db/roles';
+import { add_user_to_role } from '$server/roles';
 import prisma from '$lib/prisma.js';
+import { Schema } from 'zod';
+import type { Message } from '$lib/types.js';
 
 const signUpSchema = userSchema
 	.pick({
@@ -38,7 +40,7 @@ export const load = async (event) => {
 	if (session) {
 		throw redirect(302, '/');
 	}
-	const form = await superValidate(event, signUpSchema);
+	const form = await superValidate<typeof signUpSchema, Message>(event, signUpSchema);
 	return {
 		form
 	};
@@ -46,7 +48,7 @@ export const load = async (event) => {
 
 export const actions = {
 	default: async (event) => {
-		const form = await superValidate(event, signUpSchema);
+		const form = await superValidate<typeof signUpSchema, Message>(event, signUpSchema);
 
 		if (!form.valid) {
 			return fail(400, {
@@ -99,13 +101,18 @@ export const actions = {
 			event.locals.auth.setSession(session);
 			// const message = { type: 'success', message: 'Signed Up!' } as const;
 			// throw flashRedirect(message, event);
-		} catch (error) {
-			if (error instanceof LuciaError && error.message === `DUPLICATE_KEY_ID`) {
+		} catch (e) {
+			if (e instanceof LuciaError && e.message === `DUPLICATE_KEY_ID`) {
 				// key already exists
-				console.error(error);
+				console.error('Lucia Error: ', e);
 			}
-			console.log(error);
-			return setError(form, '', 'Unable to create your account. Please try again.');
+			console.log(e);
+			const message = {
+				type: 'error',
+				message: 'Unable to create your account. Please try again.'
+			};
+			throw error(500, message);
+			// return setError(form, '', message);
 		}
 	}
 };

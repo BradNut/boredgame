@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { fly, fade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
-	import Portal from '../../Portal.svelte';
+	import Portal from '$lib/Portal.svelte';
 	import ToastMessage from './ToastMessage.svelte';
 	import { toast } from './toast';
 </script>
@@ -10,6 +10,8 @@
 	<div class="toast-wrapper">
 		{#each $toast as toastData (toastData.id)}
 			<div
+				role="button"
+				tabindex="0"
 				aria-label={toastData.dismissible ? 'Click to dismiss' : `${toastData.message}`}
 				on:click={() => toastData.dismissible && toast.remove(toastData.id)}
 				on:keydown={() => toastData.dismissible && toast.remove(toastData.id)}

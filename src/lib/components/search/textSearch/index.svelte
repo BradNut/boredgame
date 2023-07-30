@@ -19,6 +19,9 @@
 	import RemoveCollectionDialog from '../../dialog/RemoveCollectionDialog.svelte';
 	import RemoveWishlistDialog from '../../dialog/RemoveWishlistDialog.svelte';
   import type { ListGameSchema, SearchSchema } from '$lib/zodValidation';
+	import { Label } from '$components/ui/label';
+	import { Input } from '$components/ui/input';
+	import { Button } from '$components/ui/button';
 
 	interface RemoveGameEvent extends Event {
 		detail: GameType | SavedGameType;
@@ -147,22 +150,11 @@
 <form id="search-form" action="/search" method="GET">
 	<div class="search">
 		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
-			<label class="label" for="q">
-				<span>Search</span>
-				<input
-					id="q"
-					class="input"
-					name="q"
-					bind:value={$form.q}
-					data-invalid={$errors?.q}
-					{...$constraints.q}
-					type="search"
-					aria-label="Search board games"
-					placeholder="Search board games"
-			/>
-			</label>
-			{#if $errors?.q}<span class="invalid">{$errors?.q}</span>{/if}
-
+			<Label for="label">Search</Label>
+			<Input type="text" id="q" class={$errors.q && "outline outline-destructive"} name="search" placeholder="Search board games" data-invalid={$errors.q} bind:value={$form.q} />
+			{#if $errors.q}
+				<p class="text-sm text-destructive">{$errors.q}</p>
+			{/if}
 			<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />
 			<input id="limit" type="hidden" name="limit" bind:value={$form.limit} />
 		</fieldset>
@@ -196,15 +188,7 @@
 		{/if}
 	</div>
 	{#if showButton}
-		<button
-			id="search-submit"
-			class="btn"
-			type="submit"
-			disabled={submitting}
-			bind:this={submitButton}
-		>
-			Submit
-		</button>
+		<Button type="submit">Submit</Button>
 	{/if}
 </form>
 

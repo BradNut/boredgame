@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
+	import * as flashModule from 'sveltekit-flash-message/client';
 	import { AlertCircle } from "lucide-svelte";
 	import { userSchema } from '$lib/config/zod-schemas.js';
 	import Label from '$components/ui/label/Label.svelte';
@@ -9,6 +10,17 @@
 
 	export let data;
 	const { form, errors, enhance, delayed } = superForm(data.form, {
+		flashMessage: {
+			module: flashModule,
+			onError: ({ result, message }) => {
+				// Error handling for the flash message:
+      // - result is the ActionResult
+      // - message is the flash store (not the status message store)
+      const errorMessage = result.error.message
+      message.set({ type: 'error', message: errorMessage });
+			}
+		},
+		syncFlashMessage: false,
 		taintedMessage: null,
 		validationMethod: 'oninput',
 		delayMs: 0,

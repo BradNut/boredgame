@@ -1,6 +1,8 @@
 import { Prisma } from '@prisma/client';
 import type { SvelteComponent } from 'svelte';
 
+export type Message = { status: 'error' | 'success' | 'warning' | 'info'; text: string };
+
 export const gameInclude = Prisma.validator<Prisma.CollectionItemInclude>()({
 	game: {
 		select: {
