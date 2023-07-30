@@ -10,6 +10,7 @@ const signInSchema = userSchema.pick({
 });
 
 export const load = async (event) => {
+	console.log('sign in load event', event);
 	const session = await event.locals.auth.validate();
 	if (session) {
 		throw redirect(302, '/');
@@ -33,7 +34,10 @@ export const actions = {
 
 		try {
 			const key = await auth.useKey('username', form.data.username, form.data.password);
-			const session = await auth.createSession(key.userId);
+			const session = await auth.createSession({
+				userId: key.userId,
+				attributes: {}
+			});
 			event.locals.auth.setSession(session);
 
 			const user = await prisma.authUser.findUnique({

@@ -20,21 +20,22 @@
 	import type { ListGameSchema } from '$lib/zodValidation';
 	import type { CollectionItem } from '@prisma/client';
 
-	export let data: SuperValidated<ListGameSchema>;
+	// export let data: SuperValidated<ListGameSchema>;
 	export let game: GameType | CollectionItem;
 	export let detailed: boolean = false;
 
-	const { form, errors, enhance, delayed } = superForm(data);
+	// const { form, errors, enhance, delayed } = superForm(data);
+	// data={modifyListForm}
 
-	const dispatch = createEventDispatcher();
+	// const dispatch = createEventDispatcher();
 
-	function removeGameFromWishlist() {
-		dispatch('handleRemoveWishlist', game);
-	}
+	// function removeGameFromWishlist() {
+	// 	dispatch('handleRemoveWishlist', game);
+	// }
 
-	function removeGameFromCollection() {
-		dispatch('handleRemoveCollection', game);
-	}
+	// function removeGameFromCollection() {
+	// 	dispatch('handleRemoveCollection', game);
+	// }
 
 	function onCollectionClick() {
 		if (existsInCollection) {
@@ -88,16 +89,16 @@
 <article class="grid grid-template-cols-2 gap-4" transition:fade|global>
 	<Card>
 		<CardHeader>
-			<CardTitle>{game.game_name}</CardTitle>
+			<CardTitle>{game.name}</CardTitle>
 		</CardHeader>
 		<CardContent>
 			<a
 				class="thumbnail"
-				href={`/game/${game.game_id}`}
+				href={`/game/${game.id}`}
 				title={`View ${game.game_name}`}
 				data-sveltekit-preload-data
 			>
-				<img src={game.thumb_url} alt={`Image of ${game.game_name}`} loading="lazy" decoding="async" />
+				<img src={game.thumb_url} alt={`Image of ${game.name}`} loading="lazy" decoding="async" />
 				<div class="game-details">
 					{#if game?.players}
 						<p>Players: {game.players}</p>
@@ -114,7 +115,7 @@
 		</CardContent>
 		<CardFooter>
 			<div class="grid gap-2 place-items-center">
-				<form method="POST" use:enhance action={`/collection?/${existsInCollection ? 'remove' : 'add'}`}>
+				<form method="POST" action={`/collection?/${existsInCollection ? 'remove' : 'add'}`}>
 					<input type="hidden" name="id" value={game.id} />
 					<Button variant={existsInCollection ? 'destructive' : 'default'} on:click={onCollectionClick}>
 						{collectionText}
@@ -125,7 +126,7 @@
 						{/if}
 					</Button>
 				</form>
-				<form method="POST" use:enhance action={`/wishlist?/${existsInWishlist ? 'remove' : 'add'}`}>
+				<form method="POST" action={`/wishlist?/${existsInWishlist ? 'remove' : 'add'}`}>
 					<input type="hidden" name="id" value={game.id} />
 					<Button variant={existsInWishlist ? 'destructive' : 'default'} on:click={onWishlistClick}>
 						{wishlistText}

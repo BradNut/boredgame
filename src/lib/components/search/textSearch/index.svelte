@@ -29,8 +29,9 @@
 	export let showButton: boolean = false;
 	export let advancedSearch: boolean = false;
 
+	const { games, totalCount } = data?.searchData;
 	const { form, errors, enhance, constraints, message }: SuperValidated<SearchSchema> = superForm(data.form);
-	const { form: modifyListForm, errors: listErrors, constraints: listConstraints, enhance: listEnhance, message: listMessage } : SuperValidated<ListGameSchema> = superForm(data.modifyListForm);
+	// const { form: modifyListForm, errors: listErrors, constraints: listConstraints, enhance: listEnhance, message: listMessage } : SuperValidated<ListGameSchema> = superForm(data.modifyListForm);
 
 	let gameToRemove: GameType | SavedGameType;
 	let numberOfGameSkeleton = 1;
@@ -43,8 +44,8 @@
 	let name = form?.name || '';
 	let disclosureOpen = $errors.length > 0 || false;
 
-	$: skip = (page - 1) * pageSize;
-	$: showPagination = $gameStore?.length > 1;
+	// $: skip = (page - 1) * pageSize;
+	// $: showPagination = $gameStore?.length > 1;
 
 	if ($xl) {
 		numberOfGameSkeleton = 8;
@@ -222,9 +223,9 @@
 	<div class="games">
 		<h1>Games Found:</h1>
 		<div class="games-list">
-			{#if $gameStore?.length > 0}
-				{#each $gameStore as game (game.id)}
-					<Game {game} data={modifyListForm} />
+			{#if totalCount > 0}
+				{#each games as game (game.id)}
+					<Game {game} />
 				{/each}
 			{:else}
 			 <h2>Sorry no games found!</h2>

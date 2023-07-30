@@ -21,7 +21,7 @@ export async function GET({ url, locals, params }) {
 
 	let collection = await prisma.collection.findUnique({
 		where: {
-			user_id: locals.user.id
+			user_id: locals.user.userId
 		}
 	});
 	console.log('collection', collection);

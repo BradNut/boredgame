@@ -6,37 +6,75 @@ import prisma from '$lib/prisma.js';
 import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
 import { search_schema } from '$lib/zodValidation';
-import { listGameSchema } from '$lib/config/zod-schemas.js';
+import type { PageServerLoad } from '../$types.js';
+// import { listGameSchema } from '$lib/config/zod-schemas.js';
 
-async function searchForGames(urlQueryParams: SearchQuery, locals) {
+/**
+ * Asynchronous function searchForGames to fetch games from a local and remote repository based on the given parameters.
+ * @async
+ * @function searchForGames
+ * @param {SearchQuery} urlQueryParams - An object that represents the search parameters. It includes properties like name, min_players,
+ * max_players, min_playtime, max_playtime, min_age, skip, limit which are used to define the search condition for games.
+ * @param {any} locals - An object that contains data related to the local server environment like user information.
+ * @param {Function} eventFetch - A function that fetches games from the local API.
+ * @returns {Object} returns an object with totalCount property which is the total number of games fetched and games property which is
+ * an array of all the games fetched. If any error occurred during the operation, it returns an object with totalCount as 0 and games as empty array.
+ * @throws will throw an error if the response received from fetching games operation is not OK (200).
+ */
+async function searchForGames(urlQueryParams: SearchQuery, locals, eventFetch) {
 	try {
-		let games = await prisma.game.findMany({
-			where: {
-				name: {
-					search: urlQueryParams?.name
-				},
-				min_players: {
-					gte: urlQueryParams?.min_players || 0
-				},
-				max_players: {
-					lte: urlQueryParams?.max_players || 100
-				},
-				min_playtime: {
-					gte: urlQueryParams?.min_playtime || 0
-				},
-				max_playtime: {
-					lte: urlQueryParams?.max_playtime || 5000
-				},
-				min_age: {
-					gte: urlQueryParams?.min_age || 0
-				}
-			},
-			skip: urlQueryParams?.skip,
-			take: urlQueryParams?.limit,
-			orderBy: {
-				name: 'asc'
-			}
-		});
+		console.log('urlQueryParams search games', urlQueryParams);
+		// let games = await prisma.game.findMany({
+		// 	where: {
+		// 		name: {
+		// 			search: urlQueryParams?.name
+		// 		},
+		// 		min_players: {
+		// 			gte: urlQueryParams?.min_players || 0
+		// 		},
+		// 		max_players: {
+		// 			lte: urlQueryParams?.max_players || 100
+		// 		},
+		// 		min_playtime: {
+		// 			gte: urlQueryParams?.min_playtime || 0
+		// 		},
+		// 		max_playtime: {
+		// 			lte: urlQueryParams?.max_playtime || 5000
+		// 		},
+		// 		min_age: {
+		// 			gte: urlQueryParams?.min_age || 0
+		// 		}
+		// 	},
+		// 	skip: urlQueryParams?.skip,
+		// 	take: urlQueryParams?.limit,
+		// 	orderBy: {
+		// 		name: 'asc'
+		// 	}
+		// });
+		const headers: HeadersInit = new Headers();
+		headers.set('Content-Type', 'application/json');
+		const requestInit: RequestInit = {
+			method: 'GET',
+			headers
+		};
+		const response = await eventFetch(
+			`/api/game/search${urlQueryParams ? `?${urlQueryParams}` : ''}`,
+			requestInit
+		);
+		console.log('response from internal api', response);
+
+		if (!response.ok) {
+			console.log('Status not 200', response.status);
+			throw error(response.status);
+		}
+
+		// const games: GameType[] = [];
+		// let totalCount = 0;
+		let games = [];
+		if (response.ok) {
+			games = await response.json();
+		}
+
 		console.log('games from DB', games);
 		let totalCount = games?.length || 0;
 
@@ -134,6 +172,17 @@ async function searchForGames(urlQueryParams: SearchQuery, locals) {
 	};
 }
 
+/**
+ * Asynchronous function createOrUpdateGame is used to create or update a game using the given game information.
+ *
+ * @async
+ * @function createOrUpdateGame
+ * @param {GameType} game - An object that holds the details about a game. It should contain required information like name, description,
+ * id (both internal and external), thumbnail URL, minimum age, minimum and maximum number of players, minimum and maximum play time,
+ * year of publication and primary publisher information including the publisher's name and ID, categories and mechanics related to the game.
+ *
+ * @returns {Promise<Object>} The return is a Promise that resolves with the data of the game that was created or updated.
+ */
 async function createOrUpdateGame(game: GameType) {
 	const categoryIds = game.categories.map((category) => ({
 		external_id: category.id
@@ -214,19 +263,21 @@ async function createOrUpdateGame(game: GameType) {
 	});
 }
 
-export const load = async (event) => {
-	const { params, locals, request, fetch, url } = event;
+export const load: PageServerLoad = async ({ params, locals, request, fetch, url }) => {
 	const defaults = {
 		limit: 10,
-		skip: 0
+		skip: 0,
+		order: 'asc',
+		sort: 'name'
 	};
 	const searchParams = Object.fromEntries(url?.searchParams);
 	console.log('searchParams', searchParams);
 	searchParams.limit = searchParams.limit || `${defaults.limit}`;
 	searchParams.skip = searchParams.skip || `${defaults.skip}`;
 	searchParams.order = searchParams.order || 'asc';
+	searchParams.sort = searchParams.sort || 'name';
 	const form = await superValidate(searchParams, search_schema);
-	const modifyListForm = await superValidate(listGameSchema);
+	// const modifyListForm = await superValidate(listGameSchema);
 
 	const queryParams: SearchQuery = {
 		order_by: 'rank',
@@ -269,11 +320,11 @@ export const load = async (event) => {
 	}
 
 	const urlQueryParams = new URLSearchParams(newQueryParams);
-	const searchData = await searchForGames(urlQueryParams, locals);
+	const searchData = await searchForGames(urlQueryParams, locals, fetch);
 
 	return {
 		form,
-		modifyListForm,
+		// modifyListForm,
 		searchData
 	};
 };

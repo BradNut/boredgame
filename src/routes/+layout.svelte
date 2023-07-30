@@ -1,9 +1,11 @@
 <script lang="ts">
 	import "../app.postcss";
+	import { onMount } from "svelte";
+	// import { getFlash } from 'sveltekit-flash-message/client';
+  import { navigating, page } from '$app/stores';
 	import { browser } from '$app/environment';
-	import { navigating } from '$app/stores';
 	import debounce from 'just-debounce-it';
-	import { Toy } from '@leveluptuts/svelte-toy';
+	// import { Toy } from '@leveluptuts/svelte-toy';
 	import 'iconify-icon';
 	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/index.svelte';
@@ -14,13 +16,10 @@
 	import { boredState } from '$lib/stores/boredState';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
-	import { gameStore } from '$lib/stores/gameSearchStore';
-	import { toast } from '$lib/components/toast/toast';
 	import Toast from '$lib/components/toast/Toast.svelte';
 	import { theme } from '$state/theme';
 	// import '$styles/styles.pcss';
 	import type { SavedGameType } from '$lib/types';
-	import { onMount } from "svelte";
 
 	$: {
 		if ($navigating) {
@@ -34,6 +33,7 @@
 	}
 
 	$: isOpen = $boredState?.dialog?.isOpen;
+	// const flash = getFlash(page);
 
 	if (browser) {
 	const collator = new Intl.Collator('en');
@@ -121,6 +121,10 @@
 	</div>
 {/if}
 <Toast></Toast>
+<!-- {#if $flash}
+  {@const bg = $flash.type == 'success' ? '#3D9970' : '#FF4136'}
+  <div style:background-color={bg} class="flash">{$flash.message}</div>
+{/if} -->
 
 <style lang="postcss">
 	.loading {

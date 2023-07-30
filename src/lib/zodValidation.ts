@@ -60,7 +60,7 @@ export const search_schema = z
 		exactMinPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
 		exactMaxPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
 		sort: z.enum(['asc', 'desc']).optional(),
-		sortBy: z.enum(['name', 'min_players', 'max_players', 'min_age', 'times_played']).optional(),
+		order: z.enum(['name', 'min_players', 'max_players', 'min_age', 'times_played']).optional(),
 		limit: z.number().min(10).max(100).default(10),
 		skip: z.number().min(0).default(0)
 	})

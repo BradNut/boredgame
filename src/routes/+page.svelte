@@ -24,7 +24,7 @@
 			<Random />
 		</div>
 	</section>
-	<TextSearch showButton advancedSearch data={data.form} />
+	<!-- <TextSearch showButton advancedSearch data={data.form} /> -->
 </div>
 
 <style lang="scss">

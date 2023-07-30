@@ -3,18 +3,9 @@
 	import { Image } from 'svelte-lazy-loader';
 	import minusCircle from '@iconify-icons/line-md/minus-circle';
 	import plusCircle from '@iconify-icons/line-md/plus-circle';
-	// import {
-  // ChevronRightIcon,
-	// 	ExternalLinkIcon,
-	// 	MinusCircleIcon,
-	// 	MinusIcon,
-	// 	PlusCircleIcon,
-	// 	PlusIcon
-	// } from '@rgossiaux/svelte-heroicons/outline';
 	import type { GameType, SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
-	import Button from '$lib/components/button/index.svelte';
 	import RemoveCollectionDialog from '$lib/components/dialog/RemoveCollectionDialog.svelte';
 	import { addToCollection } from '$lib/util/manipulateCollection';
 	import type { PageData } from './$types';
@@ -25,6 +16,7 @@
 	import RemoveWishlistDialog from '$lib/components/dialog/RemoveWishlistDialog.svelte';
   import { binarySearchOnStore } from '$lib/util/binarySearchOnStore';
   import { convertToSavedGame } from '$lib/util/gameMapper';
+	import { Button } from '$components/ui/button';
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
@@ -127,7 +119,7 @@
 						<iconify-icon icon={plusCircle} width="24" height="24" />
 					{/if}
 				</Button>
-				<Button size="md" kind={existsInWishlist ? 'danger' : 'primary'} icon on:click={onWishlistClick}>
+				<Button kind={existsInWishlist ? 'danger' : 'primary'} icon on:click={onWishlistClick}>
 					{wishlistText}
 					{#if existsInWishlist}
 						<iconify-icon icon={minusCircle} width="24" height="24" />
@@ -138,7 +130,7 @@
 			</div>
 		{:else}
 			<span>
-				<a href="/auth/signup">Sign Up</a> or <a href="/auth/signin">Sign In</a> to collect this game
+				<Button href="/auth/signup">Sign Up</Button> or <Button href="/auth/signin">Sign In</Button> to add to a list.
 			</span>
 		{/if}
 	</div>

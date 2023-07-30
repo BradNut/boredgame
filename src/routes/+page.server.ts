@@ -10,9 +10,9 @@ export const load = async ({ fetch, url }) => {
 	return { form };
 };
 
-export const actions = {
-	default: async ({ request, locals }): Promise<any> => {
-		// Do things in here
-		return {};
-	}
-};
+// export const actions = {
+// 	default: async ({ request, locals }): Promise<any> => {
+// 		// Do things in here
+// 		return {};
+// 	}
+// };

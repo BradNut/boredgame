@@ -22,10 +22,10 @@ model Role {
 
 model UserRole {
   id          String    @id @default(cuid())
-  user        AuthUser  @relation(fields: [user_id], references: [id])
-  user_id      String
+  user        User  @relation(fields: [user_id], references: [id])
+  user_id     String
   role        Role      @relation(fields: [role_id], references: [id])
-  role_id      String
+  role_id     String
   created_at  DateTime  @default(now()) @db.Timestamp(6)
   updated_at  DateTime  @updatedAt  @db.Timestamp(6)
 
@@ -35,7 +35,7 @@ model UserRole {
   @@map("user_roles")
 }
 
-model AuthUser {
+model User {
   id            String        @id @default(cuid())
   username      String        @unique
   email         String?       @unique
@@ -50,39 +50,37 @@ model AuthUser {
   theme         String        @default("system")
   created_at    DateTime      @default(now()) @db.Timestamp(6)
   updated_at    DateTime      @updatedAt @db.Timestamp(6)
-  auth_session  AuthSession[]
-  auth_key      AuthKey[]
+  auth_session  Session[]
+  auth_key      Key[]
 
-  @@map("auth_user")
+  @@map("users")
 }
 
-model AuthSession {
+model Session {
   id             String   @id @unique
   user_id        String
   active_expires BigInt
   idle_expires   BigInt
-  auth_user      AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  user           User @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
-  @@map("auth_session")
+  @@map("sessions")
 }
 
-model AuthKey {
+model Key {
   id              String   @id @unique
   hashed_password String?
   user_id         String
-  primary_key     Boolean
-  expires         BigInt?
-  auth_user       AuthUser @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  user       User @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
-  @@map("auth_key")
+  @@map("keys")
 }
 
 model Collection {
   id String @id @default(cuid())
   user_id String @unique
-  auth_user AuthUser @relation(references: [id], fields: [user_id])
+  user User @relation(references: [id], fields: [user_id])
   items CollectionItem[]
 
   @@index([user_id])
@@ -105,7 +103,7 @@ model Wishlist {
   id String @id @default(cuid())
   name String
   user_id String @unique
-  auth_user AuthUser @relation(references: [id], fields: [user_id])
+  user User @relation(references: [id], fields: [user_id])
   items WishlistItem[]
 
   @@index([user_id])

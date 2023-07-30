@@ -2,9 +2,9 @@
 // for information about these interfaces
 // and what to do when importing types
 
-import type { AuthUser } from '@prisma/client';
+import type { User } from '@prisma/client';
 
-type User = Omit<AuthUser, 'created_at' | 'updated_at'>;
+type User = Omit<User, 'created_at' | 'updated_at'>;
 
 // src/app.d.ts
 declare global {
@@ -13,7 +13,7 @@ declare global {
 			flash?: { type: 'success' | 'error'; message: string };
 		}
 		interface Locals {
-			auth: import('lucia-auth').AuthRequest;
+			auth: import('lucia').AuthRequest;
 			prisma: PrismaClient;
 			user: Lucia.UserAttributes;
 			startTimer: number;
@@ -34,11 +34,12 @@ declare global {
 // interface Error {}
 // interface Platform {}
 
-/// <reference types="lucia-auth" />
+/// <reference types="lucia" />
 declare global {
 	namespace Lucia {
-		type Auth = import('$lib/lucia').Auth;
-		type UserAttributes = User;
+		type Auth = import('$lib/server/lucia').Auth;
+		type DatabaseUserAttributes = User;
+		type DatabaseSessionAttributes = {};
 	}
 }
 
