@@ -2,29 +2,23 @@
 	import { page } from '$app/stores';
 	import { superForm } from 'sveltekit-superforms/client';
 	import * as flashModule from 'sveltekit-flash-message/client';
+	import toast from 'svelte-french-toast';
 	import { ChevronsUpDown } from "lucide-svelte";
 	import Button from '$components/ui/button/Button.svelte';
   import Input from '$components/ui/input/Input.svelte';
 	import Label from '$components/ui/label/Label.svelte';
-	import { userSchema } from '$lib/config/zod-schemas.js';
-	import toast from 'svelte-french-toast';
+	import { signUpSchema } from '$lib/config/zod-schemas.js';
 	import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger
   } from "$components/ui/collapsible";
+	import Alert from '$components/ui/alert/Alert.svelte';
+	import AlertTitle from '$components/ui/alert/AlertTitle.svelte';
+	import AlertDescription from '$components/ui/alert/AlertDescription.svelte';
 
 	export let data;
 	let isOpen = false;
-
-  const signUpSchema = userSchema.pick({
-    firstName: true,
-    lastName: true,
-    username: true,
-    email: true,
-    password: true,
-		confirm_password: true
-  });
 
   const { form, errors, constraints, enhance, delayed } = superForm(data.form, {
 		flashMessage: {
@@ -109,6 +103,14 @@
 				<Button type="submit">Signup</Button>
 				<Button variant="link" href="/">or Cancel</Button>
 			</div>
+			{#if !$form.email}
+				<Alert>
+					<AlertTitle>Heads up!</AlertTitle>
+					<AlertDescription>
+						Without an email address, you won't be able to reset your password. Submit only if you are sure. You can always add this later.
+					</AlertDescription>
+				</Alert>
+			{/if}
 		</div>
   </form>
 </div>

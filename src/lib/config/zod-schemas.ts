@@ -44,6 +44,31 @@ export const userSchema = z.object({
 	updatedAt: z.date().optional()
 });
 
+export const signUpSchema = userSchema
+	.pick({
+		firstName: true,
+		lastName: true,
+		email: true,
+		username: true,
+		password: true,
+		confirm_password: true,
+		terms: true
+	})
+	.superRefine(({ confirm_password, password }, ctx) => {
+		if (confirm_password !== password) {
+			// ctx.addIssue({
+			// 	code: 'custom',
+			// 	message: 'Password and Confirm Password must match',
+			// 	path: ['password']
+			// });
+			ctx.addIssue({
+				code: 'custom',
+				message: ' Password and Confirm Password must match',
+				path: ['confirm_password']
+			});
+		}
+	});
+
 export const updateUserPasswordSchema = userSchema
 	.pick({ password: true, confirm_password: true })
 	.superRefine(({ confirm_password, password }, ctx) => {

@@ -51,6 +51,8 @@ export const actions = {
 		const form = await superValidate<typeof signUpSchema, Message>(event, signUpSchema);
 
 		if (!form.valid) {
+			form.data.password = '';
+			form.data.confirm_password = '';
 			return fail(400, {
 				form
 			});
