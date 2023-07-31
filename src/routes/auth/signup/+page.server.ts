@@ -102,7 +102,7 @@ export const actions = {
 			// const message = { type: 'success', message: 'Signed Up!' } as const;
 			// throw flashRedirect(message, event);
 		} catch (e) {
-			if (e instanceof LuciaError && e.message === `DUPLICATE_KEY_ID`) {
+			if (e instanceof LuciaError && e.message.toUpperCase() === `DUPLICATE_KEY_ID`) {
 				// key already exists
 				console.error('Lucia Error: ', e);
 			}
@@ -111,8 +111,9 @@ export const actions = {
 				type: 'error',
 				message: 'Unable to create your account. Please try again.'
 			};
+			form.data.password = '';
+			form.data.confirm_password = '';
 			throw error(500, message);
-			// return setError(form, '', message);
 		}
 	}
 };
