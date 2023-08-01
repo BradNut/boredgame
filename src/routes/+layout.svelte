@@ -71,13 +71,13 @@
 	export let data;
 	$: ({ user } = data);
 
-	const flash = getFlash(page);
+	const flash = getFlash(page, {
+		clearAfterMs: 6000
+	});
 	let flashType;
 	let flashMessage;
 	$: flashType = $flash?.type;
 	$: flashMessage = $flash?.message;
-	console.log('flashType', flashType);
-	console.log('flashMessage', flashMessage);
 
 	// if ($flash && flashType && flashMessage) {
 	// 	switch (flashType) {
@@ -97,6 +97,22 @@
 		$theme = user?.theme || 'system';
 		document.querySelector('html')?.setAttribute('data-theme', $theme);
 	});
+
+	flash.subscribe(($flash) => {
+		if (!$flash) return;
+
+		if ($flash.type == 'success') {
+			toast.success($flash.message);
+		} else {
+			toast.error($flash.message, {
+				duration: 5000
+			});
+		}
+
+		// Clearing the flash message could sometimes
+		// be required here to avoid double-toasting.
+		flash.set(undefined);
+	});
 </script>
 
 {#if !dev}
@@ -114,15 +130,6 @@
 
 	<Footer />
 </div>
-
-{#if $flash}
-  <div class="status"
-    class:error={$flash.type == 'error'}
-    class:success={$flash.type == 'success'}
-  >
-    {$flash.message}
-  </div>
-{/if}
 
 <Toaster />
 

@@ -2,8 +2,13 @@
 	import { enhance } from '$app/forms';
 	import { LogOut } from 'lucide-svelte';
 	import Button from '$components/ui/button/Button.svelte';
+	 import { createDropdownMenu } from '@melt-ui/svelte'
+  const { menu, item, trigger, arrow, separator } = createDropdownMenu();
 	// import Profile from '../preferences/profile.svelte';
 	import logo from './bored-game.png';
+	import Avatar from '$components/ui/avatar/Avatar.svelte';
+	import AvatarImage from '$components/ui/avatar/AvatarImage.svelte';
+	import AvatarFallback from '$components/ui/avatar/AvatarFallback.svelte';
 
 	export let user: any;
 </script>
@@ -19,7 +24,37 @@
 		{#if user}
 			<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
 			<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
-			<form
+			<button melt={$trigger}>
+				<Avatar class="h-16 w-16 bg-neutral-100">
+					<AvatarFallback class="text-3xl font-medium text-magnum-700">
+						{user?.username.slice(0, 2).toUpperCase() || '?'}
+					</AvatarFallback>
+				</Avatar>
+			</button>
+			<div melt={$menu}>
+				<div {...$item} use:item>
+					<a href="/profile">Profile</a>
+				</div>
+				<div class="separator" melt={$separator} />
+				<div {...$item} use:item={{
+					onSelect: (e) => {
+						e.preventDefault();
+					}
+				}}>
+					<form
+						use:enhance
+						action="/auth/signout"
+						method="POST"
+					>
+						<Button type="submit">
+							<LogOut class="mr-2 h-4 w-4"/>
+							Sign out
+						</Button>
+					</form>
+				</div>
+				<div melt={$arrow} />
+			</div>
+			<!-- <form
 				use:enhance
 				action="/auth/signout"
 				method="POST"
@@ -28,7 +63,7 @@
 					<LogOut class="mr-2 h-4 w-4"/>
 					Sign out
 				</Button>
-			</form>
+			</form> -->
 		{/if}
 		{#if !user}
 			<a href="/auth/signin">
@@ -69,8 +104,8 @@
 	}
 
 	.corner img {
-		width: 2em;
-		height: 2em;
+		width: 1.5em;
+		height: 1.5em;
 		object-fit: contain;
 	}
 
@@ -84,10 +119,10 @@
 	}
 
 	nav a {
-		display: flex;
-		height: 100%;
-		align-items: center;
-		padding: 0 1em;
+		/* display: flex; */
+		/* height: 100%; */
+		/* align-items: center; */
+		/* padding: 0 1em; */
 		color: var(--heading-color);
 		font-weight: 700;
 		text-transform: uppercase;
