@@ -50,7 +50,7 @@
 			<Label for="username">Username</Label>
 			<Input type="text" id="username" name="username" placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} />
 			<Label for="password">Password</Label>
-			<Input type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" data-invalid={$errors.password} bind:value={$form.password} />
+			<Input type="password" id="password" name="password" placeholder="Password" autocomplete="password" data-invalid={$errors.password} bind:value={$form.password} />
 			<Button type="submit">Sign In</Button>
 		</div>
 	</form>

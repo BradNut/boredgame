@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	// import { Popover, PopoverButton, PopoverPanel } from '@rgossiaux/svelte-headlessui';
 	import cogOutline from '@iconify-icons/mdi/cog-outline';
 	import Themes from './themes.svelte';
 	import GameCollection from './gameCollection.svelte';

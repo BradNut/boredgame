@@ -3,17 +3,21 @@
 	//import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { userSchema } from '$lib/config/zod-schemas';
 	import { AlertTriangle } from 'lucide-svelte';
+	import Label from '$components/ui/label/Label.svelte';
+	import Input from '$components/ui/input/Input.svelte';
+	import Button from '$components/ui/button/Button.svelte';
 	export let data;
 
-	const signUpSchema = userSchema.pick({
+	const profileSchema = userSchema.pick({
 		firstName: true,
 		lastName: true,
-		email: true
+		email: true,
+		username: true
 	});
 
 	const { form, errors, enhance, delayed, message } = superForm(data.form, {
 		taintedMessage: null,
-		validators: signUpSchema,
+		validators: profileSchema,
 		delayMs: 0
 	});
 </script>
@@ -30,79 +34,41 @@
 			</div>
 		</aside>
 	{/if}
-	{#if $errors._errors}
-		<aside class="alert variant-filled-error mt-6">
-			<!-- Icon -->
-			<div><AlertTriangle size="42" /></div>
-			<!-- Message -->
-			<div class="alert-message">
-				<h3 class="h3">Sign In Problem</h3>
-				<p>{$errors._errors}</p>
-			</div>
-		</aside>
-	{/if}
 	<div class="mt-6">
-		<label class="label">
-			<span class="">First Name</span>
-			<input
-				id="firstName"
-				name="firstName"
-				type="text"
-				placeholder="First Name"
-				autocomplete="given-name"
-				data-invalid={$errors.firstName}
-				bind:value={$form.firstName}
-				class="input"
-				class:input-error={$errors.firstName}
-			/>
-			{#if $errors.firstName}
-				<small>{$errors.firstName}</small>
-			{/if}
-		</label>
+		<Label for="username">Username</Label>
+		<Input type="text" id="username" name="username" placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} />
+		{#if $errors.username}
+			<small>{$errors.username}</small>
+		{/if}
 	</div>
 	<div class="mt-6">
-		<label class="label">
-			<span class="">Last Name</span>
-			<input
-				id="lastName"
-				name="lastName"
-				type="text"
-				placeholder="Last Name"
-				autocomplete="family-name"
-				data-invalid={$errors.lastName}
-				bind:value={$form.lastName}
-				class="input"
-				class:input-error={$errors.lastName}
-			/>
-			{#if $errors.lastName}
-				<small>{$errors.lastName}</small>
-			{/if}
-		</label>
+		<Label for="firstName">First Name</Label>
+		<Input type="text" id="firstName" name="firstName" placeholder="First Name" autocomplete="given-name" data-invalid={$errors.firstName} bind:value={$form.firstName} />
+		{#if $errors.firstName}
+			<small>{$errors.firstName}</small>
+		{/if}
 	</div>
 	<div class="mt-6">
-		<label class="label">
-			<span class="">Email address</span>
-			<input
-				id="email"
-				name="email"
-				type="email"
-				placeholder="Email address"
-				autocomplete="email"
-				data-invalid={$errors.email}
-				bind:value={$form.email}
-				class="input"
-				class:input-error={$errors.email}
-			/>
-			{#if $errors.email}
-				<small>{$errors.email}</small>
-			{/if}
-		</label>
+		<Label for="lastName">Last Name</Label>
+		<Input type="text" id="lastName" name="lastName" placeholder="Last Name" autocomplete="family-name" data-invalid={$errors.lastName} bind:value={$form.lastName} />
+		{#if $errors.lastName}
+			<small>{$errors.lastName}</small>
+		{/if}
 	</div>
 	<div class="mt-6">
-		<a href="/auth/password/reset">Change Password</a>
+		<Label for="email">Email address</Label>
+		<Input type="email" id="email" name="email" placeholder="Email Address" autocomplete="email" data-invalid={$errors.email} bind:value={$form.email} />
+		{#if $errors.email}
+			<small>{$errors.email}</small>
+		{/if}
+	</div>
+	<div class="mt-6">
+		<Button variant="link" href="/auth/password/reset">Change Password</Button>
+		<!-- <a href="/auth/password/reset">Change Password</a> -->
 	</div>
 
 	<div class="mt-6">
+		<Button type="submit" class="w-full">Update Profile</Button>
 		<!-- <button type="submit" class="btn variant-filled-primary w-full"
 			>{#if $delayed}<ConicGradient stops={conicStops} spin width="w-6" />{:else}Update Profile{/if}</button
 		> -->

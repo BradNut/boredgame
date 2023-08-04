@@ -3,6 +3,7 @@ import { redirect } from '@sveltejs/kit';
 
 export const actions = {
 	default: async ({ locals }) => {
+		console.log('Signing out user');
 		const session = await locals.auth.validate();
 		if (!session) {
 			throw redirect(302, '/auth/signin');
