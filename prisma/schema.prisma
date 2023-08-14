@@ -90,13 +90,15 @@ model Collection {
 
 model CollectionItem {
   id String @id @default(cuid())
-  collection_id String @unique
+  collection_id String
   collection Collection @relation(references: [id], fields: [collection_id], onDelete: Cascade)
   game_id String @unique
   game Game @relation(references: [id], fields: [game_id])
   times_played Int
 
   @@index([game_id, collection_id])
+  @@index([game_id])
+  @@index([collection_id])
   @@map("collection_items")
 }
 
@@ -112,7 +114,7 @@ model Wishlist {
 
 model WishlistItem {
   id String @id @default(cuid())
-  wishlist_id String @unique
+  wishlist_id String
   wishlist Wishlist @relation(references: [id], fields: [wishlist_id], onDelete: Cascade)
   game_id String @unique
   game Game @relation(references: [id], fields: [game_id])
@@ -120,6 +122,8 @@ model WishlistItem {
   updated_at DateTime @updatedAt @db.Timestamp(6)
 
   @@index([game_id, wishlist_id])
+  @@index([game_id])
+  @@index([wishlist_id])
   @@map("wishlist_items")
 }
 
@@ -136,7 +140,7 @@ model List {
 
 model ListItem {
   id String @id @default(cuid())
-  list_id String @unique
+  list_id String
   list List @relation(references: [id], fields: [list_id], onDelete: Cascade)
   game_id String @unique
   game Game @relation(references: [id], fields: [game_id])
@@ -144,6 +148,8 @@ model ListItem {
   updated_at DateTime @updatedAt @db.Timestamp(6)
 
   @@index([game_id, list_id])
+  @@index([game_id])
+  @@index([list_id])
   @@map("list_items")
 }
 

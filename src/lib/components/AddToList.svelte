@@ -13,72 +13,74 @@
 	export let in_collection = false;
 	export let lists = [];
 
-	const handleChange = ({ curr, next }) => {
-		console.log({ curr, next });
-		return next;
-	}
+	// const handleChange = ({ curr, next }) => {
+	// 	console.log({ curr, next });
+	// 	return next;
+	// }
 
-	const {
-		elements: { trigger, menu, option, label, group, groupLabel },
-		states: { valueLabel, open },
-		helpers: { isSelected },
-	} = createSelect({
-		forceVisible: true,
-		onValueChange: handleChange
-	});
+	// const {
+	// 	elements: { trigger, menu, option, label, group, groupLabel },
+	// 	states: { valueLabel, open },
+	// 	helpers: { isSelected },
+	// } = createSelect({
+	// 	forceVisible: true,
+	// 	onValueChange: handleChange
+	// });
 
-	console.log({ in_collection, in_wishlist });
+	// console.log({ in_collection, in_wishlist });
 
-	let options: Record<string, string> = {};
-	let list_of_lists = [];
-	if (!in_collection) {
-		options[collection.id] = 'Add to collection';
-	}
-	if (!in_wishlist) {
-		options[wishlist.id] = 'Add to wishlist';
-	}
-	lists.forEach((list) => {
-		if (!list?.in_list) {
-			options[list.id] = list.name;
-		}
-	});
+	// let options: Record<string, string> = {};
+	// let list_of_lists = [];
+	// if (!in_collection) {
+	// 	options[collection.id] = 'Add to collection';
+	// }
+	// if (!in_wishlist) {
+	// 	options[wishlist.id] = 'Add to wishlist';
+	// }
+	// lists.forEach((list) => {
+	// 	if (!list?.in_list) {
+	// 		options[list.id] = list.name;
+	// 	}
+	// });
 </script>
 
-{#if in_wishlist}
-	<form method="POST" action={`/wishlist?/remove`} use:enhance>
-		<input type="hidden" name="id" value={game_id} />
-		<Button variant="destructive" type="submit">
-			<MinusCircle class="square-5" /> Remove from wishlist
-		</Button>
-	</form>
-{:else}
-	<form method="POST" action='/wishlist?/add' use:enhance>
-		<input type="hidden" name="id" value={game_id} />
-		<Button variant="destructive" type="submit">
-			<PlusCircle class="square-5" /> Add to wishlist
-		</Button>
-	</form>
-{/if}
+<div class="flex gap-1">
+	{#if in_wishlist}
+		<form method="POST" action={`/wishlist?/remove`} use:enhance>
+			<input type="hidden" name="id" value={game_id} />
+			<Button class="flex gap-1" variant="destructive" type="submit">
+				<MinusCircle class="square-5" /> Remove from wishlist
+			</Button>
+		</form>
+	{:else}
+		<form method="POST" action='/wishlist?/add' use:enhance>
+			<input type="hidden" name="id" value={game_id} />
+			<Button class="flex gap-1" type="submit">
+				<PlusCircle class="square-5" /> Add to wishlist
+			</Button>
+		</form>
+	{/if}
 
-{#if in_collection}
-	<form method="POST" action='/collection?/remove' use:enhance>
-		<input type="hidden" name="id" value={game_id} />
-		<Button variant="destructive" type="submit">
-			<MinusCircle class="square-5" /> Remove from collection
-		</Button>
-	</form>
-{:else}
-	<form method="POST" action='/collection?/add' use:enhance>
-		<input type="hidden" name="id" value={game_id} />
-		<Button variant="destructive" type="submit">
-			<PlusCircle class="square-5" /> Add to collection
-		</Button>
-	</form>
-{/if}
+	{#if in_collection}
+		<form method="POST" action='/collection?/remove' use:enhance>
+			<input type="hidden" name="id" value={game_id} />
+			<Button class="flex gap-1" type="submit" variant="destructive">
+				<MinusCircle class="square-5" /> Remove from collection
+			</Button>
+		</form>
+	{:else}
+		<form method="POST" action='/collection?/add' use:enhance>
+			<input type="hidden" name="id" value={game_id} />
+			<Button class="flex gap-1" type="submit">
+				<PlusCircle class="square-5" /> Add to collection
+			</Button>
+		</form>
+	{/if}
+</div>
 
-<div class="flex flex-col gap-1">
+<!-- <div class="flex flex-col gap-1"> -->
 	<!-- svelte-ignore a11y-label-has-associated-control - $label contains the 'for' attribute -->
-	<button
+	<!-- <button
 		class="flex h-10 min-w-[220px] items-center justify-between rounded-md bg-white px-3 py-2 text-black-500 transition-opacity hover:opacity-90"
 		use:melt={$trigger}
 		aria-label="Wishlist"
@@ -107,32 +109,4 @@
 			{/each}
 		</div>
 	{/if}
-</div>
-
-<!-- <CardFooter>
-			<div class="grid gap-2 place-items-center">
-				<form method="POST" action={`/collection?/${existsInCollection ? 'remove' : 'add'}`}>
-					<input type="hidden" name="id" value={game.id} />
-					<Button variant={existsInCollection ? 'destructive' : 'default'}>
-						{collectionText}
-						{#if existsInCollection}
-							<iconify-icon class="ml-2" icon={minusCircle} width="24" height="24" />
-						{:else}
-							<iconify-icon class="ml-2" icon={plusCircle} width="24" height="24" />
-						{/if}
-					</Button>
-				</form>
-				<!-- Add dropdown for wishlist add -->
-<!---				<form method="POST" action={`/wishlist?/${existsInWishlist ? 'remove' : 'add'}`}>
-					<input type="hidden" name="id" value={game.id} />
-					<Button variant={existsInWishlist ? 'destructive' : 'default'}>
-						{wishlistText}
-						{#if existsInWishlist}
-							<iconify-icon class="ml-2" icon={minusCircle} width="24" height="24" />
-						{:else}
-							<iconify-icon class="ml-2" icon={plusCircle} width="24" height="24" />
-						{/if}
-					</Button>
-				</form>
-			</div>
-		</CardFooter> -->
+</div> -->
