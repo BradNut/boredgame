@@ -39,7 +39,7 @@ export async function load({ params, locals }) {
 		console.log('wishlist', wishlist);
 
 		return {
-			games: wishlist?.items
+			items: wishlist?.items
 		};
 	} catch (e) {
 		console.error(e);
@@ -109,6 +109,7 @@ export const actions = {
 		if (!session) {
 			throw redirect(302, '/auth/signin');
 		}
+		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
 	delete: async ({ params, locals, request }) => {
@@ -116,6 +117,7 @@ export const actions = {
 		if (!session) {
 			throw redirect(302, '/auth/signin');
 		}
+		return error(405, 'Method not allowed');
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {

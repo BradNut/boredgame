@@ -1,65 +1,11 @@
 <script lang="ts">
 	// import { tick, onDestroy } from 'svelte';
 	import Game from '$lib/components/game/index.svelte';
-	import type { SearchSchema } from '$lib/zodValidation.js';
-	import { superForm } from 'sveltekit-superforms/client';
-	import type { SuperValidated } from 'sveltekit-superforms';
-	import type { ModifyListGame } from '$lib/config/zod-schemas.js';
-	import { onMount } from 'svelte';
-	import toast from 'svelte-french-toast';
-	// import { collectionStore } from '$lib/stores/collectionStore';
-	// import type { GameType, SavedGameType } from '$lib/types';
-	// import { boredState } from '$lib/stores/boredState';
-	// import Pagination from '$lib/components/pagination/index.svelte';
-	// import RemoveCollectionDialog from '$lib/components/dialog/RemoveCollectionDialog.svelte';
-	// import RemoveWishlistDialog from '$lib/components/dialog/RemoveWishlistDialog.svelte';
-	// import { createSearchStore, searchHandler } from '$lib/stores/search';
 
 	export let data;
 	console.log(`Page data: ${JSON.stringify(data)}`);
 	let collectionItems = data?.collection || [];
 	console.log('collectionItems', collectionItems);
-
-	// let gameToRemove: GameType | SavedGameType;
-	// let pageSize = 10;
-	// let page = 1;
-
-	// const searchStore = createSearchStore($collectionStore);
-	// console.log('searchStore', $searchStore);
-
-	// const unsubscribe = searchStore.subscribe((model) => searchHandler(model));
-
-	// onDestroy(() => {
-	// 	unsubscribe();
-	// });
-
-	// $: skip = (page - 1) * pageSize;
-	// $: gamesShown = $searchStore.data.slice(skip, skip + pageSize);
-	// $: totalItems = $searchStore.search === '' ? $collectionStore.length : $searchStore.filtered.length;
-
-	// interface RemoveGameEvent extends Event {
-	// 	detail: GameType | SavedGameType;
-	// }
-
-	// function handleRemoveCollection(event: RemoveGameEvent) {
-	// 	console.log('Remove collection event handler');
-	// 	console.log('event', event);
-	// 	gameToRemove = event?.detail;
-	// 	boredState.update((n) => ({
-	// 		...n,
-	// 		dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
-	// 	}));
-	// }
-
-	// function handleRemoveWishlist(event: RemoveGameEvent) {
-	// 	console.log('Remove wishlist event handler');
-	// 	console.log('event', event);
-	// 	gameToRemove = event?.detail;
-	// 	boredState.update((n) => ({
-	// 		...n,
-	// 		dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
-	// 	}));
-	// }
 
 	// async function handleNextPageEvent(event: CustomEvent) {
 	// 	if (+event?.detail?.page === page + 1) {
@@ -95,7 +41,7 @@
 			<h2>No games in your collection</h2>
 		{:else}
 			{#each collectionItems as game (game.game_id)}
-				<Game {game} data={data.listManageForm} />
+				<Game {game} />
 			{/each}
 		{/if}
 	</div>

@@ -24,7 +24,7 @@
 			<a
 				class="thumbnail"
 				href={`/game/${game.id}`}
-				title={`View ${game.game_name}`}
+				title={`View ${game.name}`}
 				data-sveltekit-preload-data
 			>
 				<img src={game.thumb_url} alt={`Image of ${game.name}`} loading="lazy" decoding="async" />

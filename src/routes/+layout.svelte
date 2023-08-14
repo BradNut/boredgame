@@ -7,6 +7,7 @@
 	import { browser } from '$app/environment';
 	import debounce from 'just-debounce-it';
 	import 'iconify-icon';
+	import Transition from '$lib/components/transition/index.svelte';
 	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/index.svelte';
 	import Footer from '$lib/components/footer.svelte';
@@ -122,9 +123,9 @@
 	<Header user={data.user} />
 
 	<main>
-		<!-- <Transition url={data.url} transition={{ type: 'page' }}> -->
+		<Transition url={data.url} transition={{ type: 'page' }}>
 			<slot />
-		<!-- </Transition> -->
+		</Transition>
 	</main>
 
 	<Footer />

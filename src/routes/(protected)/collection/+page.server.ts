@@ -1,4 +1,4 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from '../../$types.js';
 import prisma from '$lib/prisma.js';
@@ -71,13 +71,11 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 			const game = item.game;
 			if (game) {
 				let collectionItem: ListGame = {
-					id: item.id,
+					id: game.id,
 					collection_id: item.collection_id,
-					game_id: game.id,
-					game_name: game.name,
+					name: game.name,
 					thumb_url: game.thumb_url,
 					times_played: item.times_played,
-					wishlist_id: '',
 					in_collection: true
 				};
 				collectionItems.push(collectionItem);
@@ -106,38 +104,56 @@ export const actions = {
 		const { params, locals, request } = event;
 		const form = await superValidate(event, modifyListGameSchema);
 
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/auth/signin');
-		}
-
-		let game = await prisma.game.findUnique({
-			where: {
-				id: form.id
+		try {
+			const session = await locals.auth.validate();
+			if (!session) {
+				throw redirect(302, '/auth/signin');
 			}
-		});
 
-		if (!game) {
-			game = await prisma.game.create({
-				data: {
-					name: form.name
+			let game = await prisma.game.findUnique({
+				where: {
+					id: form.data.id
 				}
 			});
-			throw redirect(302, '/404');
-		}
 
-		if (game) {
-			const wishlist = await prisma.collectionItem.create({
-				data: {
-					user_id: session.userId,
-					name: form.name
+			if (!game) {
+				// game = await prisma.game.create({
+				// 	data: {
+				// 		name: form.name
+				// 	}
+				// });
+				console.log('game not found');
+				throw redirect(302, '/404');
+			}
+
+			if (game) {
+				const collection = await prisma.collection.findUnique({
+					where: {
+						user_id: session.user.userId
+					}
+				});
+
+				if (!collection) {
+					console.log('Wishlist not found');
+					return error(404, 'Wishlist not found');
 				}
-			});
-		}
 
-		return {
-			form
-		};
+				await prisma.collectionItem.create({
+					data: {
+						game_id: game.id,
+						collection_id: collection.id,
+						times_played: 0
+					}
+				});
+			}
+
+			return {
+				form
+			};
+		} catch (e) {
+			console.error(e);
+			return error(500, 'Something went wrong');
+		}
 	},
 	// Create new wishlist
 	create: async ({ params, locals, request }) => {
@@ -145,6 +161,7 @@ export const actions = {
 		if (!session) {
 			throw redirect(302, '/auth/signin');
 		}
+		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
 	delete: async ({ params, locals, request }) => {
@@ -152,56 +169,61 @@ export const actions = {
 		if (!session) {
 			throw redirect(302, '/auth/signin');
 		}
+		return error(405, 'Method not allowed');
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { params, locals, request } = event;
 		const form = await superValidate(event, modifyListGameSchema);
 
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/auth/signin');
-		}
-
-		console.log('form', form);
-
-		let collectionItem = await prisma.collectionItem.findUnique({
-			where: {
-				id: form.data.id
-			},
-			include: {
-				collection: {
-					select: {
-						user_id: true
-					}
-				}
+		try {
+			const session = await locals.auth.validate();
+			if (!session) {
+				throw redirect(302, '/auth/signin');
 			}
-		});
-		console.log('collectionItem', collectionItem);
-		const belongsToUser = collectionItem?.collection?.user_id === session.userId;
-		console.log('belongsToUser', belongsToUser);
 
-		if (!collectionItem || !belongsToUser) {
-			// game = await prisma.game.create({
-			// 	data: {
-			// 		name: form.name
-			// 	}
-			// });
-			throw redirect(302, '/404');
-		}
-
-		if (collectionItem) {
-			console.log('Going to delete');
-			await prisma.collectionItem.delete({
+			let game = await prisma.game.findUnique({
 				where: {
-					id: collectionItem.id
+					id: form.data.id
 				}
 			});
-		}
 
-		return {
-			form,
-			collection: []
-		};
+			if (!game) {
+				// game = await prisma.game.create({
+				// 	data: {
+				// 		name: form.name
+				// 	}
+				// });
+				console.log('game not found');
+				throw redirect(302, '/404');
+			}
+
+			if (game) {
+				const collection = await prisma.collection.findUnique({
+					where: {
+						user_id: session.user.userId
+					}
+				});
+
+				if (!collection) {
+					console.log('Wishlist not found');
+					return error(404, 'Wishlist not found');
+				}
+
+				await prisma.collectionItem.delete({
+					where: {
+						collection_id: collection.id,
+						game_id: game.id
+					}
+				});
+			}
+
+			return {
+				form
+			};
+		} catch (e) {
+			console.error(e);
+			return error(500, 'Something went wrong');
+		}
 	}
 };
