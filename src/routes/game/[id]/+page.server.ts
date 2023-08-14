@@ -12,9 +12,44 @@ export const load = async ({ params, setHeaders, locals }) => {
 			}
 		});
 		console.log('found game', game);
+
+		if (!game) {
+			throw error(404, 'not found');
+		}
+
+		const wishlist = await prisma.wishlist.findUnique({
+			where: {
+				user_id: user.userId
+			},
+			include: {
+				items: {
+					where: {
+						game_id: game.id
+					}
+				}
+			}
+		});
+
+		const collection = await prisma.collection.findUnique({
+			where: {
+				user_id: user.userId
+			},
+			include: {
+				items: {
+					where: {
+						game_id: game.id
+					}
+				}
+			}
+		});
+
 		return {
 			game,
-			user
+			user,
+			in_wishlist: wishlist?.items?.length !== 0 || false,
+			in_collection: collection?.items?.length !== 0 || false,
+			wishlist,
+			collection
 		};
 	} catch (error) {
 		console.log(error);

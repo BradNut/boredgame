@@ -28,4 +28,5 @@ const config = {
 		componentPath: './src/lib/components/ui'
 	}
 };
+
 export default config;

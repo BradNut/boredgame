@@ -89,8 +89,7 @@ export const actions = {
 			});
 			await prisma.wishlist.create({
 				data: {
-					user_id: user.userId,
-					name: 'My Wishlist'
+					user_id: user.userId
 				}
 			});
 

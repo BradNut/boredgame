@@ -11,7 +11,6 @@
 	import Header from '$lib/components/header/index.svelte';
 	import Footer from '$lib/components/footer.svelte';
 	import Loading from '$lib/components/loading.svelte';
-	import Transition from '$lib/components/transition/index.svelte';
 	import Portal from '$lib/Portal.svelte';
 	import { boredState } from '$lib/stores/boredState';
 	import { collectionStore } from '$lib/stores/collectionStore';
@@ -123,9 +122,9 @@
 	<Header user={data.user} />
 
 	<main>
-		<Transition url={data.url} transition={{ type: 'page' }}>
+		<!-- <Transition url={data.url} transition={{ type: 'page' }}> -->
 			<slot />
-		</Transition>
+		<!-- </Transition> -->
 	</main>
 
 	<Footer />

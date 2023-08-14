@@ -3,20 +3,14 @@
 	import { Image } from 'svelte-lazy-loader';
 	import minusCircle from '@iconify-icons/line-md/minus-circle';
 	import plusCircle from '@iconify-icons/line-md/plus-circle';
-	import type { GameType, SavedGameType } from '$lib/types';
+	import type { SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
-	import RemoveCollectionDialog from '$lib/components/dialog/RemoveCollectionDialog.svelte';
-	import { addToCollection } from '$lib/util/manipulateCollection';
 	import type { PageData } from './$types';
-	import { boredState } from '$lib/stores/boredState';
-	import { browser } from '$app/environment';
 	import LinkWithIcon from '$lib/components/LinkWithIcon.svelte';
-	import { addToWishlist } from '$lib/util/manipulateWishlist';
-	import RemoveWishlistDialog from '$lib/components/dialog/RemoveWishlistDialog.svelte';
-  import { binarySearchOnStore } from '$lib/util/binarySearchOnStore';
-  import { convertToSavedGame } from '$lib/util/gameMapper';
 	import { Button } from '$components/ui/button';
+	import AddToList from '$components/AddToList.svelte';
+	import { Dices } from 'lucide-svelte';
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
@@ -25,56 +19,11 @@
 
 	export let data: PageData;
 	console.log('data', data);
-	// let game: GameType;
-	$: ({ game, user } = data);
-	// let game = data?.game;
-	// export let game: GameType = data?.game;
+
+	$: ({ game, user, wishlist, collection, in_collection, in_wishlist } = data);
+
 	let seeMore: boolean = false;
 	console.log('game', game);
-	// let firstParagraphEnd = 0;
-	// if (game?.description?.indexOf('</p>') > 0) {
-	// 	firstParagraphEnd = game?.description?.indexOf('</p>') + 4;
-	// } else if (game?.description?.indexOf('</ p>') > 0) {
-	// 	firstParagraphEnd = game?.description?.indexOf('</ p>') + 5;
-	// }
-
-	function onCollectionClick() {
-		if (existsInCollection) {
-			removeFromCollection();
-		} else {
-			let index = binarySearchOnStore($collectionStore, convertToSavedGame(game), 'en');
-			console.log(`Binary index: ${index}`)
-			addToCollection(game, index);
-			if (browser) {
-				localStorage.collection = JSON.stringify($collectionStore);
-			}
-		}
-	}
-
-	function onWishlistClick() {
-		if (existsInWishlist) {
-			removeFromWishList();
-		} else {
-			addToWishlist(game);
-			if (browser) {
-				localStorage.wishlist = JSON.stringify($wishlistStore);
-			}
-		}
-	}
-
-	function removeFromCollection() {
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: game }
-		}));
-	}
-
-	function removeFromWishList() {
-		boredState.update((n) => ({
-			...n,
-			dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: game }
-		}));
-	}
 </script>
 
 <svelte:head>
@@ -86,7 +35,11 @@
 <section class="game">
 	<div>
 		<a class="thumbnail" href={game.url}>
-			<Image src={game.thumb_url} alt={`Image of ${game.name}`} />
+			{#if game?.thumb_url}
+				<Image src={game.thumb_url} alt={`Image of ${game.name}`} />
+			{:else}
+				<Dices />
+			{/if}
 			<!-- <img src={game.image_url} alt={`Image of ${game.name}`} /> -->
 		</a>
 	</div>
@@ -110,24 +63,7 @@
 			</LinkWithIcon>
 		</div>
 		{#if user?.username}
-			<div style="display: grid; gap: 1.5rem; place-content: center;">
-				<Button size="md" kind={existsInCollection ? 'danger' : 'primary'} icon on:click={onCollectionClick}>
-					{collectionText}
-					{#if existsInCollection}
-						<iconify-icon icon={minusCircle} width="24" height="24" />
-					{:else}
-						<iconify-icon icon={plusCircle} width="24" height="24" />
-					{/if}
-				</Button>
-				<Button kind={existsInWishlist ? 'danger' : 'primary'} icon on:click={onWishlistClick}>
-					{wishlistText}
-					{#if existsInWishlist}
-						<iconify-icon icon={minusCircle} width="24" height="24" />
-					{:else}
-						<iconify-icon icon={plusCircle} width="24" height="24" />
-					{/if}
-				</Button>
-			</div>
+			<AddToList {in_collection} {in_wishlist} game_id={game.id} {wishlist} {collection} />
 		{:else}
 			<span>
 				<Button href="/auth/signup">Sign Up</Button> or <Button href="/auth/signin">Sign In</Button> to add to a list.

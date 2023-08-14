@@ -71,12 +71,10 @@ export const actions = {
 						user_id: user.id
 					},
 					create: {
-						user_id: user.id,
-						name: 'My Wishlist'
+						user_id: user.id
 					},
 					update: {
-						user_id: user.id,
-						name: 'My Wishlist'
+						user_id: user.id
 					}
 				});
 			}

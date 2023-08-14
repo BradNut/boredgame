@@ -265,6 +265,11 @@ const searchResultSchema = z.object({
 	count: z.number()
 });
 
+export const WishlistSchema = z.object({
+	name: z.string(),
+	id: z.string()
+});
+
 // export const game_raw_schema_json = zodToJsonSchema(game_schema, {
 //   $refStrategy: 'none',
 // });

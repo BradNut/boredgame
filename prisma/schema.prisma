@@ -46,7 +46,8 @@ model User {
   receiveEmail  Boolean       @default(false)
   token         String?       @unique
   collection    Collection?
-  wishlist      Wishlist[]
+  wishlist      Wishlist?
+  list          List[]
   theme         String        @default("system")
   created_at    DateTime      @default(now()) @db.Timestamp(6)
   updated_at    DateTime      @updatedAt @db.Timestamp(6)
@@ -101,7 +102,6 @@ model CollectionItem {
 
 model Wishlist {
   id String @id @default(cuid())
-  name String
   user_id String @unique
   user User @relation(references: [id], fields: [user_id])
   items WishlistItem[]
@@ -121,6 +121,30 @@ model WishlistItem {
 
   @@index([game_id, wishlist_id])
   @@map("wishlist_items")
+}
+
+model List {
+  id String @id @default(cuid())
+  name String
+  user_id String @unique
+  user User @relation(references: [id], fields: [user_id])
+  items ListItem[]
+
+  @@index([user_id])
+  @@map("lists")
+}
+
+model ListItem {
+  id String @id @default(cuid())
+  list_id String @unique
+  list List @relation(references: [id], fields: [list_id], onDelete: Cascade)
+  game_id String @unique
+  game Game @relation(references: [id], fields: [game_id])
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
+
+  @@index([game_id, list_id])
+  @@map("list_items")
 }
 
 model Game {
@@ -152,6 +176,7 @@ model Game {
   expansions              Expansion[]
   collection_items        CollectionItem[]
   wishlist_items          WishlistItem[]
+  list_items              ListItem[]
   external_id             String @unique
   created_at              DateTime @default(now()) @db.Timestamp(6)
   updated_at              DateTime @updatedAt @db.Timestamp(6)

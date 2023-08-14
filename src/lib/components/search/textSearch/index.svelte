@@ -1,31 +1,20 @@
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { fade } from 'svelte/transition';
-	import { applyAction, type SubmitFunction } from '$app/forms';
+	import { fade, fly } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import type { SuperValidated } from 'sveltekit-superforms/index';
-	// import { Disclosure, DisclosureButton, DisclosurePanel } from '@rgossiaux/svelte-headlessui';
-	// import { ChevronRightIcon } from '@rgossiaux/svelte-heroicons/solid';
 	import { boredState } from '$lib/stores/boredState';
 	import AdvancedSearch from '$lib/components/search/advancedSearch/index.svelte';
 	import { xl, md, sm } from '$lib/stores/mediaQueryStore';
 	import { gameStore } from '$lib/stores/gameSearchStore';
-	import { toast } from '../../toast/toast';
 	import Pagination from '$lib/components/pagination/index.svelte';
 	import Game from '$lib/components/game/index.svelte';
-	import { ToastType, type GameType, type SavedGameType } from '$lib/types';
-	// import SkeletonPlaceholder from '../../SkeletonPlaceholder.svelte';
-	import RemoveCollectionDialog from '../../dialog/RemoveCollectionDialog.svelte';
-	import RemoveWishlistDialog from '../../dialog/RemoveWishlistDialog.svelte';
-  import type { ListGameSchema, SearchSchema } from '$lib/zodValidation';
+	import { type GameType, type SavedGameType } from '$lib/types';
+  import type { SearchSchema } from '$lib/zodValidation';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
-
-	interface RemoveGameEvent extends Event {
-		detail: GameType | SavedGameType;
-	}
 
 	export let data;
 	console.log("text search data", data);
@@ -34,7 +23,6 @@
 
 	const { games, totalCount } = data?.searchData;
 	const { form, errors, enhance, constraints, message }: SuperValidated<SearchSchema> = superForm(data.form);
-	// const { form: modifyListForm, errors: listErrors, constraints: listConstraints, enhance: listEnhance, message: listMessage } : SuperValidated<ListGameSchema> = superForm(data.modifyListForm);
 
 	let gameToRemove: GameType | SavedGameType;
 	let numberOfGameSkeleton = 1;
@@ -47,7 +35,6 @@
 	let name = form?.name || '';
 	let disclosureOpen = $errors.length > 0 || false;
 
-	// $: skip = (page - 1) * pageSize;
 	$: showPagination = totalCount > pageSize;
 
 	if ($xl) {
@@ -59,12 +46,6 @@
 	} else {
 		numberOfGameSkeleton = 1;
 	}
-
-	// let placeholderList = [...Array(numberOfGameSkeleton).keys()];
-
-	// if (form?.error) {
-	// 	disclosureOpen = true;
-	// }
 
 	async function handleNextPageEvent(event: CustomEvent) {
 		if (+event?.detail?.page === page + 1) {
@@ -89,54 +70,6 @@
 		submitButton.click();
 	}
 
-	// function handleRemoveCollection(event: RemoveGameEvent) {
-	// 	gameToRemove = event?.detail;
-	// 	boredState.update((n) => ({
-	// 		...n,
-	// 		dialog: { isOpen: true, content: RemoveCollectionDialog, additionalData: gameToRemove }
-	// 	}));
-	// }
-
-	// function handleRemoveWishlist(event: RemoveGameEvent) {
-	// 	gameToRemove = event?.detail;
-	// 	boredState.update((n) => ({
-	// 		...n,
-	// 		dialog: { isOpen: true, content: RemoveWishlistDialog, additionalData: gameToRemove }
-	// 	}));
-	// }
-
-	// const submitSearch: SubmitFunction = ({ form, data, action, cancel }) => {
-	// 	const { name } = Object.fromEntries(data);
-	// 	if (!disclosureOpen && name?.length === 0) {
-	// 		toast.send('Please enter a search term', {
-	// 			duration: 3000,
-	// 			type: ToastType.ERROR,
-	// 			dismissible: true
-	// 		});
-	// 		cancel();
-	// 		return;
-	// 	}
-
-	// 	gameStore.removeAll();
-	// 	boredState.update((n) => ({ ...n, loading: true }));
-	// 	return async ({ result }) => {
-	// 		boredState.update((n) => ({ ...n, loading: false }));
-	// 		// `result` is an `ActionResult` object
-	// 		if (result.type === 'error') {
-	// 			toast.send('Error!', { duration: 3000, type: ToastType.ERROR, dismissible: true });
-	// 			await applyAction(result);
-	// 		} else if (result.type === 'success') {
-	// 			gameStore.removeAll();
-	// 			gameStore.addAll(result?.data?.searchData?.games);
-	// 			totalItems = result?.data?.searchData?.totalCount;
-	// 			// toast.send('Success!', { duration: 3000, type: ToastType.INFO, dismissible: true });
-	// 			await applyAction(result);
-	// 		} else {
-	// 			await applyAction(result);
-	// 		}
-	// 	};
-	// };
-
 	const dev = process.env.NODE_ENV !== 'production';
 
 	// TODO: Keep all Pagination Values on back and forth browser
@@ -147,7 +80,7 @@
 	<SuperDebug data={$form} />
 {/if}
 
-<form id="search-form" action="/search" method="GET">
+<form id="search-form" action="/search" method="GET" use:enhance>
 	<div class="search">
 		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
 			<Label for="label">Search</Label>

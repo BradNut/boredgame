@@ -21,7 +21,7 @@ import type { PageServerLoad } from '../$types.js';
  * an array of all the games fetched. If any error occurred during the operation, it returns an object with totalCount as 0 and games as empty array.
  * @throws will throw an error if the response received from fetching games operation is not OK (200).
  */
-async function searchForGames(urlQueryParams: SearchQuery, locals, eventFetch) {
+async function searchForGames(urlQueryParams: SearchQuery, eventFetch) {
 	try {
 		console.log('urlQueryParams search games', urlQueryParams);
 		// let games = await prisma.game.findMany({
@@ -104,58 +104,13 @@ async function searchForGames(urlQueryParams: SearchQuery, locals, eventFetch) {
 				console.log('totalCount', totalCount);
 				gameList.forEach((game) => {
 					if (game?.min_players && game?.max_players) {
-						game.players = `${game.min_players}-${game.max_players}`;
-						game.playtime = `${game.min_playtime}-${game.max_playtime}`;
+						game.players = `${game.min_players} - ${game.max_players}`;
+						game.playtime = `${game.min_playtime} - ${game.max_playtime}`;
 					}
 					const boredGame = mapAPIGameToBoredGame(game);
 					createOrUpdateGame(boredGame);
 					games.push(boredGame);
 				});
-			}
-		}
-
-		if (locals?.user) {
-			const game_ids = games.map((game) => game.id);
-			console.log('game_ids', game_ids);
-			const collections = await prisma.collection.findMany({
-				where: {
-					user_id: locals.user.id
-				},
-				include: {
-					items: {
-						where: {
-							game_id: {
-								in: game_ids
-							}
-						}
-					}
-				}
-			});
-			console.log('collections', collections);
-			const wishlists = await prisma.wishlist.findMany({
-				where: {
-					user_id: locals.user.id
-				},
-				include: {
-					items: {
-						where: {
-							id: {
-								in: game_ids
-							}
-						}
-					}
-				}
-			});
-			// console.log('wishlist_items', wishlist_items);
-			for (const game of games) {
-				console.log(
-					'Checking collection',
-					collections.findIndex((item) => item.items.some((i) => i.game_id === game.id))
-				);
-				game.in_collection =
-					collections.findIndex((item) => item.items.some((i) => i.game_id === game.id)) === 0;
-				game.in_wishlist =
-					wishlists.findIndex((item) => item.items.some((i) => i.game_id === game.id)) === 0;
 			}
 		}
 
@@ -290,42 +245,54 @@ export const load: PageServerLoad = async ({ params, locals, request, fetch, url
 	};
 
 	// fields: ('id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description');
-
-	if (form.data?.minAge) {
-		if (form.data?.exactMinAge) {
-			queryParams.min_age = form.data?.minAge;
-		} else {
-			queryParams.gt_min_age = form.data?.minAge === 1 ? 0 : form.data?.minAge - 1;
+	try {
+		if (form.data?.minAge) {
+			if (form.data?.exactMinAge) {
+				queryParams.min_age = form.data?.minAge;
+			} else {
+				queryParams.gt_min_age = form.data?.minAge === 1 ? 0 : form.data?.minAge - 1;
+			}
 		}
-	}
 
-	if (form.data?.minPlayers) {
-		if (form.data?.exactMinPlayers) {
-			queryParams.min_players = form.data?.minPlayers;
-		} else {
-			queryParams.gt_min_players = form.data?.minPlayers === 1 ? 0 : form.data?.minPlayers - 1;
+		if (form.data?.minPlayers) {
+			if (form.data?.exactMinPlayers) {
+				queryParams.min_players = form.data?.minPlayers;
+			} else {
+				queryParams.gt_min_players = form.data?.minPlayers === 1 ? 0 : form.data?.minPlayers - 1;
+			}
 		}
-	}
-	if (form.data?.maxPlayers) {
-		if (form.data?.exactMaxPlayers) {
-			queryParams.max_players = form.data?.maxPlayers;
-		} else {
-			queryParams.lt_max_players = form.data?.maxPlayers + 1;
+		if (form.data?.maxPlayers) {
+			if (form.data?.exactMaxPlayers) {
+				queryParams.max_players = form.data?.maxPlayers;
+			} else {
+				queryParams.lt_max_players = form.data?.maxPlayers + 1;
+			}
 		}
+
+		const newQueryParams: Record<string, string> = {};
+		for (const key in queryParams) {
+			newQueryParams[key] = `${queryParams[key as keyof SearchQuery]}`;
+		}
+
+		const urlQueryParams = new URLSearchParams(newQueryParams);
+		const searchData = await searchForGames(urlQueryParams, fetch);
+		// console.log('searchData', searchData);
+
+		return {
+			form,
+			// modifyListForm,
+			searchData
+		};
+	} catch (e) {
+		console.log(`Error searching board games ${e}`);
 	}
-
-	const newQueryParams: Record<string, string> = {};
-	for (const key in queryParams) {
-		newQueryParams[key] = `${queryParams[key as keyof SearchQuery]}`;
-	}
-
-	const urlQueryParams = new URLSearchParams(newQueryParams);
-	const searchData = await searchForGames(urlQueryParams, locals, fetch);
-
 	return {
 		form,
-		// modifyListForm,
-		searchData
+		searchData: {
+			totalCount: 0,
+			games: []
+		},
+		wishlists: []
 	};
 };
 

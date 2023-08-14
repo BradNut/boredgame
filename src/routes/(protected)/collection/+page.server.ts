@@ -1,6 +1,6 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
-import type { PageServerLoad } from '../$types.js';
+import type { PageServerLoad } from '../../$types.js';
 import prisma from '$lib/prisma.js';
 import { modifyListGameSchema, type ListGame } from '$lib/config/zod-schemas.js';
 import type { CollectionItemWithGame } from '$lib/types.js';
@@ -127,7 +127,7 @@ export const actions = {
 		}
 
 		if (game) {
-			const wishlist = await prisma.wishlist.create({
+			const wishlist = await prisma.collectionItem.create({
 				data: {
 					user_id: session.userId,
 					name: form.name
