@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import kebabCase from 'just-kebab-case';
+import { createId } from '@paralleldrive/cuid2';
 import categories from './categories.json' assert { type: 'json' };
 import mechanics from './mechanics.json' assert { type: 'json' };
 
@@ -48,6 +49,29 @@ async function main() {
 		}
 		console.log('Categories created.');
 	}
+
+	await prisma.publisher.create({
+		data: {
+			name: 'Unknown',
+			slug: 'unknown',
+			external_id: createId()
+		}
+	});
+
+	await prisma.designer.create({
+		data: {
+			name: 'Unknown',
+			slug: 'unknown',
+			external_id: createId()
+		}
+	});
+
+	await prisma.artist.create({
+		data: {
+			name: 'Unknown',
+			slug: 'unknown'
+		}
+	});
 
 	// for (const p of userData) {
 	// 	const user = await prisma.user.create({

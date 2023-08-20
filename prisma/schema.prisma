@@ -159,7 +159,7 @@ model Game {
   slug                    String
   description             String? @db.LongText
   description_preview     String? @db.LongText
-  year_published          Int?
+  year_published          Int? @db.Year
   min_players             Int?
   max_players             Int?
   min_playtime            Int?
@@ -195,6 +195,7 @@ model Game {
 model GameName {
   id          String @id @default(cuid())
   name        String
+  slug        String
   game_id     String
   game        Game @relation(references: [id], fields: [game_id])
   created_at  DateTime @default(now()) @db.Timestamp(6)
@@ -247,6 +248,7 @@ model Mechanic {
 model Designer {
   id                String    @id @default(cuid())
   name              String
+  slug              String
   external_id       String    @unique
   games             Game[]
   primary_designer  Game[]    @relation("PrimaryDesigners")
@@ -260,7 +262,7 @@ model Designer {
 model Artist {
   id            String    @id @default(cuid())
   name          String
-  external_id   String    @unique
+  slug          String    @unique
   games         Game[]
   created_at    DateTime  @default(now()) @db.Timestamp(6)
   updated_at    DateTime  @updatedAt @db.Timestamp(6)
