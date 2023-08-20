@@ -56,3 +56,31 @@ export const GET = async ({ url, locals, params, request }) => {
 		throw error(500, { message: 'Something went wrong' });
 	}
 };
+
+// let games = await prisma.game.findMany({
+// 	where: {
+// 		name: {
+// 			search: urlQueryParams?.name
+// 		},
+// 		min_players: {
+// 			gte: urlQueryParams?.min_players || 0
+// 		},
+// 		max_players: {
+// 			lte: urlQueryParams?.max_players || 100
+// 		},
+// 		min_playtime: {
+// 			gte: urlQueryParams?.min_playtime || 0
+// 		},
+// 		max_playtime: {
+// 			lte: urlQueryParams?.max_playtime || 5000
+// 		},
+// 		min_age: {
+// 			gte: urlQueryParams?.min_age || 0
+// 		}
+// 	},
+// 	skip: urlQueryParams?.skip,
+// 	take: urlQueryParams?.limit,
+// 	orderBy: {
+// 		name: 'asc'
+// 	}
+// });
