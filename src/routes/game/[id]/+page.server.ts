@@ -17,31 +17,35 @@ export const load = async ({ params, setHeaders, locals }) => {
 			throw error(404, 'not found');
 		}
 
-		const wishlist = await prisma.wishlist.findUnique({
-			where: {
-				user_id: user.userId
-			},
-			include: {
-				items: {
-					where: {
-						game_id: game.id
+		let wishlist;
+		let collection;
+		if (user) {
+			wishlist = await prisma.wishlist.findUnique({
+				where: {
+					user_id: user.userId
+				},
+				include: {
+					items: {
+						where: {
+							game_id: game.id
+						}
 					}
 				}
-			}
-		});
+			});
 
-		const collection = await prisma.collection.findUnique({
-			where: {
-				user_id: user.userId
-			},
-			include: {
-				items: {
-					where: {
-						game_id: game.id
+			collection = await prisma.collection.findUnique({
+				where: {
+					user_id: user.userId
+				},
+				include: {
+					items: {
+						where: {
+							game_id: game.id
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 
 		return {
 			game,

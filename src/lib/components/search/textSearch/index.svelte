@@ -80,7 +80,7 @@
 	<SuperDebug data={$form} />
 {/if}
 
-<form id="search-form" action="/search" method="GET" use:enhance>
+<form id="search-form" action="/search" method="GET">
 	<div class="search">
 		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
 			<Label for="label">Search</Label>
