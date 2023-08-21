@@ -1,7 +1,7 @@
 import { invalid, type RequestEvent } from '@sveltejs/kit';
 import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
 import type { GameType, SearchQuery } from '$lib/types';
-import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
+import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper';
 
 interface Actions {
 	[key: string]: any; // Action

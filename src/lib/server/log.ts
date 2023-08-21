@@ -1,8 +1,8 @@
 import { Client } from '@axiomhq/axiom-node';
 import { AXIOM_TOKEN, AXIOM_ORG_ID, AXIOM_DATASET } from '$env/static/private';
-import getAllUrlParams from '$lib/util/getAllUrlParams';
-import parseTrack from '$lib/util/parseTrack';
-import parseMessage from '$lib/util/parseMessage';
+import getAllUrlParams from '$lib/utils/getAllUrlParams';
+import parseTrack from '$lib/utils/parseTrack';
+import parseMessage from '$lib/utils/parseMessage';
 import { DOMAIN } from '$lib/config/constants';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

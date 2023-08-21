@@ -8,7 +8,7 @@
 	// } from '@rgossiaux/svelte-headlessui';
 	import { boredState } from '$lib/stores/boredState';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
-	import { removeFromWishlist } from '$lib/util/manipulateWishlist';
+	import { removeFromWishlist } from '$lib/utils/manipulateWishlist';
 	import { browser } from '$app/environment';
 
 	function removeGame() {

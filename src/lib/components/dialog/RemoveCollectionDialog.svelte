@@ -13,7 +13,7 @@
 	} from '$components/ui/dialog';
 	import { boredState } from '$lib/stores/boredState';
 	import { collectionStore } from '$lib/stores/collectionStore';
-	import { removeFromCollection } from '$lib/util/manipulateCollection';
+	import { removeFromCollection } from '$lib/utils/manipulateCollection';
 	import { browser } from '$app/environment';
 
 	function removeGame() {

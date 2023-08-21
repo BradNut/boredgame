@@ -4,7 +4,7 @@ import kebabCase from 'just-kebab-case';
 import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
 import prisma from '$lib/prisma.js';
 import type { GameType, SearchQuery } from '$lib/types';
-import { mapAPIGameToBoredGame } from '$lib/util/gameMapper';
+import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import { search_schema } from '$lib/zodValidation';
 import type { PageServerLoad } from '../$types.js';
 // import { listGameSchema } from '$lib/config/zod-schemas.js';

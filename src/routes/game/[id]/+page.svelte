@@ -35,7 +35,7 @@
 <section class="game">
 	<div>
 		<a class="thumbnail" href={game.url}>
-			{#if game?.thumb_url}
+			{#if game?.thumb_url && game?.name}
 				<Image src={game.thumb_url} alt={`Image of ${game.name}`} />
 			{:else}
 				<Dices />

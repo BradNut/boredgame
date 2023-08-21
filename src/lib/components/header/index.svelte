@@ -1,15 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { LogOut } from 'lucide-svelte';
-	import Button from '$components/ui/button/Button.svelte';
+	import { Button } from '$components/ui/button';
+	import { Separator } from "$components/ui/separator";
 	import logo from './bored-game.png';
-	import Avatar from '$components/ui/avatar/Avatar.svelte';
-	import AvatarFallback from '$components/ui/avatar/AvatarFallback.svelte';
+	import { Avatar, AvatarFallback } from '$components/ui/avatar';
 	import {
 	Sheet,
 	SheetClose,
 	SheetContent,
-	SheetDescription,
 	SheetFooter,
 	SheetHeader,
 	SheetTitle,
