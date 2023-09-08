@@ -5,11 +5,6 @@
 
 	export let data;
 	console.log("search page data", data);
-
-	// $: if (data?.searchData?.games) {
-	// 	gameStore.removeAll();
-	// 	gameStore.addAll(data?.searchData?.games);
-	// }
 </script>
 
 <div class="game-search">

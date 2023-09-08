@@ -6,7 +6,7 @@ import { list_game_request_schema } from '$lib/zodValidation';
 export async function load({ params, locals }) {
 	const session = await locals.auth.validate();
 	if (!session) {
-		throw redirect(302, '/auth/signin');
+		throw redirect(302, '/login');
 	}
 
 	try {
@@ -49,7 +49,7 @@ export const actions = {
 
 		const session = await locals.auth.validate();
 		if (!session) {
-			throw redirect(302, '/auth/signin');
+			throw redirect(302, '/login');
 		}
 
 		let game = await prisma.game.findUnique({
@@ -106,21 +106,21 @@ export const actions = {
 	create: async ({ params, locals, request }) => {
 		const session = await locals.auth.validate();
 		if (!session) {
-			throw redirect(302, '/auth/signin');
+			throw redirect(302, '/login');
 		}
 	},
 	// Delete a wishlist
 	delete: async ({ params, locals, request }) => {
 		const session = await locals.auth.validate();
 		if (!session) {
-			throw redirect(302, '/auth/signin');
+			throw redirect(302, '/login');
 		}
 	},
 	// Remove game from a wishlist
 	remove: async ({ params, locals, request }) => {
 		const session = await locals.auth.validate();
 		if (!session) {
-			throw redirect(302, '/auth/signin');
+			throw redirect(302, '/login');
 		}
 	}
 };

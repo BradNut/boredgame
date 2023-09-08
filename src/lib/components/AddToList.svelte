@@ -3,7 +3,7 @@
 	import { fly } from "svelte/transition";
 	import { createSelect, melt } from "@melt-ui/svelte";
 	import { Check, ChevronDown, MinusCircle, PlusCircle } from "lucide-svelte";
-	import Button from "./ui/button/Button.svelte";
+	import { Button } from '$components/ui/button';
 	import type { Collection, Wishlist } from "@prisma/client";
 
 	export let game_id: string;

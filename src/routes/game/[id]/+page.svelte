@@ -66,7 +66,7 @@
 			<AddToList {in_collection} {in_wishlist} game_id={game.id} {wishlist} {collection} />
 		{:else}
 			<span>
-				<Button href="/auth/signup">Sign Up</Button> or <Button href="/auth/signin">Sign In</Button> to add to a list.
+				<Button href="/sign-up">Sign Up</Button> or <Button href="/login">Sign In</Button> to add to a list.
 			</span>
 		{/if}
 	</div>

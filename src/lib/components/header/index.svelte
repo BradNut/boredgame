@@ -1,27 +1,21 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { LogOut } from 'lucide-svelte';
-	import { Button } from '$components/ui/button';
-	import { Separator } from "$components/ui/separator";
-	import logo from './bored-game.png';
-	import { Avatar, AvatarFallback } from '$components/ui/avatar';
-	import {
-	Sheet,
-	SheetClose,
-	SheetContent,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger
-} from "$components/ui/sheet";
+	import { Button } from '$lib/components/ui/button';
+	import { Toggle } from "$lib/components/ui/toggle";
+	import * as Avatar from "$lib/components/ui/avatar";
+	import * as Sheet from "$lib/components/ui/sheet";
+	import Logo from '$components/logo.svelte';
 
 	export let user: any;
+
+	let avatar = user?.username.slice(0, 1).toUpperCase() || '?';
 </script>
 
 <header>
 	<div class="corner">
 		<a href="/" title="Home">
-			<img src={logo} alt="Bored Game Home" />
+			<Logo />
 		</a>
 	</div>
 	<!-- <TextSearch /> -->
@@ -29,39 +23,42 @@
 		{#if user}
 			<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
 			<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
-			<Sheet>
-				<SheetTrigger>
-					<Avatar class="h-16 w-16 bg-neutral-100">
-						<AvatarFallback class="text-3xl font-medium text-magnum-700">
-							{user?.username.slice(0, 1).toUpperCase() || '?'}
-						</AvatarFallback>
-					</Avatar>
-				</SheetTrigger>
-				<SheetContent position="right" size="lg">
-					<SheetHeader>
-						<SheetTitle>Menu</SheetTitle>
-					</SheetHeader>
+			<Sheet.Root>
+				<Sheet.Trigger>
+					<Avatar.Root asChild>
+						<Avatar.Fallback class="text-3xl font-medium text-magnum-700 h-16 w-16 bg-neutral-100">
+							{avatar}
+						</Avatar.Fallback>
+					</Avatar.Root>
+				</Sheet.Trigger>
+				<Sheet.Content side="right">
+					<Sheet.Header>
+						<Sheet.Title>Menu</Sheet.Title>
+						<Toggle aria-label="toggle bold">
+
+						</Toggle>
+					</Sheet.Header>
 					<div class="menu">
-						<div class="item">
-							<SheetClose>
-								<Button variant="link" href="/profile">View Profile</Button>
-							</SheetClose>
-						</div>
-						<div class="item">
-							<SheetClose>
-								<Button variant="link" href="/collection">Your Collection</Button>
-							</SheetClose>
-						</div>
-						<div class="item">
-							<SheetClose>
-								<Button variant="link" href="/wishlist">Your Wishlist</Button>
-							</SheetClose>
-						</div>
+						<Sheet.Close asChild let:builder>
+							<div class="item">
+								<Button builders={[builder]} variant="link" class="text-secondary-foreground" href="/profile">View Profile</Button>
+							</div>
+						</Sheet.Close>
+						<Sheet.Close asChild let:builder>
+							<div class="item">
+								<Button builders={[builder]} variant="link" class="text-secondary-foreground" href="/collection">Your Collection</Button>
+							</div>
+						</Sheet.Close>
+						<Sheet.Close asChild let:builder>
+							<div class="item">
+								<Button builders={[builder]} variant="link" class="text-secondary-foreground" href="/wishlist">Your Wishlist</Button>
+							</div>
+						</Sheet.Close>
 						<div class="separator" />
 						<div class="item">
 							<form
 								use:enhance
-								action="/auth/signout"
+								action="/logout"
 								method="POST"
 							>
 								<Button type="submit">
@@ -71,33 +68,22 @@
 							</form>
 						</div>
 					</div>
-					<SheetFooter>
-						<SheetClose>
-							<Button type="button">Close</Button>
-						</SheetClose>
-					</SheetFooter>
-				</SheetContent>
-			</Sheet>
-			<!-- <form
-				use:enhance
-				action="/auth/signout"
-				method="POST"
-			>
-				<Button type="submit">
-					<LogOut class="mr-2 h-4 w-4"/>
-					Sign out
-				</Button>
-			</form> -->
+					<Sheet.Footer>
+						<Sheet.Close asChild let:builder>
+							<Button builders={[builder]} type="button">Close</Button>
+						</Sheet.Close>
+					</Sheet.Footer>
+				</Sheet.Content>
+			</Sheet.Root>
 		{/if}
 		{#if !user}
-			<a href="/auth/signin">
-				<span class="flex-auto">Sign In</span></a
+			<a href="/login">
+				<span class="flex-auto">Login</span></a
 			>
-			<a href="/auth/signup">
+			<a href="/sign-up">
 				<span class="flex-auto">Sign Up</span></a
 			>
 		{/if}
-		<!-- <Profile /> -->
 	</nav>
 </header>
 
@@ -119,12 +105,13 @@
 	}
 
 	.item {
-		margin-bottom: 0.2rem;
+		/* margin: 0.2rem 0; */
 	}
 
 	.corner {
 		width: 3em;
 		height: 3em;
+		margin-left: 1rem;
 	}
 
 	.corner a {

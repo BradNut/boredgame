@@ -69,6 +69,11 @@ export const signUpSchema = userSchema
 		}
 	});
 
+export const signInSchema = userSchema.pick({
+	username: true,
+	password: true
+});
+
 export const updateUserPasswordSchema = userSchema
 	.pick({ password: true, confirm_password: true })
 	.superRefine(({ confirm_password, password }, ctx) => {

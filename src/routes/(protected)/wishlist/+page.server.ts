@@ -7,7 +7,7 @@ import { modifyListGameSchema } from '$lib/config/zod-schemas.js';
 export async function load({ params, locals }) {
 	const session = await locals.auth.validate();
 	if (!session) {
-		throw redirect(302, '/auth/signin');
+		throw redirect(302, '/login');
 	}
 
 	console.log('Wishlist load User id', session.user);
@@ -56,7 +56,7 @@ export const actions = {
 		try {
 			const session = await locals.auth.validate();
 			if (!session) {
-				throw redirect(302, '/auth/signin');
+				throw redirect(302, '/login');
 			}
 
 			let game = await prisma.game.findUnique({
@@ -107,7 +107,7 @@ export const actions = {
 	create: async ({ params, locals, request }) => {
 		const session = await locals.auth.validate();
 		if (!session) {
-			throw redirect(302, '/auth/signin');
+			throw redirect(302, '/login');
 		}
 		return error(405, 'Method not allowed');
 	},
@@ -115,7 +115,7 @@ export const actions = {
 	delete: async ({ params, locals, request }) => {
 		const session = await locals.auth.validate();
 		if (!session) {
-			throw redirect(302, '/auth/signin');
+			throw redirect(302, '/login');
 		}
 		return error(405, 'Method not allowed');
 	},
@@ -127,7 +127,7 @@ export const actions = {
 		try {
 			const session = await locals.auth.validate();
 			if (!session) {
-				throw redirect(302, '/auth/signin');
+				throw redirect(302, '/login');
 			}
 
 			let game = await prisma.game.findUnique({

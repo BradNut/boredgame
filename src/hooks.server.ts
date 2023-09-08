@@ -42,8 +42,8 @@ export const authentication: Handle = async function ({ event, resolve }) {
 			console.log('user', session?.user);
 			event.locals.user = session?.user;
 			// if (event.route.id?.startsWith('/(protected)')) {
-			// if (!user) throw redirect(302, '/auth/sign-in');
-			// if (!user.verified) throw redirect(302, '/auth/verify/email');
+			// if (!user) throw redirect(302, '/sign-in');
+			// if (!user.verified) throw redirect(302, '/verify/email');
 			// }
 		} catch (error) {
 			console.error('Error validating user', error);

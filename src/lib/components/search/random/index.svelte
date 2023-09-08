@@ -6,7 +6,7 @@
 	import { ToastType } from '$lib/types';
   import { superForm } from 'sveltekit-superforms/client';
 	import { toast } from '../../toast/toast';
-	import Button from '$components/ui/button/Button.svelte';
+	import { Button } from '$components/ui/button';
 
 	export let data: SuperValidated<SearchSchema>;
 	const { enhance } = superForm(data, {

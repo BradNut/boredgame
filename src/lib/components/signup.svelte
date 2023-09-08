@@ -19,7 +19,7 @@
 	// $: termsValue = $form.terms as Writable<boolean>;
 </script>
 
-<form method="POST" action="/auth/signup" use:enhance>
+<form method="POST" action="/sign-up" use:enhance>
 	<h1>Signup user</h1>
 	<label class="label">
 		<span class="sr-only">First Name</span>
@@ -105,7 +105,7 @@
 			<small>{$errors.password}</small>
 		{/if}
 	</label>
-	
+
 	<button type="submit">Signup</button>
 
 	<a class="back" href="/"> or Cancel </a>

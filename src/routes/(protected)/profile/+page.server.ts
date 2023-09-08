@@ -17,7 +17,7 @@ export const load = async (event) => {
 	const session = await event.locals.auth.validate();
 
 	if (!session) {
-		throw redirect(302, '/auth/signin');
+		throw redirect(302, '/login');
 	}
 
 	const { user } = session;
@@ -48,7 +48,7 @@ export const actions = {
 			const session = await event.locals.auth.validate();
 
 			if (!session) {
-				throw redirect(302, '/auth/signin');
+				throw redirect(302, '/login');
 			}
 
 			const user = session.user;

@@ -19,7 +19,7 @@
 	];
 </script>
 
-<form method="POST" action="/auth/sign-in" use:enhance>
+<form method="POST" action="/sign-in" use:enhance>
 	<!--<SuperDebug data={$form} />-->
 	{#if $errors._errors}
 		<aside class="alert variant-filled-error mt-6">
@@ -77,6 +77,6 @@
 		>
 	</div>
 	<div class="flex flex-row justify-center items-center mt-10">
-		<a href="/auth/password/reset" class="font-semibold">{i("forgotPassword")}</a>
+		<a href="/password/reset" class="font-semibold">{i("forgotPassword")}</a>
 	</div>
 </form>

@@ -5,7 +5,7 @@
 	import { AlertTriangle } from 'lucide-svelte';
 	import Label from '$components/ui/label/Label.svelte';
 	import Input from '$components/ui/input/Input.svelte';
-	import Button from '$components/ui/button/Button.svelte';
+	import { Button } from '$components/ui/button';
 	export let data;
 
 	const profileSchema = userSchema.pick({
@@ -63,8 +63,8 @@
 		{/if}
 	</div>
 	<div class="mt-6">
-		<Button variant="link" href="/auth/password/reset">Change Password</Button>
-		<!-- <a href="/auth/password/reset">Change Password</a> -->
+		<Button variant="link" href="/password/reset">Change Password</Button>
+		<!-- <a href="/password/reset">Change Password</a> -->
 	</div>
 
 	<div class="mt-6">

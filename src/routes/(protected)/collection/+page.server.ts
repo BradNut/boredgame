@@ -9,7 +9,7 @@ import { search_schema } from '$lib/zodValidation.js';
 export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	const session = await locals.auth.validate();
 	if (!session) {
-		throw redirect(302, '/auth/signin');
+		throw redirect(302, '/login');
 	}
 
 	// console.log('locals load', locals);
@@ -107,7 +107,7 @@ export const actions = {
 		try {
 			const session = await locals.auth.validate();
 			if (!session) {
-				throw redirect(302, '/auth/signin');
+				throw redirect(302, '/login');
 			}
 
 			let game = await prisma.game.findUnique({
@@ -159,7 +159,7 @@ export const actions = {
 	create: async ({ params, locals, request }) => {
 		const session = await locals.auth.validate();
 		if (!session) {
-			throw redirect(302, '/auth/signin');
+			throw redirect(302, '/login');
 		}
 		return error(405, 'Method not allowed');
 	},
@@ -167,7 +167,7 @@ export const actions = {
 	delete: async ({ params, locals, request }) => {
 		const session = await locals.auth.validate();
 		if (!session) {
-			throw redirect(302, '/auth/signin');
+			throw redirect(302, '/login');
 		}
 		return error(405, 'Method not allowed');
 	},
@@ -179,7 +179,7 @@ export const actions = {
 		try {
 			const session = await locals.auth.validate();
 			if (!session) {
-				throw redirect(302, '/auth/signin');
+				throw redirect(302, '/login');
 			}
 
 			let game = await prisma.game.findUnique({
