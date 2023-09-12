@@ -1,7 +1,7 @@
 <script lang="ts">
-	import TextSearch from '$lib/components/search/textSearch/index.svelte';
+	// import TextSearch from '$lib/components/search/textSearch/index.svelte';
 	import RandomSearch from '$lib/components/search/random/index.svelte';
-	import Random from '$lib/components/random/index.svelte';
+	// import Random from '$lib/components/random/index.svelte';
 
 	export let data;
 	export let formData;
@@ -21,7 +21,7 @@
 		<p>Or pick a random game!</p>
 		<div class="random-buttons">
 			<RandomSearch data={data.form} />
-			<Random />
+			<!-- <Random /> -->
 		</div>
 	</section>
 	<!-- <TextSearch showButton advancedSearch data={data.form} /> -->
