@@ -43,7 +43,7 @@
 	<title>Bored Game | Sign Up</title>
 </svelte:head>
 
-<div class="page sign-up">
+<div class="page">
 	<form method="POST" action="/sign-up" use:enhance>
 		<div class="grid w-full max-w-sm items-center gap-2.5">
 			<h2
@@ -120,12 +120,5 @@
   </form>
 </div>
 
-<style lang="postcss">
-	.sign-up {
-		display: grid;
-		width: 100%;
-		max-width: 24rem;
-		margin-left: auto;
-		margin-right: auto;
-	}
+<style scoped>
 </style>

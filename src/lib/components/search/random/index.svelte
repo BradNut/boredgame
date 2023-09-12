@@ -3,9 +3,7 @@
 	import type { SearchSchema } from '$lib/zodValidation';
 	import { boredState } from '$lib/stores/boredState';
 	import { gameStore } from '$lib/stores/gameSearchStore';
-	import { ToastType } from '$lib/types';
   import { superForm } from 'sveltekit-superforms/client';
-	import { toast } from '../../toast/toast';
 	import { Button } from '$components/ui/button';
 
 	export let data: SuperValidated<SearchSchema>;
