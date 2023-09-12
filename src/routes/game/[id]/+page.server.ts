@@ -1,5 +1,6 @@
 import { error } from '@sveltejs/kit';
 import prisma from '$lib/prisma.js';
+import { boardGameApi } from '../../api';
 
 export const load = async ({ params, setHeaders, locals }) => {
 	try {
