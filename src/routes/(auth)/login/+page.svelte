@@ -45,7 +45,7 @@
 </svelte:head>
 
 <div class="login">
-	<form method="POST" use:enhance class="grid max-w-sm items-center gap-2">
+	<form method="POST" use:enhance>
 		<h2
 			class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 		>
@@ -79,10 +79,23 @@
 
 <style lang="postcss">
 	.login {
-		display: grid;
+		display: flex;
+		margin-top: 1.5rem;
+		flex-direction: column;
+		justify-content: center;
 		width: 100%;
-		max-width: 24rem;
-		margin-left: auto;
 		margin-right: auto;
+		margin-left: auto;
+
+		@media (min-width: 640px) {
+			width: 350px;
+		}
+
+		form {
+			display: grid;
+			gap: 0.5rem;
+			align-items: center;
+			max-width: 24rem;
+		}
 	}
 </style>

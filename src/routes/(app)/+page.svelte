@@ -1,5 +1,5 @@
 <script lang="ts">
-	import TextSearch from '$lib/components/search/textSearch/index.svelte';
+	// import TextSearch from '$lib/components/search/textSearch/index.svelte';
 	import RandomSearch from '$lib/components/search/random/index.svelte';
 	import Random from '$lib/components/random/index.svelte';
 

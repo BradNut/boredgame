@@ -5,8 +5,8 @@
 	import toast from 'svelte-french-toast';
 	import { ChevronsUpDown } from "lucide-svelte";
 	import { Button } from '$components/ui/button';
-  import { Input } from '$components/ui/input';
-	import Label from '$components/ui/label/Label.svelte';
+	import { Label } from '$components/ui/label';
+	import { Input } from '$components/ui/input';
 	import { signUpSchema } from '$lib/config/zod-schemas.js';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Alert from '$lib/components/ui/alert';

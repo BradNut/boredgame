@@ -70,6 +70,77 @@
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 			max-width: none;
 		}
+
+		.auth-marketing {
+			display: none;
+			position: relative;
+			padding: 2.5rem;
+			flex-direction: column;
+			height: 100%;
+			color: #ffffff;
+
+			@media (min-width: 1024px) {
+				display: flex;
+			}
+
+			.image {
+				position: absolute;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				background-size: cover;
+			}
+
+			.logo {
+				display: flex;
+				position: relative;
+				z-index: 20;
+				gap: 0.5rem;
+				align-items: center;
+				font-size: 1.125rem;
+				line-height: 1.75rem;
+				font-weight: 500;
+				transition-property: color, background-color, border-color,text-decoration-color, fill, stroke;
+				transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+				transition-duration: 300ms;
+
+				&:hover {
+					color: hsl(var(--muted-foreground));
+				}
+
+				.logo-image {
+					width: 2rem;
+					height: 2rem;
+				}
+			}
+
+			.quote-wrapper {
+				position: relative;
+				z-index: 20;
+				margin-top: auto;
+
+				.quote {
+					margin-top: 0.5rem;
+
+					p {
+						font-size: 1.125rem;
+						line-height: 1.75rem;
+					}
+				}
+
+				footer {
+					font-size: 0.875rem;
+					line-height: 1.25rem;
+				}
+			}
+		}
+
+		.auth-form {
+			@media (min-width: 1024px) {
+				padding: 2rem;
+			}
+		}
 	}
 
 	:global(.auth-button) {
@@ -80,77 +151,6 @@
 		@media (min-width: 768px) {
 			top: 2rem;
 			right: 2rem;
-		}
-	}
-
-	.auth-marketing {
-		display: none;
-		position: relative;
-		padding: 2.5rem;
-		flex-direction: column;
-		height: 100%;
-		color: #ffffff;
-
-		@media (min-width: 1024px) {
-			display: flex;
-		}
-
-		.image {
-			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			background-size: cover;
-		}
-
-		.logo {
-			display: flex;
-			position: relative;
-			z-index: 20;
-			gap: 0.5rem;
-			align-items: center;
-			font-size: 1.125rem;
-			line-height: 1.75rem;
-			font-weight: 500;
-			transition-property: color, background-color, border-color,text-decoration-color, fill, stroke;
-			transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-			transition-duration: 300ms;
-
-			&:hover {
-				color: hsl(var(--muted-foreground));
-			}
-
-			.logo-image {
-				width: 2rem;
-				height: 2rem;
-			}
-		}
-
-		.quote-wrapper {
-			position: relative;
-			z-index: 20;
-			margin-top: auto;
-
-			.quote {
-				margin-top: 0.5rem;
-
-				p {
-					font-size: 1.125rem;
-					line-height: 1.75rem;
-				}
-			}
-
-			.footer {
-				font-size: 0.875rem;
-				line-height: 1.25rem;
-			}
-		}
-	}
-
-	.auth-form {
-		@media (min-width: 1024px) {
-			padding: 2rem;
 		}
 	}
 </style>

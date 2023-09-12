@@ -1,83 +1,68 @@
 <script lang="ts">
-	// import "../app.postcss";
-	import { onMount } from "svelte";
-	import { getFlash } from 'sveltekit-flash-message/client';
-	import toast, { Toaster } from 'svelte-french-toast';
-  import { navigating, page } from '$app/stores';
-	import { browser } from '$app/environment';
-	import debounce from 'just-debounce-it';
 	import 'iconify-icon';
 	import Transition from '$lib/components/transition/index.svelte';
-	import Analytics from '$lib/components/analytics.svelte';
 	import Header from '$lib/components/header/index.svelte';
 	import Footer from '$lib/components/footer.svelte';
-	import Loading from '$lib/components/loading.svelte';
-	import Portal from '$lib/Portal.svelte';
-	import { boredState } from '$lib/stores/boredState';
-	import { collectionStore } from '$lib/stores/collectionStore';
-	import { wishlistStore } from '$lib/stores/wishlistStore';
-	import { theme } from '$state/theme';
-	import type { SavedGameType } from '$lib/types';
 
-	$: {
-		if ($navigating) {
-			debounce(() => {
-				boredState.update((n) => ({ ...n, loading: true }));
-			}, 250);
-		}
-		if (!$navigating) {
-			boredState.update((n) => ({ ...n, loading: false }));
-		}
-	}
+	// $: {
+	// 	if ($navigating) {
+	// 		debounce(() => {
+	// 			boredState.update((n) => ({ ...n, loading: true }));
+	// 		}, 250);
+	// 	}
+	// 	if (!$navigating) {
+	// 		boredState.update((n) => ({ ...n, loading: false }));
+	// 	}
+	// }
 
-	$: isOpen = $boredState?.dialog?.isOpen;
+	// $: isOpen = $boredState?.dialog?.isOpen;
 
-	if (browser) {
-	const collator = new Intl.Collator('en');
+	// if (browser) {
+	// 	const collator = new Intl.Collator('en');
 
-	let collectionEmpty = $collectionStore.length === 0 || false;
-	let wishlistEmpty = $wishlistStore.length === 0 || false;
-	if (wishlistEmpty && localStorage?.wishlist && localStorage?.wishlist?.length !== 0) {
-		const wishlist: SavedGameType[] = JSON.parse(localStorage.wishlist);
-		if (wishlist?.length !== 0) {
-			wishlist.sort((a, b) => collator.compare(a.name, b.name));
-			for (const item of wishlist) {
-				if (!item?.searchTerms) {
-					item.searchTerms = `${item?.name?.toLowerCase()}`;
-				}
-				if (!item?.includeInRandom) {
-					item.includeInRandom = false;
-				}
-			}
-			wishlistStore.addAll(wishlist);
-		}
-	}
-	if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
-		const collection: SavedGameType[] = JSON.parse(localStorage.collection);
-		if (collection?.length !== 0) {
-			collection.sort((a, b) => collator.compare(a.name, b.name));
-			for (const item of collection) {
-				if (!item?.searchTerms) {
-					item.searchTerms = `${item?.name?.toLowerCase()}`;
-				}
-			}
-			collectionStore.addAll(collection);
-		}
-	}
-}
+	// 	let collectionEmpty = $collectionStore.length === 0 || false;
+	// 	let wishlistEmpty = $wishlistStore.length === 0 || false;
+	// 	if (wishlistEmpty && localStorage?.wishlist && localStorage?.wishlist?.length !== 0) {
+	// 		const wishlist: SavedGameType[] = JSON.parse(localStorage.wishlist);
+	// 		if (wishlist?.length !== 0) {
+	// 			wishlist.sort((a, b) => collator.compare(a.name, b.name));
+	// 			for (const item of wishlist) {
+	// 				if (!item?.searchTerms) {
+	// 					item.searchTerms = `${item?.name?.toLowerCase()}`;
+	// 				}
+	// 				if (!item?.includeInRandom) {
+	// 					item.includeInRandom = false;
+	// 				}
+	// 			}
+	// 			wishlistStore.addAll(wishlist);
+	// 		}
+	// 	}
+	// 	if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
+	// 		const collection: SavedGameType[] = JSON.parse(localStorage.collection);
+	// 		if (collection?.length !== 0) {
+	// 			collection.sort((a, b) => collator.compare(a.name, b.name));
+	// 			for (const item of collection) {
+	// 				if (!item?.searchTerms) {
+	// 					item.searchTerms = `${item?.name?.toLowerCase()}`;
+	// 				}
+	// 			}
+	// 			collectionStore.addAll(collection);
+	// 		}
+	// 	}
+	// }
 
-	const dev = process.env.NODE_ENV !== 'production';
+	// const dev = process.env.NODE_ENV !== 'production';
 
 	export let data;
-	$: ({ user } = data);
+	// $: ({ user } = data);
 
-	const flash = getFlash(page, {
-		clearAfterMs: 6000
-	});
-	let flashType;
-	let flashMessage;
-	$: flashType = $flash?.type;
-	$: flashMessage = $flash?.message;
+	// const flash = getFlash(page, {
+	// 	clearAfterMs: 6000
+	// });
+	// let flashType;
+	// let flashMessage;
+	// $: flashType = $flash?.type;
+	// $: flashMessage = $flash?.message;
 
 	// if ($flash && flashType && flashMessage) {
 	// 	switch (flashType) {
@@ -92,34 +77,34 @@
 	// 	}
 	// }
 
-	onMount(() => {
-		// set the theme to the user's active theme
-		$theme = user?.theme || 'system';
-		document.querySelector('html')?.setAttribute('data-theme', $theme);
-	});
+	// onMount(() => {
+	// 	// set the theme to the user's active theme
+	// 	$theme = user?.theme || 'system';
+	// 	document.querySelector('html')?.setAttribute('data-theme', $theme);
+	// });
 
-	flash.subscribe(($flash) => {
-		if (!$flash) return;
+	// flash.subscribe(($flash) => {
+	// 	if (!$flash) return;
 
-		if ($flash.type == 'success') {
-			toast.success($flash.message);
-		} else {
-			toast.error($flash.message, {
-				duration: 5000
-			});
-		}
+	// 	if ($flash.type == 'success') {
+	// 		toast.success($flash.message);
+	// 	} else {
+	// 		toast.error($flash.message, {
+	// 			duration: 5000
+	// 		});
+	// 	}
 
-		// Clearing the flash message could sometimes
-		// be required here to avoid double-toasting.
-		flash.set(undefined);
-	});
+	// 	// Clearing the flash message could sometimes
+	// 	// be required here to avoid double-toasting.
+	// 	flash.set(undefined);
+	// });
 </script>
 
-{#if !dev}
+<!-- {#if !dev}
 	<Analytics />
-{/if}
+{/if} -->
 
-<div class="wrapper">
+<!-- <div class="wrapper"> -->
 	<Header user={data.user} />
 
 	<main>
@@ -129,11 +114,11 @@
 	</main>
 
 	<Footer />
-</div>
+<!-- </div> -->
 
-<Toaster />
+<!-- <Toaster /> -->
 
-{#if $boredState?.loading}
+<!-- {#if $boredState?.loading}
 	<Portal>
 			<div class="loading">
 				<Loading></Loading>
@@ -146,16 +131,16 @@
 	<div class="container">
 		<svelte:component this={$boredState?.dialog?.content}></svelte:component>
 	</div>
-{/if}
+{/if} -->
 
 <style lang="postcss">
-	.flash {
+	/* .flash {
 		display: inline-block;
 		position: absolute;
 		place-items: center;
 		padding: 0.5rem;
 		border-radius: 2px;
-	}
+	} */
 
 	.loading {
 		position: fixed;
@@ -181,11 +166,11 @@
 		z-index: 100;
 	}
 
-	.wrapper {
+	/* .wrapper {
 		display: grid;
 		grid-template-rows: auto 1fr auto;
 		min-height: 100vh;
-	}
+	} */
 
 	main {
 		flex: 1;
