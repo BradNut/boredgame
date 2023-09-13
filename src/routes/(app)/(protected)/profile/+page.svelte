@@ -3,8 +3,8 @@
 	//import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { userSchema } from '$lib/config/zod-schemas';
 	import { AlertTriangle } from 'lucide-svelte';
-	import Label from '$components/ui/label/Label.svelte';
-	import Input from '$components/ui/input/Input.svelte';
+	import { Label } from '$components/ui/label';
+	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
 	export let data;
 

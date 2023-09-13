@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { LogOut } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Toggle } from "$lib/components/ui/toggle";
+	// import { Toggle } from "$lib/components/ui/toggle"; -- TODO: Add light/dark toggle
 	import * as Avatar from "$lib/components/ui/avatar";
 	import * as Sheet from "$lib/components/ui/sheet";
 	import Logo from '$components/logo.svelte';
@@ -34,9 +34,6 @@
 				<Sheet.Content side="right">
 					<Sheet.Header>
 						<Sheet.Title>Menu</Sheet.Title>
-						<Toggle aria-label="toggle bold">
-
-						</Toggle>
 					</Sheet.Header>
 					<div class="menu">
 						<Sheet.Close asChild let:builder>
@@ -61,10 +58,12 @@
 								action="/logout"
 								method="POST"
 							>
-								<Button type="submit">
-									<LogOut class="mr-2 h-4 w-4"/>
-									Sign out
-								</Button>
+								<Sheet.Close asChild let:builder>
+									<Button builders={[builder]} type="submit">
+										<LogOut class="mr-2 h-4 w-4"/>
+										Sign out
+									</Button>
+								</Sheet.Close>
 							</form>
 						</div>
 					</div>

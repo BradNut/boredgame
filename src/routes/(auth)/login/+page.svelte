@@ -46,18 +46,16 @@
 
 <div class="login">
 	<form method="POST" use:enhance>
-		<div class="grid w-full max-w-sm items-center gap-2">
-			<h2
-				class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-			>
-				Log into your account
-			</h2>
-			<Label for="username">Username</Label>
-			<Input type="text" id="username" name="username" placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} required />
-			<Label for="password">Password</Label>
-			<Input type="password" id="password" name="password" placeholder="Password" autocomplete="password" data-invalid={$errors.password} bind:value={$form.password} required />
-			<Button type="submit">Sign In</Button>
-		</div>
+		<h2
+			class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+		>
+			Log into your account
+		</h2>
+		<Label for="username">Username</Label>
+		<Input type="text" id="username" name="username" placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} required />
+		<Label for="password">Password</Label>
+		<Input type="password" id="password" name="password" placeholder="Password" autocomplete="password" data-invalid={$errors.password} bind:value={$form.password} required />
+		<Button type="submit">Login</Button>
 	</form>
 	{#if $errors._errors}
 		<Alert.Root variant="destructive">
@@ -68,11 +66,36 @@
 			</Alert.Description>
 		</Alert.Root>
 	{/if}
+	<p class="px-8 text-center text-sm text-muted-foreground">
+		By clicking continue, you agree to our
+		<a href="/terms-of-service" class="underline underline-offset-4 hover:text-primary">
+			Terms of Service
+		</a>
+		and
+		<a href="/privacy" class="underline underline-offset-4 hover:text-primary"> Privacy Policy </a>
+		.
+	</p>
 </div>
 
 <style lang="postcss">
 	.login {
-		display: grid;
-		gap: 2rem;
+		display: flex;
+		margin-top: 1.5rem;
+		flex-direction: column;
+		justify-content: center;
+		width: 100%;
+		margin-right: auto;
+		margin-left: auto;
+
+		@media (min-width: 640px) {
+			width: 350px;
+		}
+
+		form {
+			display: grid;
+			gap: 0.5rem;
+			align-items: center;
+			max-width: 24rem;
+		}
 	}
 </style>
