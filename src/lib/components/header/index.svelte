@@ -58,10 +58,12 @@
 								action="/logout"
 								method="POST"
 							>
-								<Button type="submit">
-									<LogOut class="mr-2 h-4 w-4"/>
-									Sign out
-								</Button>
+								<Sheet.Close asChild let:builder>
+									<Button builders={[builder]} type="submit">
+										<LogOut class="mr-2 h-4 w-4"/>
+										Sign out
+									</Button>
+								</Sheet.Close>
 							</form>
 						</div>
 					</div>

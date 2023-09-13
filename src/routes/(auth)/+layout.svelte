@@ -53,8 +53,10 @@
 
 <style lang="postcss">
 	.container {
-		display: none;
-		position: relative;
+		/* display: none;
+		position: relative; */
+		display: flex;
+		align-content: center;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
