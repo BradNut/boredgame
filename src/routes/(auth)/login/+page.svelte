@@ -56,8 +56,7 @@
 		<Label for="password">Password</Label>
 		<Input type="password" id="password" name="password" placeholder="Password" autocomplete="password" data-invalid={$errors.password} bind:value={$form.password} required />
 		<Button type="submit">Login</Button>
-	</form>
-	{#if $errors._errors}
+		{#if $errors._errors}
 		<Alert.Root variant="destructive">
 			<AlertCircle class="h-4 w-4" />
 			<Alert.Title>Error</Alert.Title>
@@ -68,13 +67,15 @@
 	{/if}
 	<p class="px-8 text-center text-sm text-muted-foreground">
 		By clicking continue, you agree to our
-		<a href="/terms-of-service" class="underline underline-offset-4 hover:text-primary">
-			Terms of Service
+		<a href="/terms" class="underline underline-offset-4 hover:text-primary">
+			Terms of Use
 		</a>
 		and
-		<a href="/privacy" class="underline underline-offset-4 hover:text-primary"> Privacy Policy </a>
-		.
+		<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
+			Privacy Policy
+		</a>.
 	</p>
+	</form>
 </div>
 
 <style lang="postcss">

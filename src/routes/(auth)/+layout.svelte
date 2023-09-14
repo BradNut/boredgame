@@ -2,13 +2,6 @@
 	import { page } from "$app/stores";
 	import { Button } from "$lib/components/ui/button";
 	import Logo from "$lib/components/logo.svelte";
-
-	$: link = {
-		label: $page.url.pathname === "/sign-up" ? "Login" : "Sign up",
-		href: $page.url.pathname === "/sign-up" ? "/login" : "/sign-up"
-	};
-
-	$: console.log($page.url.pathname);
 </script>
 
 <div class="container">
@@ -56,7 +49,6 @@
 		/* display: none;
 		position: relative; */
 		display: flex;
-		align-content: center;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;

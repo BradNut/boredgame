@@ -8,10 +8,6 @@
 	console.log('formData', formData);
 </script>
 
-<svelte:head>
-	<title>Bored Game | Home</title>
-</svelte:head>
-
 <h1>Search Boardgames!</h1>
 <div class="game-search">
 	<section>

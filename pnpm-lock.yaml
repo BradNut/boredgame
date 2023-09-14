@@ -77,15 +77,9 @@ dependencies:
   svelte-french-toast:
     specifier: ^1.2.0
     version: 1.2.0(svelte@4.2.0)
-  svelte-lazy:
-    specifier: ^1.2.1
-    version: 1.2.1(svelte@4.2.0)
   svelte-lazy-loader:
     specifier: ^1.0.0
     version: 1.0.0
-  svelte-legos:
-    specifier: ^0.2.1
-    version: 0.2.1(svelte@4.2.0)
   tailwind-merge:
     specifier: ^1.14.0
     version: 1.14.0
@@ -175,6 +169,9 @@ devDependencies:
   svelte-check:
     specifier: ^3.5.0
     version: 3.5.0(postcss-load-config@4.0.1)(postcss@8.4.29)(sass@1.65.1)(svelte@4.2.0)
+  svelte-meta-tags:
+    specifier: ^3.0.3
+    version: 3.0.3(svelte@4.2.0)(typescript@5.1.6)
   svelte-preprocess:
     specifier: ^5.0.4
     version: 5.0.4(postcss-load-config@4.0.1)(postcss@8.4.29)(sass@1.65.1)(svelte@4.2.0)(typescript@5.1.6)
@@ -1865,10 +1862,6 @@ packages:
     resolution: {integrity: sha512-tahF5O9EiiTzwTUqAeFjIZbn4Dnqxzz7ktrgGlMYNLH43Ul26IgTMH/zvL3DG0lZxBYnlT04axvInszUsZULdA==}
     dev: true
 
-  /canvas-confetti@1.6.0:
-    resolution: {integrity: sha512-ej+w/m8Jzpv9Z7W7uJZer14Ke8P2ogsjg4ZMGIuq4iqUOqY2Jq8BNW42iGmNfRwREaaEfFIczLuZZiEVSYNHAA==}
-    dev: false
-
   /chai@4.3.7:
     resolution: {integrity: sha512-HLnAzZ2iupm25PlN0xFreAlBA5zaBSv3og0DdeGA4Ar6h6rJ3A0rolRUKJhSF2V10GZKDgWF/VmAEsNWjCRB+A==}
     engines: {node: '>=4'}
@@ -3545,10 +3538,6 @@ packages:
     hasBin: true
     dev: true
 
-  /prism-svelte@0.5.0:
-    resolution: {integrity: sha512-db91Bf3pRGKDPz1lAqLFSJXeW13mulUJxhycysFpfXV5MIK7RgWWK2E5aPAa71s8TCzQUXxF5JOV42/iOs6QkA==}
-    dev: false
-
   /prisma@5.2.0:
     resolution: {integrity: sha512-FfFlpjVCkZwrqxDnP4smlNYSH1so+CbfjgdpioFzGGqlQAEm6VHAYSzV7jJgC3ebtY9dNOhDMS2+4/1DDSM7bQ==}
     engines: {node: '>=16.13'}
@@ -3556,11 +3545,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 5.2.0
-
-  /prismjs@1.29.0:
-    resolution: {integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==}
-    engines: {node: '>=6'}
-    dev: false
 
   /proxy-from-env@1.1.0:
     resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
@@ -3693,6 +3677,14 @@ packages:
       chokidar: 3.5.3
       immutable: 4.1.0
       source-map-js: 1.0.2
+
+  /schema-dts@1.1.2(typescript@5.1.6):
+    resolution: {integrity: sha512-MpNwH0dZJHinVxk9bT8XUdjKTxMYrA5bLtrrGmFA6PTLwlOKnhi67XoRd6/ty+Djt6ZC0slR57qFhZDNMI6DhQ==}
+    peerDependencies:
+      typescript: '>=4.1.0'
+    dependencies:
+      typescript: 5.1.6
+    dev: true
 
   /semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
@@ -3913,24 +3905,16 @@ packages:
     resolution: {integrity: sha512-AZD6R60vksyojn21FgXLglmBiBB9K5Dkdu0hdGrLbCaRCYT68IsWkZfRUqKhMx1IfzqWcZQ8X9y/f+Ih0oNQkQ==}
     dev: false
 
-  /svelte-lazy@1.2.1(svelte@4.2.0):
-    resolution: {integrity: sha512-8L+GrU5p0ia/nLDeGDMTC+DtmbXlFcoaTPoSf8jIy1NoKicqSJXz5tjiu6GUsD7ra0RjgIvhQiLcdZYR9VECeA==}
+  /svelte-meta-tags@3.0.3(svelte@4.2.0)(typescript@5.1.6):
+    resolution: {integrity: sha512-av5B6MQb1ujpM11GOYj9PDridXYJmWWJdfQvtJivFDeEc7t4Xh0hBQqcL5oEONd4Tt8UjSi0cIQG0mshTM4s+A==}
     peerDependencies:
-      svelte: 3.x
+      svelte: ^3.55.0 || ^4.0.0
     dependencies:
+      schema-dts: 1.1.2(typescript@5.1.6)
       svelte: 4.2.0
-    dev: false
-
-  /svelte-legos@0.2.1(svelte@4.2.0):
-    resolution: {integrity: sha512-M7IncWP2e8FaHzQN1DSzxLSoq/6aQYWZ93REZam9bYlvLEjdPGWLAYdpPNnnZtXlHco+o3zrgYTdwsyyS9beUQ==}
-    peerDependencies:
-      svelte: ^3.54.0
-    dependencies:
-      canvas-confetti: 1.6.0
-      prism-svelte: 0.5.0
-      prismjs: 1.29.0
-      svelte: 4.2.0
-    dev: false
+    transitivePeerDependencies:
+      - typescript
+    dev: true
 
   /svelte-preprocess@5.0.4(postcss-load-config@4.0.1)(postcss@8.4.29)(sass@1.65.1)(svelte@4.2.0)(typescript@5.1.6):
     resolution: {integrity: sha512-ABia2QegosxOGsVlsSBJvoWeXy1wUKSfF7SWJdTjLAbx/Y3SrVevvvbFNQqrSJw89+lNSsM58SipmZJ5SRi5iw==}

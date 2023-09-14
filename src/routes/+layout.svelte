@@ -1,9 +1,10 @@
 <script lang="ts">
-	import "$lib/styles/app.postcss";
+	import "$lib/styles/app.pcss";
 	import { onMount } from "svelte";
 	import { getFlash } from 'sveltekit-flash-message/client';
 	import toast, { Toaster } from 'svelte-french-toast';
   import { navigating, page } from '$app/stores';
+	import { MetaTags } from 'svelte-meta-tags';
 	import debounce from 'just-debounce-it';
 	import 'iconify-icon';
 	import Analytics from '$lib/components/analytics.svelte';
@@ -14,6 +15,18 @@
 
 	export let data;
 	$: ({ user } = data);
+
+	$: metaTags = {
+		titleTemplate: '%s | Bored Game',
+		description: 'Bored Game, keep track of your games.',
+		openGraph: {
+			type: 'website',
+			titleTemplate: '%s | Bored Game',
+			locale: 'en_US',
+			description: 'Bored Game, keep track of your games',
+		},
+		...$page.data.metaTagsChild
+	}
 
 	const flash = getFlash(page, {
 		clearAfterMs: 6000
@@ -62,6 +75,8 @@
 {#if !dev}
 	<Analytics />
 {/if}
+
+<MetaTags {...metaTags} />
 
 <div class="layout">
 	<slot />
