@@ -9,33 +9,40 @@ const height = 630;
 const width = 1200;
 
 export const GET: RequestHandler = async ({ url }) => {
-	const title = url.searchParams.get('title') ?? undefined;
-	const result = SocialImageCard.render({ title });
-	const element = toReactNode(`${result.html}<style>${result.css.code}</style>`);
-	const svg = await satori(element, {
-		fonts: [
-			{
-				name: 'Noto Sans',
-				data: Buffer.from(NotoSans),
-				style: 'normal'
+	try {
+		const ogImage = `${new URL(url.origin).href}images/bored-game.png`;
+		const title = url.searchParams.get('title') ?? undefined;
+		const description = url.searchParams.get('description') ?? '';
+		const result = SocialImageCard.render({ title, image: ogImage, description });
+		console.log('result', result);
+		const element = toReactNode(`${result.html}<style>${result.css.code}</style>`);
+		const svg = await satori(element, {
+			fonts: [
+				{
+					name: 'Noto Sans',
+					data: Buffer.from(NotoSans),
+					style: 'normal'
+				}
+			],
+			height,
+			width
+		});
+
+		const resvg = new Resvg(svg, {
+			fitTo: {
+				mode: 'width',
+				value: width
 			}
-		],
-		height,
-		width
-	});
+		});
 
-	const resvg = new Resvg(svg, {
-		fitTo: {
-			mode: 'width',
-			value: width
-		}
-	});
+		const image = resvg.render();
 
-	const image = resvg.render();
-
-	return new Response(image.asPng(), {
-		headers: {
-			'content-type': 'image/png'
-		}
-	});
+		return new Response(image.asPng(), {
+			headers: {
+				'content-type': 'image/png'
+			}
+		});
+	} catch (e) {
+		console.error(e);
+	}
 };

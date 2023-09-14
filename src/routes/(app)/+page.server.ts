@@ -14,7 +14,9 @@ export const load = async ({ fetch, url }) => {
 			description: 'Bored Game, keep track of your games',
 			images: [
 				{
-					url: `${new URL(url.pathname, url.origin).href}og?title=Home | Bored Game`,
+					url: `${
+						new URL(url.pathname, url.origin).href
+					}og?title=Home | Bored Game&description=Bored Game, keep track of your games`,
 					width: 1200,
 					height: 630
 				}
