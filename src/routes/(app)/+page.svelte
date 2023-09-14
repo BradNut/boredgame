@@ -1,6 +1,5 @@
 <script lang="ts">
 	// import TextSearch from '$lib/components/search/textSearch/index.svelte';
-	import SocialImageCard from '$components/socialImageCard.svelte';
 	import RandomSearch from '$lib/components/search/random/index.svelte';
 	import logo from '$lib/assets/bored-game.png';
 
@@ -25,9 +24,6 @@
 	</section>
 	<!-- <TextSearch showButton advancedSearch data={data.form} /> -->
 </div>
-
-<SocialImageCard header="Bored Game" page="Home" content="Test" image={logo} width={1200} height={630}>
-</SocialImageCard>
 
 <style lang="scss">
 	.game-search {
