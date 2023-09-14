@@ -1,6 +1,10 @@
 <script lang="ts">
 	// import TextSearch from '$lib/components/search/textSearch/index.svelte';
+	import SocialImageCard from '$components/socialImageCard.svelte';
 	import RandomSearch from '$lib/components/search/random/index.svelte';
+	import { MetaTags } from 'svelte-meta-tags';
+	import logo from '$lib/assets/bored-game.png';
+
 	// import Random from '$lib/components/random/index.svelte';
 
 	export let data;
@@ -22,6 +26,10 @@
 	</section>
 	<!-- <TextSearch showButton advancedSearch data={data.form} /> -->
 </div>
+
+<SocialImageCard title="Home | Bored Game" icon={logo}>
+	<h2>Bored Game, keep track of your games!</h2>
+</SocialImageCard>
 
 <style lang="scss">
 	.game-search {

@@ -11,7 +11,14 @@ export const load = async ({ fetch, url }) => {
 			url: new URL(url.pathname, url.origin).href,
 			locale: 'en_US',
 			title: 'Home',
-			description: 'Bored Game, keep track of your games'
+			description: 'Bored Game, keep track of your games',
+			images: [
+				{
+					url: `${new URL(url.pathname, url.origin).href}/og?title=Home`,
+					width: 1200,
+					height: 630
+				}
+			]
 		}
 	});
 
