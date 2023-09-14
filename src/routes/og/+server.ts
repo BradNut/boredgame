@@ -11,9 +11,18 @@ const width = 1200;
 export const GET: RequestHandler = async ({ url }) => {
 	try {
 		const ogImage = `${new URL(url.origin).href}images/bored-game.png`;
-		const title = url.searchParams.get('title') ?? undefined;
-		const description = url.searchParams.get('description') ?? '';
-		const result = SocialImageCard.render({ title, image: ogImage, description });
+		const header = url.searchParams.get('header') ?? undefined;
+		const page = url.searchParams.get('page') ?? undefined;
+		const content = url.searchParams.get('content') ?? '';
+		const result = SocialImageCard.render({
+			header,
+			page,
+			content,
+			image: ogImage,
+			width,
+			height,
+			url: new URL(url.origin).href
+		});
 		console.log('result', result);
 		const element = toReactNode(`${result.html}<style>${result.css.code}</style>`);
 		const svg = await satori(element, {
