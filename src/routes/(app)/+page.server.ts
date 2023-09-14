@@ -1,7 +1,6 @@
 import { superValidate } from 'sveltekit-superforms/server';
 import { search_schema } from '$lib/zodValidation';
 import type { MetaTagsProps } from 'svelte-meta-tags';
-import logo from '$lib/assets/bored-game.png';
 
 export const load = async ({ fetch, url }) => {
 	const metaTags: MetaTagsProps = Object.freeze({
@@ -15,7 +14,7 @@ export const load = async ({ fetch, url }) => {
 			description: 'Bored Game, keep track of your games',
 			images: [
 				{
-					url: `${new URL(url.pathname, url.origin).href}og?title=Home | Bored Game&icon=${logo}`,
+					url: `${new URL(url.pathname, url.origin).href}og?title=Home | Bored Game`,
 					width: 1200,
 					height: 630
 				}
