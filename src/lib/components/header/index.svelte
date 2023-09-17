@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { LogOut } from 'lucide-svelte';
+	import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
-	// import { Toggle } from "$lib/components/ui/toggle"; -- TODO: Add light/dark toggle
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import * as Avatar from "$lib/components/ui/avatar";
-	import * as Sheet from "$lib/components/ui/sheet";
 	import Logo from '$components/logo.svelte';
 
 	export let user: any;
@@ -23,57 +22,49 @@
 		{#if user}
 			<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
 			<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
-			<Sheet.Root>
-				<Sheet.Trigger>
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
 					<Avatar.Root asChild>
 						<Avatar.Fallback class="text-3xl font-medium text-magnum-700 h-16 w-16 bg-neutral-100">
 							{avatar}
 						</Avatar.Fallback>
 					</Avatar.Root>
-				</Sheet.Trigger>
-				<Sheet.Content side="right">
-					<Sheet.Header>
-						<Sheet.Title>Menu</Sheet.Title>
-					</Sheet.Header>
-					<div class="menu">
-						<Sheet.Close asChild let:builder>
-							<div class="item">
-								<Button builders={[builder]} variant="link" class="text-secondary-foreground" href="/profile">View Profile</Button>
-							</div>
-						</Sheet.Close>
-						<Sheet.Close asChild let:builder>
-							<div class="item">
-								<Button builders={[builder]} variant="link" class="text-secondary-foreground" href="/collection">Your Collection</Button>
-							</div>
-						</Sheet.Close>
-						<Sheet.Close asChild let:builder>
-							<div class="item">
-								<Button builders={[builder]} variant="link" class="text-secondary-foreground" href="/wishlist">Your Wishlist</Button>
-							</div>
-						</Sheet.Close>
-						<div class="separator" />
-						<div class="item">
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content>
+					<DropdownMenu.Group>
+						<DropdownMenu.Label>My Account</DropdownMenu.Label>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item>
+							<User class="mr-2 h-4 w-4" />
+							<Button variant="link" class="text-secondary-foreground" href="/profile">Profile</Button>
+							<DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut>
+						</DropdownMenu.Item>
+						<DropdownMenu.Item>
+							<ListChecks class="mr-2 h-4 w-4" />
+							<Button variant="link" class="text-secondary-foreground" href="/collection">Collection</Button>
+							<DropdownMenu.Shortcut>⇧⌘C</DropdownMenu.Shortcut>
+						</DropdownMenu.Item>
+						<DropdownMenu.Item>
+							<ListTodo class="mr-2 h-4 w-4" />
+							<Button variant="link" class="text-secondary-foreground" href="/wishlist">Wishlist</Button>
+							<DropdownMenu.Shortcut>⇧⌘W</DropdownMenu.Shortcut>
+						</DropdownMenu.Item>
+						<DropdownMenu.Item>
 							<form
 								use:enhance
 								action="/logout"
 								method="POST"
 							>
-								<Sheet.Close asChild let:builder>
-									<Button builders={[builder]} type="submit">
-										<LogOut class="mr-2 h-4 w-4"/>
-										Sign out
-									</Button>
-								</Sheet.Close>
+								<Button type="submit">
+									<LogOut class="mr-2 h-4 w-4"/>
+									Sign out
+								</Button>
 							</form>
-						</div>
-					</div>
-					<Sheet.Footer>
-						<Sheet.Close asChild let:builder>
-							<Button builders={[builder]} type="button">Close</Button>
-						</Sheet.Close>
-					</Sheet.Footer>
-				</Sheet.Content>
-			</Sheet.Root>
+							<DropdownMenu.Shortcut>⇧⌘Q</DropdownMenu.Shortcut>
+						</DropdownMenu.Item>
+					</DropdownMenu.Group>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 		{/if}
 		{#if !user}
 			<a href="/login">
@@ -101,10 +92,6 @@
 
 	.menu {
 		display: grid;
-	}
-
-	.item {
-		/* margin: 0.2rem 0; */
 	}
 
 	.corner {

@@ -4,159 +4,20 @@
 	import Header from '$lib/components/header/index.svelte';
 	import Footer from '$lib/components/footer.svelte';
 
-	// $: {
-	// 	if ($navigating) {
-	// 		debounce(() => {
-	// 			boredState.update((n) => ({ ...n, loading: true }));
-	// 		}, 250);
-	// 	}
-	// 	if (!$navigating) {
-	// 		boredState.update((n) => ({ ...n, loading: false }));
-	// 	}
-	// }
-
-	// $: isOpen = $boredState?.dialog?.isOpen;
-
-	// if (browser) {
-	// 	const collator = new Intl.Collator('en');
-
-	// 	let collectionEmpty = $collectionStore.length === 0 || false;
-	// 	let wishlistEmpty = $wishlistStore.length === 0 || false;
-	// 	if (wishlistEmpty && localStorage?.wishlist && localStorage?.wishlist?.length !== 0) {
-	// 		const wishlist: SavedGameType[] = JSON.parse(localStorage.wishlist);
-	// 		if (wishlist?.length !== 0) {
-	// 			wishlist.sort((a, b) => collator.compare(a.name, b.name));
-	// 			for (const item of wishlist) {
-	// 				if (!item?.searchTerms) {
-	// 					item.searchTerms = `${item?.name?.toLowerCase()}`;
-	// 				}
-	// 				if (!item?.includeInRandom) {
-	// 					item.includeInRandom = false;
-	// 				}
-	// 			}
-	// 			wishlistStore.addAll(wishlist);
-	// 		}
-	// 	}
-	// 	if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
-	// 		const collection: SavedGameType[] = JSON.parse(localStorage.collection);
-	// 		if (collection?.length !== 0) {
-	// 			collection.sort((a, b) => collator.compare(a.name, b.name));
-	// 			for (const item of collection) {
-	// 				if (!item?.searchTerms) {
-	// 					item.searchTerms = `${item?.name?.toLowerCase()}`;
-	// 				}
-	// 			}
-	// 			collectionStore.addAll(collection);
-	// 		}
-	// 	}
-	// }
-
-	// const dev = process.env.NODE_ENV !== 'production';
-
 	export let data;
-	// $: ({ user } = data);
-
-	// const flash = getFlash(page, {
-	// 	clearAfterMs: 6000
-	// });
-	// let flashType;
-	// let flashMessage;
-	// $: flashType = $flash?.type;
-	// $: flashMessage = $flash?.message;
-
-	// if ($flash && flashType && flashMessage) {
-	// 	switch (flashType) {
-	// 		case 'success':
-	// 			toast.success(flashMessage);
-	// 			break;
-	// 		case 'error':
-	// 			toast.error(flashMessage);
-	// 			break;
-	// 		default:
-	// 			toast.error(flashMessage);
-	// 	}
-	// }
-
-	// onMount(() => {
-	// 	// set the theme to the user's active theme
-	// 	$theme = user?.theme || 'system';
-	// 	document.querySelector('html')?.setAttribute('data-theme', $theme);
-	// });
-
-	// flash.subscribe(($flash) => {
-	// 	if (!$flash) return;
-
-	// 	if ($flash.type == 'success') {
-	// 		toast.success($flash.message);
-	// 	} else {
-	// 		toast.error($flash.message, {
-	// 			duration: 5000
-	// 		});
-	// 	}
-
-	// 	// Clearing the flash message could sometimes
-	// 	// be required here to avoid double-toasting.
-	// 	flash.set(undefined);
-	// });
 </script>
 
-<!-- {#if !dev}
-	<Analytics />
-{/if} -->
+<Header user={data.user} />
 
-<!-- <div class="wrapper"> -->
-	<Header user={data.user} />
+<main>
+	<Transition url={data.url} transition={{ type: 'page' }}>
+		<slot />
+	</Transition>
+</main>
 
-	<main>
-		<Transition url={data.url} transition={{ type: 'page' }}>
-			<slot />
-		</Transition>
-	</main>
-
-	<Footer />
-<!-- </div> -->
-
-<!-- <Toaster /> -->
-
-<!-- {#if $boredState?.loading}
-	<Portal>
-			<div class="loading">
-				<Loading></Loading>
-				<h3>Loading...</h3>
-			</div>
-		<div class="background"></div>
-	</Portal>
-{/if}
-{#if isOpen}
-	<div class="container">
-		<svelte:component this={$boredState?.dialog?.content}></svelte:component>
-	</div>
-{/if} -->
+<Footer />
 
 <style lang="postcss">
-	/* .flash {
-		display: inline-block;
-		position: absolute;
-		place-items: center;
-		padding: 0.5rem;
-		border-radius: 2px;
-	} */
-
-	.loading {
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 101;
-		display: grid;
-		place-items: center;
-		gap: 1rem;
-
-		& h3 {
-			color: white;
-		}
-	}
-
 	.background {
 		background: black;
 		opacity: 0.8;

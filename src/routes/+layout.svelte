@@ -8,6 +8,8 @@
 	import debounce from 'just-debounce-it';
 	import 'iconify-icon';
 	import Analytics from '$lib/components/analytics.svelte';
+	import Portal from "$lib/Portal.svelte";
+	import Loading from "$components/loading.svelte";
 	import { boredState } from '$lib/stores/boredState';
 	import { theme } from '$state/theme';
 
@@ -48,6 +50,7 @@
 	}
 
 	$: isOpen = $boredState?.dialog?.isOpen;
+	$: loading = $boredState?.loading;
 
 	onMount(() => {
 		// set the theme to the user's active theme
@@ -82,9 +85,34 @@
 	<slot />
 </div>
 
+<!-- {#if loading}
+	<Portal>
+		<div class="loading">
+			<Loading />
+			<h3>Loading...</h3>
+		</div>
+	<div class="background" />
+	</Portal>
+{/if} -->
+
 <Toaster />
 
 <style lang="postcss">
+	.loading {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 101;
+		display: grid;
+		place-items: center;
+		gap: 1rem;
+
+		& h3 {
+			color: white;
+		}
+	}
+
 	.layout {
 		display: flex;
 		position: relative;

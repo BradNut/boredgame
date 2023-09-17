@@ -9,6 +9,9 @@
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
   import * as Alert from "$components/ui/alert";
+	import { boredState } from '$lib/stores/boredState.js';
+	import Portal from '$lib/Portal.svelte';
+	import Loading from '$components/loading.svelte';
 
 	export let data;
 	const { form, errors, enhance, delayed } = superForm(data.form, {
@@ -26,7 +29,7 @@
 		taintedMessage: null,
 		validators: signInSchema,
 		validationMethod: 'oninput',
-		delayMs: 0,
+		delayMs: 250,
 	});
 
 	const flash = flashModule.getFlash(page);
@@ -76,9 +79,35 @@
 		</a>.
 	</p>
 	</form>
+	{#if $delayed}
+	<Portal>
+		<!-- <Transition transition={{ type: 'fade', duration: 0 }}> -->
+			<div class="loading">
+				<Loading />
+				<h3>Loading...</h3>
+			</div>
+		<!-- </Transition> -->
+		<div class="background" />
+	</Portal>
+{/if}
+
 </div>
 
 <style lang="postcss">
+		.loading {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 101;
+		display: grid;
+		place-items: center;
+		gap: 1rem;
+
+		& h3 {
+			color: white;
+		}
+	}
 	.login {
 		display: flex;
 		margin-top: 1.5rem;
