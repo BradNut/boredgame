@@ -1,10 +1,13 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
 	import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte';
 	import { Button } from '$lib/components/ui/button';
 	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 	import * as Avatar from "$lib/components/ui/avatar";
 	import Logo from '$components/logo.svelte';
+	import { boredState } from '$lib/stores/boredState';
+	import { invalidateAll } from '$app/navigation';
+	import toast from 'svelte-french-toast';
 
 	export let user: any;
 
@@ -53,7 +56,24 @@
 							</DropdownMenu.Item>
 						</a>
 						<form
-							use:enhance
+							use:enhance={() => {
+								boredState.update((n) => ({ ...n, loading: true }));
+								return async ({ result }) => {
+									console.log(result);
+									if (result.type === 'success' || result.type === 'redirect') {
+										toast.success('Logged Out');
+									} else if (result.type === 'error') {
+										console.log(result);
+										toast.error(`Error: ${result.error.message}`);
+									} else {
+										toast.error(`Something went wrong.`);
+										console.log(result);
+									}
+									await invalidateAll();
+									await applyAction(result);
+									boredState.update((n) => ({ ...n, loading: true }));
+								};
+							}}
 							action="/logout"
 							method="POST"
 						>

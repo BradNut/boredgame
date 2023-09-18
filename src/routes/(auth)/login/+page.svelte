@@ -10,11 +10,11 @@
 	import { Button } from '$components/ui/button';
   import * as Alert from "$components/ui/alert";
 	import { boredState } from '$lib/stores/boredState.js';
-	import Portal from '$lib/Portal.svelte';
-	import Loading from '$components/loading.svelte';
 
 	export let data;
-	const { form, errors, enhance, delayed } = superForm(data.form, {
+	const { form, errors, enhance } = superForm(data.form, {
+		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
+  	onResult: () => boredState.update((n) => ({ ...n, loading: false })),
 		flashMessage: {
 			module: flashModule,
 			onError: ({ result, message }) => {
@@ -29,14 +29,8 @@
 		taintedMessage: null,
 		validators: signInSchema,
 		validationMethod: 'oninput',
-		delayMs: 250,
+		delayMs: 0,
 	});
-
-	$: {
-		if ($delayed) {
-			boredState.update((n) => ({ ...n, loading: true }));
-		}
-	}
 
 	const flash = flashModule.getFlash(page);
 

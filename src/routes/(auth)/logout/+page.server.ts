@@ -10,6 +10,6 @@ export const actions = {
 		}
 		await auth.invalidateSession(session.sessionId); // invalidate session
 		locals.auth.setSession(null); // remove cookie
-		throw redirect(302, '/login');
+		throw redirect(302, '/');
 	}
 };
