@@ -85,7 +85,7 @@
 	<slot />
 </div>
 
-<!-- {#if loading}
+{#if loading}
 	<Portal>
 		<div class="loading">
 			<Loading />
@@ -93,7 +93,7 @@
 		</div>
 	<div class="background" />
 	</Portal>
-{/if} -->
+{/if}
 
 <Toaster />
 
@@ -108,9 +108,18 @@
 		place-items: center;
 		gap: 1rem;
 
-		& h3 {
+		h3 {
 			color: white;
 		}
+	}
+
+	.background {
+		background: black;
+		opacity: 0.8;
+		cursor: none;
+		inset: 0;
+		position: fixed;
+		z-index: 100;
 	}
 
 	.layout {

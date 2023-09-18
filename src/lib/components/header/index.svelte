@@ -34,34 +34,38 @@
 					<DropdownMenu.Group>
 						<DropdownMenu.Label>My Account</DropdownMenu.Label>
 						<DropdownMenu.Separator />
-						<DropdownMenu.Item>
-							<User class="mr-2 h-4 w-4" />
-							<Button variant="link" class="text-secondary-foreground" href="/profile">Profile</Button>
-							<DropdownMenu.Shortcut>⇧⌘P</DropdownMenu.Shortcut>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<ListChecks class="mr-2 h-4 w-4" />
-							<Button variant="link" class="text-secondary-foreground" href="/collection">Collection</Button>
-							<DropdownMenu.Shortcut>⇧⌘C</DropdownMenu.Shortcut>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<ListTodo class="mr-2 h-4 w-4" />
-							<Button variant="link" class="text-secondary-foreground" href="/wishlist">Wishlist</Button>
-							<DropdownMenu.Shortcut>⇧⌘W</DropdownMenu.Shortcut>
-						</DropdownMenu.Item>
-						<DropdownMenu.Item>
-							<form
-								use:enhance
-								action="/logout"
-								method="POST"
-							>
-								<Button type="submit">
+						<a href="/profile">
+							<DropdownMenu.Item>
+								<User class="mr-2 h-4 w-4" />
+								<span>Profile</span>
+							</DropdownMenu.Item>
+						</a>
+						<a href="/collection">
+							<DropdownMenu.Item>
+								<ListChecks class="mr-2 h-4 w-4" />
+								<span>Collection</span>
+							</DropdownMenu.Item>
+						</a>
+						<a href="/wishlist">
+							<DropdownMenu.Item>
+								<ListTodo class="mr-2 h-4 w-4" />
+								<span>Wishlist</span>
+							</DropdownMenu.Item>
+						</a>
+						<form
+							use:enhance
+							action="/logout"
+							method="POST"
+						>
+							<button type="submit" class="">
+								<DropdownMenu.Item>
+								<div class="flex items-center gap-1">
 									<LogOut class="mr-2 h-4 w-4"/>
-									Sign out
-								</Button>
-							</form>
-							<DropdownMenu.Shortcut>⇧⌘Q</DropdownMenu.Shortcut>
-						</DropdownMenu.Item>
+									<span>Sign out</span>
+								</div>
+								</DropdownMenu.Item>
+							</button>
+						</form>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
@@ -88,10 +92,6 @@
 		@media (max-width: 1000px) {
 			padding-top: 1.25rem;
 		}
-	}
-
-	.menu {
-		display: grid;
 	}
 
 	.corner {
@@ -124,10 +124,6 @@
 	}
 
 	nav a {
-		/* display: flex; */
-		/* height: 100%; */
-		/* align-items: center; */
-		/* padding: 0 1em; */
 		color: var(--heading-color);
 		font-weight: 700;
 		text-transform: uppercase;
@@ -141,54 +137,7 @@
 		color: var(--accent-color);
 	}
 
-	/* .menu {
-    @apply z-10 flex max-h-[300px] min-w-[220px] flex-col shadow-lg;
-    @apply rounded-md bg-slate-300 p-1 shadow-neutral-900/30 lg:max-h-none;
-    @apply ring-0 !important;
-  } */
-	/*
-  .subMenu {
-    @apply min-w-[220px] shadow-md shadow-neutral-900/30;
-  }*/
-  /* .item {
-    @apply relative h-6 select-none rounded-sm pl-6 pr-1;
-    @apply z-20 text-slate-700 outline-none;
-    @apply data-[highlighted]:bg-slate-200 data-[highlighted]:text-slate-700;
-    @apply data-[disabled]:text-neutral-300;
-    @apply flex items-center leading-none;
-    @apply ring-0 !important;
-  } */
-	/*
-  .trigger {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-white;
-    @apply text-magnum-700 transition-colors hover:bg-white/90;
-    @apply data-[highlighted]:ring-magnum-400 data-[highlighted]:ring-offset-2 !important;
-    @apply p-0 text-sm font-medium focus:ring data-[highlighted]:outline-none;
-  }
-  .check {
-    @apply absolute left-2 top-1/2 text-magnum-500;
-    translate: 0 calc(-50% + 1px);
-  }
-
-  .dot {
-    @apply h-[4.75px] w-[4.75px] rounded-full bg-magnum-700;
-  } */
-
   .separator {
     @apply m-[5px] h-[1px] bg-black;
   }
-
-  /* .rightSlot {
-    @apply ml-auto pl-5;
-  }
-
-  .icon {
-    @apply h-[13px] w-[13px];
-  }
-  .check {
-    @apply absolute left-0 inline-flex w-6 items-center justify-center;
-  }
-  .text {
-    @apply pl-6 text-xs leading-6 text-neutral-600;
-  } */
 </style>

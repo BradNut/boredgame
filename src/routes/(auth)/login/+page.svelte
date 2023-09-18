@@ -32,6 +32,12 @@
 		delayMs: 250,
 	});
 
+	$: {
+		if ($delayed) {
+			boredState.update((n) => ({ ...n, loading: true }));
+		}
+	}
+
 	const flash = flashModule.getFlash(page);
 
 	$: {
@@ -60,41 +66,29 @@
 		<Input type="password" id="password" name="password" placeholder="Password" autocomplete="password" data-invalid={$errors.password} bind:value={$form.password} required />
 		<Button type="submit">Login</Button>
 		{#if $errors._errors}
-		<Alert.Root variant="destructive">
-			<AlertCircle class="h-4 w-4" />
-			<Alert.Title>Error</Alert.Title>
-			<Alert.Description>
-				{$errors._errors}
-			</Alert.Description>
-		</Alert.Root>
-	{/if}
-	<p class="px-8 text-center text-sm text-muted-foreground">
-		By clicking continue, you agree to our
-		<a href="/terms" class="underline underline-offset-4 hover:text-primary">
-			Terms of Use
-		</a>
-		and
-		<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
-			Privacy Policy
-		</a>.
-	</p>
+			<Alert.Root variant="destructive">
+				<AlertCircle class="h-4 w-4" />
+				<Alert.Title>Error</Alert.Title>
+				<Alert.Description>
+					{$errors._errors}
+				</Alert.Description>
+			</Alert.Root>
+		{/if}
+		<p class="px-8 text-center text-sm text-muted-foreground">
+			By clicking continue, you agree to our
+			<a href="/terms" class="underline underline-offset-4 hover:text-primary">
+				Terms of Use
+			</a>
+			and
+			<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
+				Privacy Policy
+			</a>.
+		</p>
 	</form>
-	{#if $delayed}
-	<Portal>
-		<!-- <Transition transition={{ type: 'fade', duration: 0 }}> -->
-			<div class="loading">
-				<Loading />
-				<h3>Loading...</h3>
-			</div>
-		<!-- </Transition> -->
-		<div class="background" />
-	</Portal>
-{/if}
-
 </div>
 
 <style lang="postcss">
-		.loading {
+	.loading {
 		position: fixed;
 		top: 50%;
 		left: 50%;
@@ -104,7 +98,7 @@
 		place-items: center;
 		gap: 1rem;
 
-		& h3 {
+		h3 {
 			color: white;
 		}
 	}
