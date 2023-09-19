@@ -2,6 +2,9 @@
 	import { page } from "$app/stores";
 	import { Button } from "$lib/components/ui/button";
 	import Logo from "$lib/components/logo.svelte";
+	import Transition from '$lib/components/transition.svelte';
+
+	export let data;
 </script>
 
 <div class="container">
@@ -38,9 +41,10 @@
 			</blockquote>
 		</div>
 	</div>
-
 	<div class="auth-form">
-		<slot />
+		<Transition url={data.url} transition={{ type: 'page' }}>
+			<slot />
+		</Transition>
 	</div>
 </div>
 

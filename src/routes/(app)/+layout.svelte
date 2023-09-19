@@ -1,6 +1,6 @@
 <script lang="ts">
 	import 'iconify-icon';
-	import Transition from '$lib/components/transition/index.svelte';
+	import Transition from '$lib/components/transition.svelte';
 	import Header from '$lib/components/header/index.svelte';
 	import Footer from '$lib/components/footer.svelte';
 
