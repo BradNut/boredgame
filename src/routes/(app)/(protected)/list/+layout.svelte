@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Transition from '$lib/components/transition/index.svelte';
+	import Transition from '$components/transition.svelte';
 
 	export let data;
 	const wishlists = data.wishlists || [];

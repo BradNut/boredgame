@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { slide } from 'svelte/transition';
+	import { quintIn } from 'svelte/easing';
 	import { superForm } from 'sveltekit-superforms/client';
 	import * as flashModule from 'sveltekit-flash-message/client';
 	import toast from 'svelte-french-toast';
@@ -10,12 +12,13 @@
 	import { signUpSchema } from '$lib/config/zod-schemas.js';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Alert from '$lib/components/ui/alert';
-	import { slide } from 'svelte/transition';
-	import { quintIn } from 'svelte/easing';
+	import { boredState } from '$lib/stores/boredState.js';
 
 	export let data;
 
-  const { form, errors, constraints, enhance, delayed } = superForm(data.form, {
+  const { form, errors, enhance } = superForm(data.form, {
+		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
+  	onResult: () => boredState.update((n) => ({ ...n, loading: false })),
 		flashMessage: {
 			module: flashModule,
 			onError: ({ result, message }) => {

@@ -2,7 +2,7 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	//import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { userSchema } from '$lib/config/zod-schemas';
-	import { AlertTriangle } from 'lucide-svelte';
+	import { AlertTriangle, KeyRound } from 'lucide-svelte';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
@@ -63,8 +63,10 @@
 		{/if}
 	</div>
 	<div class="mt-6">
-		<Button variant="link" href="/password/reset">Change Password</Button>
-		<!-- <a href="/password/reset">Change Password</a> -->
+		<Button variant="link" class="text-secondary-foreground" href="/password/change">
+			<KeyRound class="mr-2 h-4 w-4" />
+			Change Password
+		</Button>
 	</div>
 
 	<div class="mt-6">

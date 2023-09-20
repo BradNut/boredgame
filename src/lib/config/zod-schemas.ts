@@ -90,3 +90,31 @@ export const updateUserPasswordSchema = userSchema
 			});
 		}
 	});
+
+export const changeUserPasswordSchema = z
+	.object({
+		current_password: z.string({ required_error: 'Current Password is required' }),
+		password: z
+			.string({ required_error: 'Password is required' })
+			.trim()
+			.min(8, { message: 'Password must be at least 8 characters' })
+			.max(128, { message: 'Password must be less than 128 characters' }),
+		confirm_password: z
+			.string({ required_error: 'Confirm Password is required' })
+			.trim()
+			.min(8, { message: 'Confirm Password must be at least 8 characters' })
+	})
+	.superRefine(({ confirm_password, password }, ctx) => {
+		if (confirm_password !== password) {
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Password and Confirm Password must match',
+				path: ['password']
+			});
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Password and Confirm Password must match',
+				path: ['confirm_password']
+			});
+		}
+	});
