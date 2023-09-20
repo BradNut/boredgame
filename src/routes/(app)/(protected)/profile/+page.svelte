@@ -6,6 +6,7 @@
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
+	import * as Alert from "$lib/components/ui/alert";
 	export let data;
 
 	const profileSchema = userSchema.pick({
@@ -24,7 +25,7 @@
 
 <form method="POST" use:enhance>
 	<!--<SuperDebug data={$form} />-->
-	<h3>Profile</h3>
+	<h3>Your Profile</h3>
 	<hr class="!border-t-2 mt-2 mb-6" />
 	{#if $message}
 		<aside class="alert variant-filled-success mt-6">
@@ -55,11 +56,20 @@
 			<small>{$errors.lastName}</small>
 		{/if}
 	</div>
-	<div class="mt-6">
+	<div class="grid gap-2 mt-6">
 		<Label for="email">Email address</Label>
 		<Input type="email" id="email" name="email" placeholder="Email Address" autocomplete="email" data-invalid={$errors.email} bind:value={$form.email} />
 		{#if $errors.email}
 			<small>{$errors.email}</small>
+		{/if}
+		{#if $form.email === ''}
+			<Alert.Root variant="destructive">
+				<AlertTriangle class="h-4 w-4" />
+				<Alert.Title>Heads up!</Alert.Title>
+				<Alert.Description>
+					Without an email, you won't be able to reset your password if you forget it.
+				</Alert.Description>
+			</Alert.Root>
 		{/if}
 	</div>
 	<div class="mt-6">
@@ -76,3 +86,9 @@
 		> -->
 	</div>
 </form>
+
+<style lang="postcss">
+	form {
+		min-width: 300px;;
+	}
+</style>
