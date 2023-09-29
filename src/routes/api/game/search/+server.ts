@@ -46,11 +46,11 @@ export const GET = async ({ url, locals, params, request }) => {
 	const q = searchParams?.q || '';
 	const limit = parseInt(searchParams?.limit) || 10;
 	const skip = parseInt(searchParams?.skip) || 0;
-	const order: Prisma.SortOrder = searchParams?.order || 'asc';
+	const order: Prisma.SortOrder = <Prisma.SortOrder>searchParams?.order || 'asc';
 	const sort = searchParams?.sort || 'name';
-	const session = await locals.auth.validate();
+	// const session = await locals.auth.validate();
 	console.log('url', url);
-	console.log('username', locals?.user?.id);
+	// console.log('username', locals?.user?.id);
 
 	try {
 		const orderBy = { [sort]: order };

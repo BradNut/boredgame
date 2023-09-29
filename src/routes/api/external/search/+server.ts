@@ -10,9 +10,6 @@ export async function GET({ url, locals, params }) {
 	const exact = parseInt(searchParams.exact) || 0;
 	const limit = parseInt(searchParams?.limit) || 10;
 	const skip = parseInt(searchParams?.skip) || 0;
-	console.log('exact', exact);
-	console.log('limit', limit);
-	console.log('skip', skip);
 
 	// TODO: Debounce and throttle
 	try {
