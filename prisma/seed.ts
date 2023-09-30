@@ -27,7 +27,7 @@ async function main() {
 			await prisma.mechanic.create({
 				data: {
 					name: mechanic.name,
-					external_id: mechanic.id,
+					external_id: createId(),
 					slug: kebabCase(mechanic.name)
 				}
 			});
@@ -42,7 +42,7 @@ async function main() {
 			await prisma.category.create({
 				data: {
 					name: category.name,
-					external_id: category.id,
+					external_id: createId(),
 					slug: kebabCase(category.name)
 				}
 			});

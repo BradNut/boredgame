@@ -72,16 +72,16 @@ model Key {
   id              String   @id @unique
   hashed_password String?
   user_id         String
-  user       User @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  user            User @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
   @@map("keys")
 }
 
 model Collection {
-  id String @id @default(cuid())
-  user_id String @unique
-  user User @relation(references: [id], fields: [user_id])
+  id String               @id @default(cuid())
+  user_id String          @unique
+  user User               @relation(references: [id], fields: [user_id])
   items CollectionItem[]
 
   @@index([user_id])
@@ -162,6 +162,7 @@ model Game {
   year_published          Int? @db.Year
   min_players             Int?
   max_players             Int?
+  playtime                Int?
   min_playtime            Int?
   max_playtime            Int?
   min_age                 Int?
@@ -169,6 +170,7 @@ model Game {
   thumb_url               String?
   url                     String?
   rules_url               String?
+  is_expansion            Boolean @default(false)
   primary_publisher_id    String?
   primary_publisher       Publisher? @relation("PrimaryPublishers", references: [id], fields: [primary_publisher_id])
   primary_designer_id     String?
@@ -206,14 +208,14 @@ model GameName {
 }
 
 model Publisher {
-  id                String    @id @default(cuid())
-  name              String
-  slug              String
-  external_id       String    @unique
-  games             Game[]
-  primary_publisher Game[]    @relation("PrimaryPublishers")
-  created_at        DateTime  @default(now()) @db.Timestamp(6)
-  updated_at        DateTime  @updatedAt @db.Timestamp(6)
+  id                  String    @id @default(cuid())
+  name                String
+  slug                String
+  external_id         String    @unique
+  games               Game[]
+  primary_publisher   Game[]    @relation("PrimaryPublishers")
+  created_at          DateTime  @default(now()) @db.Timestamp(6)
+  updated_at          DateTime  @updatedAt @db.Timestamp(6)
 
   @@fulltext([name])
   @@map("publishers")
@@ -233,13 +235,13 @@ model Category {
 }
 
 model Mechanic {
-  id        String  @id @default(cuid())
-  name      String
-  slug      String
-  games     Game[]
-  external_id String @unique
-  created_at DateTime @default(now()) @db.Timestamp(6)
-  updated_at DateTime @updatedAt @db.Timestamp(6)
+  id            String  @id @default(cuid())
+  name          String
+  slug          String
+  games         Game[]
+  external_id   String @unique
+  created_at    DateTime @default(now()) @db.Timestamp(6)
+  updated_at    DateTime @updatedAt @db.Timestamp(6)
 
   @@fulltext([name])
   @@map("mechanics")
@@ -275,7 +277,7 @@ model Expansion {
   id              String  @id @default(cuid())
   name            String
   year_published  Int?
-  baseGame        Game?   @relation(fields: [base_game_id], references: [id])
+  base_game       Game?   @relation(fields: [base_game_id], references: [id])
   base_game_id    String?
   external_id     String @unique
   created_at      DateTime @default(now()) @db.Timestamp(6)

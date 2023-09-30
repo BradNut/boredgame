@@ -1,12 +1,14 @@
 {
 	"name": "boredgame",
 	"version": "0.0.2",
+	"private": "true",
 	"scripts": {
 		"dev": "NODE_OPTIONS=\"--inspect\" vite dev --host",
 		"build": "prisma generate && vite build",
 		"package": "svelte-kit package",
 		"preview": "vite preview",
 		"test": "playwright test",
+		"test:ui": "svelte-kit sync && playwright test --ui",
 		"postinstall": "prisma generate",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -16,7 +18,9 @@
 		"site:update": "pnpm update -i -L",
 		"db:studio": "prisma studio",
 		"db:push": "prisma db push",
-		"db:seed": "prisma db seed"
+		"db:generate": "prisma generate",
+		"db:seed": "prisma db seed",
+		"i-changed-the-schema": "pnpm run db:push && pnpm run db:generate"
 	},
 	"prisma": {
 		"seed": "ts-node --esm prisma/seed.ts"
@@ -65,7 +69,7 @@
 	},
 	"type": "module",
 	"engines": {
-		"node": ">=18.12.1",
+		"node": ">=18.0.0 <19.0.0 || >=20.0.0 <21.0.0",
 		"pnpm": ">=8"
 	},
 	"dependencies": {
@@ -77,6 +81,7 @@
 		"@lucia-auth/adapter-prisma": "^3.0.1",
 		"@lukeed/uuid": "^2.0.1",
 		"@melt-ui/svelte": "^0.50.0",
+		"@paralleldrive/cuid2": "^2.2.2",
 		"@prisma/client": "5.3.1",
 		"@types/feather-icons": "^4.29.1",
 		"@vercel/og": "^0.5.13",
@@ -87,6 +92,7 @@
 		"cookie": "^0.5.0",
 		"feather-icons": "^4.29.1",
 		"formsnap": "^0.0.9",
+		"html-entities": "^2.4.0",
 		"iconify-icon": "^1.0.8",
 		"just-kebab-case": "^4.2.0",
 		"loader": "^2.1.1",

@@ -7,6 +7,8 @@ import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import { search_schema } from '$lib/zodValidation';
 import type { PageServerLoad } from '../$types.js';
+import { BggClient } from 'boardgamegeekclient';
+import type { BggThingDto } from 'boardgamegeekclient/dist/esm/dto/index.js';
 // import { listGameSchema } from '$lib/config/zod-schemas.js';
 
 /**
@@ -78,29 +80,28 @@ async function searchForGames(urlQueryParams: SearchQuery, eventFetch) {
 		console.log('games from DB', games);
 		let totalCount = games?.length || 0;
 
-		if (!games || games.length === 0) {
-			const url = new URL(
-				`https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''}`
+		if (totalCount === 0) {
+			console.log('No games found in DB for', urlQueryParams.get('name'));
+
+			const externalResponse = await eventFetch(
+				`/api/external/search${urlQueryParams ? `?${urlQueryParams}` : ''}`,
+				requestInit
 			);
-			const headers: HeadersInit = new Headers();
-			headers.set('Content-Type', 'application/json');
-			const requestInit: RequestInit = {
-				method: 'GET',
-				headers
-			};
-			const response = await fetch(url, requestInit);
+
+			console.log('Back from external search', externalResponse);
 
 			if (!response.ok) {
 				console.log('Status not 200', response.status);
 				throw error(response.status);
 			}
 
-			// const games: GameType[] = [];
-			// let totalCount = 0;
-			if (response.ok) {
-				const gameResponse = await response.json();
-				const gameList: GameType[] = gameResponse?.games;
-				totalCount = gameResponse?.count;
+			// // const games: GameType[] = [];
+			// // let totalCount = 0;
+			if (externalResponse.ok) {
+				const gameResponse = await externalResponse.json();
+				console.log('response from external api', gameResponse);
+				const gameList: BggThingDto[] = gameResponse?.games;
+				totalCount = gameResponse?.totalCount;
 				console.log('totalCount', totalCount);
 				gameList.forEach((game) => {
 					if (game?.min_players && game?.max_players) {
@@ -229,8 +230,8 @@ export const load: PageServerLoad = async ({ params, locals, request, fetch, url
 	console.log('searchParams', searchParams);
 	searchParams.limit = searchParams.limit || `${defaults.limit}`;
 	searchParams.skip = searchParams.skip || `${defaults.skip}`;
-	searchParams.order = searchParams.order || 'asc';
-	searchParams.sort = searchParams.sort || 'name';
+	searchParams.order = searchParams.order || defaults.order;
+	searchParams.sort = searchParams.sort || defaults.sort;
 	const form = await superValidate(searchParams, search_schema);
 	// const modifyListForm = await superValidate(listGameSchema);
 
@@ -239,8 +240,6 @@ export const load: PageServerLoad = async ({ params, locals, request, fetch, url
 		ascending: false,
 		limit: form.data?.limit,
 		skip: form.data?.skip,
-		client_id: BOARD_GAME_ATLAS_CLIENT_ID,
-		fuzzy_match: true,
 		name: form.data?.q
 	};
 

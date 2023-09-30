@@ -135,16 +135,13 @@ export type GameType = {
 };
 
 export type SearchQuery = {
-	client_id: string;
 	limit?: number;
 	skip?: number;
 	ids?: string[];
 	list_id?: string;
-	kickstarter?: boolean;
 	random?: boolean;
 	name?: string;
 	exact?: boolean;
-	fuzzy_match?: boolean;
 	designer?: string;
 	publisher?: string;
 	artist?: string;
@@ -164,23 +161,11 @@ export type SearchQuery = {
 	gt_max_playtime?: number;
 	gt_min_age?: number;
 	gt_year_published?: number;
-	gt_price?: bigint;
-	gt_msrp?: bigint;
-	gt_discount?: bigint;
-	gt_reddit_count?: number;
-	gt_reddit_week_count?: number;
-	gt_reddit_day_count?: number;
 	lt_min_players?: number;
 	lt_max_players?: number;
 	lt_min_playtime?: number;
 	lt_max_playtime?: number;
 	lt_min_age?: number;
 	lt_year_published?: number;
-	lt_price?: bigint;
-	lt_msrp?: bigint;
-	lt_discount?: bigint;
-	lt_reddit_count?: number;
-	lt_reddit_week_count?: number;
-	lt_reddit_day_count?: number;
 	fields?: string;
 };

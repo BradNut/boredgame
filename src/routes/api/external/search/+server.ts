@@ -6,7 +6,8 @@ import { search_schema } from '$lib/zodValidation.js';
 
 export async function GET({ url, locals, params }) {
 	const searchParams = Object.fromEntries(url.searchParams);
-	const q = searchParams?.q || '';
+	console.log('searchParams external', searchParams);
+	const name = searchParams?.name || '';
 	const exact = parseInt(searchParams.exact) || 0;
 	const limit = parseInt(searchParams?.limit) || 10;
 	const skip = parseInt(searchParams?.skip) || 0;
@@ -14,7 +15,7 @@ export async function GET({ url, locals, params }) {
 	// TODO: Debounce and throttle
 	try {
 		search_schema.parse({
-			q,
+			q: name,
 			limit,
 			skip
 		});
@@ -29,7 +30,7 @@ export async function GET({ url, locals, params }) {
 
 	const client = BggClient.Create();
 	const request: ISearchRequest = {
-		query: q,
+		query: name,
 		exact,
 		type: ['boardgame', 'boardgameaccessory', 'boardgameexpansion']
 	};
@@ -46,7 +47,11 @@ export async function GET({ url, locals, params }) {
 	if (end > result.total) {
 		end = result.total;
 	}
-	const apiResponse = result.items.slice(start, end);
+	const games = result.items.slice(start, end);
+	const apiResponse = {
+		totalCount: response[0].total,
+		games
+	};
 
 	console.log('Response from BGG', JSON.stringify(result, null, 2));
 
