@@ -93,18 +93,37 @@ export type CategoryType = {
 
 export type PublisherType = {
 	id: string;
-	name: string;
 };
 
 export type DesignerType = {
 	id: string;
-	name: string;
+};
+
+export type ArtistType = {
+	id: string;
+}
+
+export type ExpansionType = {
+	id: string;
+}
+
+export type BGGLinkType =
+	| 'boardgamecategory'
+	| 'boardgamemechanic'
+	| 'boardgameexpansion'
+	| 'boardgameartist'
+	| 'boardgamepublisher';
+
+export type BGGLink = {
+	id: number;
+	type: BGGLinkType;
+	value: string;
 };
 
 export type GameType = {
 	id: string;
-	handle: string;
 	name: string;
+	slug: string;
 	url: string;
 	edit_url: string;
 	thumb_url: string;
@@ -122,16 +141,17 @@ export type GameType = {
 	primary_designer: DesignerType;
 	designers: DesignerType[];
 	developers: String[];
-	artists: String[];
+	artists: ArtistType[];
+	expansions: ExpansionType[];
 	min_players: number;
 	max_players: number;
 	min_playtime: number;
 	max_playtime: number;
 	min_age: number;
 	description: string;
-	description_preview: string;
 	players: string;
-	playtime: string;
+	playtime: number;
+	external_id: number;
 };
 
 export type SearchQuery = {
@@ -140,7 +160,7 @@ export type SearchQuery = {
 	ids?: string[];
 	list_id?: string;
 	random?: boolean;
-	name?: string;
+	q?: string;
 	exact?: boolean;
 	designer?: string;
 	publisher?: string;

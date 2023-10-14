@@ -1,16 +1,13 @@
 <script lang="ts">
 	import { fade, fly } from 'svelte/transition';
 	import { Image } from 'svelte-lazy-loader';
-	import minusCircle from '@iconify-icons/line-md/minus-circle';
-	import plusCircle from '@iconify-icons/line-md/plus-circle';
+	import { Dices, ExternalLinkIcon, MinusIcon, PlusIcon } from 'lucide-svelte';
 	import type { SavedGameType } from '$lib/types';
 	import { collectionStore } from '$lib/stores/collectionStore';
 	import { wishlistStore } from '$lib/stores/wishlistStore';
 	import type { PageData } from './$types';
-	import LinkWithIcon from '$lib/components/LinkWithIcon.svelte';
 	import { Button } from '$components/ui/button';
 	import AddToList from '$components/AddToList.svelte';
-	import { Dices } from 'lucide-svelte';
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
@@ -23,31 +20,28 @@
 	$: ({ game, user, wishlist, collection, in_collection, in_wishlist } = data);
 
 	let seeMore: boolean = false;
-	console.log('game', game);
 </script>
 
 <svelte:head>
 	<title>{game?.name} | Bored Game</title>
 </svelte:head>
 
-<h2>{game?.name}</h2>
+<h2>{game?.name}
+	{#if game?.year_published}
+		({game?.year_published})
+	{/if}
+</h2>
 
 <section class="game">
 	<div>
-		<a class="thumbnail" href={game.url}>
-			{#if game?.thumb_url && game?.name}
-				<Image src={game.thumb_url} alt={`Image of ${game.name}`} />
+			{#if game?.image_url && game?.name}
+				<Image src={game.image_url} alt={`Image of ${game.name}`} />
 			{:else}
 				<Dices />
 			{/if}
-			<!-- <img src={game.image_url} alt={`Image of ${game.name}`} /> -->
-		</a>
 	</div>
 	<div style="display: grid; place-items: center; gap: 3rem;">
 		<div class="details">
-			{#if game?.year_published}
-				<p>Year: {game?.year_published}</p>
-			{/if}
 			{#if game?.min_players && game?.max_players}
 				<p>Players: {game.min_players} - {game.max_players}</p>
 			{/if}
@@ -57,10 +51,12 @@
 			{#if game?.min_age}
 				<p>Minimum Age: {game.min_age}</p>
 			{/if}
-			<LinkWithIcon external ariaLabel={`Board Game Atlas Link for ${game.name}`} url={game.url}>
-				Board Game Atlas
-				<!-- <ExternalLinkIcon width="24" height="24" /> -->
-			</LinkWithIcon>
+			{#if game?.min_playtime && game?.max_playtime}
+				<p>Playtime: {game.min_playtime} - {game.max_playtime} minutes</p>
+			{/if}
+			<Button class="text-secondary-foreground p-0" variant="link" href={game.url} title="View on BoardGameGeek" target="_blank">
+				View on BoardGameGeek <ExternalLinkIcon class="mr-2 h-4 w-4" />
+			</Button>
 		</div>
 		{#if user?.username}
 			<AddToList {in_collection} {in_wishlist} game_id={game.id} {wishlist} {collection} />
@@ -71,34 +67,19 @@
 		{/if}
 	</div>
 </section>
-{#if game?.description_preview}
+<section class="description" class:show={seeMore} class:hide={!seeMore} style="margin-top: 2rem;">
+	{@html game?.description}
+</section>
+<button class="btn button-icon" type="button" on:click={() => (seeMore = !seeMore)}
+	>See
 	{#if !seeMore}
-		<section class="description" style="margin-top: 2rem;" in:fly|global={{ opacity: 0, x: 100 }} out:fly|global={{ opacity: 0, x: -100 }}>
-			{`${game?.description_preview.substring(0, 250)}...`}
-		</section>
+		More
+		<PlusIcon width="24" height="24" />
+	{:else}
+		Less
+		<MinusIcon width="24" height="24" />
 	{/if}
-	{#if seeMore}
-		<div class="overflow-description" in:fly|global={{ opacity: 0, x: 100 }} out:fade|global>
-			{@html game?.description}
-		</div>
-	{/if}
-	<button class="btn button-icon" type="button" on:click={() => (seeMore = !seeMore)}
-		>See
-		{#if !seeMore}
-			More
-			<!-- <PlusIcon width="24" height="24" /> -->
-		{:else}
-			Less
-			<!-- <MinusIcon width="24" height="24" /> -->
-		{/if}
-	</button>
-{:else}
-	<section class="description">
-		<span>
-			{@html game?.description}
-		</span>
-	</section>
-{/if}
+</button>
 
 <style lang="scss">
 	h2 {
@@ -147,13 +128,11 @@
 	}
 
 	.details {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 0.5rem;
-		place-content: center;
-		p {
-			margin: 1rem;
-		}
+		display: flex;
+		/* grid-template-columns: 1fr 1fr; */
+		flex-direction: column;
+		gap: 1rem;
+		/* align-items: center; */
 
 		@media (max-width: 500px) {
 			grid-template-columns: 1fr;
@@ -166,6 +145,15 @@
 		gap: 1.5rem;
 		margin: 1rem;
 		line-height: 1.75em;
+
+		&.show {
+			max-height: auto;
+		}
+
+		&.hide {
+			max-height: 300px;
+			overflow: hidden;
+		}
 	}
 
 	.overflow-description {

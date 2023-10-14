@@ -1,19 +1,35 @@
 import { error } from '@sveltejs/kit';
 import prisma from '$lib/prisma.js';
+import type { GameType } from '$lib/types.js';
+import { createArtist, createCategory, createDesigner, createExpansion, createMechanic, createOrUpdateGame, createPublisher } from '$lib/utils/dbUtils.js';
+import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
+import type { Game } from '@prisma/client';
 
-export const load = async ({ params, setHeaders, locals }) => {
+export const load = async ({ params, setHeaders, locals, fetch }) => {
 	try {
 		const { user } = locals;
 		const { id } = params;
 		const game = await prisma.game.findUnique({
 			where: {
 				id
+			},
+			include: {
+				artists: true,
+				designers: true,
+				publishers: true,
+				mechanics: true,
+				categories: true
 			}
 		});
 		console.log('found game', game);
 
 		if (!game) {
 			throw error(404, 'not found');
+		}
+
+		const currentDate = new Date();
+		if (game.last_sync_at === null || currentDate.getDate() - game.last_sync_at.getDate() > 7 * 24 * 60 * 60 * 1000) {
+			await syncGameAndConnectedData(game, fetch);
 		}
 
 		let wishlist;
@@ -60,3 +76,63 @@ export const load = async ({ params, setHeaders, locals }) => {
 
 	throw error(404, 'not found');
 };
+
+async function syncGameAndConnectedData(game: Game, eventFetch: Function) {
+	console.log(
+		`Retrieving full external game details for external id: ${game.external_id} with name ${game.name}`
+	);
+	const externalGameResponse = await eventFetch(`/api/external/game/${game.external_id}`);
+	if (externalGameResponse.ok) {
+		const externalGame = await externalGameResponse.json();
+		console.log('externalGame', externalGame);
+		let categories = [];
+		let mechanics = [];
+		let artists = [];
+		let designers = [];
+		let publishers = [];
+		let expansions = [];
+		for (const externalCategory of externalGame.categories) {
+			const category = await createCategory(externalCategory);
+			categories.push({
+				id: category.id
+			});
+		}
+		for (const externalMechanic of externalGame.mechanics) {
+			const mechanic = await createMechanic(externalMechanic);
+			mechanics.push({ id: mechanic.id });
+		}
+		for (const externalArtist of externalGame.artists) {
+			const artist = await createArtist(externalArtist);
+			artists.push({ id: artist.id });
+		}
+		for (const externalDesigner of externalGame.designers) {
+			const designer = await createDesigner(externalDesigner);
+			designers.push({ id: designer.id });
+		}
+		for (const externalPublisher of externalGame.publishers) {
+			const publisher = await createPublisher(externalPublisher);
+			publishers.push({ id: publisher.id });
+		}
+
+		for (const externalExpansion of externalGame.expansions) {
+			let expansion;
+			console.log('Inbound?', externalExpansion.inbound);
+			if (externalExpansion?.inbound === true) {
+				expansion = await createExpansion(game, externalExpansion, false, eventFetch);
+			} else {
+				expansion = await createExpansion(game, externalExpansion, true, eventFetch);
+			}
+			expansions.push({ id: expansion.id });
+		}
+
+		let boredGame = mapAPIGameToBoredGame(externalGame);
+
+		boredGame.categories = categories;
+		boredGame.mechanics = mechanics;
+		boredGame.designers = designers;
+		boredGame.artists = artists;
+		boredGame.publishers = publishers;
+		boredGame.expansions = expansions;
+		return createOrUpdateGame(boredGame);
+	}
+}

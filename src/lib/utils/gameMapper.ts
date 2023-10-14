@@ -1,4 +1,5 @@
 import type { GameType, SavedGameType } from '$lib/types';
+import kebabCase from 'just-kebab-case';
 
 export function convertToSavedGame(game: GameType | SavedGameType): SavedGameType {
 	return {
@@ -41,56 +42,21 @@ export function mapSavedGameToGame(game: SavedGameType): GameType {
 	};
 }
 
-// TODO: Type API response
-export function mapAPIGameToBoredGame(game: any): GameType {
-	const {
-		id,
-		handle,
-		name,
-		url,
-		thumb_url,
-		image_url,
-		year_published,
-		categories,
-		mechanics,
-		primary_designer,
-		designers,
-		primary_publisher,
-		publishers,
-		artists,
-		min_players,
-		max_players,
-		min_playtime,
-		max_playtime,
-		min_age,
-		description,
-		description_preview,
-		players,
-		playtime
-	} = game;
+export function mapAPIGameToBoredGame(game: GameType): GameType {
+	// TODO: Fix types
 	return {
-		id,
-		handle,
-		name,
-		url,
-		thumb_url,
-		image_url,
-		year_published,
-		categories,
-		mechanics,
-		primary_designer,
-		designers,
-		primary_publisher,
-		publishers,
-		artists,
-		min_players,
-		max_players,
-		min_playtime,
-		max_playtime,
-		min_age,
-		description,
-		description_preview,
-		players,
-		playtime
+		external_id: game.external_id,
+		name: game.name,
+		slug: kebabCase(game.name),
+		thumb_url: game.thumbnail,
+		image_url: game.image,
+		year_published: game.year_published,
+		min_players: game.min_players,
+		max_players: game.max_players,
+		min_playtime: game.min_playtime,
+		max_playtime: game.max_playtime,
+		min_age: game.min_age,
+		description: game.description,
+		playtime: game.playing_time
 	};
 }

@@ -7,8 +7,17 @@ import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import { search_schema } from '$lib/zodValidation';
 import type { PageServerLoad } from '../$types.js';
-import { BggClient } from 'boardgamegeekclient';
 import type { BggThingDto } from 'boardgamegeekclient/dist/esm/dto/index.js';
+import type { BggLinkDto } from 'boardgamegeekclient/dist/esm/dto/concrete/subdto/BggLinkDto.js';
+import {
+	createArtist,
+	createCategory,
+	createDesigner,
+	createMechanic,
+	createOrUpdateGame,
+	createOrUpdateGameMinimal,
+	createPublisher
+} from '$lib/utils/dbUtils.js';
 // import { listGameSchema } from '$lib/config/zod-schemas.js';
 
 /**
@@ -23,46 +32,19 @@ import type { BggThingDto } from 'boardgamegeekclient/dist/esm/dto/index.js';
  * an array of all the games fetched. If any error occurred during the operation, it returns an object with totalCount as 0 and games as empty array.
  * @throws will throw an error if the response received from fetching games operation is not OK (200).
  */
-async function searchForGames(urlQueryParams: SearchQuery, eventFetch) {
+async function searchForGames(urlQueryParams: SearchQuery, eventFetch: Function) {
 	try {
 		console.log('urlQueryParams search games', urlQueryParams);
-		// let games = await prisma.game.findMany({
-		// 	where: {
-		// 		name: {
-		// 			search: urlQueryParams?.name
-		// 		},
-		// 		min_players: {
-		// 			gte: urlQueryParams?.min_players || 0
-		// 		},
-		// 		max_players: {
-		// 			lte: urlQueryParams?.max_players || 100
-		// 		},
-		// 		min_playtime: {
-		// 			gte: urlQueryParams?.min_playtime || 0
-		// 		},
-		// 		max_playtime: {
-		// 			lte: urlQueryParams?.max_playtime || 5000
-		// 		},
-		// 		min_age: {
-		// 			gte: urlQueryParams?.min_age || 0
-		// 		}
-		// 	},
-		// 	skip: urlQueryParams?.skip,
-		// 	take: urlQueryParams?.limit,
-		// 	orderBy: {
-		// 		name: 'asc'
-		// 	}
-		// });
+
 		const headers: HeadersInit = new Headers();
 		headers.set('Content-Type', 'application/json');
 		const requestInit: RequestInit = {
 			method: 'GET',
 			headers
 		};
-		const response = await eventFetch(
-			`/api/game/search${urlQueryParams ? `?${urlQueryParams}` : ''}`,
-			requestInit
-		);
+		const url = `/api/game/search${urlQueryParams ? `?${urlQueryParams}` : ''}`;
+		console.log('Calling internal api', url);
+		const response = await eventFetch(url, requestInit);
 		console.log('response from internal api', response);
 
 		if (!response.ok) {
@@ -70,18 +52,21 @@ async function searchForGames(urlQueryParams: SearchQuery, eventFetch) {
 			throw error(response.status);
 		}
 
-		// const games: GameType[] = [];
-		// let totalCount = 0;
 		let games = [];
 		if (response.ok) {
 			games = await response.json();
 		}
 
 		console.log('games from DB', games);
+
+		const gameNameSearch = urlQueryParams.get('q');
 		let totalCount = games?.length || 0;
 
-		if (totalCount === 0) {
-			console.log('No games found in DB for', urlQueryParams.get('name'));
+		if (
+			totalCount === 0 ||
+			!games.find((game: GameType) => game.slug === kebabCase(gameNameSearch))
+		) {
+			console.log('No games found in DB for', gameNameSearch);
 
 			const externalResponse = await eventFetch(
 				`/api/external/search${urlQueryParams ? `?${urlQueryParams}` : ''}`,
@@ -95,23 +80,26 @@ async function searchForGames(urlQueryParams: SearchQuery, eventFetch) {
 				throw error(response.status);
 			}
 
-			// // const games: GameType[] = [];
-			// // let totalCount = 0;
 			if (externalResponse.ok) {
 				const gameResponse = await externalResponse.json();
 				console.log('response from external api', gameResponse);
 				const gameList: BggThingDto[] = gameResponse?.games;
 				totalCount = gameResponse?.totalCount;
 				console.log('totalCount', totalCount);
-				gameList.forEach((game) => {
-					if (game?.min_players && game?.max_players) {
-						game.players = `${game.min_players} - ${game.max_players}`;
-						game.playtime = `${game.min_playtime} - ${game.max_playtime}`;
+				for (const game of gameList) {
+					console.log(
+						`Retrieving simplified external game details for id: ${game.id} with name ${game.name}`
+					);
+					const externalGameResponse = await eventFetch(
+						`/api/external/game/${game.id}?simplified=true`
+					);
+					if (externalGameResponse.ok) {
+						const externalGame = await externalGameResponse.json();
+						console.log('externalGame', externalGame);
+						let boredGame = mapAPIGameToBoredGame(externalGame);
+						games.push(createOrUpdateGameMinimal(boredGame));
 					}
-					const boredGame = mapAPIGameToBoredGame(game);
-					createOrUpdateGame(boredGame);
-					games.push(boredGame);
-				});
+				}
 			}
 		}
 
@@ -121,6 +109,7 @@ async function searchForGames(urlQueryParams: SearchQuery, eventFetch) {
 		};
 	} catch (e) {
 		console.log(`Error searching board games ${e}`);
+		// throw error(500, { message: 'Something went wrong' });
 	}
 	return {
 		totalCount: 0,
@@ -128,98 +117,7 @@ async function searchForGames(urlQueryParams: SearchQuery, eventFetch) {
 	};
 }
 
-/**
- * Asynchronous function createOrUpdateGame is used to create or update a game using the given game information.
- *
- * @async
- * @function createOrUpdateGame
- * @param {GameType} game - An object that holds the details about a game. It should contain required information like name, description,
- * id (both internal and external), thumbnail URL, minimum age, minimum and maximum number of players, minimum and maximum play time,
- * year of publication and primary publisher information including the publisher's name and ID, categories and mechanics related to the game.
- *
- * @returns {Promise<Object>} The return is a Promise that resolves with the data of the game that was created or updated.
- */
-async function createOrUpdateGame(game: GameType) {
-	const categoryIds = game.categories.map((category) => ({
-		external_id: category.id
-	}));
-	const mechanicIds = game.mechanics.map((mechanic) => ({
-		external_id: mechanic.id
-	}));
-	console.log('categoryIds', categoryIds);
-	console.log('mechanicIds', mechanicIds);
-	return await prisma.game.upsert({
-		where: {
-			external_id: game.id
-		},
-		create: {
-			name: game.name,
-			slug: kebabCase(game.name),
-			description: game.description,
-			description_preview: game.description_preview,
-			external_id: game.id,
-			thumb_url: game.thumb_url,
-			min_age: game.min_age,
-			min_players: game.min_players,
-			max_players: game.max_players,
-			min_playtime: game.min_playtime,
-			max_playtime: game.max_playtime,
-			year_published: game.year_published,
-			primary_publisher: {
-				connectOrCreate: {
-					where: {
-						external_id: game.primary_publisher.id
-					},
-					create: {
-						external_id: game.primary_publisher.id,
-						name: game.primary_publisher.name,
-						slug: kebabCase(game.primary_publisher.name)
-					}
-				}
-			},
-			categories: {
-				connect: categoryIds
-			},
-			mechanics: {
-				connect: mechanicIds
-			}
-		},
-		update: {
-			name: game.name,
-			slug: kebabCase(game.name),
-			description: game.description,
-			description_preview: game.description_preview,
-			external_id: game.id,
-			thumb_url: game.thumb_url,
-			min_age: game.min_age,
-			min_players: game.min_players,
-			max_players: game.max_players,
-			min_playtime: game.min_playtime,
-			max_playtime: game.max_playtime,
-			year_published: game.year_published,
-			primary_publisher: {
-				connectOrCreate: {
-					where: {
-						external_id: game.primary_publisher.id
-					},
-					create: {
-						external_id: game.primary_publisher.id,
-						name: game.primary_publisher.name,
-						slug: kebabCase(game.primary_publisher.name)
-					}
-				}
-			},
-			categories: {
-				connect: categoryIds
-			},
-			mechanics: {
-				connect: mechanicIds
-			}
-		}
-	});
-}
-
-export const load: PageServerLoad = async ({ params, locals, request, fetch, url }) => {
+export const load: PageServerLoad = async ({ fetch, url }) => {
 	const defaults = {
 		limit: 10,
 		skip: 0,
@@ -236,11 +134,9 @@ export const load: PageServerLoad = async ({ params, locals, request, fetch, url
 	// const modifyListForm = await superValidate(listGameSchema);
 
 	const queryParams: SearchQuery = {
-		order_by: 'rank',
-		ascending: false,
 		limit: form.data?.limit,
 		skip: form.data?.skip,
-		name: form.data?.q
+		q: form.data?.q
 	};
 
 	// fields: ('id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description');
@@ -275,7 +171,6 @@ export const load: PageServerLoad = async ({ params, locals, request, fetch, url
 
 		const urlQueryParams = new URLSearchParams(newQueryParams);
 		const searchData = await searchForGames(urlQueryParams, fetch);
-		// console.log('searchData', searchData);
 
 		return {
 			form,

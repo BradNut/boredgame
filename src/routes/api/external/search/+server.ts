@@ -4,10 +4,10 @@ import { BggClient } from 'boardgamegeekclient';
 import type { ISearchRequest } from 'boardgamegeekclient/dist/esm/request/index.js';
 import { search_schema } from '$lib/zodValidation.js';
 
-export async function GET({ url, locals, params }) {
+export async function GET({ url }) {
 	const searchParams = Object.fromEntries(url.searchParams);
 	console.log('searchParams external', searchParams);
-	const name = searchParams?.name || '';
+	const q = searchParams?.q || '';
 	const exact = parseInt(searchParams.exact) || 0;
 	const limit = parseInt(searchParams?.limit) || 10;
 	const skip = parseInt(searchParams?.skip) || 0;
@@ -15,7 +15,7 @@ export async function GET({ url, locals, params }) {
 	// TODO: Debounce and throttle
 	try {
 		search_schema.parse({
-			q: name,
+			q,
 			limit,
 			skip
 		});
@@ -30,13 +30,14 @@ export async function GET({ url, locals, params }) {
 
 	const client = BggClient.Create();
 	const request: ISearchRequest = {
-		query: name,
+		query: q,
 		exact,
 		type: ['boardgame', 'boardgameaccessory', 'boardgameexpansion']
 	};
 	const response = await client.search.query(request);
 
 	if (!response || response.length === 0 || response[0]?.total === 0) {
+		console.log('No results found in external search', response);
 		throw error(404, { message: 'No results found in external search' });
 	}
 
