@@ -19,16 +19,16 @@ dependencies:
     version: 1.2.47
   '@lucia-auth/adapter-mysql':
     specifier: ^2.1.0
-    version: 2.1.0(lucia@2.7.0)
+    version: 2.1.0(lucia@2.7.1)
   '@lucia-auth/adapter-prisma':
-    specifier: ^3.0.1
-    version: 3.0.1(@prisma/client@5.3.1)(lucia@2.7.0)
+    specifier: ^3.0.2
+    version: 3.0.2(@prisma/client@5.3.1)(lucia@2.7.1)
   '@lukeed/uuid':
     specifier: ^2.0.1
     version: 2.0.1
   '@melt-ui/svelte':
-    specifier: ^0.50.0
-    version: 0.50.0(svelte@4.2.1)
+    specifier: ^0.50.1
+    version: 0.50.1(svelte@4.2.1)
   '@paralleldrive/cuid2':
     specifier: ^2.2.2
     version: 2.2.2
@@ -43,7 +43,7 @@ dependencies:
     version: 0.5.13
   bits-ui:
     specifier: ^0.0.27
-    version: 0.0.27(@sveltejs/kit@1.25.1)(svelte@4.2.1)
+    version: 0.0.27(@sveltejs/kit@1.25.2)(svelte@4.2.1)
   boardgamegeekclient:
     specifier: ^1.9.1
     version: 1.9.1
@@ -75,8 +75,8 @@ dependencies:
     specifier: ^2.1.1
     version: 2.1.1
   lucia:
-    specifier: ^2.7.0
-    version: 2.7.0
+    specifier: ^2.7.1
+    version: 2.7.1
   lucide-svelte:
     specifier: ^0.256.1
     version: 0.256.1(svelte@4.2.1)
@@ -108,7 +108,7 @@ dependencies:
 devDependencies:
   '@melt-ui/pp':
     specifier: ^0.1.2
-    version: 0.1.2(@melt-ui/svelte@0.50.0)(svelte@4.2.1)
+    version: 0.1.2(@melt-ui/svelte@0.50.1)(svelte@4.2.1)
   '@playwright/test':
     specifier: ^1.37.0
     version: 1.37.0
@@ -117,13 +117,13 @@ devDependencies:
     version: 2.4.1
   '@sveltejs/adapter-auto':
     specifier: ^1.0.3
-    version: 1.0.3(@sveltejs/kit@1.25.1)
+    version: 1.0.3(@sveltejs/kit@1.25.2)
   '@sveltejs/adapter-vercel':
     specifier: ^1.0.6
-    version: 1.0.6(@sveltejs/kit@1.25.1)
+    version: 1.0.6(@sveltejs/kit@1.25.2)
   '@sveltejs/kit':
-    specifier: ^1.25.1
-    version: 1.25.1(svelte@4.2.1)(vite@4.4.9)
+    specifier: ^1.25.2
+    version: 1.25.2(svelte@4.2.1)(vite@4.4.9)
   '@types/cookie':
     specifier: ^0.5.1
     version: 0.5.1
@@ -201,10 +201,10 @@ devDependencies:
     version: 2.0.1
   sveltekit-flash-message:
     specifier: ^2.2.1
-    version: 2.2.1(@sveltejs/kit@1.25.1)(svelte@4.2.1)
+    version: 2.2.1(@sveltejs/kit@1.25.2)(svelte@4.2.1)
   sveltekit-superforms:
     specifier: ^1.7.2
-    version: 1.7.2(@sveltejs/kit@1.25.1)(svelte@4.2.1)(zod@3.22.2)
+    version: 1.7.2(@sveltejs/kit@1.25.2)(svelte@4.2.1)(zod@3.22.2)
   tailwindcss:
     specifier: ^3.3.3
     version: 3.3.3(ts-node@10.9.1)
@@ -1180,7 +1180,7 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@lucia-auth/adapter-mysql@2.1.0(lucia@2.7.0):
+  /@lucia-auth/adapter-mysql@2.1.0(lucia@2.7.1):
     resolution: {integrity: sha512-LkqsJHQS9KuMs+cTJQJnaqb6obqMyJfblyyLM0Ogoimzikb5orbkWI0C8eY3Supr60bgP4PYuQxYZm8xxera0Q==}
     peerDependencies:
       '@planetscale/database': ^1.0.0
@@ -1192,17 +1192,17 @@ packages:
       mysql2:
         optional: true
     dependencies:
-      lucia: 2.7.0
+      lucia: 2.7.1
     dev: false
 
-  /@lucia-auth/adapter-prisma@3.0.1(@prisma/client@5.3.1)(lucia@2.7.0):
-    resolution: {integrity: sha512-JZNl+721M5ApjtNiH+WUYstiC8cffcI/Y9IzKsa0uUhQMIHl2ObCrgO0R3fgHnjWHBjhQoK36g/r/iSJIDppBA==}
+  /@lucia-auth/adapter-prisma@3.0.2(@prisma/client@5.3.1)(lucia@2.7.1):
+    resolution: {integrity: sha512-EyJWZene1/zasPwPctv8wwNErZt5mwwm5JATbhg+kXr3R8pbC7lJfVzDTAeeFClVH5k/FywRcsBl3JkPaNIcow==}
     peerDependencies:
       '@prisma/client': ^4.2.0 || ^5.0.0
       lucia: ^2.0.0
     dependencies:
       '@prisma/client': 5.3.1(prisma@5.3.1)
-      lucia: 2.7.0
+      lucia: 2.7.1
     dev: false
 
   /@lukeed/csprng@1.1.0:
@@ -1234,14 +1234,14 @@ packages:
       - encoding
       - supports-color
 
-  /@melt-ui/pp@0.1.2(@melt-ui/svelte@0.50.0)(svelte@4.2.1):
+  /@melt-ui/pp@0.1.2(@melt-ui/svelte@0.50.1)(svelte@4.2.1):
     resolution: {integrity: sha512-GZeqp7UWLNZUC2dJpREnZrWMR88vy27WO7C3cIBz4KW3/CFD19FjNkd3VbSRfcRryrMkdnEs9nu2VUa8/0u58w==}
     engines: {pnpm: '>=8.6.3'}
     peerDependencies:
       '@melt-ui/svelte': '>= 0.29.0'
       svelte: ^3.55.0 || ^4.0.0
     dependencies:
-      '@melt-ui/svelte': 0.50.0(svelte@4.2.1)
+      '@melt-ui/svelte': 0.50.1(svelte@4.2.1)
       svelte: 4.2.1
     dev: true
 
@@ -1257,8 +1257,8 @@ packages:
       svelte: 4.2.1
     dev: false
 
-  /@melt-ui/svelte@0.50.0(svelte@4.2.1):
-    resolution: {integrity: sha512-NcWwxwStXq77/yOuBfnGkuJdUta3M4SwqZECdaRpAQ61BHI3qz7WW2ZM42JmDvGSs9W6ww2kZFNF8XNTO92CdA==}
+  /@melt-ui/svelte@0.50.1(svelte@4.2.1):
+    resolution: {integrity: sha512-MIenasd8a5jXgynNKmH5JNSrDBS0EKUK4BImgyD0R6Vbzrll6rQquBIxlh5PeqVhZ2azDIEh/yRkwaOFi2HEgw==}
     peerDependencies:
       svelte: '>=3 <5'
     dependencies:
@@ -1480,21 +1480,21 @@ packages:
       fflate: 0.7.4
       string.prototype.codepointat: 0.2.1
 
-  /@sveltejs/adapter-auto@1.0.3(@sveltejs/kit@1.25.1):
+  /@sveltejs/adapter-auto@1.0.3(@sveltejs/kit@1.25.2):
     resolution: {integrity: sha512-hc7O12YQqvZ1CD4fo1gMJuPzBZvuoG5kwxb2RRoz4fVoB8B2vuPO2cY751Ln0G6T/HMrAf8kCqw6Pg+wbxcstw==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.25.1(svelte@4.2.1)(vite@4.4.9)
+      '@sveltejs/kit': 1.25.2(svelte@4.2.1)(vite@4.4.9)
       import-meta-resolve: 2.2.0
     dev: true
 
-  /@sveltejs/adapter-vercel@1.0.6(@sveltejs/kit@1.25.1):
+  /@sveltejs/adapter-vercel@1.0.6(@sveltejs/kit@1.25.2):
     resolution: {integrity: sha512-fo6aaEygPd/6B5Jms4Ff7R4jbADnppuLvKOWBNTGe5MGB7ZRUkl+gxHWMQx2av2knyEZkA6V8y5M6R3ML5yN4g==}
     peerDependencies:
       '@sveltejs/kit': ^1.0.0
     dependencies:
-      '@sveltejs/kit': 1.25.1(svelte@4.2.1)(vite@4.4.9)
+      '@sveltejs/kit': 1.25.2(svelte@4.2.1)(vite@4.4.9)
       '@vercel/nft': 0.22.6
       esbuild: 0.16.8
     transitivePeerDependencies:
@@ -1502,12 +1502,12 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/adapter-vercel@3.0.3(@sveltejs/kit@1.25.1):
+  /@sveltejs/adapter-vercel@3.0.3(@sveltejs/kit@1.25.2):
     resolution: {integrity: sha512-0FQMjR6klW4627ewdclSr0lUe/DqiiyOaRTfgb5cXgNbVMsZMOA2fQ77TYQnJdvMfSEWe6y8uznV48XqKh9+vA==}
     peerDependencies:
       '@sveltejs/kit': ^1.5.0
     dependencies:
-      '@sveltejs/kit': 1.25.1(svelte@4.2.1)(vite@4.4.9)
+      '@sveltejs/kit': 1.25.2(svelte@4.2.1)(vite@4.4.9)
       '@vercel/nft': 0.23.1
       esbuild: 0.18.11
     transitivePeerDependencies:
@@ -1515,8 +1515,8 @@ packages:
       - supports-color
     dev: false
 
-  /@sveltejs/kit@1.25.1(svelte@4.2.1)(vite@4.4.9):
-    resolution: {integrity: sha512-pD8XsvNJNgTNkFngNlM60my/X8dXWPKVzN5RghEQr0NjGZmuCjy49AfFu2cGbZjNf5pBcqd2RCNMW912P5fkhA==}
+  /@sveltejs/kit@1.25.2(svelte@4.2.1)(vite@4.4.9):
+    resolution: {integrity: sha512-USuuSpdAPFDiLi58N2Pwd/TG9bcUSPAlzE5iaAXaLyCTWa3l36HDKH6nV5NqBybwfeux1ZwgtIeITLZJDJ6HDg==}
     engines: {node: ^16.14 || >=18}
     hasBin: true
     requiresBuild: true
@@ -1989,13 +1989,13 @@ packages:
     dependencies:
       file-uri-to-path: 1.0.0
 
-  /bits-ui@0.0.27(@sveltejs/kit@1.25.1)(svelte@4.2.1):
+  /bits-ui@0.0.27(@sveltejs/kit@1.25.2)(svelte@4.2.1):
     resolution: {integrity: sha512-T/8BjEVvAOlp+1ofg4JRiwjv5m/320KUrWk5ONrjzmZVZ5d+uIlGwHmdVysbVtygHxf+FWi8CCKSPYrbxmQUYA==}
     peerDependencies:
       svelte: ^4.0.0
     dependencies:
       '@melt-ui/svelte': 0.37.2(svelte@4.2.1)
-      '@sveltejs/adapter-vercel': 3.0.3(@sveltejs/kit@1.25.1)
+      '@sveltejs/adapter-vercel': 3.0.3(@sveltejs/kit@1.25.2)
       nanoid: 4.0.2
       shiki: 0.14.3
       svelte: 4.2.1
@@ -2707,7 +2707,7 @@ packages:
       zod: ^3.22.2
     dependencies:
       svelte: 4.2.1
-      sveltekit-superforms: 1.7.2(@sveltejs/kit@1.25.1)(svelte@4.2.1)(zod@3.22.2)
+      sveltekit-superforms: 1.7.2(@sveltejs/kit@1.25.2)(svelte@4.2.1)(zod@3.22.2)
       zod: 3.22.2
     dev: false
 
@@ -3088,8 +3088,8 @@ packages:
     dependencies:
       yallist: 4.0.0
 
-  /lucia@2.7.0:
-    resolution: {integrity: sha512-VwWyG3U3mKUXx7qa5SXAQctBukkLpIW5L/vEVqP2R3mDBQTZIBIAZP/neZl5U6mot7Y9bRQ/2pVKO8djEH1O8A==}
+  /lucia@2.7.1:
+    resolution: {integrity: sha512-EHDTajS1YWA7Q37jd29Far1l4nfZgsWLp4hDQeaQhVpJd2WKQqA3626kJYmOj1CTweVMkE54xFi5JIph+agZkQ==}
     dev: false
 
   /lucide-svelte@0.256.1(svelte@4.2.1):
@@ -4340,24 +4340,24 @@ packages:
       magic-string: 0.30.0
       periscopic: 3.1.0
 
-  /sveltekit-flash-message@2.2.1(@sveltejs/kit@1.25.1)(svelte@4.2.1):
+  /sveltekit-flash-message@2.2.1(@sveltejs/kit@1.25.2)(svelte@4.2.1):
     resolution: {integrity: sha512-KnVuC7Q07crRTwgm/N5CQEebNbzPWoMrtlKXRMq608T+/by8kETXmyTUnuZ5wsnfJEwhWQyXsXBOY2a6NzCPQQ==}
     peerDependencies:
       '@sveltejs/kit': 1.x
       svelte: 3.x || 4.x
     dependencies:
-      '@sveltejs/kit': 1.25.1(svelte@4.2.1)(vite@4.4.9)
+      '@sveltejs/kit': 1.25.2(svelte@4.2.1)(vite@4.4.9)
       svelte: 4.2.1
     dev: true
 
-  /sveltekit-superforms@1.7.2(@sveltejs/kit@1.25.1)(svelte@4.2.1)(zod@3.22.2):
+  /sveltekit-superforms@1.7.2(@sveltejs/kit@1.25.2)(svelte@4.2.1)(zod@3.22.2):
     resolution: {integrity: sha512-3zhMynkNWCQF+af2NlsVhi5n03+NEnPy0jzL7EVO3aiYDlJ/9LY1GNI09Mac5UVlJDPS00oB8q3qQUhZSX/gSg==}
     peerDependencies:
       '@sveltejs/kit': 1.x
       svelte: 3.x || 4.x
       zod: 3.x
     dependencies:
-      '@sveltejs/kit': 1.25.1(svelte@4.2.1)(vite@4.4.9)
+      '@sveltejs/kit': 1.25.2(svelte@4.2.1)(vite@4.4.9)
       svelte: 4.2.1
       zod: 3.22.2
 

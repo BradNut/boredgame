@@ -23,7 +23,7 @@
 		"i-changed-the-schema": "pnpm run db:push && pnpm run db:generate"
 	},
 	"prisma": {
-		"seed": "ts-node --esm prisma/seed.ts"
+		"seed": "node --loader ts-node/esm prisma/seed.ts"
 	},
 	"devDependencies": {
 		"@melt-ui/pp": "^0.1.2",
@@ -31,7 +31,7 @@
 		"@resvg/resvg-js": "^2.4.1",
 		"@sveltejs/adapter-auto": "^1.0.3",
 		"@sveltejs/adapter-vercel": "^1.0.6",
-		"@sveltejs/kit": "^1.25.1",
+		"@sveltejs/kit": "^1.25.2",
 		"@types/cookie": "^0.5.1",
 		"@types/node": "^18.17.5",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
@@ -78,9 +78,9 @@
 		"@iconify-icons/line-md": "^1.2.26",
 		"@iconify-icons/mdi": "^1.2.47",
 		"@lucia-auth/adapter-mysql": "^2.1.0",
-		"@lucia-auth/adapter-prisma": "^3.0.1",
+		"@lucia-auth/adapter-prisma": "^3.0.2",
 		"@lukeed/uuid": "^2.0.1",
-		"@melt-ui/svelte": "^0.50.0",
+		"@melt-ui/svelte": "^0.50.1",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"@prisma/client": "5.3.1",
 		"@types/feather-icons": "^4.29.1",
@@ -96,7 +96,7 @@
 		"iconify-icon": "^1.0.8",
 		"just-kebab-case": "^4.2.0",
 		"loader": "^2.1.1",
-		"lucia": "^2.7.0",
+		"lucia": "^2.7.1",
 		"lucide-svelte": "^0.256.1",
 		"open-props": "^1.5.13",
 		"radix-svelte": "^0.9.0",
