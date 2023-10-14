@@ -80,96 +80,80 @@
 	<SuperDebug data={$form} />
 {/if}
 
-<form id="search-form" action="/search" method="GET">
-	<div class="search">
-		<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
-			<Label for="label">Search</Label>
-			<Input type="text" id="q" class={$errors.q && "outline outline-destructive"} name="search" placeholder="Search board games" data-invalid={$errors.q} bind:value={$form.q} />
-			{#if $errors.q}
-				<p class="text-sm text-destructive">{$errors.q}</p>
-			{/if}
-			<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />
-			<input id="limit" type="hidden" name="limit" bind:value={$form.limit} />
-		</fieldset>
-		{#if advancedSearch}
-			<!-- <Disclosure> -->
-				<!-- <DisclosureButton
-					class="disclosure-button"
-					on:click={() => (disclosureOpen = !disclosureOpen)}
-				> -->
-					<span>Advanced Search?</span>
-					<!-- <ChevronRightIcon
-						class="icon disclosure-icon"
-						style={disclosureOpen
-							? 'transform: rotate(90deg); transition: transform 0.5s ease;'
-							: 'transform: rotate(0deg); transition: transform 0.5s ease;'}
-					/> -->
-				<!-- </DisclosureButton> -->
-
-				{#if disclosureOpen}
-					<div transition:fade|global>
-						<!-- Using `static`, `DisclosurePanel` is always rendered,
-                and ignores the `open` state -->
-						<!-- <DisclosurePanel static> -->
-							{#if disclosureOpen}
-								<AdvancedSearch {form} {errors} {constraints} />
-							{/if}
-						<!-- </DisclosurePanel> -->
-					</div>
+<search>
+	<form id="search-form" action="/search" method="GET">
+		<div class="search">
+			<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
+				<Label for="label">Search</Label>
+				<Input type="text" id="q" class={$errors.q && "outline outline-destructive"} name="search" placeholder="Search board games" data-invalid={$errors.q} bind:value={$form.q} />
+				{#if $errors.q}
+					<p class="text-sm text-destructive">{$errors.q}</p>
 				{/if}
-			<!-- </Disclosure> -->
-		{/if}
-	</div>
-	{#if showButton}
-		<Button type="submit">Submit</Button>
-	{/if}
-</form>
+				<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />
+				<input id="limit" type="hidden" name="limit" bind:value={$form.limit} />
+			</fieldset>
+			{#if advancedSearch}
+				<!-- <Disclosure> -->
+					<!-- <DisclosureButton
+						class="disclosure-button"
+						on:click={() => (disclosureOpen = !disclosureOpen)}
+					> -->
+						<span>Advanced Search?</span>
+						<!-- <ChevronRightIcon
+							class="icon disclosure-icon"
+							style={disclosureOpen
+								? 'transform: rotate(90deg); transition: transform 0.5s ease;'
+								: 'transform: rotate(0deg); transition: transform 0.5s ease;'}
+						/> -->
+					<!-- </DisclosureButton> -->
 
-{#if $boredState.loading}
-	<div class="games">
-		<h1>Games Found:</h1>
-		<div class="games-list">
-			<!-- {#each placeholderList as game, i}
-				<SkeletonPlaceholder
-					style="width: 100%; height: 500px; border-radius: var(--borderRadius);"
-				/>
-			{/each} -->
-		</div>
-	</div>
-{:else}
-	<div class="games">
-		<h1>Games Found:</h1>
-		<div class="games-list">
-			{#if totalCount > 0}
-				{#each games as game (game.id)}
-					<Game {game} />
-				{/each}
-			{:else}
-			 <h2>Sorry no games found!</h2>
+					{#if disclosureOpen}
+						<div transition:fade|global>
+							<!-- Using `static`, `DisclosurePanel` is always rendered,
+									and ignores the `open` state -->
+							<!-- <DisclosurePanel static> -->
+								{#if disclosureOpen}
+									<AdvancedSearch {form} {errors} {constraints} />
+								{/if}
+							<!-- </DisclosurePanel> -->
+						</div>
+					{/if}
+				<!-- </Disclosure> -->
 			{/if}
 		</div>
-		{#if showPagination && $gameStore?.length > 0}
-			<Pagination
-				{pageSize}
-				{page}
-				{totalItems}
-				forwardText="Next"
-				backwardText="Prev"
-				pageSizes={[10, 25, 50, 100]}
-				on:nextPageEvent={handleNextPageEvent}
-				on:previousPageEvent={handlePreviousPageEvent}
-				on:perPageEvent={handlePerPageEvent}
-			/>
+		{#if showButton}
+			<Button type="submit">Submit</Button>
+		{/if}
+	</form>
+</search>
+
+<section class="games">
+	<h1>Games Found:</h1>
+	<div class="games-list">
+		{#if totalCount > 0}
+			{#each games as game (game.id)}
+				<Game {game} />
+			{/each}
+		{:else}
+			<h2>Sorry no games found!</h2>
 		{/if}
 	</div>
-{/if}
+	{#if showPagination && $gameStore?.length > 0}
+		<Pagination
+			{pageSize}
+			{page}
+			{totalItems}
+			forwardText="Next"
+			backwardText="Prev"
+			pageSizes={[10, 25, 50, 100]}
+			on:nextPageEvent={handleNextPageEvent}
+			on:previousPageEvent={handlePreviousPageEvent}
+			on:perPageEvent={handlePerPageEvent}
+		/>
+	{/if}
+</section>
 
 <style lang="postcss">
-	.search {
-		display: grid;
-		gap: 1rem;
-	}
-
 	:global(.disclosure-button) {
 		display: flex;
 		gap: 0.25rem;
