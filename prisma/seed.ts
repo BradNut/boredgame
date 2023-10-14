@@ -20,59 +20,50 @@ async function main() {
 		console.log('Roles already exist. No action taken.');
 	}
 
-	console.log('Creating Mechanics ...');
-	const existingMechanics = await prisma.mechanic.findMany();
-	if (existingMechanics.length === 0) {
-		for (const mechanic of mechanics.mechanics) {
-			await prisma.mechanic.create({
-				data: {
-					name: mechanic.name,
-					external_id: createId(),
-					slug: kebabCase(mechanic.name)
-				}
-			});
+	if (!await prisma.publisher.findFirst({
+		where: {
+			external_id: 9999
 		}
-		console.log('Mechanics created.');
+	})) {
+		console.log('Publisher does not exist. Creating...');
+		await prisma.publisher.create({
+			data: {
+				name: 'Unknown',
+				slug: 'unknown',
+				external_id: 9999
+			}
+		});
 	}
 
-	console.log('Creating Categories ...');
-	const existingCategories = await prisma.category.findMany();
-	if (existingCategories.length === 0) {
-		for (const category of categories.categories) {
-			await prisma.category.create({
-				data: {
-					name: category.name,
-					external_id: createId(),
-					slug: kebabCase(category.name)
-				}
-			});
+	if (!await prisma.designer.findFirst({
+		where: {
+			external_id: 9999
 		}
-		console.log('Categories created.');
+	})) {
+		console.log('Designer does not exist. Creating...');
+		await prisma.designer.create({
+			data: {
+				name: 'Unknown',
+				slug: 'unknown',
+				external_id: 9999
+			}
+		});
 	}
 
-	await prisma.publisher.create({
-		data: {
-			name: 'Unknown',
-			slug: 'unknown',
-			external_id: createId()
+	if (!await prisma.artist.findFirst({
+		where: {
+			external_id: 9999
 		}
-	});
-
-	await prisma.designer.create({
-		data: {
-			name: 'Unknown',
-			slug: 'unknown',
-			external_id: createId()
-		}
-	});
-
-	await prisma.artist.create({
-		data: {
-			name: 'Unknown',
-			slug: 'unknown'
-		}
-	});
-
+	})) {
+		console.log('Artist does not exist. Creating...');
+		await prisma.artist.create({
+			data: {
+				name: 'Unknown',
+				slug: 'unknown',
+				external_id: 9999
+			}
+		});
+	}
 	// for (const p of userData) {
 	// 	const user = await prisma.user.create({
 	// 		data: {
