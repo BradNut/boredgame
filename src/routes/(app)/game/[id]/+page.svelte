@@ -11,8 +11,8 @@
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
-	$: collectionText = existsInCollection ? 'Remove from collection' : 'Add to collection';
-	$: wishlistText = existsInWishlist ? 'Remove from wishlist' : 'Add to wishlist';
+	// $: collectionText = existsInCollection ? 'Remove from collection' : 'Add to collection';
+	// $: wishlistText = existsInWishlist ? 'Remove from wishlist' : 'Add to wishlist';
 
 	export let data: PageData;
 	console.log('data', data);
@@ -66,6 +66,24 @@
 			</span>
 		{/if}
 	</div>
+</section>
+<section>
+	<p>Categories</p>
+	{#each game?.categories as category}
+		<span>{category.name}</span>
+	{/each}
+</section>
+<section>
+	<p>Mechanics</p>
+	{#each game?.mechanics as mechanic}
+		<span>{mechanic.name}</span>
+	{/each}
+</section>
+<section>
+	<p>Expansions</p>
+	{#each game?.expansions as expansions}
+		<span>{expansions?.base_game?.name}</span>
+	{/each}
 </section>
 <section class="description" class:show={seeMore} class:hide={!seeMore} style="margin-top: 2rem;">
 	{@html game?.description}

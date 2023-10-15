@@ -1,7 +1,15 @@
 import { error } from '@sveltejs/kit';
 import prisma from '$lib/prisma.js';
 import type { GameType } from '$lib/types.js';
-import { createArtist, createCategory, createDesigner, createExpansion, createMechanic, createOrUpdateGame, createPublisher } from '$lib/utils/dbUtils.js';
+import {
+	createArtist,
+	createCategory,
+	createDesigner,
+	createExpansion,
+	createMechanic,
+	createOrUpdateGame,
+	createPublisher
+} from '$lib/utils/dbUtils.js';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import type { Game } from '@prisma/client';
 
@@ -18,7 +26,12 @@ export const load = async ({ params, setHeaders, locals, fetch }) => {
 				designers: true,
 				publishers: true,
 				mechanics: true,
-				categories: true
+				categories: true,
+				expansions: {
+					include: {
+						base_game: true
+					}
+				}
 			}
 		});
 		console.log('found game', game);
@@ -28,7 +41,10 @@ export const load = async ({ params, setHeaders, locals, fetch }) => {
 		}
 
 		const currentDate = new Date();
-		if (game.last_sync_at === null || currentDate.getDate() - game.last_sync_at.getDate() > 7 * 24 * 60 * 60 * 1000) {
+		if (
+			game.last_sync_at === null ||
+			currentDate.getDate() - game.last_sync_at.getDate() > 7 * 24 * 60 * 60 * 1000
+		) {
 			await syncGameAndConnectedData(game, fetch);
 		}
 
@@ -61,6 +77,8 @@ export const load = async ({ params, setHeaders, locals, fetch }) => {
 				}
 			});
 		}
+
+		console.log('Returning game', game);
 
 		return {
 			game,
@@ -119,10 +137,22 @@ async function syncGameAndConnectedData(game: Game, eventFetch: Function) {
 			console.log('Inbound?', externalExpansion.inbound);
 			if (externalExpansion?.inbound === true) {
 				expansion = await createExpansion(game, externalExpansion, false, eventFetch);
+				await prisma.game.update({
+					where: {
+						external_id: externalExpansion.id
+					},
+					data: {
+						expansions: {
+							connect: {
+								id: expansion.id
+							}
+						}
+					}
+				})
 			} else {
 				expansion = await createExpansion(game, externalExpansion, true, eventFetch);
+				expansions.push({ id: expansion.id });
 			}
-			expansions.push({ id: expansion.id });
 		}
 
 		let boredGame = mapAPIGameToBoredGame(externalGame);
