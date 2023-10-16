@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import { Prisma } from '@prisma/client';
-import prisma from '$lib/prisma.js';
+import prisma from '$lib/prisma';
 
 // Search a user's collection
 export const GET = async ({ url }) => {

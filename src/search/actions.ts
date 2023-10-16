@@ -1,5 +1,4 @@
 import { invalid, type RequestEvent } from '@sveltejs/kit';
-import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
 import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper';
 
@@ -18,8 +17,6 @@ export const Games: Actions = {
 			ascending: false,
 			limit: 10,
 			skip: 0,
-			client_id: BOARD_GAME_ATLAS_CLIENT_ID,
-			fuzzy_match: true,
 			name: ''
 		};
 

@@ -1,7 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
-import prisma from '$lib/prisma.js';
-import { list_game_request_schema } from '$lib/zodValidation';
+import prisma from '$lib/prisma';
 import { modifyListGameSchema } from '$lib/config/zod-schemas.js';
 
 export async function load({ params, locals }) {

@@ -1,6 +1,5 @@
 import { error } from '@sveltejs/kit';
-import prisma from '$lib/prisma.js';
-import type { GameType } from '$lib/types.js';
+import prisma from '$lib/prisma';
 import {
 	createArtist,
 	createCategory,

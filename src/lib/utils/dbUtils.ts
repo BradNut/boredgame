@@ -1,10 +1,9 @@
-import prisma from "$lib/prisma";
-import type { GameType } from "$lib/types";
-import type { Game } from "@prisma/client";
-import type { BggThingDto } from "boardgamegeekclient/dist/esm/dto";
-import type { BggLinkDto } from "boardgamegeekclient/dist/esm/dto/concrete/subdto";
-import kebabCase from "just-kebab-case";
-import { mapAPIGameToBoredGame } from "./gameMapper";
+import type { Game } from '@prisma/client';
+import kebabCase from 'just-kebab-case';
+import type { BggLinkDto } from 'boardgamegeekclient/dist/esm/dto/concrete/subdto';
+import prisma from '$lib/prisma';
+import type { GameType } from '$lib/types';
+import { mapAPIGameToBoredGame } from './gameMapper';
 
 export async function createArtist(externalArtist: BggLinkDto) {
 	try {
@@ -204,7 +203,12 @@ export async function createMechanic(externalMechanic: BggLinkDto) {
 	}
 }
 
-export async function createExpansion(game: Game, externalExpansion: BggLinkDto, gameIsExpansion: boolean, eventFetch: Function) {
+export async function createExpansion(
+	game: Game,
+	externalExpansion: BggLinkDto,
+	gameIsExpansion: boolean,
+	eventFetch: Function
+) {
 	try {
 		let dbExpansionGame = await prisma.game.findUnique({
 			where: {
@@ -222,7 +226,9 @@ export async function createExpansion(game: Game, externalExpansion: BggLinkDto,
 				let boredGame = mapAPIGameToBoredGame(externalGame);
 				dbExpansionGame = await createOrUpdateGameMinimal(boredGame);
 			} else {
-				throw new Error(`${gameIsExpansion ? 'Base game' : 'Expansion game'} not found and failed to create.`);
+				throw new Error(
+					`${gameIsExpansion ? 'Base game' : 'Expansion game'} not found and failed to create.`
+				);
 			}
 		}
 
@@ -230,7 +236,10 @@ export async function createExpansion(game: Game, externalExpansion: BggLinkDto,
 		let baseGameId;
 		let gameId;
 		if (gameIsExpansion) {
-			console.log('External expansion is expansion. Looking for base game', JSON.stringify(game, null, 2));
+			console.log(
+				'External expansion is expansion. Looking for base game',
+				JSON.stringify(game, null, 2)
+			);
 			dbExpansion = await prisma.expansion.findFirst({
 				where: {
 					game_id: dbExpansionGame.id
@@ -244,7 +253,10 @@ export async function createExpansion(game: Game, externalExpansion: BggLinkDto,
 			baseGameId = game.id;
 			gameId = dbExpansionGame.id;
 		} else {
-			console.log('External Expansion is base game. Looking for expansion', JSON.stringify(game, null, 2));
+			console.log(
+				'External Expansion is base game. Looking for expansion',
+				JSON.stringify(game, null, 2)
+			);
 			dbExpansion = await prisma.expansion.findFirst({
 				where: {
 					base_game_id: dbExpansionGame.id

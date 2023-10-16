@@ -1,8 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import kebabCase from 'just-kebab-case';
-import { BOARD_GAME_ATLAS_CLIENT_ID } from '$env/static/private';
-import prisma from '$lib/prisma.js';
 import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import { search_schema } from '$lib/zodValidation';
@@ -141,6 +139,17 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 
 	// fields: ('id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description');
 	try {
+		if (form.data?.q === '') {
+			return {
+				form,
+				searchData: {
+					totalCount: 0,
+					games: [],
+					wishlists: []
+				}
+			};
+		}
+
 		if (form.data?.minAge) {
 			if (form.data?.exactMinAge) {
 				queryParams.min_age = form.data?.minAge;
@@ -175,7 +184,8 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		return {
 			form,
 			// modifyListForm,
-			searchData
+			searchData,
+			wishlists: []
 		};
 	} catch (e) {
 		console.log(`Error searching board games ${e}`);
@@ -196,7 +206,6 @@ export const actions = {
 		const queryParams: SearchQuery = {
 			order_by: 'rank',
 			ascending: false,
-			client_id: BOARD_GAME_ATLAS_CLIENT_ID,
 			random: true,
 			fields:
 				'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'

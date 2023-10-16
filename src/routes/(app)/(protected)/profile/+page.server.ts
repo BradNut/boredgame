@@ -3,7 +3,6 @@ import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { userSchema } from '$lib/config/zod-schemas';
 import { auth } from '$lib/server/lucia.js';
 import { LuciaError } from 'lucia';
-// import prisma from '$lib/prisma.js';
 
 const profileSchema = userSchema.pick({
 	firstName: true,

@@ -5,7 +5,7 @@ import { LuciaError } from 'lucia';
 import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$server/roles';
-import prisma from '$lib/prisma.js';
+import prisma from '$lib/prisma';
 import { Schema } from 'zod';
 import type { Message } from '$lib/types.js';
 

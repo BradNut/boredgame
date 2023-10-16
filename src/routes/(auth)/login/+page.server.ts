@@ -2,7 +2,7 @@ import { fail } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { auth } from '$lib/server/lucia';
-import prisma from '$lib/prisma.js';
+import prisma from '$lib/prisma';
 import { userSchema } from '$lib/config/zod-schemas';
 
 const signInSchema = userSchema.pick({

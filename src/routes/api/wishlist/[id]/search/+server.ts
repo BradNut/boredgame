@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import prisma from '$lib/prisma.js';
+import prisma from '$lib/prisma';
 import type { CollectionItemWithGame } from '$lib/types.js';
 
 // Search a user's collection
