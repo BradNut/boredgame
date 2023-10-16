@@ -1,8 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import kebabCase from 'just-kebab-case';
-import { createId } from '@paralleldrive/cuid2';
-import categories from './categories.json' assert { type: 'json' };
-import mechanics from './mechanics.json' assert { type: 'json' };
 
 const prisma = new PrismaClient();
 
