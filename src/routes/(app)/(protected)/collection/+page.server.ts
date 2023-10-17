@@ -1,9 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
-import { setError, superValidate } from 'sveltekit-superforms/server';
+import { superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from '../../$types.js';
-import prisma from '$lib/prisma';
 import { modifyListGameSchema, type ListGame } from '$lib/config/zod-schemas.js';
-import type { CollectionItemWithGame } from '$lib/types.js';
 import { search_schema } from '$lib/zodValidation.js';
 
 export const load: PageServerLoad = async ({ fetch, url, locals }) => {
@@ -29,7 +27,7 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	const listManageForm = await superValidate(modifyListGameSchema);
 
 	try {
-		let collection = await prisma.collection.findUnique({
+		let collection = await locals.prisma.collection.findUnique({
 			where: {
 				user_id: session.user.userId
 			}
@@ -39,14 +37,14 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 		if (!collection) {
 			console.log('Collection was not found');
 			return fail(404, {});
-			// 	collection = await prisma.collection.create({
+			// 	collection = await locals.prisma.collection.create({
 			// 		data: {
 			// 			user_id: session.userId
 			// 		}
 			// 	});
 		}
 
-		let collection_items: CollectionItemWithGame[] = await prisma.collectionItem.findMany({
+		let collection_items = await locals.prisma.collectionItem.findMany({
 			where: {
 				collection_id: collection.id
 			},
@@ -110,14 +108,14 @@ export const actions = {
 				throw redirect(302, '/login');
 			}
 
-			let game = await prisma.game.findUnique({
+			let game = await locals.prisma.game.findUnique({
 				where: {
 					id: form.data.id
 				}
 			});
 
 			if (!game) {
-				// game = await prisma.game.create({
+				// game = await locals.prisma.game.create({
 				// 	data: {
 				// 		name: form.name
 				// 	}
@@ -127,7 +125,7 @@ export const actions = {
 			}
 
 			if (game) {
-				const collection = await prisma.collection.findUnique({
+				const collection = await locals.prisma.collection.findUnique({
 					where: {
 						user_id: session.user.userId
 					}
@@ -138,7 +136,7 @@ export const actions = {
 					return error(404, 'Wishlist not found');
 				}
 
-				await prisma.collectionItem.create({
+				await locals.prisma.collectionItem.create({
 					data: {
 						game_id: game.id,
 						collection_id: collection.id,
@@ -182,14 +180,14 @@ export const actions = {
 				throw redirect(302, '/login');
 			}
 
-			let game = await prisma.game.findUnique({
+			let game = await locals.prisma.game.findUnique({
 				where: {
 					id: form.data.id
 				}
 			});
 
 			if (!game) {
-				// game = await prisma.game.create({
+				// game = await locals.prisma.game.create({
 				// 	data: {
 				// 		name: form.name
 				// 	}
@@ -199,7 +197,7 @@ export const actions = {
 			}
 
 			if (game) {
-				const collection = await prisma.collection.findUnique({
+				const collection = await locals.prisma.collection.findUnique({
 					where: {
 						user_id: session.user.userId
 					}
@@ -210,7 +208,7 @@ export const actions = {
 					return error(404, 'Wishlist not found');
 				}
 
-				await prisma.collectionItem.delete({
+				await locals.prisma.collectionItem.delete({
 					where: {
 						collection_id: collection.id,
 						game_id: game.id

@@ -79,12 +79,6 @@
 		<span>{mechanic.name}</span>
 	{/each}
 </section>
-<section>
-	<p>Expansions</p>
-	{#each game?.expansions as expansions}
-		<span>{expansions?.base_game?.name}</span>
-	{/each}
-</section>
 <section class="description" class:show={seeMore} class:hide={!seeMore} style="margin-top: 2rem;">
 	{@html game?.description}
 </section>
@@ -98,6 +92,30 @@
 		<MinusIcon width="24" height="24" />
 	{/if}
 </button>
+<section>
+	<p>Expansion Of</p>
+	<ul style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+	{#each game?.expansion_of as expansion}
+		<li>
+			<a href={`/game/${expansion?.base_game?.id}`}>
+				{expansion?.base_game?.name}
+			</a>
+		</li>
+	{/each}
+	</ul>
+</section>
+<section>
+	<p>Expansions</p>
+	<ul style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+	{#each game?.expansions as expansion}
+		<li>
+			<a href={`/game/${expansion?.game?.id}`}>
+				{expansion?.game?.name}
+			</a>
+		</li>
+	{/each}
+	</ul>
+</section>
 
 <style lang="scss">
 	h2 {

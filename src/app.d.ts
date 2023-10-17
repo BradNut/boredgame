@@ -22,6 +22,10 @@ declare global {
 			errorStackTrace: string;
 			message: unknown;
 			track: unknown;
+			session: {
+				ip: string,
+				country: string
+			}
 		}
 		interface Error {
 			code?: string;

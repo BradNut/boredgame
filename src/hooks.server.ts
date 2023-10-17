@@ -1,34 +1,19 @@
+import * as Sentry from '@sentry/sveltekit';
 import { sequence } from '@sveltejs/kit/hooks';
-import { type HandleServerError, type Handle } from '@sveltejs/kit';
-import { dev } from '$app/environment';
+import { PrismaClient } from '@prisma/client';
+import type { Handle } from '@sveltejs/kit';
 import { auth } from '$lib/server/lucia';
-import log from '$lib/server/log';
+import { dev } from '$app/environment';
 
-export const handleError: HandleServerError = async ({ error, event }) => {
-	const errorId = crypto.randomUUID();
+Sentry.init({
+	dsn: 'https://742e43279df93a3c4a4a78c12eb1f879@o4506057768632320.ingest.sentry.io/4506057770401792',
+	tracesSampleRate: 1,
+	environment: dev ? 'development' : 'production'
+});
 
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	//@ts-ignore
-	event.locals.error = error?.toString() || undefined;
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	//@ts-ignore
-	event.locals.errorStackTrace = error?.stack || undefined;
-	event.locals.errorId = errorId;
-	if (!dev) {
-		log(500, event);
-	}
-
-	return {
-		message: 'An unexpected error occurred.',
-		errorId
-	};
-};
-
-// export const prismaClient: Handle = async function ({ event, resolve }) {
-// 	event.locals.prisma = prisma;
-// 	const response = await resolve(event);
-// 	return response;
-// };
+// * START UP
+// RUNS ONCE ON FILE LOAD
+export const prisma_client = new PrismaClient();
 
 export const authentication: Handle = async function ({ event, resolve }) {
 	const startTimer = Date.now();
@@ -52,8 +37,22 @@ export const authentication: Handle = async function ({ event, resolve }) {
 		console.log('auth empty');
 	}
 
+	return await resolve(event);
+};
+
+// This hook is used to pass our prisma instance to each action, load, and endpoint
+export const prisma: Handle = async function ({ event, resolve }) {
+	const ip = event.request.headers.get('x-forwarded-for') as string;
+	const country = event.request.headers.get('x-vercel-ip-country') as string;
+	event.locals.prisma = prisma_client;
+	event.locals.session = {
+		...event.locals.session,
+		ip,
+		country
+	};
 	const response = await resolve(event);
 	return response;
 };
 
-export const handle = sequence(authentication);
+export const handle = sequence(sequence(Sentry.sentryHandle(), authentication, prisma));
+export const handleError = Sentry.handleErrorWithSentry();

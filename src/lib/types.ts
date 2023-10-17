@@ -1,21 +1,6 @@
-import { Prisma } from '@prisma/client';
 import type { SvelteComponent } from 'svelte';
 
 export type Message = { status: 'error' | 'success' | 'warning' | 'info'; text: string };
-
-export const gameInclude = Prisma.validator<Prisma.CollectionItemInclude>()({
-	game: {
-		select: {
-			id: true,
-			name: true,
-			thumb_url: true
-		}
-	}
-});
-
-export type CollectionItemWithGame = Prisma.CollectionItemGetPayload<{
-	include: typeof gameInclude;
-}>;
 
 export type Dialog = {
 	isOpen: boolean;

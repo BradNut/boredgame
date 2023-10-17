@@ -1,5 +1,4 @@
 import { error } from '@sveltejs/kit';
-import prisma from '$lib/prisma';
 import {
 	createArtist,
 	createCategory,
@@ -12,11 +11,11 @@ import {
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import type { Game } from '@prisma/client';
 
-export const load = async ({ params, setHeaders, locals, fetch }) => {
+export const load = async ({ params, locals, fetch }) => {
 	try {
 		const { user } = locals;
 		const { id } = params;
-		const game = await prisma.game.findUnique({
+		const game = await locals.prisma.game.findUnique({
 			where: {
 				id
 			},
@@ -28,7 +27,22 @@ export const load = async ({ params, setHeaders, locals, fetch }) => {
 				categories: true,
 				expansions: {
 					include: {
-						base_game: true
+						game: {
+							select: {
+								id: true,
+								name: true
+							}
+						}
+					}
+				},
+				expansion_of: {
+					include: {
+						base_game: {
+							select: {
+								id: true,
+								name: true
+							}
+						}
 					}
 				}
 			}
@@ -44,13 +58,13 @@ export const load = async ({ params, setHeaders, locals, fetch }) => {
 			game.last_sync_at === null ||
 			currentDate.getDate() - game.last_sync_at.getDate() > 7 * 24 * 60 * 60 * 1000
 		) {
-			await syncGameAndConnectedData(game, fetch);
+			await syncGameAndConnectedData(locals, game, fetch);
 		}
 
 		let wishlist;
 		let collection;
 		if (user) {
-			wishlist = await prisma.wishlist.findUnique({
+			wishlist = await locals.prisma.wishlist.findUnique({
 				where: {
 					user_id: user.userId
 				},
@@ -63,7 +77,7 @@ export const load = async ({ params, setHeaders, locals, fetch }) => {
 				}
 			});
 
-			collection = await prisma.collection.findUnique({
+			collection = await locals.prisma.collection.findUnique({
 				where: {
 					user_id: user.userId
 				},
@@ -94,7 +108,7 @@ export const load = async ({ params, setHeaders, locals, fetch }) => {
 	throw error(404, 'not found');
 };
 
-async function syncGameAndConnectedData(game: Game, eventFetch: Function) {
+async function syncGameAndConnectedData(locals: App.Locals, game: Game, eventFetch: Function) {
 	console.log(
 		`Retrieving full external game details for external id: ${game.external_id} with name ${game.name}`
 	);
@@ -107,50 +121,35 @@ async function syncGameAndConnectedData(game: Game, eventFetch: Function) {
 		let artists = [];
 		let designers = [];
 		let publishers = [];
-		let expansions = [];
 		for (const externalCategory of externalGame.categories) {
-			const category = await createCategory(externalCategory);
+			const category = await createCategory(locals, externalCategory);
 			categories.push({
 				id: category.id
 			});
 		}
 		for (const externalMechanic of externalGame.mechanics) {
-			const mechanic = await createMechanic(externalMechanic);
+			const mechanic = await createMechanic(locals, externalMechanic);
 			mechanics.push({ id: mechanic.id });
 		}
 		for (const externalArtist of externalGame.artists) {
-			const artist = await createArtist(externalArtist);
+			const artist = await createArtist(locals, externalArtist);
 			artists.push({ id: artist.id });
 		}
 		for (const externalDesigner of externalGame.designers) {
-			const designer = await createDesigner(externalDesigner);
+			const designer = await createDesigner(locals, externalDesigner);
 			designers.push({ id: designer.id });
 		}
 		for (const externalPublisher of externalGame.publishers) {
-			const publisher = await createPublisher(externalPublisher);
+			const publisher = await createPublisher(locals, externalPublisher);
 			publishers.push({ id: publisher.id });
 		}
 
 		for (const externalExpansion of externalGame.expansions) {
-			let expansion;
 			console.log('Inbound?', externalExpansion.inbound);
 			if (externalExpansion?.inbound === true) {
-				expansion = await createExpansion(game, externalExpansion, false, eventFetch);
-				await prisma.game.update({
-					where: {
-						external_id: externalExpansion.id
-					},
-					data: {
-						expansions: {
-							connect: {
-								id: expansion.id
-							}
-						}
-					}
-				})
+				createExpansion(locals, game, externalExpansion, false, eventFetch);
 			} else {
-				expansion = await createExpansion(game, externalExpansion, true, eventFetch);
-				expansions.push({ id: expansion.id });
+				createExpansion(locals, game, externalExpansion, true, eventFetch);
 			}
 		}
 
@@ -161,7 +160,7 @@ async function syncGameAndConnectedData(game: Game, eventFetch: Function) {
 		boredGame.designers = designers;
 		boredGame.artists = artists;
 		boredGame.publishers = publishers;
-		boredGame.expansions = expansions;
-		return createOrUpdateGame(boredGame);
+		// boredGame.expansions = expansions;
+		return createOrUpdateGame(locals, boredGame);
 	}
 }

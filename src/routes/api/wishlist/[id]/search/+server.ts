@@ -1,6 +1,4 @@
 import { error, json } from '@sveltejs/kit';
-import prisma from '$lib/prisma';
-import type { CollectionItemWithGame } from '$lib/types.js';
 
 // Search a user's collection
 export async function GET({ url, locals, params }) {
@@ -19,7 +17,7 @@ export async function GET({ url, locals, params }) {
 		throw error(401, { message: 'Unauthorized' });
 	}
 
-	let collection = await prisma.collection.findUnique({
+	let collection = await locals.prisma.collection.findUnique({
 		where: {
 			user_id: locals.user.userId
 		}
@@ -33,7 +31,7 @@ export async function GET({ url, locals, params }) {
 
 	try {
 		const orderBy = { [sort]: order };
-		let collection_items: CollectionItemWithGame[] = await prisma.collectionItem.findMany({
+		let collection_items = await locals.prisma.collectionItem.findMany({
 			where: {
 				collection_id,
 				AND: [

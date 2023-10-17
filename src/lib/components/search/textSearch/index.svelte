@@ -85,20 +85,20 @@
 		<div class="search">
 			<fieldset class="text-search" aria-busy={submitting} disabled={submitting}>
 				<Label for="label">Search</Label>
-				<Input type="text" id="q" class={$errors.q && "outline outline-destructive"} name="search" placeholder="Search board games" data-invalid={$errors.q} bind:value={$form.q} />
+				<Input type="text" id="q" class={$errors.q && "outline outline-destructive"} name="q" placeholder="Search board games" data-invalid={$errors.q} bind:value={$form.q} />
 				{#if $errors.q}
 					<p class="text-sm text-destructive">{$errors.q}</p>
 				{/if}
 				<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />
 				<input id="limit" type="hidden" name="limit" bind:value={$form.limit} />
 			</fieldset>
-			{#if advancedSearch}
+			<!-- {#if advancedSearch} -->
 				<!-- <Disclosure> -->
 					<!-- <DisclosureButton
 						class="disclosure-button"
 						on:click={() => (disclosureOpen = !disclosureOpen)}
 					> -->
-						<span>Advanced Search?</span>
+						<!-- <span>Advanced Search?</span> -->
 						<!-- <ChevronRightIcon
 							class="icon disclosure-icon"
 							style={disclosureOpen
@@ -107,19 +107,19 @@
 						/> -->
 					<!-- </DisclosureButton> -->
 
-					{#if disclosureOpen}
-						<div transition:fade|global>
+					<!-- {#if disclosureOpen}
+						<div transition:fade|global> -->
 							<!-- Using `static`, `DisclosurePanel` is always rendered,
 									and ignores the `open` state -->
 							<!-- <DisclosurePanel static> -->
-								{#if disclosureOpen}
+								<!-- {#if disclosureOpen}
 									<AdvancedSearch {form} {errors} {constraints} />
-								{/if}
+								{/if} -->
 							<!-- </DisclosurePanel> -->
-						</div>
-					{/if}
+						<!-- </div> -->
+					<!-- {/if} -->
 				<!-- </Disclosure> -->
-			{/if}
+			<!-- {/if} -->
 		</div>
 		{#if showButton}
 			<Button type="submit">Submit</Button>

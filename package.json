@@ -83,6 +83,7 @@
 		"@melt-ui/svelte": "^0.50.1",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"@prisma/client": "^5.4.2",
+		"@sentry/sveltekit": "^7.74.0",
 		"@types/feather-icons": "^4.29.1",
 		"@vercel/og": "^0.5.13",
 		"bits-ui": "^0.0.27",

@@ -2,7 +2,6 @@ import { fail } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { auth } from '$lib/server/lucia';
-import prisma from '$lib/prisma';
 import { userSchema } from '$lib/config/zod-schemas';
 
 const signInSchema = userSchema.pick({
@@ -25,6 +24,7 @@ export const load = async (event) => {
 
 export const actions = {
 	default: async (event) => {
+		const { locals } = event;
 		const form = await superValidate(event, signInSchema);
 
 		if (!form.valid) {
@@ -42,7 +42,7 @@ export const actions = {
 			});
 			event.locals.auth.setSession(session);
 
-			const user = await prisma.user.findUnique({
+			const user = await locals.prisma.user.findUnique({
 				where: {
 					id: session.user.userId
 				},
@@ -55,7 +55,7 @@ export const actions = {
 				}
 			});
 			if (user) {
-				await prisma.collection.upsert({
+				await locals.prisma.collection.upsert({
 					where: {
 						user_id: user.id
 					},
@@ -66,7 +66,7 @@ export const actions = {
 						user_id: user.id
 					}
 				});
-				await prisma.wishlist.upsert({
+				await locals.prisma.wishlist.upsert({
 					where: {
 						user_id: user.id
 					},

@@ -1,10 +1,9 @@
-import { auth } from '$lib/server/lucia';
-import prisma from '$lib/prisma';
 import type { User } from '@prisma/client';
+import { prisma_client } from '../hooks.server';
 import { add_user_to_role } from './roles';
 
 export function create_user(user: User) {
-	return prisma.user.create({
+	return prisma_client.user.create({
 		data: {
 			username: user.username
 		}
@@ -12,7 +11,7 @@ export function create_user(user: User) {
 }
 
 export async function find_or_create_user(user: User) {
-	const existing_user = await prisma.user.findUnique({
+	const existing_user = await prisma_client.user.findUnique({
 		where: {
 			username: user.username
 		}
@@ -27,7 +26,7 @@ export async function find_or_create_user(user: User) {
 }
 
 export async function find_user_with_roles(user_id: string) {
-	const user_with_roles = await prisma.user.findUnique({
+	const user_with_roles = await prisma_client.user.findUnique({
 		where: {
 			id: user_id
 		},

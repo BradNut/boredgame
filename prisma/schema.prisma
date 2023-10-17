@@ -175,7 +175,8 @@ model Game {
   publishers              Publisher[]
   artists                 Artist[]
   names                   GameName[]
-  expansions              Expansion[]
+  expansions              Expansion[]         @relation("BaseToExpansion")
+  expansion_of            Expansion[]         @relation("ExpansionToBase")
   collection_items        CollectionItem[]
   wishlist_items          WishlistItem[]
   list_items              ListItem[]
@@ -269,8 +270,9 @@ model Artist {
 
 model Expansion {
   id              String    @id @default(cuid())
-  base_game       Game      @relation(fields: [base_game_id], references: [id])
+  base_game       Game      @relation(name: "BaseToExpansion", fields: [base_game_id], references: [id])
   base_game_id    String
+  game            Game      @relation(name: "ExpansionToBase", fields: [game_id], references: [id])
   game_id         String
   created_at      DateTime  @default(now()) @db.Timestamp(6)
   updated_at      DateTime  @updatedAt @db.Timestamp(6)

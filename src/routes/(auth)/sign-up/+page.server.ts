@@ -1,12 +1,9 @@
 import { fail, redirect, error } from '@sveltejs/kit';
-import { setError, superValidate } from 'sveltekit-superforms/server';
-import { redirect as flashRedirect } from 'sveltekit-flash-message/server';
+import { superValidate } from 'sveltekit-superforms/server';
 import { LuciaError } from 'lucia';
 import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$server/roles';
-import prisma from '$lib/prisma';
-import { Schema } from 'zod';
 import type { Message } from '$lib/types.js';
 
 const signUpSchema = userSchema
@@ -81,12 +78,12 @@ export const actions = {
 			});
 			console.log('signup user', user);
 			add_user_to_role(user.userId, 'user');
-			await prisma.collection.create({
+			await locals.prisma.collection.create({
 				data: {
 					user_id: user.userId
 				}
 			});
-			await prisma.wishlist.create({
+			await locals.prisma.wishlist.create({
 				data: {
 					user_id: user.userId
 				}

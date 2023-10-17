@@ -1,7 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
-import prisma from '$lib/prisma';
-import { list_game_request_schema } from '$lib/zodValidation';
 
 export async function load({ params, locals }) {
 	const session = await locals.auth.validate();
@@ -10,7 +8,7 @@ export async function load({ params, locals }) {
 	}
 
 	try {
-		let wishlist = await prisma.wishlist.findUnique({
+		let wishlist = await locals.prisma.wishlist.findUnique({
 			where: {
 				id: params.id,
 				AND: {
@@ -52,14 +50,14 @@ export const actions = {
 			throw redirect(302, '/login');
 		}
 
-		let game = await prisma.game.findUnique({
+		let game = await locals.prisma.game.findUnique({
 			where: {
 				id: form.id
 			}
 		});
 
 		if (!game) {
-			// game = await prisma.game.create({
+			// game = await locals.prisma.game.create({
 			// 	data: {
 			// 		name: form.name
 			// 	}
@@ -69,7 +67,7 @@ export const actions = {
 			});
 		}
 
-		const wishlist = await prisma.wishlist.findUnique({
+		const wishlist = await locals.prisma.wishlist.findUnique({
 			where: {
 				id: params.id
 			}
@@ -85,7 +83,7 @@ export const actions = {
 			throw redirect(302, '/404');
 		}
 
-		const wishlistItem = await prisma.wishlistItem.create({
+		const wishlistItem = await locals.prisma.wishlistItem.create({
 			data: {
 				game_id: game.id,
 				wishlist_id: wishlist.id

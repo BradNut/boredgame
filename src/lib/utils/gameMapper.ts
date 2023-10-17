@@ -1,4 +1,5 @@
 import type { GameType, SavedGameType } from '$lib/types';
+import type { Game } from '@prisma/client';
 import kebabCase from 'just-kebab-case';
 
 export function convertToSavedGame(game: GameType | SavedGameType): SavedGameType {
@@ -42,7 +43,7 @@ export function mapSavedGameToGame(game: SavedGameType): GameType {
 	};
 }
 
-export function mapAPIGameToBoredGame(game: GameType): GameType {
+export function mapAPIGameToBoredGame(game: GameType): Game {
 	// TODO: Fix types
 	return {
 		external_id: game.external_id,

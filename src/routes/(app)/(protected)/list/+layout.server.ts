@@ -1,21 +1,20 @@
-import prisma from '$lib/prisma';
 import { redirect } from '@sveltejs/kit';
 
-export async function load({ params, locals }) {
+export async function load({ locals }) {
 	const session = await locals.auth.validate();
 	if (!session) {
 		throw redirect(302, '/login');
 	}
 
 	try {
-		let wishlists = await prisma.wishlist.findMany({
+		let wishlists = await locals.prisma.wishlist.findMany({
 			where: {
 				user_id: session.userId
 			}
 		});
 
 		if (wishlists.length === 0) {
-			const wishlist = await prisma.wishlist.create({
+			const wishlist = await locals.prisma.wishlist.create({
 				data: {
 					user_id: session.userId
 				}

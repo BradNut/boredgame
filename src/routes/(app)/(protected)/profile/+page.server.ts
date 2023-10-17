@@ -61,7 +61,7 @@ export const actions = {
 
 			if (user.email !== form.data.email) {
 				// auth.update
-				// await prisma.key.update({
+				// await locals.prisma.key.update({
 				// 	where: {
 				// 		id: 'emailpassword:' + user.email
 				// 	},

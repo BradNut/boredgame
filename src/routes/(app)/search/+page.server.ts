@@ -30,7 +30,11 @@ import {
  * an array of all the games fetched. If any error occurred during the operation, it returns an object with totalCount as 0 and games as empty array.
  * @throws will throw an error if the response received from fetching games operation is not OK (200).
  */
-async function searchForGames(urlQueryParams: SearchQuery, eventFetch: Function) {
+async function searchForGames(
+	locals: App.Locals,
+	eventFetch: Function,
+	urlQueryParams: SearchQuery
+) {
 	try {
 		console.log('urlQueryParams search games', urlQueryParams);
 
@@ -50,11 +54,7 @@ async function searchForGames(urlQueryParams: SearchQuery, eventFetch: Function)
 			throw error(response.status);
 		}
 
-		let games = [];
-		if (response.ok) {
-			games = await response.json();
-		}
-
+		let games = await response.json();
 		console.log('games from DB', games);
 
 		const gameNameSearch = urlQueryParams.get('q');
@@ -95,7 +95,7 @@ async function searchForGames(urlQueryParams: SearchQuery, eventFetch: Function)
 						const externalGame = await externalGameResponse.json();
 						console.log('externalGame', externalGame);
 						let boredGame = mapAPIGameToBoredGame(externalGame);
-						games.push(createOrUpdateGameMinimal(boredGame));
+						games.push(createOrUpdateGameMinimal(locals, boredGame));
 					}
 				}
 			}
@@ -115,7 +115,7 @@ async function searchForGames(urlQueryParams: SearchQuery, eventFetch: Function)
 	};
 }
 
-export const load: PageServerLoad = async ({ fetch, url }) => {
+export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 	const defaults = {
 		limit: 10,
 		skip: 0,
@@ -179,7 +179,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		}
 
 		const urlQueryParams = new URLSearchParams(newQueryParams);
-		const searchData = await searchForGames(urlQueryParams, fetch);
+		const searchData = await searchForGames(locals, fetch, urlQueryParams);
 
 		return {
 			form,
@@ -201,7 +201,7 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 };
 
 export const actions = {
-	random: async ({ request }): Promise<any> => {
+	random: async ({ request, locals, fetch }): Promise<any> => {
 		const form = await superValidate(request, search_schema);
 		const queryParams: SearchQuery = {
 			order_by: 'rank',
@@ -220,7 +220,7 @@ export const actions = {
 
 		return {
 			form,
-			searchData: await searchForGames(urlQueryParams)
+			searchData: await searchForGames(locals, fetch, urlQueryParams)
 		};
 	}
 };
