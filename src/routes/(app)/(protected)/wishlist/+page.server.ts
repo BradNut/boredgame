@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error, redirect, type Actions } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import prisma from '$lib/prisma';
 import { modifyListGameSchema } from '$lib/config/zod-schemas.js';
@@ -46,7 +46,7 @@ export async function load({ params, locals }) {
 	redirect(302, '/404');
 }
 
-export const actions = {
+export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { params, locals, request } = event;

@@ -11,8 +11,9 @@ import {
 } from '$lib/utils/dbUtils.js';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import prisma from '$lib/prisma';
+import type { PageServerLoad } from './$types';
 
-export const load = async ({ params, locals, fetch }) => {
+export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 	try {
 		const { user } = locals;
 		const { id } = params;

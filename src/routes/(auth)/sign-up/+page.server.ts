@@ -1,6 +1,7 @@
-import { fail, redirect, error } from '@sveltejs/kit';
+import {fail, error, type Actions} from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import { LuciaError } from 'lucia';
+import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
 import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
@@ -19,11 +20,6 @@ const signUpSchema = userSchema
 	})
 	.superRefine(({ confirm_password, password }, ctx) => {
 		if (confirm_password !== password) {
-			// ctx.addIssue({
-			// 	code: 'custom',
-			// 	message: 'Password and Confirm Password must match',
-			// 	path: ['password']
-			// });
 			ctx.addIssue({
 				code: 'custom',
 				message: 'Password and Confirm Password must match',
@@ -32,7 +28,7 @@ const signUpSchema = userSchema
 		}
 	});
 
-export const load = async (event) => {
+export const load: PageServerLoad = async (event) => {
 	console.log('sign up load event', event);
 	// const session = await event.locals.auth.validate();
 	// if (session) {
@@ -43,7 +39,7 @@ export const load = async (event) => {
 	};
 };
 
-export const actions = {
+export const actions: Actions = {
 	default: async (event) => {
 		const form = await superValidate<typeof signUpSchema, Message>(event, signUpSchema);
 

@@ -1,9 +1,10 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { changeUserPasswordSchema } from '$lib/config/zod-schemas.js';
 import { auth } from '$lib/server/lucia.js';
+import type { PageServerLoad } from "./$types";
 
-export const load = async (event) => {
+export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, changeUserPasswordSchema);
 	const session = await event.locals.auth.validate();
 
@@ -23,7 +24,7 @@ export const load = async (event) => {
 	};
 };
 
-export const actions = {
+export const actions: Actions = {
 	default: async (event) => {
 		const form = await superValidate(event, changeUserPasswordSchema);
 		//console.log(form);

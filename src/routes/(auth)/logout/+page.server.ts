@@ -1,7 +1,7 @@
+import { redirect, type Actions } from '@sveltejs/kit';
 import { auth } from '$lib/server/lucia';
-import { redirect } from '@sveltejs/kit';
 
-export const actions = {
+export const actions: Actions = {
 	default: async ({ locals }) => {
 		console.log('Signing out user');
 		const session = await locals.auth.validate();

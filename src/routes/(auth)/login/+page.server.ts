@@ -1,16 +1,17 @@
-import { fail } from '@sveltejs/kit';
+import { fail, type Actions } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import prisma from '$lib/prisma';
 import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
+import type { PageServerLoad } from './$types';
 
 const signInSchema = userSchema.pick({
 	username: true,
 	password: true
 });
 
-export const load = async (event) => {
+export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, signInSchema);
 	try {
 		console.log('login load event', event);
@@ -29,7 +30,7 @@ export const load = async (event) => {
 	}
 };
 
-export const actions = {
+export const actions: Actions = {
 	default: async (event) => {
 		const { locals } = event;
 		const form = await superValidate(event, signInSchema);

@@ -1,8 +1,9 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { message, setError, superValidate } from 'sveltekit-superforms/server';
+import { LuciaError } from 'lucia';
 import { userSchema } from '$lib/config/zod-schemas';
 import { auth } from '$lib/server/lucia.js';
-import { LuciaError } from 'lucia';
+import type { PageServerLoad } from './$types';
 
 const profileSchema = userSchema.pick({
 	firstName: true,
@@ -11,7 +12,7 @@ const profileSchema = userSchema.pick({
 	username: true
 });
 
-export const load = async (event) => {
+export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, profileSchema);
 	const session = await event.locals.auth.validate();
 
@@ -32,7 +33,7 @@ export const load = async (event) => {
 	};
 };
 
-export const actions = {
+export const actions: Actions = {
 	default: async (event) => {
 		const form = await superValidate(event, profileSchema);
 

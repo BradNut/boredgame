@@ -1,4 +1,4 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { type Actions, fail, redirect } from "@sveltejs/kit";
 import { superValidate } from 'sveltekit-superforms/server';
 import prisma from '$lib/prisma';
 
@@ -40,7 +40,7 @@ export async function load({ params, locals }) {
 	}
 }
 
-export const actions = {
+export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { params, locals, request } = event;

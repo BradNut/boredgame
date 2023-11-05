@@ -3,11 +3,13 @@
 	import { onMount } from "svelte";
 	// import { getFlash } from 'sveltekit-flash-message/client';
 	import toast, { Toaster } from 'svelte-french-toast';
-  import { page } from '$app/stores';
 	import { MetaTags } from 'svelte-meta-tags';
 	import 'iconify-icon';
+  import { page } from '$app/stores';
+	import { onNavigate } from "$app/navigation";
 	import Analytics from '$lib/components/analytics.svelte';
 	import { theme } from '$state/theme';
+	import PageLoadingIndicator from '$lib/page_loading_indicator.svelte';
 
 	const dev = process.env.NODE_ENV !== 'production';
 
@@ -70,6 +72,17 @@
 	// 	// be required here to avoid double-toasting.
 	// 	flash.set(undefined);
 	// });
+
+	onNavigate(async (navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((oldStateCaptureResolve) => {
+			document.startViewTransition(async () => {
+				oldStateCaptureResolve();
+				await navigation.complete;
+			})
+		})
+	});
 </script>
 
 {#if !dev}
@@ -77,6 +90,8 @@
 {/if}
 
 <MetaTags {...metaTags} />
+
+<PageLoadingIndicator />
 
 <div class="layout">
 	<slot />

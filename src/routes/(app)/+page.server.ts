@@ -1,8 +1,9 @@
 import { superValidate } from 'sveltekit-superforms/server';
 import { search_schema } from '$lib/zodValidation';
 import type { MetaTagsProps } from 'svelte-meta-tags';
+import type { PageServerLoad } from './$types';
 
-export const load = async ({ fetch, url }) => {
+export const load: PageServerLoad = async ({ fetch, url }) => {
 	const image = {
 		url: `${
 			new URL(url.pathname, url.origin).href
@@ -42,10 +43,3 @@ export const load = async ({ fetch, url }) => {
 	console.log('form', form);
 	return { form, metaTagsChild: metaTags };
 };
-
-// export const actions = {
-// 	default: async ({ request, locals }): Promise<any> => {
-// 		// Do things in here
-// 		return {};
-// 	}
-// };

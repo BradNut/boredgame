@@ -16,12 +16,8 @@ export const authentication: Handle = async function ({ event, resolve }) {
 
 	event.locals.auth = auth.handleRequest(event);
 	if (event?.locals?.auth) {
-		console.log('auth not empty');
-		console.log('auth', event.locals.auth);
 		try {
 			const session = await event.locals.auth.validate();
-			console.log('user', session?.user);
-			console.log('session', JSON.stringify(session, null, 2));
 			event.locals.user = session?.user;
 			// if (event.route.id?.startsWith('/(protected)')) {
 			// if (!user) throw redirect(302, '/sign-in');
@@ -35,23 +31,6 @@ export const authentication: Handle = async function ({ event, resolve }) {
 	}
 	return await resolve(event);
 };
-
-// This hook is used to pass our prisma instance to each action, load, and endpoint
-// export const prisma: Handle = async function ({ event, resolve }) {
-// 	try {
-// 		const ip = event.request.headers.get('x-forwarded-for') as string;
-// 		const country = event.request.headers.get('x-vercel-ip-country') as string;
-// 		event.locals.prisma = prisma_client;
-// 		event.locals.session = {
-// 			...event.locals.session,
-// 			ip,
-// 			country
-// 		};
-// 	} catch (error) {
-// 		console.error(error);
-// 	}
-// 	return await resolve(event);
-// };
 
 export const handle: Handle = sequence(sequence(Sentry.sentryHandle(), authentication));
 export const handleError = Sentry.handleErrorWithSentry();

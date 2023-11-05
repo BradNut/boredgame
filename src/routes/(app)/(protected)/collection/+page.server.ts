@@ -1,9 +1,9 @@
-import { error, fail, redirect } from '@sveltejs/kit';
+import { type Actions, error, fail, redirect } from "@sveltejs/kit";
 import { superValidate } from 'sveltekit-superforms/server';
-import type { PageServerLoad } from '../../$types.js';
 import prisma from '$lib/prisma';
 import { modifyListGameSchema, type ListGame } from '$lib/config/zod-schemas.js';
 import { search_schema } from '$lib/zodValidation.js';
+import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	const session = await locals.auth.validate();
@@ -97,7 +97,7 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	};
 };
 
-export const actions = {
+export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { params, locals, request } = event;
