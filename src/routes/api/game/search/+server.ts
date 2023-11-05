@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { Prisma } from '@prisma/client';
-import kebabCase from 'just-kebab-case';
+import prisma from '$lib/prisma';
 
 // Search a user's collection
 export const GET = async ({ url, locals }) => {
@@ -17,7 +17,7 @@ export const GET = async ({ url, locals }) => {
 	try {
 		let games = [];
 		if (exact) {
-			games = await locals.prisma.game.findFirst({
+			games = await prisma.game.findFirst({
 				where: {
 					name: {
 						equals: q
@@ -31,7 +31,7 @@ export const GET = async ({ url, locals }) => {
 				}
 			});
 		} else {
-			games = await locals.prisma.game.findMany({
+			games = await prisma.game.findMany({
 				orderBy: {
 					_relevance: {
 						fields: ['name'],

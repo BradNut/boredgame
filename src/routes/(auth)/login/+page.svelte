@@ -32,15 +32,15 @@
 		delayMs: 0,
 	});
 
-	const flash = flashModule.getFlash(page);
+	// const flash = flashModule.getFlash(page);
 
-	$: {
-		if ($flash) {
-			toast.error($flash.message, {
-				duration: 5000
-			});
-		}
-	}
+	// $: {
+	// 	if ($flash) {
+	// 		toast.error($flash.message, {
+	// 			duration: 5000
+	// 		});
+	// 	}
+	// }
 </script>
 
 <svelte:head>

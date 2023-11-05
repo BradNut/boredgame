@@ -1,6 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
+import prisma from '$lib/prisma';
 import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
 
@@ -10,16 +11,22 @@ const signInSchema = userSchema.pick({
 });
 
 export const load = async (event) => {
-	console.log('login load event', event);
-	const session = await event.locals.auth.validate();
-	if (session) {
-		const message = { type: 'info', message: 'You are already signed in' };
-		throw redirect('/', message, event);
-	}
 	const form = await superValidate(event, signInSchema);
-	return {
-		form
-	};
+	try {
+		console.log('login load event', event);
+		const session = await event.locals.auth.validate();
+		if (session) {
+			const message = { type: 'info', message: 'You are already signed in' };
+			throw redirect('/', message, event);
+		}
+		return {
+			form
+		};
+	} catch (e) {
+		fail(500, {
+			form
+		});
+	}
 };
 
 export const actions = {
@@ -42,7 +49,7 @@ export const actions = {
 			});
 			event.locals.auth.setSession(session);
 
-			const user = await locals.prisma.user.findUnique({
+			const user = await prisma.user.findUnique({
 				where: {
 					id: session.user.userId
 				},
@@ -55,7 +62,7 @@ export const actions = {
 				}
 			});
 			if (user) {
-				await locals.prisma.collection.upsert({
+				await prisma.collection.upsert({
 					where: {
 						user_id: user.id
 					},
@@ -66,7 +73,7 @@ export const actions = {
 						user_id: user.id
 					}
 				});
-				await locals.prisma.wishlist.upsert({
+				await prisma.wishlist.upsert({
 					where: {
 						user_id: user.id
 					},

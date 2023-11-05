@@ -1,4 +1,5 @@
 import { error } from '@sveltejs/kit';
+import type { Game } from '@prisma/client';
 import {
 	createArtist,
 	createCategory,
@@ -9,13 +10,13 @@ import {
 	createPublisher
 } from '$lib/utils/dbUtils.js';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
-import type { Game } from '@prisma/client';
+import prisma from '$lib/prisma';
 
 export const load = async ({ params, locals, fetch }) => {
 	try {
 		const { user } = locals;
 		const { id } = params;
-		const game = await locals.prisma.game.findUnique({
+		const game = await prisma.game.findUnique({
 			where: {
 				id
 			},
@@ -64,7 +65,7 @@ export const load = async ({ params, locals, fetch }) => {
 		let wishlist;
 		let collection;
 		if (user) {
-			wishlist = await locals.prisma.wishlist.findUnique({
+			wishlist = await prisma.wishlist.findUnique({
 				where: {
 					user_id: user.userId
 				},
@@ -77,7 +78,7 @@ export const load = async ({ params, locals, fetch }) => {
 				}
 			});
 
-			collection = await locals.prisma.collection.findUnique({
+			collection = await prisma.collection.findUnique({
 				where: {
 					user_id: user.userId
 				},

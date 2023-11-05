@@ -1,6 +1,7 @@
 import { fail, redirect, error } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import { LuciaError } from 'lucia';
+import prisma from '$lib/prisma';
 import { auth } from '$lib/server/lucia';
 import { userSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$server/roles';
@@ -33,10 +34,10 @@ const signUpSchema = userSchema
 
 export const load = async (event) => {
 	console.log('sign up load event', event);
-	const session = await event.locals.auth.validate();
-	if (session) {
-		throw redirect(302, '/');
-	}
+	// const session = await event.locals.auth.validate();
+	// if (session) {
+	// 	throw redirect(302, '/');
+	// }
 	return {
 		form: await superValidate<typeof signUpSchema, Message>(event, signUpSchema)
 	};
@@ -78,12 +79,12 @@ export const actions = {
 			});
 			console.log('signup user', user);
 			add_user_to_role(user.userId, 'user');
-			await locals.prisma.collection.create({
+			await prisma.collection.create({
 				data: {
 					user_id: user.userId
 				}
 			});
-			await locals.prisma.wishlist.create({
+			await prisma.wishlist.create({
 				data: {
 					user_id: user.userId
 				}

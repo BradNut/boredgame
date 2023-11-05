@@ -26,7 +26,10 @@ const config = {
 	},
 	shadcn: {
 		componentPath: './src/lib/components/ui'
-	}
+	},
+	compilerOptions: {
+    enableSourcemap: true,
+  }
 };
 
 export default config;

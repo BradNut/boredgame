@@ -1,19 +1,20 @@
 import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
-import fs from 'fs';
+// import fs from 'fs';
 
 export default defineConfig({
 	plugins: [
 		sentrySvelteKit({
 			sourceMapsUploadOptions: {
-			org: process.env.SENTRY_ORG,
-			project: process.env.SENTRY_PROJECT,
-			authToken: process.env.SENTRY_AUTH_TOKEN,
-			cleanArtifacts: true,
+				org: process.env.SENTRY_ORG,
+				project: process.env.SENTRY_PROJECT,
+				authToken: process.env.SENTRY_AUTH_TOKEN,
+				cleanArtifacts: true,
 			}
 		}),
-		sveltekit(), rawFonts(['.ttf'])
+		sveltekit()
+		// , rawFonts(['.ttf'])
 	],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
@@ -43,14 +44,14 @@ export default defineConfig({
 	}
 });
 
-function rawFonts(ext) {
-	return {
-		name: 'vite-plugin-raw-fonts',
-		transform(code, id) {
-			if (ext.some((e) => id.endsWith(e))) {
-				const buffer = fs.readFileSync(id);
-				return { code: `export default ${JSON.stringify(buffer)}`, map: null };
-			}
-		}
-	};
-}
+// function rawFonts(ext) {
+// 	return {
+// 		name: 'vite-plugin-raw-fonts',
+// 		transform(code, id) {
+// 			if (ext.some((e) => id.endsWith(e))) {
+// 				const buffer = fs.readFileSync(id);
+// 				return { code: `export default ${JSON.stringify(buffer)}`, map: null };
+// 			}
+// 		}
+// 	};
+// }

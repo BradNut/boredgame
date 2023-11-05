@@ -1,11 +1,12 @@
 import type { Game } from '@prisma/client';
 import kebabCase from 'just-kebab-case';
 import type { BggLinkDto } from 'boardgamegeekclient/dist/esm/dto/concrete/subdto';
+import prisma from '$lib/prisma';
 import { mapAPIGameToBoredGame } from './gameMapper';
 
 export async function createArtist(locals: App.Locals, externalArtist: BggLinkDto) {
 	try {
-		let dbArtist = await locals.prisma.artist.findFirst({
+		let dbArtist = await prisma.artist.findFirst({
 			where: {
 				external_id: externalArtist.id
 			},
@@ -21,7 +22,7 @@ export async function createArtist(locals: App.Locals, externalArtist: BggLinkDt
 			return dbArtist;
 		}
 		console.log('Creating artist', JSON.stringify(externalArtist, null, 2));
-		let artist = await locals.prisma.artist.create({
+		let artist = await prisma.artist.create({
 			data: {
 				name: externalArtist.value,
 				external_id: externalArtist.id,
@@ -45,7 +46,7 @@ export async function createArtist(locals: App.Locals, externalArtist: BggLinkDt
 
 export async function createDesigner(locals: App.Locals, externalDesigner: BggLinkDto) {
 	try {
-		let dbDesigner = await locals.prisma.designer.findFirst({
+		let dbDesigner = await prisma.designer.findFirst({
 			where: {
 				external_id: externalDesigner.id
 			},
@@ -61,7 +62,7 @@ export async function createDesigner(locals: App.Locals, externalDesigner: BggLi
 			return dbDesigner;
 		}
 		console.log('Creating designer', JSON.stringify(externalDesigner, null, 2));
-		let designer = await locals.prisma.designer.create({
+		let designer = await prisma.designer.create({
 			data: {
 				name: externalDesigner.value,
 				external_id: externalDesigner.id,
@@ -85,7 +86,7 @@ export async function createDesigner(locals: App.Locals, externalDesigner: BggLi
 
 export async function createPublisher(locals: App.Locals, externalPublisher: BggLinkDto) {
 	try {
-		let dbPublisher = await locals.prisma.publisher.findFirst({
+		let dbPublisher = await prisma.publisher.findFirst({
 			where: {
 				external_id: externalPublisher.id
 			},
@@ -101,7 +102,7 @@ export async function createPublisher(locals: App.Locals, externalPublisher: Bgg
 			return dbPublisher;
 		}
 		console.log('Creating publisher', JSON.stringify(externalPublisher, null, 2));
-		let publisher = await locals.prisma.publisher.create({
+		let publisher = await prisma.publisher.create({
 			data: {
 				name: externalPublisher.value,
 				external_id: externalPublisher.id,
@@ -125,7 +126,7 @@ export async function createPublisher(locals: App.Locals, externalPublisher: Bgg
 
 export async function createCategory(locals: App.Locals, externalCategory: BggLinkDto) {
 	try {
-		let dbCategory = await locals.prisma.category.findFirst({
+		let dbCategory = await prisma.category.findFirst({
 			where: {
 				external_id: externalCategory.id
 			},
@@ -141,7 +142,7 @@ export async function createCategory(locals: App.Locals, externalCategory: BggLi
 			return dbCategory;
 		}
 		console.log('Creating category', JSON.stringify(externalCategory, null, 2));
-		let category = await locals.prisma.category.create({
+		let category = await prisma.category.create({
 			data: {
 				name: externalCategory.value,
 				external_id: externalCategory.id,
@@ -166,7 +167,7 @@ export async function createCategory(locals: App.Locals, externalCategory: BggLi
 
 export async function createMechanic(locals: App.Locals, externalMechanic: BggLinkDto) {
 	try {
-		let dbMechanic = await locals.prisma.mechanic.findFirst({
+		let dbMechanic = await prisma.mechanic.findFirst({
 			where: {
 				external_id: externalMechanic.id
 			},
@@ -182,7 +183,7 @@ export async function createMechanic(locals: App.Locals, externalMechanic: BggLi
 			return dbMechanic;
 		}
 		console.log('Creating mechanic', JSON.stringify(externalMechanic, null, 2));
-		let mechanic = await locals.prisma.mechanic.upsert({
+		let mechanic = await prisma.mechanic.upsert({
 			where: {
 				external_id: externalMechanic.id
 			},
@@ -214,7 +215,7 @@ export async function createExpansion(
 	eventFetch: Function
 ) {
 	try {
-		let dbExpansionGame = await locals.prisma.game.findUnique({
+		let dbExpansionGame = await prisma.game.findUnique({
 			where: {
 				external_id: externalExpansion.id
 			}
@@ -244,7 +245,7 @@ export async function createExpansion(
 				'External expansion is expansion. Looking for base game',
 				JSON.stringify(game, null, 2)
 			);
-			dbExpansion = await locals.prisma.expansion.findFirst({
+			dbExpansion = await prisma.expansion.findFirst({
 				where: {
 					game_id: dbExpansionGame.id
 				},
@@ -261,7 +262,7 @@ export async function createExpansion(
 				'External Expansion is base game. Looking for expansion',
 				JSON.stringify(game, null, 2)
 			);
-			dbExpansion = await locals.prisma.expansion.findFirst({
+			dbExpansion = await prisma.expansion.findFirst({
 				where: {
 					base_game_id: dbExpansionGame.id
 				},
@@ -281,7 +282,7 @@ export async function createExpansion(
 		}
 
 		console.log(`Creating expansion. baseGameId: ${baseGameId}, gameId: ${gameId}`);
-		let expansion = await locals.prisma.expansion.create({
+		let expansion = await prisma.expansion.create({
 			data: {
 				base_game_id: baseGameId,
 				game_id: gameId
@@ -292,7 +293,7 @@ export async function createExpansion(
 
 		if (gameIsExpansion) {
 			console.log('Connecting current game to expansion');
-			await locals.prisma.game.update({
+			await prisma.game.update({
 				where: {
 					id: gameId
 				},
@@ -306,9 +307,9 @@ export async function createExpansion(
 			});
 		} else {
 			console.log('Connecting current game to base game');
-			await locals.prisma.game.update({
+			await prisma.game.update({
 				where: {
-					external_id: baseGameId
+					id: baseGameId
 				},
 				data: {
 					expansions: {
@@ -330,7 +331,7 @@ export async function createExpansion(
 export async function createOrUpdateGameMinimal(locals: App.Locals, game: Game) {
 	console.log('Creating or updating minimal game data', JSON.stringify(game, null, 2));
 	const externalUrl = `https://boardgamegeek.com/boardgame/${game.external_id}`;
-	return await locals.prisma.game.upsert({
+	return await prisma.game.upsert({
 		where: {
 			external_id: game.external_id
 		},
@@ -378,7 +379,7 @@ export async function createOrUpdateGame(locals: App.Locals, game: Game) {
 	const externalUrl = `https://boardgamegeek.com/boardgame/${game.external_id}`;
 	console.log('categoryIds', categoryIds);
 	console.log('mechanicIds', mechanicIds);
-	return await locals.prisma.game.upsert({
+	return await prisma.game.upsert({
 		include: {
 			mechanics: true,
 			publishers: true,

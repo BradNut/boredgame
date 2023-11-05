@@ -2,7 +2,7 @@
 // for information about these interfaces
 // and what to do when importing types
 
-import type { User } from '@prisma/client';
+import type { PrismaClient, User } from '@prisma/client';
 
 type User = Omit<User, 'created_at' | 'updated_at'>;
 

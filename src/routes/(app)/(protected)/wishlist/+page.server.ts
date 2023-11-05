@@ -1,5 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
+import prisma from '$lib/prisma';
 import { modifyListGameSchema } from '$lib/config/zod-schemas.js';
 
 export async function load({ params, locals }) {
@@ -11,7 +12,7 @@ export async function load({ params, locals }) {
 	console.log('Wishlist load User id', session.user);
 
 	try {
-		let wishlist = await locals.prisma.wishlist.findUnique({
+		let wishlist = await prisma.wishlist.findUnique({
 			where: {
 				user_id: session?.user?.userId
 			},
@@ -57,14 +58,14 @@ export const actions = {
 				throw redirect(302, '/login');
 			}
 
-			let game = await locals.prisma.game.findUnique({
+			let game = await prisma.game.findUnique({
 				where: {
 					id: form.data.id
 				}
 			});
 
 			if (!game) {
-				// game = await locals.prisma.game.create({
+				// game = await prisma.game.create({
 				// 	data: {
 				// 		name: form.name
 				// 	}
@@ -74,7 +75,7 @@ export const actions = {
 			}
 
 			if (game) {
-				const wishlist = await locals.prisma.wishlist.findUnique({
+				const wishlist = await prisma.wishlist.findUnique({
 					where: {
 						user_id: session.user.userId
 					}
@@ -85,7 +86,7 @@ export const actions = {
 					return error(404, 'Wishlist not found');
 				}
 
-				await locals.prisma.wishlistItem.create({
+				await prisma.wishlistItem.create({
 					data: {
 						game_id: game.id,
 						wishlist_id: wishlist.id
@@ -128,14 +129,14 @@ export const actions = {
 				throw redirect(302, '/login');
 			}
 
-			let game = await locals.prisma.game.findUnique({
+			let game = await prisma.game.findUnique({
 				where: {
 					id: form.data.id
 				}
 			});
 
 			if (!game) {
-				// game = await locals.prisma.game.create({
+				// game = await prisma.game.create({
 				// 	data: {
 				// 		name: form.name
 				// 	}
@@ -145,7 +146,7 @@ export const actions = {
 			}
 
 			if (game) {
-				const wishlist = await locals.prisma.wishlist.findUnique({
+				const wishlist = await prisma.wishlist.findUnique({
 					where: {
 						user_id: session.user.userId
 					}
@@ -156,7 +157,7 @@ export const actions = {
 					return error(404, 'Wishlist not found');
 				}
 
-				await locals.prisma.wishlistItem.delete({
+				await prisma.wishlistItem.delete({
 					where: {
 						wishlist_id: wishlist.id,
 						game_id: game.id
