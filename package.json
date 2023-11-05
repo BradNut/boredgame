@@ -73,14 +73,13 @@
 		"pnpm": ">=8"
 	},
 	"dependencies": {
-		"@axiomhq/axiom-node": "^0.12.0",
 		"@fontsource/fira-mono": "^4.5.10",
 		"@iconify-icons/line-md": "^1.2.26",
 		"@iconify-icons/mdi": "^1.2.47",
 		"@lucia-auth/adapter-mysql": "^2.1.0",
 		"@lucia-auth/adapter-prisma": "^3.0.2",
 		"@lukeed/uuid": "^2.0.1",
-		"@melt-ui/svelte": "^0.50.1",
+		"@melt-ui/svelte": "^0.57.3",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"@prisma/client": "^5.3.1",
 		"@sentry/sveltekit": "^7.77.0",
@@ -104,7 +103,7 @@
 		"svelte-french-toast": "^1.2.0",
 		"svelte-lazy-loader": "^1.0.0",
 		"tailwind-merge": "^1.14.0",
-		"tailwind-variants": "^0.1.13",
+		"tailwind-variants": "^0.1.18",
 		"tailwindcss-animate": "^1.0.6",
 		"zod-to-json-schema": "^3.21.4"
 	}
