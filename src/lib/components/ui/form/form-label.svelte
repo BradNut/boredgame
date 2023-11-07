@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Label as LabelPrimitive } from "bits-ui";
 	import { getFormField } from "formsnap";
-	import { cn } from "@/utils";
+	import { cn } from "$lib/utils";
 	import { Label } from "$lib/components/ui/label";
 
 	type $$Props = LabelPrimitive.Props;
@@ -13,7 +13,7 @@
 </script>
 
 <Label
-	for={ids.input}
+	for={$ids.input}
 	class={cn($errors && "text-destructive", className)}
 	{...$$restProps}
 >

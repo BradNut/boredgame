@@ -44,7 +44,9 @@ export const GET = async ({ url, locals }) => {
 					name: true,
 					slug: true,
 					thumb_url: true
-				}
+				},
+				take: limit,
+				skip
 			});
 		}
 

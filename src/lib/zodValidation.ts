@@ -50,6 +50,14 @@ const Search = z.object({
 	skip: z.number().min(0).default(0)
 });
 
+// minAge: z
+// 		.string()
+// 		.min(1)
+// 		.transform((v) => +v)
+// 		.refine((minAge) => !isNaN(minAge), { message: 'Must be a number' })
+// 		.refine((minAge) => minAge >= 1 && minAge <= 120, { message: 'Must be between 1 and 120' })
+// 		.optional(),
+
 export const search_schema = z
 	.object({
 		q: z.string().trim().optional().default(''),

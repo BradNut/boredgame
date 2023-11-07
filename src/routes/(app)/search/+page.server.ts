@@ -18,18 +18,6 @@ import {
 } from '$lib/utils/dbUtils.js';
 // import { listGameSchema } from '$lib/config/zod-schemas.js';
 
-/**
- * Asynchronous function searchForGames to fetch games from a local and remote repository based on the given parameters.
- * @async
- * @function searchForGames
- * @param {SearchQuery} urlQueryParams - An object that represents the search parameters. It includes properties like name, min_players,
- * max_players, min_playtime, max_playtime, min_age, skip, limit which are used to define the search condition for games.
- * @param {any} locals - An object that contains data related to the local server environment like user information.
- * @param {Function} eventFetch - A function that fetches games from the local API.
- * @returns {Object} returns an object with totalCount property which is the total number of games fetched and games property which is
- * an array of all the games fetched. If any error occurred during the operation, it returns an object with totalCount as 0 and games as empty array.
- * @throws will throw an error if the response received from fetching games operation is not OK (200).
- */
 async function searchForGames(
 	locals: App.Locals,
 	eventFetch: Function,

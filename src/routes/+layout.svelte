@@ -7,9 +7,12 @@
 	import 'iconify-icon';
   import { page } from '$app/stores';
 	import { onNavigate } from "$app/navigation";
+	import { boredState } from '$lib/stores/boredState';
 	import Analytics from '$lib/components/analytics.svelte';
 	import { theme } from '$state/theme';
 	import PageLoadingIndicator from '$lib/page_loading_indicator.svelte';
+	import Portal from "$lib/Portal.svelte";
+	import Loading from "$components/loading.svelte";
 
 	const dev = process.env.NODE_ENV !== 'production';
 
@@ -49,7 +52,7 @@
 	// }
 
 	// $: isOpen = $boredState?.dialog?.isOpen;
-	// $: loading = $boredState?.loading;
+	$: loading = $boredState?.loading;
 
 	onMount(() => {
 		// set the theme to the user's active theme
@@ -97,7 +100,7 @@
 	<slot />
 </div>
 
-<!-- {#if loading}
+{#if loading}
 	<Portal>
 		<div class="loading">
 			<Loading />
@@ -105,7 +108,7 @@
 		</div>
 	<div class="background" />
 	</Portal>
-{/if} -->
+{/if}
 
 <Toaster />
 
