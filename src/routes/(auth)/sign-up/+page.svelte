@@ -13,6 +13,7 @@
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Alert from '$lib/components/ui/alert';
 	import { boredState } from '$lib/stores/boredState.js';
+	import { onMount } from 'svelte';
 
 	export let data;
 
@@ -31,6 +32,8 @@
     delayMs: 0,
   });
 
+	let collapsibleOpen = true;
+
 	// const flash = flashModule.getFlash(page);
 
 	// $: {
@@ -40,6 +43,9 @@
 	// 		});
 	// 	}
 	// }
+	onMount(() => {
+		collapsibleOpen = false;
+	});
 </script>
 
 <svelte:head>
@@ -64,7 +70,7 @@
 		{#if $errors.confirm_password}
 			<p class="text-sm text-destructive">{$errors.confirm_password}</p>
 		{/if}
-		<Collapsible.Root class="grid w-full max-w-sm items-center gap-2.5">
+		<Collapsible.Root bind:open={collapsibleOpen} class="grid w-full max-w-sm items-center gap-2.5">
 			<div>
 				Optional Fields:
 				<Collapsible.Trigger asChild let:builder>
@@ -76,29 +82,29 @@
 			</div>
 			<Collapsible.Content>
 				<div transition:slide|global={{ delay: 10, duration: 150, easing: quintIn }}>
-				<Label for="email">Email</Label>
-				<Input type="email" id="email" class={$errors.email && "outline outline-destructive"} name="email" placeholder="Email" autocomplete="email" data-invalid={$errors.email} bind:value={$form.email} />
-				{#if $errors.email}
-					<p class="text-sm text-destructive">{$errors.email}</p>
-				{/if}
+					<Label for="email">Email</Label>
+					<Input type="email" id="email" class={$errors.email && "outline outline-destructive"} name="email" placeholder="Email" autocomplete="email" data-invalid={$errors.email} bind:value={$form.email} />
+					{#if $errors.email}
+						<p class="text-sm text-destructive">{$errors.email}</p>
+					{/if}
 				</div>
 			</Collapsible.Content>
 			<Collapsible.Content>
 				<div transition:slide|global={{ delay: 10, duration: 150, easing: quintIn }}>
-				<Label for="firstName">First Name</Label>
-				<Input type="text" id="firstName" class={$errors.firstName && "outline outline-destructive"} name="firstName" placeholder="First Name" autocomplete="given-name" data-invalid={$errors.firstName} bind:value={$form.firstName} />
-				{#if $errors.firstName}
-					<p class="text-sm text-destructive">{$errors.firstName}</p>
-				{/if}
+					<Label for="firstName">First Name</Label>
+					<Input type="text" id="firstName" class={$errors.firstName && "outline outline-destructive"} name="firstName" placeholder="First Name" autocomplete="given-name" data-invalid={$errors.firstName} bind:value={$form.firstName} />
+					{#if $errors.firstName}
+						<p class="text-sm text-destructive">{$errors.firstName}</p>
+					{/if}
 				</div>
 			</Collapsible.Content>
 			<Collapsible.Content>
 				<div transition:slide|global={{ delay: 10, duration: 150, easing: quintIn }}>
-				<Label for="firstName">Last Name</Label>
-				<Input type="text" id="lastName" class={$errors.firstName && "outline outline-destructive"} name="lastName" placeholder="Last Name" autocomplete="family-name" data-invalid={$errors.lastName} bind:value={$form.lastName} />
-				{#if $errors.lastName}
-					<p class="text-sm text-destructive">{$errors.lastName}</p>
-				{/if}
+					<Label for="firstName">Last Name</Label>
+					<Input type="text" id="lastName" class={$errors.firstName && "outline outline-destructive"} name="lastName" placeholder="Last Name" autocomplete="family-name" data-invalid={$errors.lastName} bind:value={$form.lastName} />
+					{#if $errors.lastName}
+						<p class="text-sm text-destructive">{$errors.lastName}</p>
+					{/if}
 				</div>
 			</Collapsible.Content>
 		</Collapsible.Root>

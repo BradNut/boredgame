@@ -16,8 +16,10 @@
 
 <header>
 	<div class="corner">
-		<a href="/" title="Home">
-			<Logo />
+		<a href="/" class="logo" title="Home">
+			<div class="logo-image">
+				<Logo />
+			</div>
 		</a>
 	</div>
 	<!-- <TextSearch /> -->
@@ -128,9 +130,9 @@
 		height: 100%;
 	}
 
-	.corner img {
-		width: 1.5em;
-		height: 1.5em;
+	.logo-image {
+		width: 2rem;
+		height: 2rem;
 		object-fit: contain;
 	}
 

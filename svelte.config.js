@@ -9,7 +9,11 @@ const config = {
 	// for more information about preprocessors
 	preprocess: sequence([vitePreprocess({}), preprocessMeltUI()]),
 	vitePlugin: {
-		inspector: true
+		inspector: {
+			toggleKeyCombo: 'control-alt-shift',
+			showToggleButton: 'always',
+			toggleButtonPos: 'bottom-right'
+		}
 	},
 	kit: {
 		adapter: adapter(),

@@ -10,7 +10,7 @@ const config = {
 		tailwindNesting(),
 		tailwindcss(),
 		postcssPresetEnv({
-			stage: 2,
+			stage: 3,
 			features: {
 				'nesting-rules': false,
 				'custom-media-queries': true,

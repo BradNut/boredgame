@@ -8,6 +8,12 @@
 </script>
 
 <div class="container">
+	<a href="/" class="auth-logo">
+		<div class="logo-image">
+			<Logo />
+		</div>
+		Bored Game
+	</a>
 	<Button
 		href={$page.url.pathname === "/sign-up" ? "/login" : "/sign-up"}
 		variant="ghost"
@@ -26,12 +32,6 @@
 				background-image:
 					url(https://images.unsplash.com/photo-1588591795084-1770cb3be374?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
 		/>
-		<a href="/" class="logo">
-			<div class="logo-image">
-				<Logo />
-			</div>
-			Bored Game
-		</a>
 		<div class="quote-wrapper">
 			<blockquote class="quote">
 				<p>
@@ -90,29 +90,6 @@
 				background-size: cover;
 			}
 
-			.logo {
-				display: flex;
-				position: relative;
-				z-index: 20;
-				gap: 0.5rem;
-				align-items: center;
-				font-size: 1.125rem;
-				line-height: 1.75rem;
-				font-weight: 500;
-				transition-property: color, background-color, border-color,text-decoration-color, fill, stroke;
-				transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-				transition-duration: 300ms;
-
-				&:hover {
-					color: hsl(var(--muted-foreground));
-				}
-
-				.logo-image {
-					width: 2rem;
-					height: 2rem;
-				}
-			}
-
 			.quote-wrapper {
 				position: relative;
 				z-index: 20;
@@ -149,6 +126,45 @@
 		@media (min-width: 768px) {
 			top: 2rem;
 			right: 2rem;
+		}
+	}
+
+	:global(.auth-logo) {
+		display: flex;
+		position: relative;
+		z-index: 20;
+		gap: 0.5rem;
+		align-items: center;
+		font-size: 1.125rem;
+		line-height: 1.75rem;
+		font-weight: 500;
+		transition-property: color, background-color, border-color,text-decoration-color, fill, stroke;
+		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+		transition-duration: 300ms;
+
+		&:hover {
+			color: hsl(var(--muted-foreground));
+		}
+
+		.logo-image {
+			width: 2rem;
+			height: 2rem;
+		}
+
+		@media (max-width: 768px) {
+			position: absolute;
+			top: 1rem;
+			left: 1rem;
+		}
+
+		@media (min-width: 768px) {
+			position: absolute;
+			top: 2rem;
+			left: 2rem;
+		}
+
+		@media (min-width: 1024px) {
+			color: white;
 		}
 	}
 </style>
