@@ -13,26 +13,20 @@ const signInSchema = userSchema.pick({
 
 export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, signInSchema);
-	try {
-		console.log('login load event', event);
-		const session = await event.locals.auth.validate();
-		if (session) {
-			const message = { type: 'info', message: 'You are already signed in' };
-			throw redirect('/', message, event);
-		}
-		return {
-			form
-		};
-	} catch (e) {
-		fail(500, {
-			form
-		});
+
+	console.log('login load event', event);
+	const session = await event.locals.auth.validate();
+	if (session) {
+		const message = { type: 'info', message: 'You are already signed in' } as const;
+		throw redirect('/', message, event);
 	}
+	return {
+		form
+	};
 };
 
 export const actions: Actions = {
 	default: async (event) => {
-		const { locals } = event;
 		const form = await superValidate(event, signInSchema);
 
 		if (!form.valid) {

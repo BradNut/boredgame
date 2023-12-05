@@ -1,4 +1,4 @@
-import {fail, error, type Actions} from '@sveltejs/kit';
+import {fail, error, type Actions, redirect} from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import { LuciaError } from 'lucia';
 import type { PageServerLoad } from './$types';
@@ -42,7 +42,7 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
 	default: async (event) => {
 		const form = await superValidate<typeof signUpSchema, Message>(event, signUpSchema);
-
+		debugger;
 		if (!form.valid) {
 			form.data.password = '';
 			form.data.confirm_password = '';
@@ -63,7 +63,7 @@ export const actions: Actions = {
 					password: form.data.password
 				},
 				attributes: {
-					email: form.data.email || '',
+					email: form.data.email || null,
 					username: form.data.username,
 					firstName: form.data.firstName || '',
 					lastName: form.data.lastName || '',
@@ -93,8 +93,6 @@ export const actions: Actions = {
 				attributes: {}
 			});
 			event.locals.auth.setSession(session);
-			// const message = { type: 'success', message: 'Signed Up!' } as const;
-			// throw flashRedirect(message, event);
 		} catch (e) {
 			if (e instanceof LuciaError && e.message.toUpperCase() === `DUPLICATE_KEY_ID`) {
 				// key already exists
@@ -109,5 +107,8 @@ export const actions: Actions = {
 			form.data.confirm_password = '';
 			throw error(500, message);
 		}
+		throw redirect(302, '/');
+			// const message = { type: 'success', message: 'Signed Up!' } as const;
+			// throw flashRedirect(message, event);
 	}
 };

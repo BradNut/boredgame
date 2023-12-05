@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { slide } from 'svelte/transition';
 	import { quintIn } from 'svelte/easing';
 	import { superForm } from 'sveltekit-superforms/client';
