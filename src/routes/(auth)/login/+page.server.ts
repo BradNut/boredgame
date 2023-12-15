@@ -2,7 +2,8 @@ import { fail, type Actions } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import prisma from '$lib/prisma';
-import { auth } from '$lib/server/lucia';
+import { lucia } from '$lib/server/auth';
+import { Argon2id } from 'oslo/password';
 import { userSchema } from '$lib/config/zod-schemas';
 import type { PageServerLoad } from './$types';
 
@@ -15,11 +16,11 @@ export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, signInSchema);
 
 	console.log('login load event', event);
-	const session = await event.locals.auth.validate();
-	if (session) {
+	if (event.locals.user) {
 		const message = { type: 'info', message: 'You are already signed in' } as const;
 		throw redirect('/', message, event);
 	}
+
 	return {
 		form
 	};
@@ -27,6 +28,7 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
+		const { cookies, locals } = event;
 		const form = await superValidate(event, signInSchema);
 
 		if (!form.valid) {
@@ -36,56 +38,63 @@ export const actions: Actions = {
 			});
 		}
 
+		let session;
+		let sessionCookie;
 		try {
-			const key = await auth.useKey('username', form.data.username, form.data.password);
-			const session = await auth.createSession({
-				userId: key.userId,
-				attributes: {}
-			});
-			event.locals.auth.setSession(session);
+			const password = form.data.password;
 
 			const user = await prisma.user.findUnique({
 				where: {
-					id: session.user.userId
-				},
-				include: {
-					roles: {
-						select: {
-							role: true
-						}
-					}
+					username: form.data.username
 				}
 			});
-			if (user) {
-				await prisma.collection.upsert({
-					where: {
-						user_id: user.id
-					},
-					create: {
-						user_id: user.id
-					},
-					update: {
-						user_id: user.id
-					}
-				});
-				await prisma.wishlist.upsert({
-					where: {
-						user_id: user.id
-					},
-					create: {
-						user_id: user.id
-					},
-					update: {
-						user_id: user.id
-					}
-				});
+
+			if (!user || !user.hashed_password) {
+				form.data.password = '';
+				return setError(form, '', 'Your username or password is incorrect.');
 			}
+
+			const validPassword = await new Argon2id().verify(user.hashed_password, password);
+			if (!validPassword) {
+				form.data.password = '';
+				return setError(form, '', 'Your username or password is incorrect.');
+			}
+
+			session = await lucia.createSession(user.id, {
+				country: locals.session.ip,
+			});
+			sessionCookie = lucia.createSessionCookie(session.id);
+
+			await prisma.collection.upsert({
+				where: {
+					user_id: user.id
+				},
+				create: {
+					user_id: user.id
+				},
+				update: {
+					user_id: user.id
+				}
+			});
+			await prisma.wishlist.upsert({
+				where: {
+					user_id: user.id
+				},
+				create: {
+					user_id: user.id
+				},
+				update: {
+					user_id: user.id
+				}
+			});
 		} catch (e) {
 			// TODO: need to return error message to the client
 			console.error(e);
 			form.data.password = '';
 			return setError(form, '', 'Your username or password is incorrect.');
 		}
+		
+		event.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 		form.data.username = '';
 		form.data.password = '';
 		const message = { type: 'success', message: 'Signed In!' };

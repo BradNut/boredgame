@@ -6,8 +6,8 @@ import { search_schema } from '$lib/zodValidation.js';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ fetch, url, locals }) => {
-	const session = await locals.auth.validate();
-	if (!session) {
+	const user = locals.user;
+	if (!user) {
 		throw redirect(302, '/login');
 	}
 
@@ -30,7 +30,7 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	try {
 		let collection = await prisma.collection.findUnique({
 			where: {
-				user_id: session.user.userId
+				user_id: user.id
 			}
 		});
 		console.log('collection', collection);
@@ -103,11 +103,11 @@ export const actions: Actions = {
 		const { params, locals, request } = event;
 		const form = await superValidate(event, modifyListGameSchema);
 
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/login');
+		if (!event.locals.user) {
+			throw fail(401);
 		}
 
+		const user = event.locals.user;
 		let game = await prisma.game.findUnique({
 			where: {
 				id: form.data.id
@@ -127,7 +127,7 @@ export const actions: Actions = {
 		try {
 			const collection = await prisma.collection.findUnique({
 				where: {
-					user_id: session.user.userId
+					user_id: user.id
 				}
 			});
 
@@ -154,17 +154,15 @@ export const actions: Actions = {
 	},
 	// Create new wishlist
 	create: async ({ params, locals, request }) => {
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/login');
+		if (!locals.user) {
+			throw fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
 	delete: async ({ params, locals, request }) => {
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/login');
+		if (!locals.user) {
+			throw fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
@@ -173,9 +171,8 @@ export const actions: Actions = {
 		const { params, locals, request } = event;
 		const form = await superValidate(event, modifyListGameSchema);
 
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/login');
+		if (!locals.user) {
+			throw fail(401);
 		}
 
 		let game = await prisma.game.findUnique({
@@ -192,7 +189,7 @@ export const actions: Actions = {
 		try {
 			const collection = await prisma.collection.findUnique({
 				where: {
-					user_id: session.user.userId
+					user_id: locals.user.id
 				}
 			});
 

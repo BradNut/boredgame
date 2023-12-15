@@ -3,8 +3,8 @@ import { superValidate } from 'sveltekit-superforms/server';
 import prisma from '$lib/prisma';
 
 export async function load({ params, locals }) {
-	const session = await locals.auth.validate();
-	if (!session) {
+	const user = locals.user;
+	if (!user) {
 		throw redirect(302, '/login');
 	}
 
@@ -13,7 +13,7 @@ export async function load({ params, locals }) {
 			where: {
 				id: params.id,
 				AND: {
-					user_id: session.userId
+					user_id: user.id
 				}
 			},
 			include: {
@@ -46,10 +46,10 @@ export const actions: Actions = {
 		const { params, locals, request } = event;
 		const form = await superValidate(event, modifyListGameSchema);
 
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/login');
+		if (!locals.user) {
+			throw fail(401);
 		}
+
 
 		let game = await prisma.game.findUnique({
 			where: {
@@ -74,7 +74,7 @@ export const actions: Actions = {
 			}
 		});
 
-		if (wishlist?.user_id !== session.userId) {
+		if (wishlist?.user_id !== locals.user.id) {
 			return fail(401, {
 				message: 'Unauthorized'
 			});
@@ -103,23 +103,20 @@ export const actions: Actions = {
 	},
 	// Create new wishlist
 	create: async ({ params, locals, request }) => {
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/login');
+		if (!locals.user) {
+			throw fail(401);
 		}
 	},
 	// Delete a wishlist
 	delete: async ({ params, locals, request }) => {
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/login');
+		if (!locals.user) {
+			throw fail(401);
 		}
 	},
 	// Remove game from a wishlist
 	remove: async ({ params, locals, request }) => {
-		const session = await locals.auth.validate();
-		if (!session) {
-			throw redirect(302, '/login');
+		if (!locals.user) {
+			throw fail(401);
 		}
 	}
 };

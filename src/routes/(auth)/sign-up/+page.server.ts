@@ -1,9 +1,9 @@
 import {fail, error, type Actions, redirect} from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
-import { LuciaError } from 'lucia';
 import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
-import { auth } from '$lib/server/lucia';
+import { lucia } from '$lib/server/auth';
+import { Argon2id } from 'oslo/password';
 import { userSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$server/roles';
 import type { Message } from '$lib/types.js';
@@ -41,8 +41,8 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
+		const { cookies } = event;
 		const form = await superValidate<typeof signUpSchema, Message>(event, signUpSchema);
-		debugger;
 		if (!form.valid) {
 			form.data.password = '';
 			form.data.confirm_password = '';
@@ -51,50 +51,47 @@ export const actions: Actions = {
 			});
 		}
 
+		let session;
+		let sessionCookie;
 		// Adding user to the db
 		try {
 			console.log('Creating user');
-			const token = crypto.randomUUID();
 
-			const user = await auth.createUser({
-				key: {
-					providerId: 'username',
-					providerUserId: form.data.username,
-					password: form.data.password
-				},
-				attributes: {
-					email: form.data.email || null,
+			const hashedPassword = await new Argon2id().hash(form.data.password);
+
+			const user = await prisma.user.create({
+				data: {
 					username: form.data.username,
+					hashed_password: hashedPassword,
+					email: form.data.email || '',
 					firstName: form.data.firstName || '',
 					lastName: form.data.lastName || '',
 					verified: false,
 					receiveEmail: false,
-					theme: 'system',
-					token
+					theme: 'system'
 				}
 			});
 			console.log('signup user', user);
-			add_user_to_role(user.userId, 'user');
+			add_user_to_role(user.id, 'user');
 			await prisma.collection.create({
 				data: {
-					user_id: user.userId
+					user_id: user.id
 				}
 			});
 			await prisma.wishlist.create({
 				data: {
-					user_id: user.userId
+					user_id: user.id
 				}
 			});
 
 			console.log('User', user);
 
-			const session = await auth.createSession({
-				userId: user.userId,
-				attributes: {}
+			session = await lucia.createSession(user.id, {
+				country: event.locals.session.country
 			});
-			event.locals.auth.setSession(session);
-		} catch (e) {
-			if (e instanceof LuciaError && e.message.toUpperCase() === `DUPLICATE_KEY_ID`) {
+			sessionCookie = lucia.createSessionCookie(session.id);
+		} catch (e: any) {
+			if (e.message.toUpperCase() === `DUPLICATE_KEY_ID`) {
 				// key already exists
 				console.error('Lucia Error: ', e);
 			}
@@ -107,6 +104,8 @@ export const actions: Actions = {
 			form.data.confirm_password = '';
 			throw error(500, message);
 		}
+
+		event.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 		throw redirect(302, '/');
 			// const message = { type: 'success', message: 'Signed Up!' } as const;
 			// throw flashRedirect(message, event);

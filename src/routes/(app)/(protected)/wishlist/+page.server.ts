@@ -4,17 +4,16 @@ import prisma from '$lib/prisma';
 import { modifyListGameSchema } from '$lib/config/zod-schemas.js';
 
 export async function load({ params, locals }) {
-	const session = await locals.auth.validate();
-	if (!session) {
+	if (!locals.user) {
 		throw redirect(302, '/login');
 	}
 
-	console.log('Wishlist load User id', session.user);
+	console.log('Wishlist load User id', locals.user.id);
 
 	try {
-		let wishlist = await prisma.wishlist.findUnique({
+		const wishlist = await prisma.wishlist.findUnique({
 			where: {
-				user_id: session?.user?.userId
+				user_id: locals.user.id
 			},
 			include: {
 				items: {
@@ -49,16 +48,15 @@ export async function load({ params, locals }) {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const { params, locals, request } = event;
+		const { locals } = event;
 		const form = await superValidate(event, modifyListGameSchema);
 
 		try {
-			const session = await locals.auth.validate();
-			if (!session) {
+			if (!locals.user) {
 				throw redirect(302, '/login');
 			}
 
-			let game = await prisma.game.findUnique({
+			const game = await prisma.game.findUnique({
 				where: {
 					id: form.data.id
 				}
@@ -77,7 +75,7 @@ export const actions: Actions = {
 			if (game) {
 				const wishlist = await prisma.wishlist.findUnique({
 					where: {
-						user_id: session.user.userId
+						user_id: locals.user.id
 					}
 				});
 
@@ -103,33 +101,30 @@ export const actions: Actions = {
 		}
 	},
 	// Create new wishlist
-	create: async ({ params, locals, request }) => {
-		const session = await locals.auth.validate();
-		if (!session) {
+	create: async ({ locals }) => {
+		if (!locals.user) {
 			throw redirect(302, '/login');
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
-	delete: async ({ params, locals, request }) => {
-		const session = await locals.auth.validate();
-		if (!session) {
+	delete: async ({ locals }) => {
+		if (!locals.user) {
 			throw redirect(302, '/login');
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
-		const { params, locals, request } = event;
+		const { locals } = event;
 		const form = await superValidate(event, modifyListGameSchema);
 
 		try {
-			const session = await locals.auth.validate();
-			if (!session) {
+			if (!locals.user) {
 				throw redirect(302, '/login');
 			}
 
-			let game = await prisma.game.findUnique({
+			const game = await prisma.game.findUnique({
 				where: {
 					id: form.data.id
 				}
@@ -148,7 +143,7 @@ export const actions: Actions = {
 			if (game) {
 				const wishlist = await prisma.wishlist.findUnique({
 					where: {
-						user_id: session.user.userId
+						user_id: locals.user.id
 					}
 				});
 

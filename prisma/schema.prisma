@@ -36,52 +36,41 @@ model UserRole {
 }
 
 model User {
-  id            String        @id @default(cuid())
-  username      String        @unique
-  email         String?       @unique
-  firstName     String?
-  lastName      String?
-  roles         UserRole[]
-  verified      Boolean       @default(false)
-  receiveEmail  Boolean       @default(false)
-  token         String?       @unique
-  collection    Collection?
-  wishlist      Wishlist?
-  list          List[]
-  theme         String        @default("system")
-  created_at    DateTime      @default(now()) @db.Timestamp(6)
-  updated_at    DateTime      @updatedAt @db.Timestamp(6)
-  auth_session  Session[]
-  auth_key      Key[]
+  id                String        @id @default(cuid())
+  username          String        @unique
+  hashed_password   String?
+  email             String?       @unique
+  firstName         String?
+  lastName          String?
+  roles             UserRole[]
+  verified          Boolean       @default(false)
+  receiveEmail      Boolean       @default(false)
+  collection        Collection?
+  wishlist          Wishlist?
+  list              List[]
+  theme             String        @default("system")
+  created_at        DateTime      @default(now()) @db.Timestamp(6)
+  updated_at        DateTime      @updatedAt @db.Timestamp(6)
+  sessions          Session[]
 
   @@map("users")
 }
 
 model Session {
-  id             String   @id @unique
-  user_id        String
-  active_expires BigInt
-  idle_expires   BigInt
-  user           User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
+  id             String     @id @unique
+  userId         String
+  country        String
+  expiresAt      DateTime
+  user           User       @relation(references: [id], fields: [userId], onDelete: Cascade)
 
-  @@index([user_id])
+  @@index([userId])
   @@map("sessions")
 }
 
-model Key {
-  id              String   @id @unique
-  hashed_password String?
-  user_id         String
-  user            User     @relation(references: [id], fields: [user_id], onDelete: Cascade)
-
-  @@index([user_id])
-  @@map("keys")
-}
-
 model Collection {
-  id String               @id @default(cuid())
-  user_id String          @unique
-  user User               @relation(references: [id], fields: [user_id])
+  id                String               @id @default(cuid())
+  user_id           String          @unique
+  user              User               @relation(references: [id], fields: [user_id])
   items CollectionItem[]
 
   @@index([user_id])

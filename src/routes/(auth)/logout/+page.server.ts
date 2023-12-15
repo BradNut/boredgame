@@ -1,15 +1,15 @@
 import { redirect, type Actions } from '@sveltejs/kit';
-import { auth } from '$lib/server/lucia';
+import { lucia } from '$lib/server/auth';
 
 export const actions: Actions = {
-	default: async ({ locals }) => {
+	default: async ({ locals, cookies }) => {
 		console.log('Signing out user');
-		const session = await locals.auth.validate();
-		if (!session) {
+		const sessionId = cookies.get(lucia.sessionCookieName);
+		if (!locals.user || !sessionId) {
 			throw redirect(302, '/login');
 		}
-		await auth.invalidateSession(session.sessionId); // invalidate session
-		locals.auth.setSession(null); // remove cookie
+		await lucia.invalidateSession(sessionId);
+		// locals.auth.setSession(null); // remove cookie
 		throw redirect(302, '/');
 	}
 };

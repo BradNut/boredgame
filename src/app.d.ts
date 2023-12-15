@@ -14,7 +14,7 @@ declare global {
 		}
 		interface Locals {
 			auth: import('lucia').AuthRequest;
-			user: Lucia.UserAttributes;
+			user: import('lucia').User | null;
 			prisma: PrismaClient;
 			startTimer: number;
 			error: string;
@@ -43,14 +43,14 @@ declare global {
 // interface Error {}
 // interface Platform {}
 
-/// <reference types="lucia" />
-declare global {
-	namespace Lucia {
-		type Auth = import('$lib/server/lucia').Auth;
-		type DatabaseUserAttributes = User;
-		type DatabaseSessionAttributes = {};
-	}
-}
+// /// <reference types="lucia" />
+// declare global {
+// 	namespace Lucia {
+// 		type Auth = import('$lib/server/lucia').Auth;
+// 		type DatabaseUserAttributes = User;
+// 		type DatabaseSessionAttributes = {};
+// 	}
+// }
 
 // THIS IS IMPORTANT!!!
 export {};

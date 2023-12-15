@@ -1,10 +1,9 @@
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import prisma from '$lib/prisma';
 
 export async function load({ locals }) {
-	const session = await locals.auth.validate();
-	if (!session) {
-		throw redirect(302, '/login');
+	if (!locals.user) {
+		throw fail(401);
 	}
 
 	try {

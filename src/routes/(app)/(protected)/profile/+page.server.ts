@@ -1,9 +1,10 @@
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 import { message, setError, superValidate } from 'sveltekit-superforms/server';
-import { LuciaError } from 'lucia';
+// import { LuciaError } from 'lucia';
 import { userSchema } from '$lib/config/zod-schemas';
-import { auth } from '$lib/server/lucia.js';
+import { Lucia } from '$lib/server/auth.js';
 import type { PageServerLoad } from './$types';
+import prisma from '$lib/prisma';
 
 const profileSchema = userSchema.pick({
 	firstName: true,
@@ -14,13 +15,12 @@ const profileSchema = userSchema.pick({
 
 export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, profileSchema);
-	const session = await event.locals.auth.validate();
 
-	if (!session) {
+	if (!event.locals.user) {
 		throw redirect(302, '/login');
 	}
 
-	const { user } = session;
+	const { user } = event.locals;
 
 	form.data = {
 		firstName: user.firstName,
@@ -42,25 +42,29 @@ export const actions: Actions = {
 				form
 			});
 		}
+		if (!event.locals.user) {
+			throw redirect(302, '/login');
+		}
 
 		try {
 			console.log('updating profile');
-			const session = await event.locals.auth.validate();
 
-			if (!session) {
-				throw redirect(302, '/login');
-			}
+			const user = event.locals.user;
 
-			const user = session.user;
-
-			auth.updateUserAttributes(user.userId, {
-				firstName: form.data.firstName,
-				lastName: form.data.lastName,
-				email: form.data.email,
-				username: form.data.username
+			await prisma.user.update({
+				where: {
+					id: user.id
+				},
+				data: {
+					firstName: form.data.firstName,
+					lastName: form.data.lastName,
+					email: form.data.email,
+					username: form.data.username
+				}
 			});
 
 			if (user.email !== form.data.email) {
+				// Send email to confirm new email?
 				// auth.update
 				// await locals.prisma.key.update({
 				// 	where: {
@@ -75,7 +79,7 @@ export const actions: Actions = {
 				// });
 			}
 		} catch (e) {
-			if (e instanceof LuciaError && e.message === `AUTH_INVALID_USER_ID`) {
+			if (e.message === `AUTH_INVALID_USER_ID`) {
 				// invalid user id
 				console.error(e);
 			}

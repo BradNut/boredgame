@@ -110,7 +110,7 @@
 	</Portal>
 {/if}
 
-<Toaster />
+<!-- <Toaster /> -->
 
 <style lang="postcss">
 	.loading {

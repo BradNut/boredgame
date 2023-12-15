@@ -68,7 +68,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 		if (user) {
 			wishlist = await prisma.wishlist.findUnique({
 				where: {
-					user_id: user.userId
+					user_id: user.id
 				},
 				include: {
 					items: {
@@ -81,7 +81,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 
 			collection = await prisma.collection.findUnique({
 				where: {
-					user_id: user.userId
+					user_id: user.id
 				},
 				include: {
 					items: {
