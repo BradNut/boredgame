@@ -28,7 +28,7 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
-		const { cookies, locals } = event;
+		const { locals } = event;
 		const form = await superValidate(event, signInSchema);
 
 		if (!form.valid) {
@@ -61,7 +61,7 @@ export const actions: Actions = {
 			}
 
 			session = await lucia.createSession(user.id, {
-				country: locals.session.ip,
+				country: locals.session.ip
 			});
 			sessionCookie = lucia.createSessionCookie(session.id);
 
@@ -93,7 +93,7 @@ export const actions: Actions = {
 			form.data.password = '';
 			return setError(form, '', 'Your username or password is incorrect.');
 		}
-		
+
 		event.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 		form.data.username = '';
 		form.data.password = '';

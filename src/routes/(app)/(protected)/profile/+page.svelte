@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
-	//import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import { userSchema } from '$lib/config/zod-schemas';
 	import { AlertTriangle, KeyRound } from 'lucide-svelte';
-	import { Label } from '$components/ui/label';
+	import { userSchema } from '$lib/config/zod-schemas';
+	import * as Alert from "$lib/components/ui/alert";
+	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
-	import * as Alert from "$lib/components/ui/alert";
+
 	export let data;
 
 	const profileSchema = userSchema.pick({
@@ -16,7 +16,7 @@
 		username: true
 	});
 
-	const { form, errors, enhance, delayed, message } = superForm(data.form, {
+	const { form, errors, enhance, message } = superForm(data.form, {
 		taintedMessage: null,
 		validators: profileSchema,
 		delayMs: 0
@@ -62,7 +62,7 @@
 		{#if $errors.email}
 			<small>{$errors.email}</small>
 		{/if}
-		{#if $form.email === ''}
+		{#if !$form.email}
 			<Alert.Root variant="destructive">
 				<AlertTriangle class="h-4 w-4" />
 				<Alert.Title>Heads up!</Alert.Title>

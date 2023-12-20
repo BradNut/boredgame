@@ -33,15 +33,6 @@
 
 	let collapsibleOpen = true;
 
-	// const flash = flashModule.getFlash(page);
-
-	// $: {
-	// 	if ($flash) {
-	// 		toast.error($flash.message, {
-	// 			duration: 5000
-	// 		});
-	// 	}
-	// }
 	onMount(() => {
 		collapsibleOpen = false;
 	});

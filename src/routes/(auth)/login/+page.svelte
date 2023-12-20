@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import { superForm } from 'sveltekit-superforms/client';
 	import * as flashModule from 'sveltekit-flash-message/client';
-	import toast from 'svelte-french-toast';
 	import { AlertCircle } from "lucide-svelte";
 	import { signInSchema } from '$lib/config/zod-schemas.js';
 	import { Label } from '$components/ui/label';
@@ -31,16 +30,6 @@
 		validationMethod: 'oninput',
 		delayMs: 0,
 	});
-
-	// const flash = flashModule.getFlash(page);
-
-	// $: {
-	// 	if ($flash) {
-	// 		toast.error($flash.message, {
-	// 			duration: 5000
-	// 		});
-	// 	}
-	// }
 </script>
 
 <svelte:head>

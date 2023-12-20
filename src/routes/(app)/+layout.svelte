@@ -1,7 +1,6 @@
 <script lang="ts">
 	import 'iconify-icon';
-	import Transition from '$lib/components/transition.svelte';
-	import Header from '$lib/components/header/index.svelte';
+	import Header from '$components/Header.svelte';
 	import Footer from '$lib/components/footer.svelte';
 
 	export let data;
@@ -10,29 +9,12 @@
 <Header user={data.user} />
 
 <main>
-	<Transition url={data.url} transition={{ type: 'page' }}>
-		<slot />
-	</Transition>
+	<slot />
 </main>
 
 <Footer />
 
 <style lang="postcss">
-	.background {
-		background: black;
-		opacity: 0.8;
-		cursor: none;
-		inset: 0;
-		position: fixed;
-		z-index: 100;
-	}
-
-	/* .wrapper {
-		display: grid;
-		grid-template-rows: auto 1fr auto;
-		min-height: 100vh;
-	} */
-
 	main {
 		flex: 1;
 		display: flex;

@@ -1,8 +1,7 @@
-import { fail, redirect, type Actions } from '@sveltejs/kit';
+import { fail, type Actions } from '@sveltejs/kit';
 import { message, setError, superValidate } from 'sveltekit-superforms/server';
-// import { LuciaError } from 'lucia';
+import { redirect } from 'sveltekit-flash-message/server';
 import { userSchema } from '$lib/config/zod-schemas';
-import { Lucia } from '$lib/server/auth.js';
 import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
 
@@ -17,7 +16,8 @@ export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, profileSchema);
 
 	if (!event.locals.user) {
-		throw redirect(302, '/login');
+		const message = { type: 'error', message: 'You are not signed in' } as const;
+		throw redirect(302, '/login', message, event);
 	}
 
 	const { user } = event.locals;

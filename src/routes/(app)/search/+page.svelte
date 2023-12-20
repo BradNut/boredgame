@@ -30,29 +30,6 @@
 		defaultPage: 1,
 		siblingCount: 1
 	});
-
-	// async function handleNextPageEvent(event: CustomEvent) {
-	// 	if (+event?.detail?.page === page + 1) {
-	// 		page += 1;
-	// 	}
-	// 	await tick();
-	// 	submitButton.click();
-	// }
-
-	// async function handlePreviousPageEvent(event: CustomEvent) {
-	// 	if (+event?.detail?.page === page - 1) {
-	// 		page -= 1;
-	// 	}
-	// 	await tick();
-	// 	submitButton.click();
-	// }
-
-	// async function handlePerPageEvent(event: CustomEvent) {
-	// 	page = 1;
-	// 	pageSize = event.detail.pageSize;
-	// 	await tick();
-	// 	submitButton.click();
-	// }
 </script>
 
 <div class="game-search">

@@ -1,5 +1,5 @@
 import { error, json } from '@sveltejs/kit';
-import type { Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import prisma from '$lib/prisma';
 
 // Search a user's collection
@@ -13,25 +13,33 @@ export const GET = async ({ url, locals }) => {
 	console.log(`q: ${q}, limit: ${limit}, skip: ${skip}, order: ${order}`);
 	// const sort : Prisma.GameOrderByRelevanceFieldEnum = <Prisma.GameOrderByRelevanceFieldEnum>searchParams?.sort || 'name';
 	// console.log('url', url);
+	const exactGameSelect: Prisma.GameSelect = {
+		id: true,
+		name: true,
+		slug: true,
+		thumb_url: true
+	};
 
-	try {
-		let games = [];
-		if (exact) {
-			games = await prisma.game.findFirst({
+	if (exact) {
+		const game =
+			await prisma.game.findFirst({
 				where: {
 					name: {
 						equals: q
 					}
 				},
-				select: {
-					id: true,
-					name: true,
-					slug: true,
-					thumb_url: true
-				}
+				select: exactGameSelect
 			});
-		} else {
-			games = await prisma.game.findMany({
+
+		if (!game) {
+			throw error(404, { message: 'No games found' });
+		}
+		const games = [game];
+		console.log('Games found in Exact Search API', JSON.stringify(games, null, 2));
+		return json(games);
+	} else {
+		const games =
+			(await prisma.game.findMany({
 				orderBy: {
 					_relevance: {
 						fields: ['name'],
@@ -39,26 +47,14 @@ export const GET = async ({ url, locals }) => {
 						sort: order
 					}
 				},
-				select: {
-					id: true,
-					name: true,
-					slug: true,
-					thumb_url: true
-				},
+				select: exactGameSelect,
 				take: limit,
 				skip
-			});
-		}
-
-		if (!games || games.length === 0) {
+			})) || [];
+		if (games.length === 0) {
 			throw error(404, { message: 'No games found' });
 		}
-
 		console.log('Games found in Search API', JSON.stringify(games, null, 2));
-
 		return json(games);
-	} catch (e) {
-		console.error(e);
-		throw error(500, { message: 'Something went wrong' });
 	}
 };

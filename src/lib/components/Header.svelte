@@ -1,22 +1,20 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte';
-	import { Button } from '$lib/components/ui/button';
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-	import * as Avatar from "$lib/components/ui/avatar";
+	import * as DropdownMenu from "$components/ui/dropdown-menu";
+	import * as Avatar from "$components/ui/avatar";
 	import Logo from '$components/logo.svelte';
-	import { boredState } from '$lib/stores/boredState';
 	import { invalidateAll } from '$app/navigation';
 	import toast from 'svelte-french-toast';
 
-	export let user: any;
+	export let user;
 
 	let avatar = user?.username.slice(0, 1).toUpperCase() || '?';
 </script>
 
 <header>
 	<div class="corner">
-		<a href="/" class="logo" title="Home">
+		<a href="/static" class="logo" title="Home">
 			<div class="logo-image">
 				<Logo />
 			</div>
@@ -59,7 +57,6 @@
 						</a>
 						<form
 							use:enhance={() => {
-								boredState.update((n) => ({ ...n, loading: true }));
 								return async ({ result }) => {
 									console.log(result);
 									if (result.type === 'success' || result.type === 'redirect') {
@@ -73,7 +70,6 @@
 									}
 									await invalidateAll();
 									await applyAction(result);
-									boredState.update((n) => ({ ...n, loading: true }));
 								};
 							}}
 							action="/logout"

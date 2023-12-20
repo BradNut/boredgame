@@ -1,9 +1,9 @@
 <script lang="ts">
-	// import TextSearch from '$lib/components/search/textSearch/index.svelte';
+	// import TextSearch from '$lib/components/search/textSearch/header.svelte';
 	import RandomSearch from '$lib/components/search/random/index.svelte';
 	import logo from '$lib/assets/bored-game.png';
 
-	// import Random from '$lib/components/random/index.svelte';
+	// import Random from '$lib/components/random/header.svelte';
 
 	export let data;
 </script>
