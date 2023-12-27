@@ -14,7 +14,7 @@
 
 <header>
 	<div class="corner">
-		<a href="/static" class="logo" title="Home">
+		<a href="/" class="logo" title="Home">
 			<div class="logo-image">
 				<Logo />
 			</div>

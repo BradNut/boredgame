@@ -15,7 +15,7 @@ export async function GET({ url, locals, params }) {
 	console.log('username', locals?.user?.id);
 
 	if (!session) {
-		throw error(401, { message: 'Unauthorized' });
+		error(401, { message: 'Unauthorized' });
 	}
 
 	let collection = await prisma.collection.findUnique({
@@ -27,7 +27,7 @@ export async function GET({ url, locals, params }) {
 
 	if (!collection) {
 		console.log('Collection was not found');
-		throw error(404, { message: 'Collection was not found' });
+		error(404, { message: 'Collection was not found' });
 	}
 
 	try {
@@ -68,6 +68,6 @@ export async function GET({ url, locals, params }) {
 		return json(collection_items);
 	} catch (e) {
 		console.error(e);
-		throw error(500, { message: 'Something went wrong' });
+		error(500, { message: 'Something went wrong' });
 	}
 }

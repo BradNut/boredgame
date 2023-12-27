@@ -2,6 +2,8 @@ import { superValidate } from 'sveltekit-superforms/server';
 import { search_schema } from '$lib/zodValidation';
 import type { MetaTagsProps } from 'svelte-meta-tags';
 import type { PageServerLoad } from './$types';
+import prisma from '$lib/prisma';
+import type { Game } from '@prisma/client';
 
 export const load: PageServerLoad = async ({ fetch, url }) => {
 	const image = {
@@ -41,5 +43,16 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	formData.name = formData?.q;
 	const form = await superValidate(formData, search_schema);
 	console.log('form', form);
-	return { form, metaTagsChild: metaTags };
+
+	const count = 5;
+	const ids: { id: string }[] = await prisma.$queryRaw`SELECT id FROM games ORDER BY RAND() LIMIT ${count}`;
+  const randomGames: Game[] = await prisma.game.findMany({
+      where: {
+				id: {
+					in: ids.map(id => id.id)
+				}
+      }
+    });
+
+	return { form, metaTagsChild: metaTags, randomGames };
 };

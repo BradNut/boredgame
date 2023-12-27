@@ -3,9 +3,6 @@ import { Lucia, TimeSpan } from 'lucia';
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
 import { dev } from '$app/environment';
 import prisma_client from '$lib/prisma';
-import { webcrypto } from "node:crypto";
-
-globalThis.crypto = webcrypto as Crypto;
 
 const adapter = new PrismaAdapter(prisma_client.session, prisma_client.user);
 

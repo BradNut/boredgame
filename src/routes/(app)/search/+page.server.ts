@@ -39,7 +39,7 @@ async function searchForGames(
 
 		if (response.status !== 404 && !response.ok) {
 			console.log('Status from internal api not 200', response.status);
-			throw error(response.status);
+			error(response.status);
 		}
 
 		const games = await response.json();
@@ -63,7 +63,7 @@ async function searchForGames(
 
 			if (!externalResponse.ok) {
 				console.log('Status not 200', externalResponse.status);
-				throw error(externalResponse.status);
+				error(externalResponse.status);
 			}
 
 			if (externalResponse.ok) {

@@ -52,7 +52,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 		console.log('found game', game);
 
 		if (!game) {
-			throw error(404, 'not found');
+			error(404, 'not found');
 		}
 
 		const currentDate = new Date();
@@ -60,6 +60,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 			game.last_sync_at === null ||
 			currentDate.getDate() - game.last_sync_at.getDate() > 7 * 24 * 60 * 60 * 1000
 		) {
+			console.log('Syncing details because last sync is out of date');
 			await syncGameAndConnectedData(locals, game, fetch);
 		}
 
@@ -107,7 +108,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 		console.log(error);
 	}
 
-	throw error(404, 'not found');
+	error(404, 'not found');
 };
 
 async function syncGameAndConnectedData(locals: App.Locals, game: Game, eventFetch: Function) {

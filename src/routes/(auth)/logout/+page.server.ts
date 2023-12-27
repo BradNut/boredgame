@@ -6,10 +6,10 @@ export const actions: Actions = {
 		console.log('Signing out user');
 		const sessionId = cookies.get(lucia.sessionCookieName);
 		if (!locals.user || !sessionId) {
-			throw redirect(302, '/login');
+			redirect(302, '/login');
 		}
 		await lucia.invalidateSession(sessionId);
 		// locals.auth.setSession(null); // remove cookie
-		throw redirect(302, '/');
+		redirect(302, '/');
 	}
 };

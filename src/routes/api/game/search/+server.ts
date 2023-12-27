@@ -32,7 +32,7 @@ export const GET = async ({ url, locals }) => {
 			});
 
 		if (!game) {
-			throw error(404, { message: 'No games found' });
+			error(404, { message: 'No games found' });
 		}
 		const games = [game];
 		console.log('Games found in Exact Search API', JSON.stringify(games, null, 2));
@@ -52,7 +52,7 @@ export const GET = async ({ url, locals }) => {
 				skip
 			})) || [];
 		if (games.length === 0) {
-			throw error(404, { message: 'No games found' });
+			error(404, { message: 'No games found' });
 		}
 		console.log('Games found in Search API', JSON.stringify(games, null, 2));
 		return json(games);

@@ -1,11 +1,14 @@
 <script lang="ts">
 	// import TextSearch from '$lib/components/search/textSearch/header.svelte';
 	import RandomSearch from '$lib/components/search/random/index.svelte';
+	import Game from '$lib/components/game/index.svelte';
 	import logo from '$lib/assets/bored-game.png';
 
 	// import Random from '$lib/components/random/header.svelte';
 
 	export let data;
+
+	const { randomGames } = data;
 </script>
 
 <h1>Search Boardgames!</h1>
@@ -22,6 +25,12 @@
 	</section>
 	<!-- <TextSearch showButton advancedSearch data={data.form} /> -->
 </div>
+
+<section>
+	{#each randomGames as game (game.id)}
+		<Game {game} />
+	{/each}
+</section>
 
 <style lang="scss">
 	.game-search {

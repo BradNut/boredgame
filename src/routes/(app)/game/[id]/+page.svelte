@@ -8,6 +8,7 @@
 	import type { PageData } from './$types';
 	import { Button } from '$components/ui/button';
 	import AddToList from '$components/AddToList.svelte';
+	import Badge from '$components/ui/badge/badge.svelte';
 
 	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
 	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
@@ -69,15 +70,19 @@
 </section>
 <section>
 	<p>Categories</p>
-	{#each game?.categories as category}
-		<span>{category.name}</span>
-	{/each}
+	<div style='display: flex; gap: 0.25rem;'>
+		{#each game?.categories as category}
+			<Badge>{category.name}</Badge>
+		{/each}
+	</div>
 </section>
 <section>
 	<p>Mechanics</p>
+	<div style='display: flex; gap: 0.25rem;'>
 	{#each game?.mechanics as mechanic}
-		<span>{mechanic.name}</span>
+		<Badge>{mechanic.name}</Badge>
 	{/each}
+	</div>
 </section>
 <section class="description" class:show={seeMore} class:hide={!seeMore} style="margin-top: 2rem;">
 	{@html game?.description}

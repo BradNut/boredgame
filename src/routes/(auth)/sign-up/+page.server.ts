@@ -102,11 +102,11 @@ export const actions: Actions = {
 			};
 			form.data.password = '';
 			form.data.confirm_password = '';
-			throw error(500, message);
+			error(500, message);
 		}
 
 		event.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-		throw redirect(302, '/');
+		redirect(302, '/');
 			// const message = { type: 'success', message: 'Signed Up!' } as const;
 			// throw flashRedirect(message, event);
 	}

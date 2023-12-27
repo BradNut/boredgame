@@ -11,7 +11,7 @@ export const load: PageServerLoad = async (event) => {
 	const user = event.locals.user;
 
 	if (!user) {
-		throw redirect(302, '/login');
+		redirect(302, '/login');
 	}
 
 	form.data = {
@@ -36,7 +36,7 @@ export const actions: Actions = {
 
 		console.log('updating profile');
 		if (!event.locals.user) {
-			throw redirect(302, '/login');
+			redirect(302, '/login');
 		}
 
 		const user = event.locals.user;

@@ -5,7 +5,7 @@ import { modifyListGameSchema } from '$lib/config/zod-schemas.js';
 
 export async function load({ params, locals }) {
 	if (!locals.user) {
-		throw redirect(302, '/login');
+		redirect(302, '/login');
 	}
 
 	console.log('Wishlist load User id', locals.user.id);
@@ -31,7 +31,7 @@ export async function load({ params, locals }) {
 		});
 
 		if (!wishlist) {
-			throw redirect(302, '/404');
+			redirect(302, '/404');
 		}
 
 		console.log('wishlist', wishlist);
@@ -53,7 +53,7 @@ export const actions: Actions = {
 
 		try {
 			if (!locals.user) {
-				throw redirect(302, '/login');
+				redirect(302, '/login');
 			}
 
 			const game = await prisma.game.findUnique({
@@ -69,7 +69,7 @@ export const actions: Actions = {
 				// 	}
 				// });
 				console.log('game not found');
-				throw redirect(302, '/404');
+				redirect(302, '/404');
 			}
 
 			if (game) {
@@ -103,14 +103,14 @@ export const actions: Actions = {
 	// Create new wishlist
 	create: async ({ locals }) => {
 		if (!locals.user) {
-			throw redirect(302, '/login');
+			redirect(302, '/login');
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
 	delete: async ({ locals }) => {
 		if (!locals.user) {
-			throw redirect(302, '/login');
+			redirect(302, '/login');
 		}
 		return error(405, 'Method not allowed');
 	},
@@ -121,7 +121,7 @@ export const actions: Actions = {
 
 		try {
 			if (!locals.user) {
-				throw redirect(302, '/login');
+				redirect(302, '/login');
 			}
 
 			const game = await prisma.game.findUnique({
@@ -137,7 +137,7 @@ export const actions: Actions = {
 				// 	}
 				// });
 				console.log('game not found');
-				throw redirect(302, '/404');
+				redirect(302, '/404');
 			}
 
 			if (game) {

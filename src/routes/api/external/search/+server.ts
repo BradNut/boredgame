@@ -22,10 +22,10 @@ export async function GET({ url }) {
 	} catch (e) {
 		console.error(e);
 		if (e instanceof ZodError) {
-			throw error(400, { message: e.flatten().fieldErrors });
+			error(400, { message: e.flatten().fieldErrors });
 		}
 
-		throw error(500, { message: 'Something went wrong' });
+		error(500, { message: 'Something went wrong' });
 	}
 
 	const client = BggClient.Create();
@@ -38,7 +38,7 @@ export async function GET({ url }) {
 
 	if (!response || response.length === 0 || response[0]?.total === 0) {
 		console.log('No results found in external search', response);
-		throw error(404, { message: 'No results found in external search' });
+		error(404, { message: 'No results found in external search' });
 	}
 
 	const result = response[0];

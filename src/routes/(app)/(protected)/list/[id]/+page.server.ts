@@ -5,7 +5,7 @@ import prisma from '$lib/prisma';
 export async function load({ params, locals }) {
 	const user = locals.user;
 	if (!user) {
-		throw redirect(302, '/login');
+		redirect(302, '/login');
 	}
 
 	try {
@@ -81,7 +81,7 @@ export const actions: Actions = {
 		}
 
 		if (!wishlist) {
-			throw redirect(302, '/404');
+			redirect(302, '/404');
 		}
 
 		const wishlistItem = await prisma.wishlistItem.create({

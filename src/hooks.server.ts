@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/sveltekit';
 import { sequence } from '@sveltejs/kit/hooks';
 import type { Handle } from '@sveltejs/kit';
-import { dev } from '$app/environment';
+import { browser, dev } from '$app/environment';
 import { lucia } from '$lib/server/auth';
 
 Sentry.init({
@@ -14,7 +14,10 @@ export const authentication: Handle = async function ({ event, resolve }) {
 	const startTimer = Date.now();
 	event.locals.startTimer = startTimer;
 
-	const ip = event.request.headers.get('x-forwarded-for') as string || event.getClientAddress();
+	let ip = event.request.headers.get('x-forwarded-for') as string;
+	if (!ip && browser) {
+		ip = event.getClientAddress();
+	}
 	const country = event.request.headers.get('x-vercel-ip-country') as string || 'unknown';
 	event.locals.session = {
 		ip,

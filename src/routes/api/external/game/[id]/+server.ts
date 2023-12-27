@@ -10,7 +10,7 @@ export async function GET({ params, url }) {
 
 	// TODO: Debounce excessive calls and possibly throttle
 	if (isNaN(game_id) || !isFinite(game_id)) {
-		throw error(400, { message: 'Invalid game id' });
+		error(400, { message: 'Invalid game id' });
 	}
 
 	const client = BggClient.Create();
@@ -19,7 +19,7 @@ export async function GET({ params, url }) {
 	});
 
 	if (!response || response.length === 0) {
-		throw error(404, { message: 'No results found in external search' });
+		error(404, { message: 'No results found in external search' });
 	}
 
 	const result = response[0];

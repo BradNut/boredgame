@@ -8,7 +8,7 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	const user = locals.user;
 	if (!user) {
-		throw redirect(302, '/login');
+		redirect(302, '/login');
 	}
 
 	// console.log('locals load', locals);
@@ -121,7 +121,7 @@ export const actions: Actions = {
 			// 	}
 			// });
 			console.log('game not found');
-			throw redirect(302, '/404');
+			redirect(302, '/404');
 		}
 
 		try {
@@ -183,7 +183,7 @@ export const actions: Actions = {
 
 		if (!game) {
 			console.log('game not found');
-			throw redirect(302, '/404');
+			redirect(302, '/404');
 		}
 
 		try {
