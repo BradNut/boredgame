@@ -10,6 +10,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
+	import { Checkbox } from "$lib/components/ui/checkbox";
 
 	export let data;
 
@@ -39,17 +40,25 @@
 
 	<search>
 		<form id="search-form" action="/search" method="GET">
-			<div class="search">
-				<fieldset class="text-search">
-					<Label for="label">Search</Label>
-					<Input type="text" id="q" class={$errors.q && "outline outline-destructive"} name="q" placeholder="Search board games" data-invalid={$errors.q} bind:value={$form.q} />
-					{#if $errors.q}
-						<p class="text-sm text-destructive">{$errors.q}</p>
-					{/if}
-					<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />
-					<input id="limit" type="hidden" name="limit" bind:value={$form.limit} />
-				</fieldset>
-			</div>
+			<fieldset>
+				<Label for="label">Search</Label>
+				<Input type="text" id="q" class={$errors.q && "outline outline-destructive"} name="q" placeholder="Search board games" data-invalid={$errors.q} bind:value={$form.q} />
+				{#if $errors.q}
+					<p class="text-sm text-destructive">{$errors.q}</p>
+				{/if}
+				<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />
+				<input id="limit" type="hidden" name="limit" bind:value={$form.limit} />
+			</fieldset>
+			<fieldset class="flex items-center space-x-2">
+				<Checkbox id="exact" bind:checked={$form.exact} aria-labelledby="exact-label" />
+				<Label
+					id="exact-label"
+					for="exact"
+					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+				>
+					Exact Search
+				</Label>
+			</fieldset>
 			<Button type="submit">Submit</Button>
 		</form>
 	</search>

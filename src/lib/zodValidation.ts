@@ -61,6 +61,7 @@ const Search = z.object({
 export const search_schema = z
 	.object({
 		q: z.string().trim().optional().default(''),
+		exact: z.preprocess((a) => Boolean(a), z.boolean().default(true)),
 		minAge: IntegerString(z.number().min(1).max(120).optional()),
 		minPlayers: IntegerString(z.number().min(1).max(50).optional()),
 		maxPlayers: IntegerString(z.number().min(1).max(50).optional()),

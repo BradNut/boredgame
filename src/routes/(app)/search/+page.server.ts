@@ -37,12 +37,12 @@ async function searchForGames(
 		const response = await eventFetch(url, requestInit);
 		console.log('response from internal api', response);
 
-		if (!response.ok) {
-			console.log('Status not 200', response.status);
+		if (response.status !== 404 && !response.ok) {
+			console.log('Status from internal api not 200', response.status);
 			throw error(response.status);
 		}
 
-		let games = await response.json();
+		const games = await response.json();
 		console.log('games from DB', games);
 
 		const gameNameSearch = urlQueryParams.get('q');
@@ -61,9 +61,9 @@ async function searchForGames(
 
 			console.log('Back from external search', externalResponse);
 
-			if (!response.ok) {
-				console.log('Status not 200', response.status);
-				throw error(response.status);
+			if (!externalResponse.ok) {
+				console.log('Status not 200', externalResponse.status);
+				throw error(externalResponse.status);
 			}
 
 			if (externalResponse.ok) {
