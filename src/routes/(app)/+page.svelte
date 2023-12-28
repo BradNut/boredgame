@@ -1,7 +1,7 @@
 <script lang="ts">
 	// import TextSearch from '$lib/components/search/textSearch/header.svelte';
 	import RandomSearch from '$lib/components/search/random/index.svelte';
-	import Game from '$lib/components/game/index.svelte';
+	import Game from '$components/Game.svelte';
 	import logo from '$lib/assets/bored-game.png';
 
 	// import Random from '$lib/components/random/header.svelte';
@@ -26,13 +26,13 @@
 	<!-- <TextSearch showButton advancedSearch data={data.form} /> -->
 </div>
 
-<section>
+<section class="random-games">
 	{#each randomGames as game (game.id)}
-		<Game {game} />
+		<Game variant='compact' {game} />
 	{/each}
 </section>
 
-<style lang="scss">
+<style lang="postcss">
 	.game-search {
 		display: grid;
 		gap: 2rem;
@@ -41,6 +41,13 @@
 			display: grid;
 			gap: 1rem;
 		}
+	}
+
+	.random-games {
+		margin-top: 1rem;
+		display: grid;
+		gap: 0.5rem;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 	}
 
 	.random-buttons {

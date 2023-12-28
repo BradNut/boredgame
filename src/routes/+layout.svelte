@@ -7,7 +7,7 @@
 	import 'iconify-icon';
   import { page } from '$app/stores';
 	import { onNavigate } from "$app/navigation";
-	import Analytics from '$lib/components/analytics.svelte';
+	import Analytics from '$components/Analytics.svelte';
 	import Loading from '$lib/components/Loading.svelte';
 	import { theme } from '$state/theme';
 	import PageLoadingIndicator from '$lib/page_loading_indicator.svelte';
@@ -29,9 +29,9 @@
 		...$page.data.metaTagsChild
 	}
 
-	const flash = getFlash(page, {
-		clearAfterMs: 6000
-	});
+	// const flash = getFlash(page, {
+	// 	clearAfterMs: 6000
+	// });
 
 	onMount(() => {
 		// set the theme to the user's active theme
@@ -39,21 +39,21 @@
 		document.querySelector('html')?.setAttribute('data-theme', $theme);
 	});
 
-	flash.subscribe(($flash) => {
-		if (!$flash) return;
+	// flash.subscribe(($flash) => {
+	// 	if (!$flash) return;
 
-		if ($flash.type === 'success') {
-			toast.success($flash.message);
-		} else {
-			toast.error($flash.message, {
-				duration: 5000
-			});
-		}
+	// 	if ($flash.type === 'success') {
+	// 		toast.success($flash.message);
+	// 	} else {
+	// 		toast.error($flash.message, {
+	// 			duration: 5000
+	// 		});
+	// 	}
 
-		// Clearing the flash message could sometimes
-		// be required here to avoid double-toasting.
-		flash.set(undefined);
-	});
+	// 	// Clearing the flash message could sometimes
+	// 	// be required here to avoid double-toasting.
+	// 	flash.set(undefined);
+	// });
 
 	onNavigate(async (navigation) => {
 		if (!document.startViewTransition) return;
@@ -80,7 +80,7 @@
 </div>
 
 <Toaster />
-<Loading />
+<!-- <Loading /> -->
 
 <style lang="postcss">
 	.layout {

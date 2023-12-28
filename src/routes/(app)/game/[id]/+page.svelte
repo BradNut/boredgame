@@ -27,7 +27,7 @@
 	<title>{game?.name} | Bored Game</title>
 </svelte:head>
 
-<h2>{game?.name}
+<h2 style:--transition-name="game-name-{game.slug}">{game?.name}
 	{#if game?.year_published}
 		({game?.year_published})
 	{/if}

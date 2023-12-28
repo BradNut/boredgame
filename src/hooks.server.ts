@@ -7,7 +7,8 @@ import { lucia } from '$lib/server/auth';
 Sentry.init({
 	dsn: 'https://742e43279df93a3c4a4a78c12eb1f879@o4506057768632320.ingest.sentry.io/4506057770401792',
 	tracesSampleRate: 1,
-	environment: dev ? 'development' : 'production'
+	environment: dev ? 'development' : 'production',
+	enabled: !dev
 });
 
 export const authentication: Handle = async function ({ event, resolve }) {

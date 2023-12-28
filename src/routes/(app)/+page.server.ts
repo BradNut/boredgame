@@ -44,15 +44,8 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 	const form = await superValidate(formData, search_schema);
 	console.log('form', form);
 
-	const count = 5;
-	const ids: { id: string }[] = await prisma.$queryRaw`SELECT id FROM games ORDER BY RAND() LIMIT ${count}`;
-  const randomGames: Game[] = await prisma.game.findMany({
-      where: {
-				id: {
-					in: ids.map(id => id.id)
-				}
-      }
-    });
+	const randomGames: Game[] = await fetch('/api/game/random?limit=6').then(res => res.json());
+	console.log('randomGames', randomGames);
 
 	return { form, metaTagsChild: metaTags, randomGames };
 };

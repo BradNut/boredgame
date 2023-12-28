@@ -1,7 +1,7 @@
 <script lang="ts">
 	import 'iconify-icon';
 	import Header from '$components/Header.svelte';
-	import Footer from '$lib/components/footer.svelte';
+	import Footer from '$components/Footer.svelte';
 
 	export let data;
 </script>

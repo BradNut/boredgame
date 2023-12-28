@@ -3,10 +3,10 @@
 	import type { SuperValidated } from 'sveltekit-superforms';
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import { createPagination, melt } from '@melt-ui/svelte';
-	import { ChevronLeft, ChevronRight } from 'lucide-svelte';
+	import { createPagination, createToolbar, melt } from '@melt-ui/svelte';
+	import { ChevronLeft, ChevronRight, LayoutList, LayoutGrid } from 'lucide-svelte';
   import type { SearchSchema } from '$lib/zodValidation';
-	import Game from '$lib/components/game/index.svelte';
+	import Game from '$components/Game.svelte';
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
@@ -23,7 +23,15 @@
 	$: showPagination = totalCount > pageSize;
 
 	const {
-		elements: { root, pageTrigger, prevButton, nextButton },
+    elements: { root: toolbarRoot },
+    builders: { createToolbarGroup },
+  } = createToolbar();
+  const {
+    elements: { group: listStyleGroup, item: listStyleItem },
+  } = createToolbarGroup();
+
+	const {
+		elements: { root: paginationRoot, pageTrigger, prevButton, nextButton },
 		states: { pages, range }
 	} = createPagination({
 		count: totalCount,
@@ -31,6 +39,11 @@
 		defaultPage: 1,
 		siblingCount: 1
 	});
+
+	const gameListStyle: 'grid' | 'list' = 'grid';
+	function handleListStyle(event) {
+		console.log(event, typeof event);
+	}
 </script>
 
 <div class="game-search">
@@ -64,7 +77,19 @@
 	</search>
 
 	<section class="games">
-		<h1>Games Found:</h1>
+		<div>
+			<h1>Games Found:</h1>
+			<div use:melt={$toolbarRoot}>
+				<div use:melt={$listStyleGroup} class="search-toolbar">
+					<button class="style-item" aria-label='list' use:melt={$listStyleItem('list')} on:m-click|preventDefault={(e) => handleListStyle(e)}>
+						<LayoutList class="square-5" />
+					</button>
+					<button class="style-item" aria-label='grid' use:melt={$listStyleItem('grid')} on:m-click|preventDefault={(e) => handleListStyle(e)}>
+						<LayoutGrid class="square-5" />
+					</button>
+				</div>
+			</div>
+		</div>
 		<div class="games-list">
 			{#if totalCount > 0}
 				{#each games as game (game.id)}
@@ -75,7 +100,7 @@
 			{/if}
 		</div>
 		{#if showPagination}
-			<nav use:melt={$root}>
+			<nav use:melt={$paginationRoot}>
 			<p class="text-center">Showing items {$range.start} - {$range.end}</p>
 			<div class="buttons">
 				<button use:melt={$prevButton}><ChevronLeft /></button>
@@ -156,6 +181,11 @@
 	.games-list {
 		display: grid;
 		--listColumns: 4;
+
+		.list {
+			--listColumns: 1;
+		}
+
 		grid-template-columns: repeat(var(--listColumns), minmax(250px, 1fr));
 		gap: 2rem;
 
@@ -173,6 +203,26 @@
 
 		@media (width <= 600px) {
 			--listColumns: 1;
+		}
+	}
+
+	.search-toolbar {
+		display: flex;
+		place-items: center;
+		gap: 0.15rem;
+	}
+
+	.style-item {
+		padding: 0.1rem;
+		border-radius: 0.375rem;
+		border: 1px solid black;
+
+		&:hover {
+			opacity: 0.75;
+		}
+
+		&[data-state='on'] {
+			background-color: grey;
 		}
 	}
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Game from '$lib/components/game/index.svelte';
+	import Game from '$components/Game.svelte';
 
 	export let data;
 	console.log('data', data);

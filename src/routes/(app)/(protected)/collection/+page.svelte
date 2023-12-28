@@ -1,6 +1,6 @@
 <script lang="ts">
 	// import { tick, onDestroy } from 'svelte';
-	import Game from '$lib/components/game/index.svelte';
+	import Game from '$components/Game.svelte';
 
 	export let data;
 	console.log(`Page data: ${JSON.stringify(data)}`);
