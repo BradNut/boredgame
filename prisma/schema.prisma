@@ -59,7 +59,8 @@ model User {
 model Session {
   id             String     @id @unique
   userId         String
-  country        String
+  ip_country     String
+  ip_address     String
   expiresAt      DateTime
   user           User       @relation(references: [id], fields: [userId], onDelete: Cascade)
 

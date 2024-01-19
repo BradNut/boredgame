@@ -17,15 +17,14 @@ declare global {
 			user: import('lucia').User | null;
 			prisma: PrismaClient;
 			startTimer: number;
+			ip: string;
+			country: string;
 			error: string;
 			errorId: string;
 			errorStackTrace: string;
 			message: unknown;
 			track: unknown;
-			session: {
-				ip: string,
-				country: string
-			}
+			session: import('lucia').Session | null;
 		}
 		interface Error {
 			code?: string;

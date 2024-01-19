@@ -49,6 +49,8 @@ export const actions: Actions = {
 				}
 			});
 
+			console.log('user', JSON.stringify(user, null, 2));
+
 			if (!user || !user.hashed_password) {
 				form.data.password = '';
 				return setError(form, '', 'Your username or password is incorrect.');
@@ -56,12 +58,16 @@ export const actions: Actions = {
 
 			const validPassword = await new Argon2id().verify(user.hashed_password, password);
 			if (!validPassword) {
+				console.log('invalid password');
 				form.data.password = '';
 				return setError(form, '', 'Your username or password is incorrect.');
 			}
 
+			console.log('ip', locals.ip);
+			console.log('country', locals.country);
 			session = await lucia.createSession(user.id, {
-				country: locals.session.ip
+				ip_country: locals.country,
+				ip_address: locals.ip
 			});
 			sessionCookie = lucia.createSessionCookie(session.id);
 
@@ -94,7 +100,11 @@ export const actions: Actions = {
 			return setError(form, '', 'Your username or password is incorrect.');
 		}
 
-		event.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+		event.cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: ".",
+			...sessionCookie.attributes
+		});
+
 		form.data.username = '';
 		form.data.password = '';
 		const message = { type: 'success', message: 'Signed In!' };

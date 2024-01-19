@@ -87,7 +87,8 @@ export const actions: Actions = {
 			console.log('User', user);
 
 			session = await lucia.createSession(user.id, {
-				country: event.locals.session.country
+				ipCountry: event.locals.session?.ipCountry,
+				ipAddress: event.locals.session?.ipAddress
 			});
 			sessionCookie = lucia.createSessionCookie(session.id);
 		} catch (e: any) {
@@ -105,7 +106,11 @@ export const actions: Actions = {
 			error(500, message);
 		}
 
-		event.cookies.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+		event.cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: ".",
+			...sessionCookie.attributes
+		});
+
 		redirect(302, '/');
 			// const message = { type: 'success', message: 'Signed Up!' } as const;
 			// throw flashRedirect(message, event);

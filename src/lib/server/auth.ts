@@ -9,7 +9,8 @@ const adapter = new PrismaAdapter(prisma_client.session, prisma_client.user);
 export const lucia = new Lucia(adapter, {
 	getSessionAttributes: (attributes) => {
 		return {
-			country: attributes.country,
+			ipCountry: attributes.ip_country,
+			ipAddress: attributes.ip_address
 		};
 	},
 	getUserAttributes: (attributes) => {
@@ -37,9 +38,11 @@ export const lucia = new Lucia(adapter, {
 declare module "lucia" {
 	interface Register {
 		Lucia: typeof lucia;
+		DatabaseUserAttributes: DatabaseUserAttributes;
 	}
 	interface DatabaseSessionAttributes {
-		country: string;
+		ip_country: string;
+		ip_address: string;
 	}
 	interface DatabaseUserAttributes {
 		username: string;
