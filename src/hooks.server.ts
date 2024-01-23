@@ -17,7 +17,7 @@ export const authentication: Handle = async function ({ event, resolve }) {
 
 	const ip = event.request.headers.get('x-forwarded-for') as string;
 	const country = event.request.headers.get('x-vercel-ip-country') as string;
-	event.locals.ip = dev ? '127.0.0.1' : ip || event.getClientAddress();
+	event.locals.ip = dev ? '127.0.0.1' : ip; // || event.getClientAddress();
 	event.locals.country = dev ? 'us' : country;
 
 	const sessionId = event.cookies.get(lucia.sessionCookieName);
