@@ -2,7 +2,6 @@ import { superValidate } from 'sveltekit-superforms/server';
 import { search_schema } from '$lib/zodValidation';
 import type { MetaTagsProps } from 'svelte-meta-tags';
 import type { PageServerLoad } from './$types';
-import prisma from '$lib/prisma';
 import type { Game } from '@prisma/client';
 
 export const load: PageServerLoad = async ({ fetch, url }) => {

@@ -4,21 +4,26 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { createPagination, createToolbar, melt } from '@melt-ui/svelte';
-	import { ChevronLeft, ChevronRight, LayoutList, LayoutGrid } from 'lucide-svelte';
-  import type { SearchSchema } from '$lib/zodValidation';
+	import { ChevronLeft, ChevronRight, LayoutList, LayoutGrid, Check } from 'lucide-svelte';
+	import { search_schema, type SearchSchema } from '$lib/zodValidation';
 	import Game from '$components/Game.svelte';
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
-	import { Checkbox } from "$lib/components/ui/checkbox";
+	import { Checkbox } from '$lib/components/ui/checkbox';
+	import * as Form from "$lib/components/ui/form";
+	import GameSearchForm from '$components/search/GameSearchForm.svelte';
 
 	export let data;
 
-	const { form, errors }: SuperValidated<SearchSchema> = superForm(data.form);
 	const { games, totalCount } = data?.searchData;
 
+	console.log('data found', data);
+	console.log('found games', games);
+	console.log('found totalCount', totalCount);
+
 	let submitButton: HTMLElement;
-	let pageSize = +form?.limit || 10;
+	let pageSize: number = data.form.limit || 10;
 
 	$: showPagination = totalCount > pageSize;
 
@@ -48,33 +53,10 @@
 
 <div class="game-search">
 	{#if dev}
-		<SuperDebug collapsible data={$form} />
+		<SuperDebug collapsible data={data.form} />
 	{/if}
 
-	<search>
-		<form id="search-form" action="/search" method="GET">
-			<fieldset>
-				<Label for="label">Search</Label>
-				<Input type="text" id="q" class={$errors.q && "outline outline-destructive"} name="q" placeholder="Search board games" data-invalid={$errors.q} bind:value={$form.q} />
-				{#if $errors.q}
-					<p class="text-sm text-destructive">{$errors.q}</p>
-				{/if}
-				<input id="skip" type="hidden" name="skip" bind:value={$form.skip} />
-				<input id="limit" type="hidden" name="limit" bind:value={$form.limit} />
-			</fieldset>
-			<fieldset class="flex items-center space-x-2">
-				<Checkbox id="exact" bind:checked={$form.exact} aria-labelledby="exact-label" />
-				<Label
-					id="exact-label"
-					for="exact"
-					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-				>
-					Exact Search
-				</Label>
-			</fieldset>
-			<Button type="submit">Submit</Button>
-		</form>
-	</search>
+	<GameSearchForm form={data.form} />
 
 	<section class="games">
 		<div>
@@ -139,15 +121,11 @@
   button {
     display: grid;
     place-items: center;
-    border-radius: 2px;
     background-color: rgb(var(--color-white) / 1);
     color: rgb(var(--color-magnum-700) / 1);
     box-shadow: 0px 1px 2px 0px rgb(var(--color-black) / 0.05);
 
     font-size: 14px;
-
-    padding-inline: 0.75rem;
-    height: 2rem;
   }
 
   button:hover {

@@ -95,7 +95,6 @@ async function searchForGames(
 		};
 	} catch (e) {
 		console.log(`Error searching board games ${e}`);
-		// throw error(500, { message: 'Something went wrong' });
 	}
 	return {
 		totalCount: 0,
@@ -103,21 +102,27 @@ async function searchForGames(
 	};
 }
 
+const defaults = {
+	limit: 10,
+	skip: 0,
+	order: 'name',
+	sort: 'asc',
+	q: '',
+	exact: false,
+};
+
 export const load: PageServerLoad = async ({ locals, fetch, url }) => {
-	const defaults = {
-		limit: 10,
-		skip: 0,
-		order: 'asc',
-		sort: 'name'
-	};
 	const searchParams = Object.fromEntries(url?.searchParams);
 	console.log('searchParams', searchParams);
-	searchParams.limit = searchParams.limit || `${defaults.limit}`;
-	searchParams.skip = searchParams.skip || `${defaults.skip}`;
 	searchParams.order = searchParams.order || defaults.order;
 	searchParams.sort = searchParams.sort || defaults.sort;
-	const form = await superValidate(searchParams, search_schema);
-	// const modifyListForm = await superValidate(listGameSchema);
+	searchParams.q = searchParams.q || defaults.q;
+	const form = await superValidate({
+		...searchParams,
+		skip: Number(searchParams.skip || defaults.skip),
+		limit: Number(searchParams.limit || defaults.limit),
+		exact: searchParams.exact ? searchParams.exact === 'true' : defaults.exact
+	}, search_schema);
 
 	const queryParams: SearchQuery = {
 		limit: form.data?.limit,
@@ -125,7 +130,6 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 		q: form.data?.q
 	};
 
-	// fields: ('id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description');
 	try {
 		if (form.data?.q === '') {
 			return {
@@ -169,6 +173,8 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 		const urlQueryParams = new URLSearchParams(newQueryParams);
 		const searchData = await searchForGames(locals, fetch, urlQueryParams);
 
+		console.log('search data', JSON.stringify(searchData, null, 2));
+
 		return {
 			form,
 			// modifyListForm,
@@ -178,6 +184,8 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 	} catch (e) {
 		console.log(`Error searching board games ${e}`);
 	}
+
+	console.log('returning default no data')
 	return {
 		form,
 		searchData: {
