@@ -1,15 +1,16 @@
-import * as Sentry from '@sentry/sveltekit';
+// import * as Sentry from '@sentry/sveltekit';
 import { sequence } from '@sveltejs/kit/hooks';
 import type { Handle } from '@sveltejs/kit';
-import { browser, dev } from '$app/environment';
+import { dev } from '$app/environment';
 import { lucia } from '$lib/server/auth';
 
-Sentry.init({
-	dsn: 'https://742e43279df93a3c4a4a78c12eb1f879@o4506057768632320.ingest.sentry.io/4506057770401792',
-	tracesSampleRate: 1,
-	environment: dev ? 'development' : 'production',
-	enabled: !dev
-});
+// TODO: Fix Sentry as it is not working on SvelteKit v2
+// Sentry.init({
+// 	dsn: 'https://742e43279df93a3c4a4a78c12eb1f879@o4506057768632320.ingest.sentry.io/4506057770401792',
+// 	tracesSampleRate: 1,
+// 	environment: dev ? 'development' : 'production',
+// 	enabled: !dev
+// });
 
 export const authentication: Handle = async function ({ event, resolve }) {
 	const startTimer = Date.now();
@@ -52,5 +53,8 @@ export const authentication: Handle = async function ({ event, resolve }) {
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(sequence(Sentry.sentryHandle(), authentication));
-export const handleError = Sentry.handleErrorWithSentry();
+export const handle: Handle = sequence(
+	// Sentry.sentryHandle(),
+	authentication
+);
+// export const handleError = Sentry.handleErrorWithSentry();

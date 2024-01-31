@@ -15,6 +15,7 @@ declare global {
 		interface Locals {
 			auth: import('lucia').AuthRequest;
 			user: import('lucia').User | null;
+			session: import('lucia').Session | null;
 			prisma: PrismaClient;
 			startTimer: number;
 			ip: string;
@@ -24,7 +25,6 @@ declare global {
 			errorStackTrace: string;
 			message: unknown;
 			track: unknown;
-			session: import('lucia').Session | null;
 		}
 		interface Error {
 			code?: string;

@@ -1,17 +1,10 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
-	import type { SuperValidated } from 'sveltekit-superforms';
-	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import { createPagination, createToolbar, melt } from '@melt-ui/svelte';
-	import { ChevronLeft, ChevronRight, LayoutList, LayoutGrid, Check } from 'lucide-svelte';
-	import { search_schema, type SearchSchema } from '$lib/zodValidation';
+	import { createToolbar, melt } from '@melt-ui/svelte';
+	import { LayoutList, LayoutGrid } from 'lucide-svelte';
 	import Game from '$components/Game.svelte';
-	import { Label } from '$lib/components/ui/label';
-	import { Input } from '$lib/components/ui/input';
-	import { Button } from '$lib/components/ui/button';
-	import { Checkbox } from '$lib/components/ui/checkbox';
-	import * as Form from "$lib/components/ui/form";
+	import * as Pagination from "$lib/components/ui/pagination";
 	import GameSearchForm from '$components/search/GameSearchForm.svelte';
 
 	export let data;
@@ -22,10 +15,7 @@
 	console.log('found games', games);
 	console.log('found totalCount', totalCount);
 
-	let submitButton: HTMLElement;
 	let pageSize: number = data.form.limit || 10;
-
-	$: showPagination = totalCount > pageSize;
 
 	const {
     elements: { root: toolbarRoot },
@@ -34,16 +24,6 @@
   const {
     elements: { group: listStyleGroup, item: listStyleItem },
   } = createToolbarGroup();
-
-	const {
-		elements: { root: paginationRoot, pageTrigger, prevButton, nextButton },
-		states: { pages, range }
-	} = createPagination({
-		count: totalCount,
-		perPage: pageSize,
-		defaultPage: 1,
-		siblingCount: 1
-	});
 
 	const gameListStyle: 'grid' | 'list' = 'grid';
 	function handleListStyle(event) {
@@ -81,22 +61,29 @@
 				<h2>Sorry no games found!</h2>
 			{/if}
 		</div>
-		{#if showPagination}
-			<nav use:melt={$paginationRoot}>
-			<p class="text-center">Showing items {$range.start} - {$range.end}</p>
-			<div class="buttons">
-				<button use:melt={$prevButton}><ChevronLeft /></button>
-				{#each $pages as page (page.key)}
+		<Pagination.Root count={totalCount} perPage={pageSize} let:pages let:currentPage>
+			<Pagination.Content>
+				<Pagination.Item>
+					<Pagination.PrevButton />
+				</Pagination.Item>
+				{#each pages as page (page.key)}
 					{#if page.type === 'ellipsis'}
-						<span>...</span>
+						<Pagination.Item>
+							<Pagination.Ellipsis />
+						</Pagination.Item>
 					{:else}
-						<button use:melt={$pageTrigger(page)} on:m-click={() => console.log('test')}>{page.value}</button>
+						<Pagination.Item isVisible={currentPage == page.value}>
+							<Pagination.Link {page} isActive={currentPage == page.value}>
+            		{page.value}
+          		</Pagination.Link>
+						</Pagination.Item>
 					{/if}
 				{/each}
-				<button use:melt={$nextButton} on:m-click|preventDefault={() => console.log('test')} on:m-keydown|preventDefault={() => console.log('test')}><ChevronRight /></button>
-			</div>
-		</nav>
-		{/if}
+				<Pagination.Item>
+      		<Pagination.NextButton />
+    		</Pagination.Item>
+  		</Pagination.Content>
+		</Pagination.Root>
 	</section>
 </div>
 
