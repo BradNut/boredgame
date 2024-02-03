@@ -89,6 +89,9 @@ dependencies:
   mysql2:
     specifier: ^3.9.1
     version: 3.9.1
+  nanoid:
+    specifier: ^5.0.5
+    version: 5.0.5
   open-props:
     specifier: ^1.6.18
     version: 1.6.18
@@ -1713,7 +1716,7 @@ packages:
       '@internationalized/date': 3.5.1
       dequal: 2.0.3
       focus-trap: 7.5.4
-      nanoid: 5.0.4
+      nanoid: 5.0.5
       svelte: 4.2.9
     dev: false
 
@@ -1727,7 +1730,7 @@ packages:
       '@internationalized/date': 3.5.0
       dequal: 2.0.3
       focus-trap: 7.5.4
-      nanoid: 5.0.4
+      nanoid: 5.0.5
       svelte: 4.2.9
     dev: true
 
@@ -3420,7 +3423,7 @@ packages:
     dependencies:
       '@internationalized/date': 3.5.1
       '@melt-ui/svelte': 0.68.0(svelte@4.2.9)
-      nanoid: 5.0.4
+      nanoid: 5.0.5
       svelte: 4.2.9
     dev: false
 
@@ -5264,8 +5267,8 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  /nanoid@5.0.4:
-    resolution: {integrity: sha512-vAjmBf13gsmhXSgBrtIclinISzFFy22WwCYoyilZlsrRXNIHSwgFQ1bEdjRwMT3aoadeIF6HMuDRlOxzfXV8ig==}
+  /nanoid@5.0.5:
+    resolution: {integrity: sha512-/Veqm+QKsyMY3kqi4faWplnY1u+VuKO3dD2binyPIybP31DRO29bPF+1mszgLnrR2KqSLceFLBNw0zmvDzN1QQ==}
     engines: {node: ^18 || >=20}
     hasBin: true
 

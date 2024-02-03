@@ -1,10 +1,11 @@
 // lib/server/lucia.ts
 import { Lucia, TimeSpan } from 'lucia';
-import { PrismaAdapter } from '@lucia-auth/adapter-prisma';
+import { DrizzleMySQLAdapter } from "@lucia-auth/adapter-drizzle";
 import { dev } from '$app/environment';
-import prisma_client from '$lib/prisma';
+import db from '$lib/drizzle';
+import { sessionTable, userTable } from '../../schema';
 
-const adapter = new PrismaAdapter(prisma_client.session, prisma_client.user);
+const adapter = new DrizzleMySQLAdapter(db, sessionTable, userTable);
 
 export const lucia = new Lucia(adapter, {
 	getSessionAttributes: (attributes) => {
