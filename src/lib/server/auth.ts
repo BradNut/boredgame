@@ -3,9 +3,9 @@ import { Lucia, TimeSpan } from 'lucia';
 import { DrizzleMySQLAdapter } from "@lucia-auth/adapter-drizzle";
 import { dev } from '$app/environment';
 import db from '$lib/drizzle';
-import { sessionTable, userTable } from '../../schema';
+import { sessions, users } from '../../schema';
 
-const adapter = new DrizzleMySQLAdapter(db, sessionTable, userTable);
+const adapter = new DrizzleMySQLAdapter(db, sessions, users);
 
 export const lucia = new Lucia(adapter, {
 	getSessionAttributes: (attributes) => {

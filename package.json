@@ -16,11 +16,9 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"site:update": "pnpm update -i -L",
-		"db:studio": "prisma studio",
-		"db:push": "prisma db push",
-		"db:generate": "prisma generate",
-		"db:seed": "prisma db seed",
-		"i-changed-the-schema": "pnpm run db:push && pnpm run db:generate"
+		"generate": "drizzle-kit generate:mysql",
+		"migrate": "tsx ./src/migrate.ts",
+		"db:push": "drizzle-kit push:mysql"
 	},
 	"prisma": {
 		"seed": "node --loader ts-node/esm prisma/seed.ts"
@@ -39,6 +37,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.20.0",
 		"@typescript-eslint/parser": "^6.20.0",
 		"autoprefixer": "^10.4.17",
+		"dotenv": "^16.4.1",
 		"drizzle-kit": "^0.20.13",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
