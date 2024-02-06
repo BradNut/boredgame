@@ -8,6 +8,11 @@ CREATE TABLE `artists` (
 	CONSTRAINT `artists_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
+CREATE TABLE `artists_to_games` (
+	`artist_id` varchar(255),
+	`game_id` varchar(255)
+);
+--> statement-breakpoint
 CREATE TABLE `categories` (
 	`id` varchar(255) NOT NULL,
 	`name` varchar(255),
@@ -16,6 +21,11 @@ CREATE TABLE `categories` (
 	`created_at` datetime DEFAULT (now(6)),
 	`updated_at` datetime DEFAULT (now(6)),
 	CONSTRAINT `categories_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `categories_to_games` (
+	`category_id` varchar(255),
+	`game_id` varchar(255)
 );
 --> statement-breakpoint
 CREATE TABLE `collection_items` (
@@ -43,6 +53,11 @@ CREATE TABLE `designers` (
 	`created_at` datetime DEFAULT (now(6)),
 	`updated_at` datetime DEFAULT (now(6)),
 	CONSTRAINT `designers_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `designers_to_games` (
+	`designer_id` varchar(255),
+	`game_id` varchar(255)
 );
 --> statement-breakpoint
 CREATE TABLE `expansions` (
@@ -87,6 +102,11 @@ CREATE TABLE `mechanics` (
 	CONSTRAINT `mechanics_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
+CREATE TABLE `mechanics_to_games` (
+	`mechanic_id` varchar(255),
+	`game_id` varchar(255)
+);
+--> statement-breakpoint
 CREATE TABLE `publishers` (
 	`id` varchar(255) NOT NULL,
 	`name` varchar(255),
@@ -95,6 +115,11 @@ CREATE TABLE `publishers` (
 	`created_at` datetime DEFAULT (now(6)),
 	`updated_at` datetime DEFAULT (now(6)),
 	CONSTRAINT `publishers_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `publishers_to_games` (
+	`publisher_id` varchar(255),
+	`game_id` varchar(255)
 );
 --> statement-breakpoint
 CREATE TABLE `roles` (
@@ -107,8 +132,6 @@ CREATE TABLE `roles` (
 CREATE TABLE `sessions` (
 	`id` varchar(255) NOT NULL,
 	`user_id` varchar(255) NOT NULL,
-	`ip_country` varchar(255),
-	`ip_address` varchar(255),
 	`expires_at` datetime NOT NULL,
 	CONSTRAINT `sessions_id` PRIMARY KEY(`id`)
 );
@@ -161,7 +184,7 @@ ALTER TABLE `collection_items` ADD CONSTRAINT `collection_items_game_id_games_id
 ALTER TABLE `collections` ADD CONSTRAINT `collections_user_id_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `expansions` ADD CONSTRAINT `expansions_base_game_id_games_id_fk` FOREIGN KEY (`base_game_id`) REFERENCES `games`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `expansions` ADD CONSTRAINT `expansions_game_id_games_id_fk` FOREIGN KEY (`game_id`) REFERENCES `games`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `sessions` ADD CONSTRAINT `sessions_user_id_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE `sessions` ADD CONSTRAINT `sessions_user_id_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `user_roles` ADD CONSTRAINT `user_roles_user_id_users_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `user_roles` ADD CONSTRAINT `user_roles_role_id_roles_id_fk` FOREIGN KEY (`role_id`) REFERENCES `roles`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE `wishlist_items` ADD CONSTRAINT `wishlist_items_wishlist_id_wishlists_id_fk` FOREIGN KEY (`wishlist_id`) REFERENCES `wishlists`(`id`) ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

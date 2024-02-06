@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4a97ddeb-b977-401f-ad10-a4ae738d1254",
+  "id": "d90c2144-2349-4a3f-b4f3-87b5ab209936",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "artists": {
@@ -64,6 +64,29 @@
       },
       "uniqueConstraints": {}
     },
+    "artists_to_games": {
+      "name": "artists_to_games",
+      "columns": {
+        "artist_id": {
+          "name": "artist_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "game_id": {
+          "name": "game_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "categories": {
       "name": "categories",
       "columns": {
@@ -122,6 +145,29 @@
           ]
         }
       },
+      "uniqueConstraints": {}
+    },
+    "categories_to_games": {
+      "name": "categories_to_games",
+      "columns": {
+        "category_id": {
+          "name": "category_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "game_id": {
+          "name": "game_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "collection_items": {
@@ -322,6 +368,29 @@
           ]
         }
       },
+      "uniqueConstraints": {}
+    },
+    "designers_to_games": {
+      "name": "designers_to_games",
+      "columns": {
+        "designer_id": {
+          "name": "designer_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "game_id": {
+          "name": "game_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "expansions": {
@@ -615,6 +684,29 @@
       },
       "uniqueConstraints": {}
     },
+    "mechanics_to_games": {
+      "name": "mechanics_to_games",
+      "columns": {
+        "mechanic_id": {
+          "name": "mechanic_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "game_id": {
+          "name": "game_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "publishers": {
       "name": "publishers",
       "columns": {
@@ -675,6 +767,29 @@
       },
       "uniqueConstraints": {}
     },
+    "publishers_to_games": {
+      "name": "publishers_to_games",
+      "columns": {
+        "publisher_id": {
+          "name": "publisher_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "game_id": {
+          "name": "game_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "roles": {
       "name": "roles",
       "columns": {
@@ -729,20 +844,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "ip_country": {
-          "name": "ip_country",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "ip_address": {
-          "name": "ip_address",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "expires_at": {
           "name": "expires_at",
           "type": "datetime",
@@ -763,7 +864,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },

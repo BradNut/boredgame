@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "ab7f5925-a7ee-4cc4-8def-045d0cb29d75",
-  "prevId": "4a97ddeb-b977-401f-ad10-a4ae738d1254",
+  "id": "ede125d1-2fb9-4212-9c56-eeabe6af2332",
+  "prevId": "d90c2144-2349-4a3f-b4f3-87b5ab209936",
   "tables": {
     "artists": {
       "name": "artists",
@@ -844,6 +844,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "ip_country": {
           "name": "ip_country",
           "type": "varchar(255)",
@@ -856,13 +863,6 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": false,
-          "autoincrement": false
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "datetime",
-          "primaryKey": false,
-          "notNull": true,
           "autoincrement": false
         }
       },
@@ -878,7 +878,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
