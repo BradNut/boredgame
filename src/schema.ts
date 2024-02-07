@@ -10,25 +10,25 @@ export const users = mysqlTable("users", {
 	username: varchar("username", {
 		length: 255
 	}).unique(),
-	hashedPassword: varchar("hashed_password", {
+	hashed_password: varchar("hashed_password", {
 		length: 255
 	}),
 	email: varchar("email", {
 		length: 255
 	}).unique(),
-	firstName: varchar("first_name", {
+  first_name: varchar("first_name", {
 		length: 255
 	}),
-	lastName: varchar("last_name", {
+  last_name: varchar("last_name", {
 		length: 255
 	}),
 	verified: boolean("verified").default(false),
-	receiveEmail: boolean("receive_email").default(false),
+  receive_email: boolean("receive_email").default(false),
 	theme: varchar("theme", {
 		length: 255
 	}).default("system"),
-	createdAt: datetime("created_at").default(sql`(now(6))`),
-	updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const user_relations = relations(users, ({ many }) => ({

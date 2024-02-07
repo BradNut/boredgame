@@ -1,4 +1,4 @@
-import {fail, error, type Actions, redirect} from '@sveltejs/kit';
+import { fail, error, type Actions, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
@@ -7,6 +7,9 @@ import { Argon2id } from 'oslo/password';
 import { userSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$server/roles';
 import type { Message } from '$lib/types.js';
+import db from '$lib/drizzle';
+import { users } from '../../../schema';
+import { eq } from 'drizzle-orm';
 
 const signUpSchema = userSchema
 	.pick({
@@ -59,38 +62,40 @@ export const actions: Actions = {
 
 			const hashedPassword = await new Argon2id().hash(form.data.password);
 
-			const user = await prisma.user.create({
-				data: {
+			await db.insert(users)
+				.values({
 					username: form.data.username,
 					hashed_password: hashedPassword,
 					email: form.data.email || '',
-					firstName: form.data.firstName || '',
-					lastName: form.data.lastName || '',
+					first_name: form.data.firstName || '',
+					last_name: form.data.lastName || '',
 					verified: false,
-					receiveEmail: false,
+					receive_email: false,
 					theme: 'system'
-				}
-			});
+				});
+			const user = await db.select()
+				.from(users)
+				.where(eq(users.username, form.data.username));
 			console.log('signup user', user);
-			add_user_to_role(user.id, 'user');
-			await prisma.collection.create({
-				data: {
-					user_id: user.id
-				}
-			});
-			await prisma.wishlist.create({
-				data: {
-					user_id: user.id
-				}
-			});
+			add_user_to_role(user[0].id, 'user');
+			// await prisma.collection.create({
+			// 	data: {
+			// 		user_id: user.id
+			// 	}
+			// });
+			// await prisma.wishlist.create({
+			// 	data: {
+			// 		user_id: user.id
+			// 	}
+			// });
 
-			console.log('User', user);
+			// console.log('User', user);
 
-			session = await lucia.createSession(user.id, {
-				ipCountry: event.locals.session?.ipCountry,
-				ipAddress: event.locals.session?.ipAddress
-			});
-			sessionCookie = lucia.createSessionCookie(session.id);
+			// session = await lucia.createSession(user.id, {
+			// 	ipCountry: event.locals.session?.ipCountry,
+			// 	ipAddress: event.locals.session?.ipAddress
+			// });
+			// sessionCookie = lucia.createSessionCookie(session.id);
 		} catch (e: any) {
 			if (e.message.toUpperCase() === `DUPLICATE_KEY_ID`) {
 				// key already exists
@@ -106,10 +111,10 @@ export const actions: Actions = {
 			error(500, message);
 		}
 
-		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: ".",
-			...sessionCookie.attributes
-		});
+		// event.cookies.set(sessionCookie.name, sessionCookie.value, {
+		// 	path: ".",
+		// 	...sessionCookie.attributes
+		// });
 
 		redirect(302, '/');
 			// const message = { type: 'success', message: 'Signed Up!' } as const;
