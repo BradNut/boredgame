@@ -1,5 +1,5 @@
 import { fail, error, type Actions, redirect } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms/server';
+import { setError, superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
 import prisma from '$lib/prisma';
 import { lucia } from '$lib/server/auth';
@@ -58,57 +58,54 @@ export const actions: Actions = {
 		let session;
 		let sessionCookie;
 		// Adding user to the db
+		console.log('Check if user already exists');
+
+		const existing_user = await db.query
+			.users
+			.findFirst({ where: eq(users.username, form.data.username) });
+
+		if (existing_user) {
+			return setError(form, 'username', 'You cannot create an account with that username');
+		}
+
+		console.log('Creating user');
+
+		const hashedPassword = await new Argon2id().hash(form.data.password);
+
+		await db.insert(users)
+			.values({
+				username: form.data.username,
+				hashed_password: hashedPassword,
+				email: form.data.email || '',
+				first_name: form.data.firstName || '',
+				last_name: form.data.lastName || '',
+				verified: false,
+				receive_email: false,
+				theme: 'system'
+			});
+		const user = await db.select()
+			.from(users)
+			.where(eq(users.username, form.data.username));
+		console.log('signup user', user);
+
+		if (!user || user.length === 0) {
+			return fail(400, {
+				form,
+				message: `Could not create your account. Please try again. If the problem persists, please contact support. Error ID: ${nanoid()}`
+			});
+		}
+
+		add_user_to_role(user[0].id, 'user');
+		await db.insert(collections)
+			.values({
+				user_id: user[0].id
+			});
+		await db.insert(wishlists)
+			.values({
+				user_id: user[0].id
+			});
+
 		try {
-			console.log('Check if user already exists');
-
-			const existing_user = await db.query
-				.users
-				.findFirst({ where: eq(users.username, form.data.username) });
-
-			if (existing_user) {
-				return fail(400, {
-					form,
-					message: 'You cannot create an account with that username'
-				});
-			}
-
-			console.log('Creating user');
-
-			const hashedPassword = await new Argon2id().hash(form.data.password);
-
-			await db.insert(users)
-				.values({
-					username: form.data.username,
-					hashed_password: hashedPassword,
-					email: form.data.email || '',
-					first_name: form.data.firstName || '',
-					last_name: form.data.lastName || '',
-					verified: false,
-					receive_email: false,
-					theme: 'system'
-				});
-			const user = await db.select()
-				.from(users)
-				.where(eq(users.username, form.data.username));
-			console.log('signup user', user);
-
-			if (!user || user.length === 0) {
-				return fail(400, {
-					form,
-					message: `Could not create your account. Please try again. If the problem persists, please contact support. Error ID: ${nanoid()}`
-				});
-			}
-
-			add_user_to_role(user[0].id, 'user');
-			await db.insert(collections)
-				.values({
-					user_id: user[0].id
-				});
-			await db.insert(wishlists)
-				.values({
-					user_id: user[0].id
-				});
-
 			session = await lucia.createSession(user[0].id, {
 				ip_country: event.locals.session?.ipCountry,
 				ip_address: event.locals.session?.ipAddress
@@ -134,8 +131,8 @@ export const actions: Actions = {
 			...sessionCookie.attributes
 		});
 
-		// redirect(302, '/');
-		const message = { type: 'success', message: 'Signed Up!' } as const;
-		throw flashRedirect(message, event);
+		redirect(302, '/');
+		// const message = { type: 'success', message: 'Signed Up!' } as const;
+		// throw flashRedirect(message, event);
 	}
 };
