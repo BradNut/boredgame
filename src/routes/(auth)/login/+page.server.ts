@@ -1,11 +1,13 @@
 import { fail, type Actions } from '@sveltejs/kit';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
-import prisma from '$lib/prisma';
 import { lucia } from '$lib/server/auth';
 import { Argon2id } from 'oslo/password';
 import { userSchema } from '$lib/config/zod-schemas';
 import type { PageServerLoad } from './$types';
+import db from '$lib/drizzle';
+import { eq, sql } from 'drizzle-orm';
+import { collections, users, wishlists } from '../../../schema';
 
 const signInSchema = userSchema.pick({
 	username: true,
@@ -43,10 +45,8 @@ export const actions: Actions = {
 		try {
 			const password = form.data.password;
 
-			const user = await prisma.user.findUnique({
-				where: {
-					username: form.data.username
-				}
+			const user = await db.query.users.findFirst({
+				where: eq(users.username, form.data.username)
 			});
 
 			console.log('user', JSON.stringify(user, null, 2));
@@ -71,28 +71,13 @@ export const actions: Actions = {
 			});
 			sessionCookie = lucia.createSessionCookie(session.id);
 
-			await prisma.collection.upsert({
-				where: {
-					user_id: user.id
-				},
-				create: {
-					user_id: user.id
-				},
-				update: {
-					user_id: user.id
-				}
-			});
-			await prisma.wishlist.upsert({
-				where: {
-					user_id: user.id
-				},
-				create: {
-					user_id: user.id
-				},
-				update: {
-					user_id: user.id
-				}
-			});
+			await db.insert(collections).values({
+				user_id: user.id
+			}).onDuplicateKeyUpdate({ set: { user_id: sql`user_id` } });
+
+			await db.insert(wishlists).values({
+				user_id: user.id
+			}).onDuplicateKeyUpdate({ set: { user_id: sql`user_id` } });
 		} catch (e) {
 			// TODO: need to return error message to the client
 			console.error(e);

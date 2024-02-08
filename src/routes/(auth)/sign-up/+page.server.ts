@@ -45,7 +45,6 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
-		const { cookies } = event;
 		const form = await superValidate<typeof signUpSchema, Message>(event, signUpSchema);
 		if (!form.valid) {
 			form.data.password = '';
