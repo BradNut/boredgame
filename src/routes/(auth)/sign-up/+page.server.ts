@@ -8,8 +8,9 @@ import { userSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$server/roles';
 import type { Message } from '$lib/types.js';
 import db from '$lib/drizzle';
-import { users } from '../../../schema';
+import { collections, users, wishlists } from '../../../schema';
 import { eq } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
 
 const signUpSchema = userSchema
 	.pick({
@@ -58,6 +59,19 @@ export const actions: Actions = {
 		let sessionCookie;
 		// Adding user to the db
 		try {
+			console.log('Check if user already exists');
+
+			const existing_user = await db.query
+				.users
+				.findFirst({ where: eq(users.username, form.data.username) });
+
+			if (existing_user) {
+				return fail(400, {
+					form,
+					message: 'You cannot create an account with that username'
+				});
+			}
+
 			console.log('Creating user');
 
 			const hashedPassword = await new Argon2id().hash(form.data.password);
@@ -77,25 +91,29 @@ export const actions: Actions = {
 				.from(users)
 				.where(eq(users.username, form.data.username));
 			console.log('signup user', user);
+
+			if (!user || user.length === 0) {
+				return fail(400, {
+					form,
+					message: `Could not create your account. Please try again. If the problem persists, please contact support. Error ID: ${nanoid()}`
+				});
+			}
+
 			add_user_to_role(user[0].id, 'user');
-			// await prisma.collection.create({
-			// 	data: {
-			// 		user_id: user.id
-			// 	}
-			// });
-			// await prisma.wishlist.create({
-			// 	data: {
-			// 		user_id: user.id
-			// 	}
-			// });
+			await db.insert(collections)
+				.values({
+					user_id: user[0].id
+				});
+			await db.insert(wishlists)
+				.values({
+					user_id: user[0].id
+				});
 
-			// console.log('User', user);
-
-			// session = await lucia.createSession(user.id, {
-			// 	ipCountry: event.locals.session?.ipCountry,
-			// 	ipAddress: event.locals.session?.ipAddress
-			// });
-			// sessionCookie = lucia.createSessionCookie(session.id);
+			session = await lucia.createSession(user[0].id, {
+				ip_country: event.locals.session?.ipCountry,
+				ip_address: event.locals.session?.ipAddress
+			});
+			sessionCookie = lucia.createSessionCookie(session.id);
 		} catch (e: any) {
 			if (e.message.toUpperCase() === `DUPLICATE_KEY_ID`) {
 				// key already exists
@@ -111,13 +129,13 @@ export const actions: Actions = {
 			error(500, message);
 		}
 
-		// event.cookies.set(sessionCookie.name, sessionCookie.value, {
-		// 	path: ".",
-		// 	...sessionCookie.attributes
-		// });
+		event.cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: ".",
+			...sessionCookie.attributes
+		});
 
-		redirect(302, '/');
-			// const message = { type: 'success', message: 'Signed Up!' } as const;
-			// throw flashRedirect(message, event);
+		// redirect(302, '/');
+		const message = { type: 'success', message: 'Signed Up!' } as const;
+		throw flashRedirect(message, event);
 	}
 };

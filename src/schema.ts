@@ -70,27 +70,27 @@ export const user_roles = mysqlTable("user_roles", {
     length: 255
   }).primaryKey()
     .$defaultFn(() => nanoid()),
-  userId: varchar("user_id", {
+  user_id: varchar("user_id", {
     length: 255
   })
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  roleId: varchar("role_id", {
+  role_id: varchar("role_id", {
     length: 255
   })
     .notNull()
     .references(() => roles.id, { onDelete: 'cascade' }),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const user_role_relations = relations(user_roles, ({ one }) => ({
 	role: one(roles, {
-		fields: [user_roles.roleId],
+		fields: [user_roles.role_id],
 		references: [roles.id]
   }),
   user: one(users, {
-    fields: [user_roles.userId],
+    fields: [user_roles.user_id],
     references: [users.id]
   })
 }));
@@ -107,26 +107,26 @@ export const games = mysqlTable("games", {
     length: 255
   }),
   description: text("description"),
-  yearPublished: year("year_published"),
-  minPlayers: int("min_players"),
-  maxPlayers: int("max_players"),
+  year_published: year("year_published"),
+  min_players: int("min_players"),
+  max_players: int("max_players"),
   playtime: int("playtime"),
-  minPlaytime: int("min_playtime"),
-  maxPlaytime: int("max_playtime"),
-  minAge: int("min_age"),
-  imageUrl: varchar("image_url", {
+  min_playtime: int("min_playtime"),
+  max_playtime: int("max_playtime"),
+  min_age: int("min_age"),
+  image_url: varchar("image_url", {
     length: 255
   }),
-  thumbUrl: varchar("thumb_url", {
+  thumb_url: varchar("thumb_url", {
     length: 255
   }),
   url: varchar("url", {
     length: 255
   }),
-  externalId: int("external_id").unique(),
-  lastSyncAt: datetime("last_sync_at"),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  external_id: int("external_id").unique(),
+  last_sync_at: datetime("last_sync_at"),
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export type Games = InferSelectModel<typeof games>;
@@ -144,27 +144,27 @@ export const expansions = mysqlTable("expansions", {
     length: 255
   }).primaryKey()
     .$defaultFn(() => nanoid()),
-  baseGameId: varchar("base_game_id", {
+  base_game_id: varchar("base_game_id", {
     length: 255
   })
     .notNull()
     .references(() => games.id, { onDelete: 'cascade' }),
-  gameId: varchar("game_id", {
+  game_id: varchar("game_id", {
     length: 255
   })
     .notNull()
     .references(() => games.id, { onDelete: 'cascade' }),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 })
 
 export const expansion_relations = relations(expansions, ({ one }) => ({
   baseGame: one(games, {
-    fields: [expansions.baseGameId],
+    fields: [expansions.base_game_id],
     references: [games.id]
   }),
   game: one(games, {
-    fields: [expansions.gameId],
+    fields: [expansions.game_id],
     references: [games.id]
   })
 }));
@@ -174,18 +174,18 @@ export const collections = mysqlTable("collections", {
     length: 255
   }).primaryKey()
     .$defaultFn(() => nanoid()),
-  userId: varchar("user_id", {
+  user_id: varchar("user_id", {
     length: 255
   })
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const collection_relations = relations(collections, ({ one }) => ({
   user: one(users, {
-    fields: [collections.userId],
+    fields: [collections.user_id],
     references: [users.id]
   }),
 }))
@@ -195,27 +195,27 @@ export const collection_items = mysqlTable("collection_items", {
     length: 255
   }).primaryKey()
     .$defaultFn(() => nanoid()),
-  collectionId: varchar("collection_id", {
+  collection_id: varchar("collection_id", {
     length: 255
   })
     .notNull()
     .references(() => collections.id, { onDelete: 'cascade' }),
-  gameId: varchar("game_id", {
+  game_id: varchar("game_id", {
     length: 255
   })
     .notNull()
     .references(() => games.id, { onDelete: 'cascade' }),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const collection_item_relations = relations(collection_items, ({ one }) =>({
   collection: one(collections, {
-    fields: [collection_items.collectionId],
+    fields: [collection_items.collection_id],
     references: [collections.id]
   }),
   game: one(games, {
-    fields: [collection_items.gameId],
+    fields: [collection_items.game_id],
     references: [games.id]
   })
 }));
@@ -225,18 +225,18 @@ export const wishlists = mysqlTable("wishlists", {
     length: 255
   }).primaryKey()
     .$defaultFn(() => nanoid()),
-  userId: varchar("user_id", {
+  user_id: varchar("user_id", {
     length: 255
   })
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const wishlists_relations = relations(wishlists, ({ one }) => ({
   user: one(users, {
-    fields: [wishlists.userId],
+    fields: [wishlists.user_id],
     references: [users.id]
   }),
 }))
@@ -247,27 +247,27 @@ export const wishlist_items = mysqlTable('wishlist_items', {
 	})
 		.primaryKey()
 		.$defaultFn(() => nanoid()),
-	wishlistId: varchar('wishlist_id', {
+	wishlist_id: varchar('wishlist_id', {
 		length: 255
 	})
 		.notNull()
 		.references(() => wishlists.id, { onDelete: 'cascade' }),
-	gameId: varchar('game_id', {
+	game_id: varchar('game_id', {
 		length: 255
 	})
 		.notNull()
 		.references(() => games.id, { onDelete: 'cascade' }),
-	createdAt: datetime('created_at').default(sql`(now(6))`),
-	updatedAt: datetime('updated_at').default(sql`(now(6))`)
+	created_at: datetime('created_at').default(sql`(now(6))`),
+	updated_at: datetime('updated_at').default(sql`(now(6))`)
 });
 
 export const wishlist_item_relations = relations(wishlist_items, ({ one }) => ({
   wishlist: one(wishlists, {
-    fields: [wishlist_items.wishlistId],
+    fields: [wishlist_items.wishlist_id],
     references: [wishlists.id]
   }),
   game: one(games, {
-    fields: [wishlist_items.gameId],
+    fields: [wishlist_items.game_id],
     references: [games.id]
   })
 }))
@@ -283,9 +283,9 @@ export const publishers = mysqlTable("publishers", {
   slug: varchar("slug", {
     length: 255
   }),
-  externalId: int("external_id"),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  external_id: int("external_id"),
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const publishers_relations = relations(publishers, ({ many }) => ({
@@ -303,9 +303,9 @@ export const categories = mysqlTable("categories", {
   slug: varchar("slug", {
     length: 255
   }),
-  externalId: int("external_id"),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  external_id: int("external_id"),
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const categories_relations = relations(categories, ({ many }) => ({
@@ -323,9 +323,9 @@ export const mechanics = mysqlTable("mechanics", {
   slug: varchar("slug", {
     length: 255
   }),
-  externalId: int("external_id"),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  external_id: int("external_id"),
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const mechanic_relations = relations(mechanics, ({ many }) => ({
@@ -343,9 +343,9 @@ export const designers = mysqlTable("designers", {
   slug: varchar("slug", {
     length: 255
   }),
-  externalId: int("external_id"),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  external_id: int("external_id"),
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const designers_relations = relations(designers, ({ many }) => ({
@@ -363,9 +363,9 @@ export const artists = mysqlTable("artists", {
   slug: varchar("slug", {
     length: 255
   }),
-  externalId: int("external_id"),
-  createdAt: datetime("created_at").default(sql`(now(6))`),
-  updatedAt: datetime("updated_at").default(sql`(now(6))`)
+  external_id: int("external_id"),
+  created_at: datetime("created_at").default(sql`(now(6))`),
+  updated_at: datetime("updated_at").default(sql`(now(6))`)
 });
 
 export const artists_relations = relations(artists, ({ many }) => ({
@@ -373,101 +373,101 @@ export const artists_relations = relations(artists, ({ many }) => ({
 }));
 
 export const artists_to_games = mysqlTable('artists_to_games', {
-	artistId: varchar('artist_id', {
+	artist_id: varchar('artist_id', {
 		length: 255
 	}),
-	gameId: varchar('game_id', {
+	game_id: varchar('game_id', {
 		length: 255
 	}),
 });
 
 export const artists_to_games_relations = relations(artists_to_games, ({ one }) => ({
   artist: one(artists, {
-    fields: [artists_to_games.artistId],
+    fields: [artists_to_games.artist_id],
     references: [artists.id]
   }),
   game: one(games, {
-    fields: [artists_to_games.gameId],
+    fields: [artists_to_games.game_id],
     references: [games.id]
   }),
 }));
 
 export const categories_to_games = mysqlTable("categories_to_games", {
-  categoryId: varchar("category_id", {
+  category_id: varchar("category_id", {
     length: 255
   }),
-  gameId: varchar("game_id", {
+  game_id: varchar("game_id", {
     length: 255
   }),
 });
 
 export const categories_to_games_relations = relations(categories_to_games, ({ one }) => ({
   category: one(categories, {
-    fields: [categories_to_games.categoryId],
+    fields: [categories_to_games.category_id],
     references: [categories.id]
   }),
   game: one(games, {
-    fields: [categories_to_games.gameId],
+    fields: [categories_to_games.game_id],
     references: [games.id]
   }),
 }))
 
 export const designers_to_games = mysqlTable("designers_to_games", {
-  designerId: varchar("designer_id", {
+  designer_id: varchar("designer_id", {
     length: 255
   }),
-  gameId: varchar("game_id", {
+  game_id: varchar("game_id", {
     length: 255
   }),
 });
 
 export const designers_to_games_relations = relations(designers_to_games, ({ one }) => ({
   designer: one(designers, {
-    fields: [designers_to_games.designerId],
+    fields: [designers_to_games.designer_id],
     references: [designers.id]
   }),
   game: one(games, {
-    fields: [designers_to_games.gameId],
+    fields: [designers_to_games.game_id],
     references: [games.id]
   }),
 }))
 
 export const mechanics_to_games = mysqlTable("mechanics_to_games", {
-  mechanicId: varchar("mechanic_id", {
+  mechanic_id: varchar("mechanic_id", {
     length: 255
   }),
-  gameId: varchar("game_id", {
+  game_id: varchar("game_id", {
     length: 255
   }),
 });
 
 export const mechanics_to_games_relations = relations(mechanics_to_games, ({ one }) => ({
   mechanic: one(mechanics, {
-    fields: [mechanics_to_games.mechanicId],
+    fields: [mechanics_to_games.mechanic_id],
     references: [mechanics.id]
   }),
   game: one(games, {
-    fields: [mechanics_to_games.gameId],
+    fields: [mechanics_to_games.game_id],
     references: [games.id]
   }),
 }));
 
 export const publishers_to_games = mysqlTable("publishers_to_games", {
-  publisherId: varchar("publisher_id", {
+  publisher_id: varchar("publisher_id", {
     length: 255
   }),
-  gameId: varchar("game_id", {
+  game_id: varchar("game_id", {
     length: 255
   }),
 });
 
 export const publishers_to_games_relations = relations(publishers_to_games, ({ one }) => ({
   publisher: one(publishers, {
-    fields: [publishers_to_games.publisherId],
+    fields: [publishers_to_games.publisher_id],
     references: [publishers.id]
   }),
   game: one(games, {
-    fields: [publishers_to_games.gameId],
+    fields: [publishers_to_games.game_id],
     references: [games.id]
   }),
 }));
