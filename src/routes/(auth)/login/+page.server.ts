@@ -1,13 +1,13 @@
 import { fail, type Actions } from '@sveltejs/kit';
+import { eq, sql } from 'drizzle-orm';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { lucia } from '$lib/server/auth';
 import { Argon2id } from 'oslo/password';
 import { userSchema } from '$lib/config/zod-schemas';
-import type { PageServerLoad } from './$types';
 import db from '$lib/drizzle';
-import { eq, sql } from 'drizzle-orm';
 import { collections, users, wishlists } from '../../../schema';
+import type { PageServerLoad } from './$types';
 
 const signInSchema = userSchema.pick({
 	username: true,

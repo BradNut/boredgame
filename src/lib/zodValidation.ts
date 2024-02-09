@@ -222,7 +222,6 @@ const gameSchema = z.object({
 	image_url: z.string().optional(),
 	thumb_url: z.string().optional(),
 	url: z.string().optional(),
-	rules_url: z.string().optional(),
 	weight_amount: z.number().optional(),
 	weight_units: z.enum(['Medium', 'Heavy']).optional(),
 	categories: z.array(category_schema).optional(),

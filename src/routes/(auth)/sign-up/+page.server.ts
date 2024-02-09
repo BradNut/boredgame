@@ -1,16 +1,15 @@
 import { fail, error, type Actions, redirect } from '@sveltejs/kit';
+import { Argon2id } from 'oslo/password';
+import { eq } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
-import prisma from '$lib/prisma';
 import { lucia } from '$lib/server/auth';
-import { Argon2id } from 'oslo/password';
 import { userSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$server/roles';
 import type { Message } from '$lib/types.js';
 import db from '$lib/drizzle';
 import { collections, users, wishlists } from '../../../schema';
-import { eq } from 'drizzle-orm';
-import { nanoid } from 'nanoid';
 
 const signUpSchema = userSchema
 	.pick({
@@ -71,7 +70,7 @@ export const actions: Actions = {
 
 		const hashedPassword = await new Argon2id().hash(form.data.password);
 
-		await db.insert(users)
+		const user = await db.insert(users)
 			.values({
 				username: form.data.username,
 				hashed_password: hashedPassword,
@@ -81,10 +80,7 @@ export const actions: Actions = {
 				verified: false,
 				receive_email: false,
 				theme: 'system'
-			});
-		const user = await db.select()
-			.from(users)
-			.where(eq(users.username, form.data.username));
+			}).returning();
 		console.log('signup user', user);
 
 		if (!user || user.length === 0) {

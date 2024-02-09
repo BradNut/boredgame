@@ -82,7 +82,7 @@ async function searchForGames(
 					if (externalGameResponse.ok) {
 						const externalGame = await externalGameResponse.json();
 						console.log('externalGame', externalGame);
-						let boredGame = mapAPIGameToBoredGame(externalGame);
+						const boredGame = mapAPIGameToBoredGame(externalGame);
 						games.push(createOrUpdateGameMinimal(locals, boredGame));
 					}
 				}
@@ -127,7 +127,8 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 	const queryParams: SearchQuery = {
 		limit: form.data?.limit,
 		skip: form.data?.skip,
-		q: form.data?.q
+		q: form.data?.q,
+		exact: form.data?.exact
 	};
 
 	try {

@@ -16,10 +16,10 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"site:update": "pnpm update -i -L",
-		"generate": "drizzle-kit generate:mysql",
+		"generate": "drizzle-kit generate:pg",
 		"migrate": "tsx ./src/migrate.ts",
 		"seed": "tsx ./src/seed/insert.ts",
-		"push": "drizzle-kit push:mysql"
+		"push": "drizzle-kit push:pg"
 	},
 	"prisma": {
 		"seed": "node --loader ts-node/esm prisma/seed.ts"
@@ -56,7 +56,7 @@
 		"satori": "^0.10.13",
 		"satori-html": "^0.3.2",
 		"svelte": "^4.2.10",
-		"svelte-check": "^3.6.3",
+		"svelte-check": "^3.6.4",
 		"svelte-meta-tags": "^3.1.0",
 		"svelte-preprocess": "^5.1.3",
 		"svelte-sequential-preprocessor": "^2.0.1",
@@ -83,6 +83,7 @@
 		"@lucia-auth/adapter-drizzle": "^1.0.1",
 		"@lucia-auth/adapter-prisma": "4.0.0",
 		"@lukeed/uuid": "^2.0.1",
+		"@neondatabase/serverless": "^0.8.1",
 		"@paralleldrive/cuid2": "^2.2.2",
 		"@planetscale/database": "^1.15.0",
 		"@prisma/client": "^5.8.1",
@@ -108,6 +109,8 @@
 		"nanoid": "^5.0.5",
 		"open-props": "^1.6.18",
 		"oslo": "^1.1.0",
+		"pg": "^8.11.3",
+		"postgres": "^3.4.3",
 		"radix-svelte": "^0.9.0",
 		"svelte-french-toast": "^1.2.0",
 		"svelte-lazy-loader": "^1.0.0",

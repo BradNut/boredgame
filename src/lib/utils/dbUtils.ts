@@ -3,6 +3,9 @@ import kebabCase from 'just-kebab-case';
 import type { BggLinkDto } from 'boardgamegeekclient/dist/esm/dto/concrete/subdto';
 import prisma from '$lib/prisma';
 import { mapAPIGameToBoredGame } from './gameMapper';
+import db from '$lib/drizzle';
+import { games } from '../../schema';
+import { eq, sql } from 'drizzle-orm';
 
 export async function createArtist(locals: App.Locals, externalArtist: BggLinkDto) {
 	try {
@@ -331,41 +334,23 @@ export async function createExpansion(
 export async function createOrUpdateGameMinimal(locals: App.Locals, game: Game) {
 	console.log('Creating or updating minimal game data', JSON.stringify(game, null, 2));
 	const externalUrl = `https://boardgamegeek.com/boardgame/${game.external_id}`;
-	return await prisma.game.upsert({
-		where: {
-			external_id: game.external_id
-		},
-		create: {
-			name: game.name,
-			slug: kebabCase(game.name),
-			description: game.description,
-			external_id: game.external_id,
-			url: externalUrl,
-			thumb_url: game.thumb_url,
-			image_url: game.image_url,
-			min_age: game.min_age || 0,
-			min_players: game.min_players || 0,
-			max_players: game.max_players || 0,
-			min_playtime: game.min_playtime || 0,
-			max_playtime: game.max_playtime || 0,
-			year_published: game.year_published || 0
-		},
-		update: {
-			name: game.name,
-			slug: kebabCase(game.name),
-			description: game.description,
-			external_id: game.external_id,
-			url: externalUrl,
-			thumb_url: game.thumb_url,
-			image_url: game.image_url,
-			min_age: game.min_age || 0,
-			min_players: game.min_players || 0,
-			max_players: game.max_players || 0,
-			min_playtime: game.min_playtime || 0,
-			max_playtime: game.max_playtime || 0,
-			year_published: game.year_published || 0
-		}
-	});
+	await db.insert(games).values({
+		external_id: game.external_id,
+		name: game.name,
+		slug: kebabCase(game.name),
+		description: game.description,
+		url: externalUrl,
+		thumb_url: game.thumb_url,
+		image_url: game.image_url,
+		min_age: game.min_age || 0,
+		min_players: game.min_players || 0,
+		max_players: game.max_players || 0,
+		min_playtime: game.min_playtime || 0,
+		max_playtime: game.max_playtime || 0,
+		year_published: game.year_published || 0,
+	}).onDuplicateKeyUpdate({ set: { external_id: sql`external_id` } });
+
+	return db.query.games.findFirst({ where: eq(games.external_id, game.external_id) });
 }
 
 export async function createOrUpdateGame(locals: App.Locals, game: Game) {
@@ -379,7 +364,10 @@ export async function createOrUpdateGame(locals: App.Locals, game: Game) {
 	const externalUrl = `https://boardgamegeek.com/boardgame/${game.external_id}`;
 	console.log('categoryIds', categoryIds);
 	console.log('mechanicIds', mechanicIds);
-	return await prisma.game.upsert({
+	await db.transaction(async (transaction) => {
+		const 
+	});
+	await db.insert(games).values({
 		include: {
 			mechanics: true,
 			publishers: true,

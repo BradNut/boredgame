@@ -1,19 +1,19 @@
 {
   "version": "5",
-  "dialect": "mysql",
+  "dialect": "pg",
   "entries": [
     {
       "idx": 0,
       "version": "5",
-      "when": 1707197486310,
-      "tag": "0000_true_sugar_man",
+      "when": 1707437865821,
+      "tag": "0000_oval_wolverine",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1707199636963,
-      "tag": "0001_motionless_old_lace",
+      "when": 1707438055782,
+      "tag": "0001_giant_tomorrow_man",
       "breakpoints": true
     }
   ]
