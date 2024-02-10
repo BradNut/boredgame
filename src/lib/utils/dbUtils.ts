@@ -365,80 +365,115 @@ export async function createOrUpdateGame(locals: App.Locals, game: Game) {
 	console.log('categoryIds', categoryIds);
 	console.log('mechanicIds', mechanicIds);
 	await db.transaction(async (transaction) => {
-		const 
+		const dbGame = await transaction.insert(games).values({
+			name: game.name,
+			slug: kebabCase(game.name),
+			description: game.description,
+			external_id: game.external_id,
+			url: externalUrl,
+			thumb_url: game.thumb_url,
+			image_url: game.image_url,
+			min_age: game.min_age || 0,
+			min_players: game.min_players || 0,
+			max_players: game.max_players || 0,
+			min_playtime: game.min_playtime || 0,
+			max_playtime: game.max_playtime || 0,
+			year_published: game.year_published || 0,
+			last_sync_at: new Date(),
+		}).onConflictDoUpdate({
+			target: games.id, set: {
+				name: game.name,
+				slug: kebabCase(game.name),
+				description: game.description,
+				external_id: game.external_id,
+				url: externalUrl,
+				thumb_url: game.thumb_url,
+				image_url: game.image_url,
+				min_age: game.min_age || 0,
+				min_players: game.min_players || 0,
+				max_players: game.max_players || 0,
+				min_playtime: game.min_playtime || 0,
+				max_playtime: game.max_playtime || 0,
+				year_published: game.year_published || 0,
+				last_sync_at: new Date(),
+			}
+		}).returning();
+
+		// TODO: Connect to everything else
+		// await transaction.insert()
 	});
-	await db.insert(games).values({
-		include: {
-			mechanics: true,
-			publishers: true,
-			designers: true,
-			artists: true,
-			expansions: true
-		},
-		where: {
-			external_id: game.external_id
-		},
-		create: {
-			name: game.name,
-			slug: kebabCase(game.name),
-			description: game.description,
-			external_id: game.external_id,
-			url: externalUrl,
-			thumb_url: game.thumb_url,
-			image_url: game.image_url,
-			min_age: game.min_age || 0,
-			min_players: game.min_players || 0,
-			max_players: game.max_players || 0,
-			min_playtime: game.min_playtime || 0,
-			max_playtime: game.max_playtime || 0,
-			year_published: game.year_published || 0,
-			last_sync_at: new Date(),
-			categories: {
-				connect: categoryIds
-			},
-			mechanics: {
-				connect: mechanicIds
-			},
-			publishers: {
-				connect: publisherIds
-			},
-			designers: {
-				connect: designerIds
-			},
-			artists: {
-				connect: artistIds
-			}
-		},
-		update: {
-			name: game.name,
-			slug: kebabCase(game.name),
-			description: game.description,
-			external_id: game.external_id,
-			url: externalUrl,
-			thumb_url: game.thumb_url,
-			image_url: game.image_url,
-			min_age: game.min_age || 0,
-			min_players: game.min_players || 0,
-			max_players: game.max_players || 0,
-			min_playtime: game.min_playtime || 0,
-			max_playtime: game.max_playtime || 0,
-			year_published: game.year_published || 0,
-			last_sync_at: new Date(),
-			categories: {
-				connect: categoryIds
-			},
-			mechanics: {
-				connect: mechanicIds
-			},
-			publishers: {
-				connect: publisherIds
-			},
-			designers: {
-				connect: designerIds
-			},
-			artists: {
-				connect: artistIds
-			}
-		}
+	// await db.insert(games).values({
+	// 	include: {
+	// 		mechanics: true,
+	// 		publishers: true,
+	// 		designers: true,
+	// 		artists: true,
+	// 		expansions: true
+	// 	},
+	// 	where: {
+	// 		external_id: game.external_id
+	// 	},
+	// 	create: {
+	// 		name: game.name,
+	// 		slug: kebabCase(game.name),
+	// 		description: game.description,
+	// 		external_id: game.external_id,
+	// 		url: externalUrl,
+	// 		thumb_url: game.thumb_url,
+	// 		image_url: game.image_url,
+	// 		min_age: game.min_age || 0,
+	// 		min_players: game.min_players || 0,
+	// 		max_players: game.max_players || 0,
+	// 		min_playtime: game.min_playtime || 0,
+	// 		max_playtime: game.max_playtime || 0,
+	// 		year_published: game.year_published || 0,
+	// 		last_sync_at: new Date(),
+	// 		categories: {
+	// 			connect: categoryIds
+	// 		},
+	// 		mechanics: {
+	// 			connect: mechanicIds
+	// 		},
+	// 		publishers: {
+	// 			connect: publisherIds
+	// 		},
+	// 		designers: {
+	// 			connect: designerIds
+	// 		},
+	// 		artists: {
+	// 			connect: artistIds
+	// 		}
+	// 	},
+	// 	update: {
+	// 		name: game.name,
+	// 		slug: kebabCase(game.name),
+	// 		description: game.description,
+	// 		external_id: game.external_id,
+	// 		url: externalUrl,
+	// 		thumb_url: game.thumb_url,
+	// 		image_url: game.image_url,
+	// 		min_age: game.min_age || 0,
+	// 		min_players: game.min_players || 0,
+	// 		max_players: game.max_players || 0,
+	// 		min_playtime: game.min_playtime || 0,
+	// 		max_playtime: game.max_playtime || 0,
+	// 		year_published: game.year_published || 0,
+	// 		last_sync_at: new Date(),
+	// 		categories: {
+	// 			connect: categoryIds
+	// 		},
+	// 		mechanics: {
+	// 			connect: mechanicIds
+	// 		},
+	// 		publishers: {
+	// 			connect: publisherIds
+	// 		},
+	// 		designers: {
+	// 			connect: designerIds
+	// 		},
+	// 		artists: {
+	// 			connect: artistIds
+	// 		}
+	// 	}
 	});
 }
