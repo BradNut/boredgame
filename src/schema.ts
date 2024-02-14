@@ -1,5 +1,5 @@
 import { relations, sql, type InferSelectModel } from 'drizzle-orm';
-import { pgTable, timestamp, varchar, boolean, integer, text, index } from 'drizzle-orm/pg-core';
+import { pgTable, timestamp, varchar, boolean, integer, text, index, pgEnum } from 'drizzle-orm/pg-core';
 import { nanoid } from 'nanoid';
 import { tsvector } from './tsVector';
 
@@ -140,7 +140,6 @@ export const games = pgTable('games', {
 		length: 255
 	}),
 	text_searchable_index: tsvector('text_searchable_index'),
-	external_id: integer('external_id').unique(),
 	last_sync_at: timestamp('last_sync_at', {
 		withTimezone: true,
 		mode: 'date',
@@ -169,8 +168,40 @@ export const gameRelations = relations(games, ({ many }) => ({
 	mechanics_to_games: many(mechanics_to_games),
 	designers_to_games: many(designers_to_games),
 	publishers_to_games: many(publishers_to_games),
-	artists_to_games: many(artists_to_games)
+	artists_to_games: many(artists_to_games),
+	gameExternalIds: many(gameExternalIds),
 }));
+
+export const externalIdType = pgEnum('external_id_type', [
+	'game', 'category', 'mechanic', 'publisher', 'designer', 'artist'
+]);
+
+export const externalIds = pgTable('external_ids', {
+	id: varchar('id', {
+		length: 255
+	})
+		.primaryKey()
+		.$defaultFn(() => nanoid()),
+	type: varchar('type', {
+		length: 255
+	}).notNull(),
+	externalId: varchar('external_id', {
+		length: 255
+	}).notNull()
+});
+
+export const gamesToExternalIds = pgTable('games_to_external_ids', {
+	gameId: varchar('game_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => games.id, { onDelete: 'cascade' }),
+	externalId: varchar('external_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => externalIds.id, { onDelete: 'cascade' }),
+});
 
 export const expansions = pgTable('expansions', {
 	id: varchar('id', {

@@ -29,6 +29,27 @@
       "when": 1707526808124,
       "tag": "0003_thick_tinkerer",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1707932397672,
+      "tag": "0004_fancy_umar",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1707932466413,
+      "tag": "0005_uneven_lifeguard",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1707932522909,
+      "tag": "0006_light_corsair",
+      "breakpoints": true
     }
   ]
 }
