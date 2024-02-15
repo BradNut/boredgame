@@ -15,7 +15,7 @@
 <header>
 	<div class="corner">
 		<a href="/" class="logo" title="Home">
-			<div class="logo-image">
+			<div class="logo">
 				<Logo />
 			</div>
 		</a>
@@ -126,10 +126,10 @@
 		height: 100%;
 	}
 
-	.logo-image {
-		width: 2rem;
-		height: 2rem;
-		object-fit: contain;
+	.logo {
+		width: 2.5rem;
+		height: 2.5rem;
+		overflow: hidden;
 	}
 
 	nav {

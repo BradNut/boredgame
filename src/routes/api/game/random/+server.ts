@@ -1,10 +1,9 @@
-// import prisma from '$lib/prisma.js';
 import db from '$lib/drizzle.js';
 import { error, json } from '@sveltejs/kit';
-import { asc, count, inArray, sql } from 'drizzle-orm';
+import { asc, count } from 'drizzle-orm';
 import { games, type Games } from '../../../../schema.js';
 
-export const GET = async ({ url, locals }) => {
+export const GET = async ({ url }) => {
 	const searchParams = Object.fromEntries(url.searchParams);
 	const limit = parseInt(searchParams?.limit) || 1;
 

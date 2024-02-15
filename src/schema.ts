@@ -3,6 +3,8 @@ import { pgTable, timestamp, varchar, boolean, integer, text, index, pgEnum } fr
 import { nanoid } from 'nanoid';
 import { tsvector } from './tsVector';
 
+// User Related Schemas
+
 export const users = pgTable('users', {
 	id: varchar('id', {
 		length: 255
@@ -71,6 +73,12 @@ export const roles = pgTable('roles', {
 	}).unique()
 });
 
+export type Roles = InferSelectModel<typeof roles>;
+
+export const role_relations = relations(roles, ({ many }) => ({
+	user_roles: many(user_roles)
+}))
+
 export const user_roles = pgTable('user_roles', {
 	id: varchar('id', {
 		length: 255
@@ -107,138 +115,6 @@ export const user_role_relations = relations(user_roles, ({ one }) => ({
 	user: one(users, {
 		fields: [user_roles.user_id],
 		references: [users.id]
-	})
-}));
-
-export const games = pgTable('games', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	name: varchar('name', {
-		length: 255
-	}),
-	slug: varchar('slug', {
-		length: 255
-	}),
-	description: text('description'),
-	year_published: integer('year_published'),
-	min_players: integer('min_players'),
-	max_players: integer('max_players'),
-	playtime: integer('playtime'),
-	min_playtime: integer('min_playtime'),
-	max_playtime: integer('max_playtime'),
-	min_age: integer('min_age'),
-	image_url: varchar('image_url', {
-		length: 255
-	}),
-	thumb_url: varchar('thumb_url', {
-		length: 255
-	}),
-	url: varchar('url', {
-		length: 255
-	}),
-	text_searchable_index: tsvector('text_searchable_index'),
-	last_sync_at: timestamp('last_sync_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
-}, (table) => {
-  return {
-    text_searchable_idx: index("text_searchable_idx").on(table.text_searchable_index).using(sql`'gin'`)
-  }
-});
-
-export type Games = InferSelectModel<typeof games>;
-
-export const gameRelations = relations(games, ({ many }) => ({
-	categories_to_games: many(categories_to_games),
-	mechanics_to_games: many(mechanics_to_games),
-	designers_to_games: many(designers_to_games),
-	publishers_to_games: many(publishers_to_games),
-	artists_to_games: many(artists_to_games),
-	gameExternalIds: many(gameExternalIds),
-}));
-
-export const externalIdType = pgEnum('external_id_type', [
-	'game', 'category', 'mechanic', 'publisher', 'designer', 'artist'
-]);
-
-export const externalIds = pgTable('external_ids', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	type: varchar('type', {
-		length: 255
-	}).notNull(),
-	externalId: varchar('external_id', {
-		length: 255
-	}).notNull()
-});
-
-export const gamesToExternalIds = pgTable('games_to_external_ids', {
-	gameId: varchar('game_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => games.id, { onDelete: 'cascade' }),
-	externalId: varchar('external_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => externalIds.id, { onDelete: 'cascade' }),
-});
-
-export const expansions = pgTable('expansions', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	base_game_id: varchar('base_game_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => games.id, { onDelete: 'cascade' }),
-	game_id: varchar('game_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => games.id, { onDelete: 'cascade' }),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
-});
-
-export const expansion_relations = relations(expansions, ({ one }) => ({
-	baseGame: one(games, {
-		fields: [expansions.base_game_id],
-		references: [games.id]
-	}),
-	game: one(games, {
-		fields: [expansions.game_id],
-		references: [games.id]
 	})
 }));
 
@@ -380,6 +256,152 @@ export const wishlist_item_relations = relations(wishlist_items, ({ one }) => ({
 	})
 }));
 
+// Game and related table schemas
+
+export const externalIdType = pgEnum('external_id_type', [
+	'game', 'category', 'mechanic', 'publisher', 'designer', 'artist'
+]);
+
+export const externalIds = pgTable('external_ids', {
+	id: varchar('id', {
+		length: 255
+	})
+		.primaryKey()
+		.$defaultFn(() => nanoid()),
+	type: varchar('type', {
+		length: 255
+	}).notNull(),
+	externalId: varchar('external_id', {
+		length: 255
+	}).notNull()
+});
+
+export const games = pgTable('games', {
+	id: varchar('id', {
+		length: 255
+	})
+		.primaryKey()
+		.$defaultFn(() => nanoid()),
+	name: varchar('name', {
+		length: 255
+	}),
+	slug: varchar('slug', {
+		length: 255
+	}),
+	description: text('description'),
+	year_published: integer('year_published'),
+	min_players: integer('min_players'),
+	max_players: integer('max_players'),
+	playtime: integer('playtime'),
+	min_playtime: integer('min_playtime'),
+	max_playtime: integer('max_playtime'),
+	min_age: integer('min_age'),
+	image_url: varchar('image_url', {
+		length: 255
+	}),
+	thumb_url: varchar('thumb_url', {
+		length: 255
+	}),
+	url: varchar('url', {
+		length: 255
+	}),
+	text_searchable_index: tsvector('text_searchable_index'),
+	last_sync_at: timestamp('last_sync_at', {
+		withTimezone: true,
+		mode: 'date',
+		precision: 6
+	}),
+	created_at: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'date',
+		precision: 6
+	}).default(sql`now()`),
+	updated_at: timestamp('updated_at', {
+		withTimezone: true,
+		mode: 'date',
+		precision: 6
+	}).default(sql`now()`)
+}, (table) => {
+  return {
+    text_searchable_idx: index("text_searchable_idx").on(table.text_searchable_index).using(sql`'gin'`)
+  }
+});
+
+export type Games = InferSelectModel<typeof games>;
+
+export const gamesToExternalIds = pgTable('games_to_external_ids', {
+	gameId: varchar('game_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => games.id, { onDelete: 'cascade' }),
+	externalId: varchar('external_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => externalIds.id, { onDelete: 'cascade' }),
+});
+
+export const gameRelations = relations(games, ({ many }) => ({
+	categories_to_games: many(categories_to_games),
+	mechanics_to_games: many(mechanics_to_games),
+	publishers_to_games: many(publishers_to_games),
+	gamesToExternalIds: many(gamesToExternalIds),
+}));
+
+export const expansions = pgTable('expansions', {
+	id: varchar('id', {
+		length: 255
+	})
+		.primaryKey()
+		.$defaultFn(() => nanoid()),
+	base_game_id: varchar('base_game_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => games.id, { onDelete: 'cascade' }),
+	game_id: varchar('game_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => games.id, { onDelete: 'cascade' }),
+	created_at: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'date',
+		precision: 6
+	}).default(sql`now()`),
+	updated_at: timestamp('updated_at', {
+		withTimezone: true,
+		mode: 'date',
+		precision: 6
+	}).default(sql`now()`)
+});
+
+export const expansionsToExternalIds = pgTable('expansions_to_external_ids', {
+	expansionId: varchar('expansion_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => expansions.id, { onDelete: 'cascade' }),
+	externalId: varchar('external_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => externalIds.id, { onDelete: 'cascade' }),
+});
+
+export const expansion_relations = relations(expansions, ({ one, many }) => ({
+	baseGame: one(games, {
+		fields: [expansions.base_game_id],
+		references: [games.id]
+	}),
+	game: one(games, {
+		fields: [expansions.game_id],
+		references: [games.id]
+	}),
+	expansionsToExternalIds: many(expansionsToExternalIds)
+}));
+
 export const publishers = pgTable('publishers', {
 	id: varchar('id', {
 		length: 255
@@ -405,8 +427,22 @@ export const publishers = pgTable('publishers', {
 	}).default(sql`now()`)
 });
 
+export const publishersToExternalIds = pgTable('publishers_to_external_ids', {
+	publisherId: varchar('publisher_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => publishers.id, { onDelete: 'cascade' }),
+	externalId: varchar('external_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => externalIds.id, { onDelete: 'cascade' }),
+});
+
 export const publishers_relations = relations(publishers, ({ many }) => ({
-	publishers_to_games: many(publishers_to_games)
+	publishers_to_games: many(publishers_to_games),
+	publishersToExternalIds: many(publishersToExternalIds)
 }));
 
 export const categories = pgTable('categories', {
@@ -434,8 +470,42 @@ export const categories = pgTable('categories', {
 	}).default(sql`now()`)
 });
 
+export const categoriesToExternalIds = pgTable('categories_to_external_ids', {
+	categoryId: varchar('category_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => categories.id, { onDelete: 'cascade' }),
+	externalId: varchar('external_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => externalIds.id, { onDelete: 'cascade' }),
+})
+
+export const categories_to_games = pgTable('categories_to_games', {
+	category_id: varchar('category_id', {
+		length: 255
+	}),
+	game_id: varchar('game_id', {
+		length: 255
+	})
+});
+
+export const categories_to_games_relations = relations(categories_to_games, ({ one }) => ({
+	category: one(categories, {
+		fields: [categories_to_games.category_id],
+		references: [categories.id]
+	}),
+	game: one(games, {
+		fields: [categories_to_games.game_id],
+		references: [games.id]
+	})
+}));
+
 export const categories_relations = relations(categories, ({ many }) => ({
-	categories_to_games: many(categories_to_games)
+	categories_to_games: many(categories_to_games),
+	categoriesToExternalIds: many(categoriesToExternalIds)
 }));
 
 export const mechanics = pgTable('mechanics', {
@@ -463,126 +533,22 @@ export const mechanics = pgTable('mechanics', {
 	}).default(sql`now()`)
 });
 
+export const mechanicsToExternalIds = pgTable('mechanics_to_external_ids', {
+	mechanicId: varchar('mechanic_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => mechanics.id, { onDelete: 'cascade' }),
+	externalId: varchar('external_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => externalIds.id, { onDelete: 'cascade' }),
+})
+
 export const mechanic_relations = relations(mechanics, ({ many }) => ({
-	mechanics_to_games: many(mechanics_to_games)
-}));
-
-export const designers = pgTable('designers', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	name: varchar('name', {
-		length: 255
-	}),
-	slug: varchar('slug', {
-		length: 255
-	}),
-	external_id: integer('external_id'),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
-});
-
-export const designers_relations = relations(designers, ({ many }) => ({
-	designers_to_games: many(designers_to_games)
-}));
-
-export const artists = pgTable('artists', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	name: varchar('name', {
-		length: 255
-	}),
-	slug: varchar('slug', {
-		length: 255
-	}),
-	external_id: integer('external_id'),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
-});
-
-export const artists_relations = relations(artists, ({ many }) => ({
-	artists_to_games: many(artists_to_games)
-}));
-
-export const artists_to_games = pgTable('artists_to_games', {
-	artist_id: varchar('artist_id', {
-		length: 255
-	}),
-	game_id: varchar('game_id', {
-		length: 255
-	})
-});
-
-export const artists_to_games_relations = relations(artists_to_games, ({ one }) => ({
-	artist: one(artists, {
-		fields: [artists_to_games.artist_id],
-		references: [artists.id]
-	}),
-	game: one(games, {
-		fields: [artists_to_games.game_id],
-		references: [games.id]
-	})
-}));
-
-export const categories_to_games = pgTable('categories_to_games', {
-	category_id: varchar('category_id', {
-		length: 255
-	}),
-	game_id: varchar('game_id', {
-		length: 255
-	})
-});
-
-export const categories_to_games_relations = relations(categories_to_games, ({ one }) => ({
-	category: one(categories, {
-		fields: [categories_to_games.category_id],
-		references: [categories.id]
-	}),
-	game: one(games, {
-		fields: [categories_to_games.game_id],
-		references: [games.id]
-	})
-}));
-
-export const designers_to_games = pgTable('designers_to_games', {
-	designer_id: varchar('designer_id', {
-		length: 255
-	}),
-	game_id: varchar('game_id', {
-		length: 255
-	})
-});
-
-export const designers_to_games_relations = relations(designers_to_games, ({ one }) => ({
-	designer: one(designers, {
-		fields: [designers_to_games.designer_id],
-		references: [designers.id]
-	}),
-	game: one(games, {
-		fields: [designers_to_games.game_id],
-		references: [games.id]
-	})
+	mechanics_to_games: many(mechanics_to_games),
+	mechanicsToExternalIds: many(mechanicsToExternalIds)
 }));
 
 export const mechanics_to_games = pgTable('mechanics_to_games', {

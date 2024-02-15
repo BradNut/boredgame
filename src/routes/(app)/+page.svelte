@@ -1,63 +1,26 @@
 <script lang="ts">
-	// import TextSearch from '$lib/components/search/textSearch/header.svelte';
-	import RandomSearch from '$lib/components/search/random/index.svelte';
-	import Game from '$components/Game.svelte';
-	import logo from '$lib/assets/bored-game.png';
-
-	// import Random from '$lib/components/random/header.svelte';
-
-	export let data;
-
-	const { randomGames } = data;
+	import Logo from "$components/logo.svelte";
 </script>
 
-<h1>Search Boardgames!</h1>
-<div class="game-search">
-	<section>
-		<p style="margin: 1rem 0;">
-			Input your requirements to search for board games that match your criteria.
-		</p>
-		<p>Or pick a random game!</p>
-		<div class="random-buttons">
-			<RandomSearch data={data.form} />
-			<!-- <Random /> -->
-		</div>
-	</section>
-	<!-- <TextSearch showButton advancedSearch data={data.form} /> -->
+<div class="container">
+	<div class="logo">
+		<Logo />
+	</div>
+	<h1>Welcome to Bored Game</h1>
+	<h2>Keep track of your board games!</h2>
+	<p>The ones you own, the ones you want, and whether you play them enough.</p>
+	<p>Get started by joinging the <a href="/waitlist">waitlist</a> or <a href="/login">signing in</a>.</p>
 </div>
 
-<section class="random-games">
-	{#each randomGames as game (game.id)}
-		<Game variant='compact' {game} />
-	{/each}
-</section>
-
 <style lang="postcss">
-	.game-search {
+	.container {
+		max-width: 900px;
 		display: grid;
-		gap: 2rem;
-
-		section {
-			display: grid;
-			gap: 1rem;
-		}
+		gap: 0.25rem;
 	}
 
-	.random-games {
-		margin-top: 1rem;
-		display: grid;
-		gap: 0.5rem;
-		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-	}
-
-	.random-buttons {
-		display: flex;
-		place-content: space-between;
-		place-items: center;
-
-		@media (max-width: 650px) {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-		}
+	.logo {
+		width: 4rem;
+		height: 4rem;
 	}
 </style>

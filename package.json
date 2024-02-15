@@ -18,7 +18,7 @@
 		"site:update": "pnpm update -i -L",
 		"generate": "drizzle-kit generate:pg",
 		"migrate": "tsx ./src/migrate.ts",
-		"seed": "tsx ./src/seed/insert.ts",
+		"seed": "tsx ./src/seed.ts",
 		"push": "drizzle-kit push:pg"
 	},
 	"prisma": {
@@ -35,6 +35,7 @@
 		"@sveltejs/vite-plugin-svelte": "^3.0.2",
 		"@types/cookie": "^0.6.0",
 		"@types/node": "^20.11.17",
+		"@types/pg": "^8.11.0",
 		"@typescript-eslint/eslint-plugin": "^6.21.0",
 		"@typescript-eslint/parser": "^6.21.0",
 		"autoprefixer": "^10.4.17",

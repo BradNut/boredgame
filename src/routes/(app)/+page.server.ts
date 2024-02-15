@@ -37,14 +37,5 @@ export const load: PageServerLoad = async ({ fetch, url }) => {
 		}
 	});
 
-	const formData = Object.fromEntries(url?.searchParams);
-	console.log('formData', formData);
-	formData.name = formData?.q;
-	const form = await superValidate(formData, search_schema);
-	console.log('form', form);
-
-	const randomGames: Game[] = await fetch('/api/game/random?limit=6').then(res => res.json());
-	console.log('randomGames', randomGames);
-
-	return { form, metaTagsChild: metaTags, randomGames };
+	return { metaTagsChild: metaTags };
 };

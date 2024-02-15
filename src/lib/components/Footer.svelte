@@ -1,12 +1,9 @@
+<script>
+	import { PUBLIC_SITE_URL } from "$env/static/public";
+</script>
+
 <footer>
-  <p>Built by <a target="__blank" href="https://bradleyshellnut.com">Bradley Shellnut</a></p>
-  <p>
-    <a
-      target="__blank"
-      href="https://www.flaticon.com/free-icons/board-game"
-      title="board game icons">Board game icons created by Freepik - Flaticon</a
-    >
-  </p>
+	<p>Bored Game &copy; {new Date().getFullYear()} | Built by <a target="__blank" href="https://bradleyshellnut.com">Bradley Shellnut</a> | {PUBLIC_SITE_URL}</p>
 </footer>
 
 <style lang="postcss">
