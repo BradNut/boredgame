@@ -3,7 +3,6 @@
 	import { quintIn } from 'svelte/easing';
 	import { superForm } from 'sveltekit-superforms/client';
 	import * as flashModule from 'sveltekit-flash-message/client';
-	import toast from 'svelte-french-toast';
 	import { ChevronsUpDown } from "lucide-svelte";
 	import { Button } from '$components/ui/button';
 	import { Label } from '$components/ui/label';
@@ -12,7 +11,6 @@
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Alert from '$lib/components/ui/alert';
 	import { boredState } from '$lib/stores/boredState.js';
-	import { onMount } from 'svelte';
 
 	export let data;
 
@@ -31,11 +29,7 @@
     delayMs: 0,
   });
 
-	let collapsibleOpen = true;
-
-	onMount(() => {
-		collapsibleOpen = false;
-	});
+	let collapsibleOpen = false;
 </script>
 
 <svelte:head>

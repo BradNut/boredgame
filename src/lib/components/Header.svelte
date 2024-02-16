@@ -14,10 +14,11 @@
 
 <header>
 	<div class="corner">
-		<a href="/" class="logo" title="Home">
-			<div class="logo">
+		<a href="/" class="main-logo" title="Home">
+			<div class="logo-image">
 				<Logo />
 			</div>
+			Bored Game
 		</a>
 	</div>
 	<!-- <TextSearch /> -->
@@ -113,23 +114,23 @@
 	}
 
 	.corner {
-		width: 3em;
-		height: 3em;
 		margin-left: 1rem;
 	}
 
 	.corner a {
 		display: flex;
-		align-items: center;
-		justify-content: center;
+		place-items: center;
+		gap: 0.5rem;
 		width: 100%;
 		height: 100%;
+		font-size: 1.125rem;
+		line-height: 1.75rem;
+		font-weight: 500;
 	}
 
-	.logo {
-		width: 2.5rem;
-		height: 2.5rem;
-		overflow: hidden;
+	.logo-image {
+		width: 2rem;
+		height: 2rem;
 	}
 
 	nav {
