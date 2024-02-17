@@ -1,11 +1,10 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
-	//import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { changeUserPasswordSchema, userSchema } from '$lib/config/zod-schemas';
-	import { AlertTriangle, KeyRound } from 'lucide-svelte';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
+	import { string } from 'zod';
 	export let data;
 
 	const { form, errors, enhance, delayed, message } = superForm(data.form, {
@@ -34,7 +33,7 @@
 			<small>{$errors.current_password}</small>
 		{/if}
 	</div>
-	<div class="mt-6">
+	<div class="mt-6 grid">
 		<Label for="password">New Password</Label>
 		<Input type="password" id="password" name="password" placeholder="Password" autocomplete="given-name" data-invalid={$errors.password} bind:value={$form.password} />
 		{#if $errors.password}

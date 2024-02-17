@@ -57,6 +57,20 @@
       "when": 1707951501716,
       "tag": "0007_same_valeria_richards",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1708105454143,
+      "tag": "0008_complete_manta",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1708105890146,
+      "tag": "0009_equal_christian_walker",
+      "breakpoints": true
     }
   ]
 }

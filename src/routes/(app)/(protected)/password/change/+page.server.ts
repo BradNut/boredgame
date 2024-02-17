@@ -1,10 +1,12 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit";
-import { message, setError, superValidate } from 'sveltekit-superforms/server';
+import { setError, superValidate } from 'sveltekit-superforms/server';
 import { Argon2id } from "oslo/password";
 import { changeUserPasswordSchema } from '$lib/config/zod-schemas.js';
 import { lucia } from '$lib/server/auth.js';
 import type { PageServerLoad } from "./$types";
-import prisma from "$lib/prisma";
+import db from "$lib/drizzle";
+import { eq } from "drizzle-orm";
+import { users } from "../../../../../schema";
 
 export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, changeUserPasswordSchema);
@@ -41,10 +43,8 @@ export const actions: Actions = {
 
 		const user = event.locals.user;
 
-		const dbUser = await prisma.user.findUnique({
-			where: {
-				id: user.id
-			}
+		const dbUser = await db.query.users.findFirst({
+			where: eq(users.id, user.id)
 		});
 
 		if (!dbUser || !dbUser.hashed_password) {
@@ -70,16 +70,11 @@ export const actions: Actions = {
 				}
 				const hashedPassword = await new Argon2id().hash(form.data.password);
 				await lucia.invalidateUserSessions(user.id);
-				await prisma.user.update({
-					where: {
-						id: user.id
-					},
-					data: {
-						hashed_password: hashedPassword
-					}
-				});
+				await db.update(users)
+					.set({ hashed_password: hashedPassword })
+					.where(eq(users.id, user.id));
 				const session = await lucia.createSession(user.id, {
-					country: event.locals.session.ip,
+					country: event.locals.session?.ip,
 				});
 				const sessionCookie = lucia.createSessionCookie(session.id);
 				return new Response(null, {

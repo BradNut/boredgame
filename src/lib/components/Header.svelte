@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
+	import toast from 'svelte-french-toast';
 	import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte';
 	import * as DropdownMenu from "$components/ui/dropdown-menu";
 	import * as Avatar from "$components/ui/avatar";
-	import Logo from '$components/logo.svelte';
 	import { invalidateAll } from '$app/navigation';
-	import toast from 'svelte-french-toast';
+	import Logo from '$components/logo.svelte';
 
-	export let user;
+	export let user: User | null;
 
 	let avatar = user?.username.slice(0, 1).toUpperCase() || '?';
 </script>
 
 <header>
 	<div class="corner">
-		<a href="/" class="main-logo" title="Home">
+		<a href="/" title="Home">
 			<div class="logo-image">
 				<Logo />
 			</div>
@@ -155,8 +155,4 @@
 		text-decoration: underline;
 		color: var(--accent-color);
 	}
-
-  .separator {
-    @apply m-[5px] h-[1px] bg-black;
-  }
 </style>
