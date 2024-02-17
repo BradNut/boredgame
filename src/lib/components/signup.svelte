@@ -1,17 +1,9 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms/client';
-	import { userSchema } from '$lib/config/zod-schemas';
+	import { signUpSchema } from '$lib/config/zod-schemas';
 	export let data;
 
-	const signUpSchema = userSchema.pick({
-		firstName: true,
-		lastName: true,
-		username: true,
-		email: true,
-		password: true
-	});
-
-	const { form, errors, enhance, delayed } = superForm(data.form, {
+	const { form, errors, enhance } = superForm(data.form, {
 		taintedMessage: null,
 		validators: signUpSchema,
 		delayMs: 0

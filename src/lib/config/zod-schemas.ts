@@ -29,13 +29,10 @@ export const userSchema = z.object({
 		.max(50, { message: 'Username must be less than 50 characters' }),
 	password: z
 		.string({ required_error: 'Password is required' })
-		.trim()
-		.min(8, { message: 'Password must be at least 8 characters' })
-		.max(128, { message: 'Password must be less than 128 characters' }),
+		.trim(),
 	confirm_password: z
 		.string({ required_error: 'Confirm Password is required' })
-		.trim()
-		.min(8, { message: 'Confirm Password must be at least 8 characters' }),
+		.trim(),
 	role: z.enum(['USER', 'ADMIN'], { required_error: 'You must have a role' }).default('USER'),
 	verified: z.boolean().default(false),
 	token: z.string().optional(),
@@ -111,54 +108,44 @@ const checkPasswordStrength = async function (password: string, ctx: z.Refinemen
 		countOfSpecialChar = 0;
 	for (let i = 0; i < password.length; i++) {
 		const char = password.charAt(i);
-		if (!isNaN(+char)) countOfNumbers++;
-		else if (containsUppercase(char)) countOfUpperCase++;
-		else if (containsLowercase(char)) countOfLowerCase++;
-		else if (containsSpecialChar(char)) countOfSpecialChar++;
+		if (!isNaN(+char)) {
+			countOfNumbers++;
+		} else if (containsUppercase(char)) {
+			countOfUpperCase++;
+		} else if (containsLowercase(char)) {
+			countOfLowerCase++;
+		} else if (containsSpecialChar(char)) {
+			countOfSpecialChar++;
+		}
 	}
 
-	let errors = {
-		upperCase: { pass: true, message: "At least one upper case." },
-		lowerCase: { pass: true, message: "At least one lower case." },
-		specialCharacter: { pass: true, message: "At least one special character." },
-		totalNumber: { pass: true, message: "At least one number." },
-		minimumLength: { pass: true, message: "At least 8 characters." },
-		maximumLength: { pass: true, message: "At most 128 characters." },
-	};
+	let errorMessage = 'Your password:';
 
 	if (countOfLowerCase < 1) {
-		errors = { ...errors, lowerCase: { ...errors.lowerCase, pass: false } };
+		errorMessage = ' Must have at least one lowercase letter. ';
 	}
 	if (countOfNumbers < 1) {
-		errors = {
-			...errors,
-			totalNumber: { ...errors.totalNumber, pass: false },
-		};
+		errorMessage += ' Must have at least one number. ';
 	}
 	if (countOfUpperCase < 1) {
-		errors = { ...errors, upperCase: { ...errors.upperCase, pass: false } };
+		errorMessage += ' Must have at least one uppercase letter. ';
 	}
 	if (countOfSpecialChar < 1) {
-		errors = { ...errors, specialCharacter: { ...errors.specialCharacter, pass: false } };
+		errorMessage += ' Must have at least one special character.';
 	}
 	if (minimumLength) {
-		errors = { ...errors, minimumLength: { ...errors.minimumLength, pass: false } };
+		errorMessage += ' Be at least 8 characters long.';
 	}
 	if (maximumLength) {
-		errors = { ...errors, maximumLength: { ...errors.maximumLength, pass: false } };
+		errorMessage += ' Be less than 128 characters long.';
 	}
 
 
-	if (
-		countOfLowerCase < 1 ||
-		countOfUpperCase < 1 ||
-		countOfSpecialChar < 1 ||
-		countOfNumbers < 1
-	) {
+	if (errorMessage.length > 'Your password:'.length) {
 		ctx.addIssue({
-			code: "custom",
-			message: JSON.stringify(errors),
-			path: ["password"]
+			code: 'custom',
+			message: errorMessage,
+			path: ['password']
 		});
 	}
 }

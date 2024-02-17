@@ -27,3 +27,6 @@ if (existingRoles.length === 0) {
 } else {
 	console.log('Roles already exist. No action taken.');
 }
+
+await pool.end();
+process.exit();

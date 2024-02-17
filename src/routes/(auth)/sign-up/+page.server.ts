@@ -5,31 +5,11 @@ import { nanoid } from 'nanoid';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
 import { lucia } from '$lib/server/auth';
-import { userSchema } from '$lib/config/zod-schemas';
+import { signUpSchema } from '$lib/config/zod-schemas';
 import { add_user_to_role } from '$server/roles';
 import type { Message } from '$lib/types.js';
 import db from '$lib/drizzle';
 import { collections, users, wishlists } from '../../../schema';
-
-const signUpSchema = userSchema
-	.pick({
-		firstName: true,
-		lastName: true,
-		email: true,
-		username: true,
-		password: true,
-		confirm_password: true,
-		terms: true
-	})
-	.superRefine(({ confirm_password, password }, ctx) => {
-		if (confirm_password !== password) {
-			ctx.addIssue({
-				code: 'custom',
-				message: 'Password and Confirm Password must match',
-				path: ['confirm_password']
-			});
-		}
-	});
 
 export const load: PageServerLoad = async (event) => {
 	console.log('sign up load event', event);
