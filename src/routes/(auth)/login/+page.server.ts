@@ -70,14 +70,6 @@ export const actions: Actions = {
 				ip_address: locals.ip
 			});
 			sessionCookie = lucia.createSessionCookie(session.id);
-
-			await db.insert(collections).values({
-				user_id: user.id
-			}).onDuplicateKeyUpdate({ set: { user_id: sql`user_id` } });
-
-			await db.insert(wishlists).values({
-				user_id: user.id
-			}).onDuplicateKeyUpdate({ set: { user_id: sql`user_id` } });
 		} catch (e) {
 			// TODO: need to return error message to the client
 			console.error(e);

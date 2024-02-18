@@ -33,7 +33,6 @@ export const userSchema = z.object({
 	confirm_password: z
 		.string({ required_error: 'Confirm Password is required' })
 		.trim(),
-	role: z.enum(['USER', 'ADMIN'], { required_error: 'You must have a role' }).default('USER'),
 	verified: z.boolean().default(false),
 	token: z.string().optional(),
 	receiveEmail: z.boolean().default(false),

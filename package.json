@@ -26,7 +26,7 @@
 	},
 	"devDependencies": {
 		"@melt-ui/pp": "^0.3.0",
-		"@melt-ui/svelte": "^0.74.0",
+		"@melt-ui/svelte": "^0.74.1",
 		"@playwright/test": "^1.41.2",
 		"@resvg/resvg-js": "^2.6.0",
 		"@sveltejs/adapter-auto": "^3.1.1",
@@ -110,7 +110,7 @@
 		"mysql2": "^3.9.1",
 		"nanoid": "^5.0.5",
 		"open-props": "^1.6.18",
-		"oslo": "^1.1.1",
+		"oslo": "^1.1.2",
 		"pg": "^8.11.3",
 		"postgres": "^3.4.3",
 		"radix-svelte": "^0.9.0",

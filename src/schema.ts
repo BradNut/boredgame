@@ -173,6 +173,7 @@ export const collection_items = pgTable('collection_items', {
 	})
 		.notNull()
 		.references(() => games.id, { onDelete: 'cascade' }),
+	times_played: integer('times_played').default(0),
 	created_at: timestamp('created_at', {
 		withTimezone: true,
 		mode: 'date',
@@ -223,7 +224,7 @@ export const wishlists_relations = relations(wishlists, ({ one }) => ({
 	user: one(users, {
 		fields: [wishlists.user_id],
 		references: [users.id]
-	})
+	}),
 }));
 
 export const wishlist_items = pgTable('wishlist_items', {

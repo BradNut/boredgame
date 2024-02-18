@@ -1,11 +1,11 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit";
+import { eq } from "drizzle-orm";
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { Argon2id } from "oslo/password";
+import db from "$lib/drizzle";
 import { changeUserPasswordSchema } from '$lib/config/zod-schemas.js';
 import { lucia } from '$lib/server/auth.js';
 import type { PageServerLoad } from "./$types";
-import db from "$lib/drizzle";
-import { eq } from "drizzle-orm";
 import { users } from "../../../../../schema";
 
 export const load: PageServerLoad = async (event) => {

@@ -99,8 +99,8 @@ dependencies:
     specifier: ^1.6.18
     version: 1.6.18
   oslo:
-    specifier: ^1.1.1
-    version: 1.1.1
+    specifier: ^1.1.2
+    version: 1.1.2
   pg:
     specifier: ^8.11.3
     version: 8.11.3
@@ -132,10 +132,10 @@ dependencies:
 devDependencies:
   '@melt-ui/pp':
     specifier: ^0.3.0
-    version: 0.3.0(@melt-ui/svelte@0.74.0)(svelte@4.2.11)
+    version: 0.3.0(@melt-ui/svelte@0.74.1)(svelte@4.2.11)
   '@melt-ui/svelte':
-    specifier: ^0.74.0
-    version: 0.74.0(svelte@4.2.11)
+    specifier: ^0.74.1
+    version: 0.74.1(svelte@4.2.11)
   '@playwright/test':
     specifier: ^1.41.2
     version: 1.41.2
@@ -1745,14 +1745,14 @@ packages:
       - supports-color
     dev: false
 
-  /@melt-ui/pp@0.3.0(@melt-ui/svelte@0.74.0)(svelte@4.2.11):
+  /@melt-ui/pp@0.3.0(@melt-ui/svelte@0.74.1)(svelte@4.2.11):
     resolution: {integrity: sha512-b07Bdh8l2KcwKVCXOY+SoBw1dk9eWvQfMSi6SoacpRVyVmmfpi0kV4oGt3HYF0tUCB3sEmVicxse50ZzZxEzEA==}
     engines: {pnpm: '>=8.6.3'}
     peerDependencies:
       '@melt-ui/svelte': '>= 0.29.0'
       svelte: ^3.55.0 || ^4.0.0 || ^5.0.0-next.1
     dependencies:
-      '@melt-ui/svelte': 0.74.0(svelte@4.2.11)
+      '@melt-ui/svelte': 0.74.1(svelte@4.2.11)
       estree-walker: 3.0.3
       magic-string: 0.30.5
       svelte: 4.2.11
@@ -1772,8 +1772,8 @@ packages:
       svelte: 4.2.11
     dev: false
 
-  /@melt-ui/svelte@0.74.0(svelte@4.2.11):
-    resolution: {integrity: sha512-4rFhTkO34OK5lflvcj13/in1YQ+exsD2A7YSNIYw2iyNeBYFxOgM0n4qH5Y4Tf7vcekkkQ+SEqgiD3XNmVBHzw==}
+  /@melt-ui/svelte@0.74.1(svelte@4.2.11):
+    resolution: {integrity: sha512-5A6QrPGLKIr4s1kI0FZrD5QoZ+wnACF2MR77DvBo8icVyFmpY+WiwpnA3cAl+zEce9Er2Uj8KxPBEF8NSMdnqw==}
     peerDependencies:
       svelte: '>=3 <5'
     dependencies:
@@ -3465,7 +3465,7 @@ packages:
       dotenv: 16.4.4
       front-matter: 4.0.2
       nanoid: 4.0.2
-      oslo: 1.1.1
+      oslo: 1.1.2
     dev: false
 
   /autoprefixer@10.4.17(postcss@8.4.35):
@@ -5550,8 +5550,8 @@ packages:
       '@node-rs/bcrypt': 1.9.2
     dev: false
 
-  /oslo@1.1.1:
-    resolution: {integrity: sha512-BuJp5GfBW3jkUDLb8VftXD9FRTfjnodMyVshSy6p4UP8PhQI8auTxAQlef9NdFe6JC4mEgZb/mhMJpfNVudDTA==}
+  /oslo@1.1.2:
+    resolution: {integrity: sha512-l5tmumAHJy6wTfcxjwbPtcEn23lxnsBqbW1PqM11lqnQ79Q8Gzc7b3+OjRpLTbiqkfvhT4/BZ2Ooe8/QCJxyEg==}
     dependencies:
       '@node-rs/argon2': 1.7.0
       '@node-rs/bcrypt': 1.9.0

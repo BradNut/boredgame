@@ -1,9 +1,11 @@
 import { type Actions, error, fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms/server';
-import prisma from '$lib/prisma';
 import { modifyListGameSchema, type ListGame } from '$lib/config/zod-schemas.js';
 import { search_schema } from '$lib/zodValidation.js';
 import type { PageServerLoad } from './$types';
+import db from '$lib/drizzle';
+import { and, eq } from 'drizzle-orm';
+import { collection_items, collections, games } from '../../../../schema';
 
 export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	const user = locals.user;
@@ -28,10 +30,8 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 	const listManageForm = await superValidate(modifyListGameSchema);
 
 	try {
-		let collection = await prisma.collection.findUnique({
-			where: {
-				user_id: user.id
-			}
+		const collection = await db.query.collections.findFirst({
+			where: eq(collections.user_id, user.id)
 		});
 		console.log('collection', collection);
 
@@ -45,27 +45,25 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 			// 	});
 		}
 
-		let collection_items = await prisma.collectionItem.findMany({
-			where: {
-				collection_id: collection.id
-			},
-			include: {
+		const collectionItems = await db.query.collection_items.findMany({
+			where: eq(collection_items.collection_id, collection.id),
+			with: {
 				game: {
-					select: {
+					columns: {
 						id: true,
 						name: true,
 						thumb_url: true
 					}
 				}
 			},
-			skip,
-			take: limit
+			offset: skip,
+			limit
 		});
 
-		console.log('collection_items', collection_items);
+		console.log('collection_items', collectionItems);
 
-		let collectionItems: ListGame[] = [];
-		for (const item of collection_items) {
+		const items: ListGame[] = [];
+		for (const item of collectionItems) {
 			console.log('item', item);
 			const game = item.game;
 			if (game) {
@@ -77,14 +75,14 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 					times_played: item.times_played,
 					in_collection: true
 				};
-				collectionItems.push(collectionItem);
+				items.push(collectionItem);
 			}
 		}
 
 		return {
 			searchForm,
 			listManageForm,
-			collection: collectionItems
+			collection: items
 		};
 	} catch (e) {
 		console.error(e);
@@ -108,10 +106,8 @@ export const actions: Actions = {
 		}
 
 		const user = event.locals.user;
-		let game = await prisma.game.findUnique({
-			where: {
-				id: form.data.id
-			}
+		const game = await db.query.games.findFirst({
+			where: eq(games.id, form.data.id)
 		});
 
 		if (!game) {
@@ -125,10 +121,8 @@ export const actions: Actions = {
 		}
 
 		try {
-			const collection = await prisma.collection.findUnique({
-				where: {
-					user_id: user.id
-				}
+			const collection = await db.query.collections.findFirst({
+				where: eq(collections.user_id, user.id)
 			});
 
 			if (!collection) {
@@ -136,12 +130,10 @@ export const actions: Actions = {
 				return error(404, 'Wishlist not found');
 			}
 
-			await prisma.collectionItem.create({
-				data: {
-					game_id: game.id,
-					collection_id: collection.id,
-					times_played: 0
-				}
+			await db.insert(collection_items).values({
+				game_id: game.id,
+				collection_id: collection.id,
+				times_played: 0
 			});
 
 			return {
@@ -175,10 +167,8 @@ export const actions: Actions = {
 			throw fail(401);
 		}
 
-		let game = await prisma.game.findUnique({
-			where: {
-				id: form.data.id
-			}
+		let game = await db.query.games.findFirst({
+			where: eq(games.id, form.data.id)
 		});
 
 		if (!game) {
@@ -187,10 +177,8 @@ export const actions: Actions = {
 		}
 
 		try {
-			const collection = await prisma.collection.findUnique({
-				where: {
-					user_id: locals.user.id
-				}
+			const collection = await db.query.collections.findFirst({
+				where: eq(collections.user_id, locals.user.id)
 			});
 
 			if (!collection) {
@@ -198,12 +186,10 @@ export const actions: Actions = {
 				return error(404, 'Collection not found');
 			}
 
-			await prisma.collectionItem.delete({
-				where: {
-					collection_id: collection.id,
-					game_id: game.id
-				}
-			});
+			await db.delete(collection_items).where(and(
+					eq(collection_items.collection_id, collection.id),
+					eq(collection_items.game_id, game.id)
+			));
 
 			return {
 				form

@@ -52,3 +52,9 @@
 		<Button type="submit" class="w-full">Change Password</Button>
 	</div>
 </form>
+
+<style lang="postcss">
+	form {
+		width: 20rem;
+	}
+</style>

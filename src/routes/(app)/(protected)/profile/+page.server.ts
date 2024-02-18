@@ -1,9 +1,11 @@
 import { fail, type Actions } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { userSchema } from '$lib/config/zod-schemas';
 import type { PageServerLoad } from './$types';
-import prisma from '$lib/prisma';
+import { users } from '../../../../schema';
+import db from '$lib/drizzle';
 
 const profileSchema = userSchema.pick({
 	firstName: true,
@@ -51,17 +53,24 @@ export const actions: Actions = {
 
 			const user = event.locals.user;
 
-			await prisma.user.update({
-				where: {
-					id: user.id
-				},
-				data: {
-					firstName: form.data.firstName,
-					lastName: form.data.lastName,
+			const newUsername = form.data.username;
+			const existingUser = await db.query.users.findFirst({
+				where: eq(users.username, newUsername)
+			});
+
+			if (existingUser && existingUser.id !== user.id) {
+				return setError(form, 'username', 'That username is already taken');
+			}
+
+			await db
+				.update(users)
+				.set({
+					first_name: form.data.firstName,
+					last_name: form.data.lastName,
 					email: form.data.email,
 					username: form.data.username
-				}
-			});
+				})
+				.where(eq(users.id, user.id));
 
 			if (user.email !== form.data.email) {
 				// Send email to confirm new email?

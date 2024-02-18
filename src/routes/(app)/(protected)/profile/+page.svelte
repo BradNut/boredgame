@@ -89,6 +89,6 @@
 
 <style lang="postcss">
 	form {
-		min-width: 300px;;
+		width: 20rem;
 	}
 </style>
