@@ -98,7 +98,6 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const { params, locals, request } = event;
 		const form = await superValidate(event, modifyListGameSchema);
 
 		if (!event.locals.user) {
@@ -145,14 +144,14 @@ export const actions: Actions = {
 		}
 	},
 	// Create new wishlist
-	create: async ({ params, locals, request }) => {
+	create: async ({ locals }) => {
 		if (!locals.user) {
 			throw fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
-	delete: async ({ params, locals, request }) => {
+	delete: async ({ locals }) => {
 		if (!locals.user) {
 			throw fail(401);
 		}
@@ -160,14 +159,14 @@ export const actions: Actions = {
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
-		const { params, locals, request } = event;
+		const { locals } = event;
 		const form = await superValidate(event, modifyListGameSchema);
 
 		if (!locals.user) {
 			throw fail(401);
 		}
 
-		let game = await db.query.games.findFirst({
+		const game = await db.query.games.findFirst({
 			where: eq(games.id, form.data.id)
 		});
 

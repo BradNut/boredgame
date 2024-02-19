@@ -82,8 +82,8 @@ export const actions: Actions = {
 
 		try {
 			session = await lucia.createSession(user[0].id, {
-				ip_country: event.locals.session?.ipCountry,
-				ip_address: event.locals.session?.ipAddress
+				ip_country: event.locals.ip,
+				ip_address: event.locals.country
 			});
 			sessionCookie = lucia.createSessionCookie(session.id);
 		} catch (e: any) {

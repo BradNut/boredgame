@@ -78,6 +78,20 @@
       "when": 1708243232524,
       "tag": "0010_flat_mister_sinister",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1708330668971,
+      "tag": "0011_gigantic_mister_sinister",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1708330799655,
+      "tag": "0012_dizzy_lethal_legion",
+      "breakpoints": true
     }
   ]
 }

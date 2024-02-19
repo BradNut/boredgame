@@ -1,103 +1,39 @@
 import type { Game } from '@prisma/client';
 import kebabCase from 'just-kebab-case';
 import type { BggLinkDto } from 'boardgamegeekclient/dist/esm/dto/concrete/subdto';
-import prisma from '$lib/prisma';
 import { mapAPIGameToBoredGame } from './gameMapper';
 import db from '$lib/drizzle';
-import { games } from '../../schema';
+import { externalIds, games, publishersToExternalIds, type Publishers, publishers } from '../../schema';
 import { eq, sql } from 'drizzle-orm';
+import { error } from '@sveltejs/kit';
 
-export async function createArtist(locals: App.Locals, externalArtist: BggLinkDto) {
-	try {
-		let dbArtist = await prisma.artist.findFirst({
-			where: {
-				external_id: externalArtist.id
-			},
-			select: {
-				id: true,
-				name: true,
-				slug: true,
-				external_id: true
-			}
-		});
-		if (dbArtist) {
-			console.log('Artist already exists', dbArtist.name);
-			return dbArtist;
-		}
-		console.log('Creating artist', JSON.stringify(externalArtist, null, 2));
-		let artist = await prisma.artist.create({
-			data: {
-				name: externalArtist.value,
-				external_id: externalArtist.id,
-				slug: kebabCase(externalArtist.value)
-			},
-			select: {
-				id: true,
-				name: true,
-				slug: true,
-				external_id: true
-			}
-		});
-
-		console.log('Created artist', JSON.stringify(artist, null, 2));
-		return artist;
-	} catch (e) {
-		console.error(e);
-		throw new Error('Something went wrong creating Artist');
+export async function createPublisher(locals: App.Locals, publisher: Publishers, externalId: string) {
+	if (!publisher || !externalId || externalId === '') {
+		error(400, 'Invalid Request');
 	}
-}
 
-export async function createDesigner(locals: App.Locals, externalDesigner: BggLinkDto) {
 	try {
-		let dbDesigner = await prisma.designer.findFirst({
-			where: {
-				external_id: externalDesigner.id
-			},
-			select: {
-				id: true,
-				name: true,
-				slug: true,
-				external_id: true
-			}
+		let dbExternalId = await db.query.externalIds.findFirst({
+			where: eq(externalIds.id, externalId),
 		});
-		if (dbDesigner) {
-			console.log('Designer already exists', dbDesigner.name);
-			return dbDesigner;
+
+		if (dbExternalId) {
+			const dbPublisher = await db.select().from(publishers).leftJoin(publishersToExternalIds, eq(publishersToExternalIds.externalId, externalId));
 		}
-		console.log('Creating designer', JSON.stringify(externalDesigner, null, 2));
-		let designer = await prisma.designer.create({
-			data: {
-				name: externalDesigner.value,
-				external_id: externalDesigner.id,
-				slug: kebabCase(externalDesigner.value)
-			},
-			select: {
+		let dbPublisher = await db.query.publishers.findFirst({
+			where: eq(publishers.external_id, externalPublisher.id),
+			columns: {
 				id: true,
 				name: true,
 				slug: true,
 				external_id: true
-			}
-		});
-
-		console.log('Created designer', JSON.stringify(designer, null, 2));
-		return designer;
-	} catch (e) {
-		console.error(e);
-		throw new Error('Something went wrong creating Designer');
-	}
-}
-
-export async function createPublisher(locals: App.Locals, externalPublisher: BggLinkDto) {
-	try {
-		let dbPublisher = await prisma.publisher.findFirst({
-			where: {
-				external_id: externalPublisher.id
 			},
-			select: {
-				id: true,
-				name: true,
-				slug: true,
-				external_id: true
+			with: {
+				publishersToExternalIds: {
+					columns: {
+						externalId: true
+					}
+				}
 			}
 		});
 		if (dbPublisher) {

@@ -7,7 +7,8 @@ import {
 	integer,
 	text,
 	index,
-	pgEnum
+	pgEnum,
+	primaryKey
 } from 'drizzle-orm/pg-core';
 import { nanoid } from 'nanoid';
 import { tsvector } from './tsVector';
@@ -40,8 +41,16 @@ export const users = pgTable('users', {
 	theme: varchar('theme', {
 		length: 255
 	}).default('system'),
-	created_at: timestamp('created_at').default(sql`now()`),
-	updated_at: timestamp('updated_at').default(sql`now()`)
+	created_at: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'date',
+		precision: 6
+	}).default(sql`now()`),
+	updated_at: timestamp('updated_at', {
+		withTimezone: true,
+		mode: 'date',
+		precision: 6
+	}).default(sql`now()`)
 });
 
 export const user_relations = relations(users, ({ many }) => ({
@@ -348,18 +357,28 @@ export const games = pgTable(
 
 export type Games = InferSelectModel<typeof games>;
 
-export const gamesToExternalIds = pgTable('games_to_external_ids', {
-	gameId: varchar('game_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => games.id, { onDelete: 'cascade' }),
-	externalId: varchar('external_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => externalIds.id, { onDelete: 'cascade' })
-});
+export const gamesToExternalIds = pgTable(
+	'games_to_external_ids',
+	{
+		gameId: varchar('game_id', {
+			length: 255
+		})
+			.notNull()
+			.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+		externalId: varchar('external_id', {
+			length: 255
+		})
+			.notNull()
+			.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+	},
+	(table) => {
+		return {
+			gamesToExternalIdsPkey: primaryKey({
+				columns: [table.gameId, table.externalId]
+			})
+		};
+	}
+);
 
 export const gameRelations = relations(games, ({ many }) => ({
 	categories_to_games: many(categories_to_games),
@@ -378,12 +397,12 @@ export const expansions = pgTable('expansions', {
 		length: 255
 	})
 		.notNull()
-		.references(() => games.id, { onDelete: 'cascade' }),
+		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 	game_id: varchar('game_id', {
 		length: 255
 	})
 		.notNull()
-		.references(() => games.id, { onDelete: 'cascade' }),
+		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 	created_at: timestamp('created_at', {
 		withTimezone: true,
 		mode: 'date',
@@ -396,18 +415,28 @@ export const expansions = pgTable('expansions', {
 	}).default(sql`now()`)
 });
 
-export const expansionsToExternalIds = pgTable('expansions_to_external_ids', {
-	expansionId: varchar('expansion_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => expansions.id, { onDelete: 'cascade' }),
-	externalId: varchar('external_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => externalIds.id, { onDelete: 'cascade' })
-});
+export const expansionsToExternalIds = pgTable(
+	'expansions_to_external_ids',
+	{
+		expansionId: varchar('expansion_id', {
+			length: 255
+		})
+			.notNull()
+			.references(() => expansions.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+		externalId: varchar('external_id', {
+			length: 255
+		})
+			.notNull()
+			.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+	},
+	(table) => {
+		return {
+			expansionsToExternalIdsPkey: primaryKey({
+				columns: [table.expansionId, table.externalId]
+			})
+		};
+	}
+);
 
 export const expansion_relations = relations(expansions, ({ one, many }) => ({
 	baseGame: one(games, {
@@ -446,17 +475,25 @@ export const publishers = pgTable('publishers', {
 	}).default(sql`now()`)
 });
 
+export type Publishers = InferSelectModel<typeof publishers>;
+
 export const publishersToExternalIds = pgTable('publishers_to_external_ids', {
 	publisherId: varchar('publisher_id', {
 		length: 255
 	})
 		.notNull()
-		.references(() => publishers.id, { onDelete: 'cascade' }),
+		.references(() => publishers.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 	externalId: varchar('external_id', {
 		length: 255
 	})
 		.notNull()
-		.references(() => externalIds.id, { onDelete: 'cascade' })
+		.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+}, (table) => {
+	return {
+		publishersToExternalIdsPkey: primaryKey({
+			columns: [table.publisherId, table.externalId]
+		})
+	}
 });
 
 export const publishers_relations = relations(publishers, ({ many }) => ({
@@ -494,21 +531,37 @@ export const categoriesToExternalIds = pgTable('categories_to_external_ids', {
 		length: 255
 	})
 		.notNull()
-		.references(() => categories.id, { onDelete: 'cascade' }),
+		.references(() => categories.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 	externalId: varchar('external_id', {
 		length: 255
 	})
 		.notNull()
-		.references(() => externalIds.id, { onDelete: 'cascade' })
+		.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+}, (table) => {
+	return {
+		categoriesToExternalIdsPkey: primaryKey({
+			columns: [table.categoryId, table.externalId]
+		})
+	}
 });
 
 export const categories_to_games = pgTable('categories_to_games', {
 	category_id: varchar('category_id', {
 		length: 255
-	}),
+	})
+		.notNull()
+		.references(() => categories.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 	game_id: varchar('game_id', {
 		length: 255
 	})
+		.notNull()
+		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+}, (table) => {
+	return {
+		categoriesToGamesPkey: primaryKey({
+			columns: [table.category_id, table.game_id]
+		})
+	}
 });
 
 export const categories_to_games_relations = relations(categories_to_games, ({ one }) => ({
@@ -557,12 +610,18 @@ export const mechanicsToExternalIds = pgTable('mechanics_to_external_ids', {
 		length: 255
 	})
 		.notNull()
-		.references(() => mechanics.id, { onDelete: 'cascade' }),
+		.references(() => mechanics.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 	externalId: varchar('external_id', {
 		length: 255
 	})
 		.notNull()
-		.references(() => externalIds.id, { onDelete: 'cascade' })
+		.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+}, (table) => {
+	return {
+		mechanicsToExternalIdsPkey: primaryKey({
+			columns: [table.mechanicId, table.externalId]
+		})
+	}
 });
 
 export const mechanic_relations = relations(mechanics, ({ many }) => ({
@@ -573,10 +632,20 @@ export const mechanic_relations = relations(mechanics, ({ many }) => ({
 export const mechanics_to_games = pgTable('mechanics_to_games', {
 	mechanic_id: varchar('mechanic_id', {
 		length: 255
-	}),
+	})
+		.notNull()
+		.references(() => mechanics.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 	game_id: varchar('game_id', {
 		length: 255
 	})
+		.notNull()
+		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+}, (table) => {
+	return {
+		mechanicsToGamesPkey: primaryKey({
+			columns: [table.mechanic_id, table.game_id]
+		})
+	}
 });
 
 export const mechanics_to_games_relations = relations(mechanics_to_games, ({ one }) => ({
@@ -593,10 +662,20 @@ export const mechanics_to_games_relations = relations(mechanics_to_games, ({ one
 export const publishers_to_games = pgTable('publishers_to_games', {
 	publisher_id: varchar('publisher_id', {
 		length: 255
-	}),
+	})
+		.notNull()
+		.references(() => publishers.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 	game_id: varchar('game_id', {
 		length: 255
 	})
+		.notNull()
+		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+}, (table) => {
+	return {
+		publishersToGamesPkey: primaryKey({
+			columns: [table.publisher_id, table.game_id]
+		})
+	}
 });
 
 export const publishers_to_games_relations = relations(publishers_to_games, ({ one }) => ({

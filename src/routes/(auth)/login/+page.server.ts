@@ -63,6 +63,19 @@ export const actions: Actions = {
 				return setError(form, '', 'Your username or password is incorrect.');
 			}
 
+			await db
+				.insert(collections)
+				.values({
+					user_id: user.id
+				})
+				.onConflictDoNothing();
+			await db
+				.insert(wishlists)
+				.values({
+					user_id: user.id
+				})
+				.onConflictDoNothing();
+
 			console.log('ip', locals.ip);
 			console.log('country', locals.country);
 			session = await lucia.createSession(user.id, {
