@@ -136,6 +136,8 @@ export const user_role_relations = relations(user_roles, ({ one }) => ({
 	})
 }));
 
+export type UserRoles = InferSelectModel<typeof user_roles>;
+
 export const collections = pgTable('collections', {
 	id: varchar('id', {
 		length: 255
@@ -195,6 +197,8 @@ export const collection_items = pgTable('collection_items', {
 	}).default(sql`now()`)
 });
 
+export type CollectionItems = InferSelectModel<typeof collection_items>;
+
 export const collection_item_relations = relations(collection_items, ({ one }) => ({
 	collection: one(collections, {
 		fields: [collection_items.collection_id],
@@ -228,6 +232,8 @@ export const wishlists = pgTable('wishlists', {
 		precision: 6
 	}).default(sql`now()`)
 });
+
+export type Wishlists = InferSelectModel<typeof wishlists>;
 
 export const wishlists_relations = relations(wishlists, ({ one }) => ({
 	user: one(users, {
@@ -264,6 +270,8 @@ export const wishlist_items = pgTable('wishlist_items', {
 	}).default(sql`now()`)
 });
 
+export type WishlistItems = InferSelectModel<typeof wishlist_items>;
+
 export const wishlist_item_relations = relations(wishlist_items, ({ one }) => ({
 	wishlist: one(wishlists, {
 		fields: [wishlist_items.wishlist_id],
@@ -297,6 +305,8 @@ export const externalIds = pgTable('external_ids', {
 		length: 255
 	}).notNull()
 });
+
+export type ExternalIds = InferSelectModel<typeof externalIds>;
 
 export const games = pgTable(
 	'games',
@@ -415,30 +425,9 @@ export const expansions = pgTable('expansions', {
 	}).default(sql`now()`)
 });
 
-export const expansionsToExternalIds = pgTable(
-	'expansions_to_external_ids',
-	{
-		expansionId: varchar('expansion_id', {
-			length: 255
-		})
-			.notNull()
-			.references(() => expansions.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-		externalId: varchar('external_id', {
-			length: 255
-		})
-			.notNull()
-			.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
-	},
-	(table) => {
-		return {
-			expansionsToExternalIdsPkey: primaryKey({
-				columns: [table.expansionId, table.externalId]
-			})
-		};
-	}
-);
+export type Expansions = InferSelectModel<typeof expansions>;
 
-export const expansion_relations = relations(expansions, ({ one, many }) => ({
+export const expansion_relations = relations(expansions, ({ one }) => ({
 	baseGame: one(games, {
 		fields: [expansions.base_game_id],
 		references: [games.id]
@@ -446,8 +435,7 @@ export const expansion_relations = relations(expansions, ({ one, many }) => ({
 	game: one(games, {
 		fields: [expansions.game_id],
 		references: [games.id]
-	}),
-	expansionsToExternalIds: many(expansionsToExternalIds)
+	})
 }));
 
 export const publishers = pgTable('publishers', {
@@ -462,7 +450,6 @@ export const publishers = pgTable('publishers', {
 	slug: varchar('slug', {
 		length: 255
 	}),
-	external_id: integer('external_id'),
 	created_at: timestamp('created_at', {
 		withTimezone: true,
 		mode: 'date',
@@ -513,7 +500,6 @@ export const categories = pgTable('categories', {
 	slug: varchar('slug', {
 		length: 255
 	}),
-	external_id: integer('external_id'),
 	created_at: timestamp('created_at', {
 		withTimezone: true,
 		mode: 'date',
@@ -525,6 +511,8 @@ export const categories = pgTable('categories', {
 		precision: 6
 	}).default(sql`now()`)
 });
+
+export type Categories = InferSelectModel<typeof categories>;
 
 export const categoriesToExternalIds = pgTable('categories_to_external_ids', {
 	categoryId: varchar('category_id', {
@@ -592,7 +580,6 @@ export const mechanics = pgTable('mechanics', {
 	slug: varchar('slug', {
 		length: 255
 	}),
-	external_id: integer('external_id'),
 	created_at: timestamp('created_at', {
 		withTimezone: true,
 		mode: 'date',
@@ -604,6 +591,8 @@ export const mechanics = pgTable('mechanics', {
 		precision: 6
 	}).default(sql`now()`)
 });
+
+export type Mechanics = InferSelectModel<typeof mechanics>;
 
 export const mechanicsToExternalIds = pgTable('mechanics_to_external_ids', {
 	mechanicId: varchar('mechanic_id', {

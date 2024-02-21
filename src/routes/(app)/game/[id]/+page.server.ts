@@ -8,7 +8,7 @@ import {
 	createMechanic,
 	createOrUpdateGame,
 	createPublisher
-} from '$lib/utils/dbUtils.js';
+} from '$lib/utils/db/dbUtils.js';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import prisma from '$lib/prisma';
 import type { PageServerLoad } from './$types';
@@ -119,11 +119,11 @@ async function syncGameAndConnectedData(locals: App.Locals, game: Game, eventFet
 	if (externalGameResponse.ok) {
 		const externalGame = await externalGameResponse.json();
 		console.log('externalGame', externalGame);
-		let categories = [];
-		let mechanics = [];
-		let artists = [];
-		let designers = [];
-		let publishers = [];
+		const categories = [];
+		const mechanics = [];
+		const artists = [];
+		const designers = [];
+		const publishers = [];
 		for (const externalCategory of externalGame.categories) {
 			const category = await createCategory(locals, externalCategory);
 			categories.push({
@@ -156,7 +156,7 @@ async function syncGameAndConnectedData(locals: App.Locals, game: Game, eventFet
 			}
 		}
 
-		let boredGame = mapAPIGameToBoredGame(externalGame);
+		const boredGame = mapAPIGameToBoredGame(externalGame);
 
 		boredGame.categories = categories;
 		boredGame.mechanics = mechanics;

@@ -15,7 +15,7 @@ import {
 	createOrUpdateGame,
 	createOrUpdateGameMinimal,
 	createPublisher
-} from '$lib/utils/dbUtils.js';
+} from '$lib/utils/db/dbUtils.js';
 // import { listGameSchema } from '$lib/config/zod-schemas.js';
 
 async function searchForGames(
