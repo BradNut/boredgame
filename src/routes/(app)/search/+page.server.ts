@@ -20,7 +20,7 @@ import {
 
 async function searchForGames(
 	locals: App.Locals,
-	eventFetch: Function,
+	eventFetch,
 	urlQueryParams: SearchQuery
 ) {
 	try {

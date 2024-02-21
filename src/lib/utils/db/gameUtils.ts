@@ -5,6 +5,23 @@ import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import { PUBLIC_SITE_URL } from '$env/static/public';
 
+export async function getGame(locals: App.Locals, id: string) {
+	if (!id || id === '') {
+		error(400, 'Invalid Request');
+	}
+
+	try {
+		return await db.query.games.findFirst({
+			where: eq(games.id, id)
+		});
+	} catch (e) {
+		console.error(e);
+		return new Response('Could not get games', {
+			status: 500
+		});
+	}
+}
+
 export async function createGame(locals: App.Locals, game: Games, externalId: string) {
 	if (!game || !externalId || externalId === '') {
 		error(400, 'Invalid Request');

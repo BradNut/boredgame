@@ -117,6 +117,10 @@ export const search_schema = z
 
 export type SearchSchema = typeof search_schema;
 
+export const BggForm = z.object({
+	link: z.string().trim().startsWith('https://boardgamegeek.com/boardgame/')
+})
+
 export const collection_search_schema = Search.extend({
 	collection_id: z.string()
 });
