@@ -1,5 +1,4 @@
 <script lang="ts">
-	import GameSearchForm from "$components/search/GameSearchForm.svelte";
 	import Input from "$components/ui/input/input.svelte";
 	import Label from "$components/ui/label/label.svelte";
 

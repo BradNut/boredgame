@@ -6,17 +6,7 @@ import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import { search_schema } from '$lib/zodValidation';
 import type { PageServerLoad } from '../$types.js';
 import type { BggThingDto } from 'boardgamegeekclient/dist/esm/dto/index.js';
-import type { BggLinkDto } from 'boardgamegeekclient/dist/esm/dto/concrete/subdto/BggLinkDto.js';
-import {
-	createArtist,
-	createCategory,
-	createDesigner,
-	createMechanic,
-	createOrUpdateGame,
-	createOrUpdateGameMinimal,
-	createPublisher
-} from '$lib/utils/db/dbUtils.js';
-// import { listGameSchema } from '$lib/config/zod-schemas.js';
+import { createOrUpdateGameMinimal } from '$lib/utils/db/gameUtils';
 
 async function searchForGames(
 	locals: App.Locals,
@@ -83,7 +73,7 @@ async function searchForGames(
 						const externalGame = await externalGameResponse.json();
 						console.log('externalGame', externalGame);
 						const boredGame = mapAPIGameToBoredGame(externalGame);
-						games.push(createOrUpdateGameMinimal(locals, boredGame));
+						games.push(createOrUpdateGameMinimal(locals, boredGame, externalGame.id));
 					}
 				}
 			}

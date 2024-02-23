@@ -45,21 +45,8 @@ export const GET = async ({ url, locals }) => {
 			thumb_url: games.thumb_url
 		})
 			.from(games)
-			.where(sql`match(${games.name}, ${games.slug}) against(${q} in natural language mode)`)
-			.offset(skip).limit(limit).orderBy(sql`${orderBy} ${order}`) || [];
-		// const games =
-		// 	(await prisma.game.findMany({
-		// 		orderBy: {
-		// 			_relevance: {
-		// 				fields: ['name'],
-		// 				search: q,
-		// 				sort: order
-		// 			}
-		// 		},
-		// 		select: exactGameSelect,
-		// 		take: limit,
-		// 		skip
-		// 	})) || [];
+			.where(sql`to_tsvector('simple', ${games.name}) || to_tsvector('simple', ${games.slug}) @@ to_tsquery('simple', ${q})`)
+			.orderBy(sql`${orderBy} ${order}`).offset(skip).limit(limit) || [];
 		if (foundGames.length === 0) {
 			error(404, { message: 'No games found' });
 		}
