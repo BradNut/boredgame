@@ -1,8 +1,9 @@
 import { fail, type Actions } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
+import { zod } from 'sveltekit-superforms/adapters';
 import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
-import { userSchema } from '$lib/config/zod-schemas';
+import { userSchema } from '$lib/validations/zod-schemas';
 import type { PageServerLoad } from './$types';
 import { users } from '../../../../schema';
 import db from '$lib/drizzle';
@@ -15,7 +16,7 @@ const profileSchema = userSchema.pick({
 });
 
 export const load: PageServerLoad = async (event) => {
-	const form = await superValidate(event, profileSchema);
+	const form = await superValidate(event, zod(profileSchema));
 
 	if (!event.locals.user) {
 		const message = { type: 'error', message: 'You are not signed in' } as const;
@@ -37,7 +38,7 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
-		const form = await superValidate(event, profileSchema);
+		const form = await superValidate(event, zod(profileSchema));
 
 		if (!form.valid) {
 			return fail(400, {

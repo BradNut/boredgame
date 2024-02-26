@@ -1,4 +1,5 @@
 import { error } from '@sveltejs/kit';
+import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
 import kebabCase from 'just-kebab-case';
 import type { GameType, SearchQuery } from '$lib/types';
@@ -16,7 +17,7 @@ async function searchForGames(
 	try {
 		console.log('urlQueryParams search games', urlQueryParams);
 
-		const headers: HeadersInit = new Headers();
+		const headers = new Headers();
 		headers.set('Content-Type', 'application/json');
 		const requestInit: RequestInit = {
 			method: 'GET',
@@ -112,7 +113,7 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 		skip: Number(searchParams.skip || defaults.skip),
 		limit: Number(searchParams.limit || defaults.limit),
 		exact: searchParams.exact ? searchParams.exact === 'true' : defaults.exact
-	}, search_schema);
+	}, zod(search_schema));
 
 	const queryParams: SearchQuery = {
 		limit: form.data?.limit,
@@ -189,7 +190,7 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 
 export const actions = {
 	random: async ({ request, locals, fetch }): Promise<any> => {
-		const form = await superValidate(request, search_schema);
+		const form = await superValidate(request, zod(search_schema));
 		const queryParams: SearchQuery = {
 			order_by: 'rank',
 			ascending: false,

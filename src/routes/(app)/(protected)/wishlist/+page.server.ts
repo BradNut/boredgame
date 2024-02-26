@@ -1,4 +1,5 @@
 import { error, redirect, type Actions } from '@sveltejs/kit';
+import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
 import { modifyListGameSchema } from '$lib/config/zod-schemas.js';
 import db from '$lib/drizzle.js';
@@ -49,7 +50,7 @@ export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { locals } = event;
-		const form = await superValidate(event, modifyListGameSchema);
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		try {
 			if (!locals.user) {
@@ -111,7 +112,7 @@ export const actions: Actions = {
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event;
-		const form = await superValidate(event, modifyListGameSchema);
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		try {
 			if (!locals.user) {

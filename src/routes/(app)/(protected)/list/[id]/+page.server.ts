@@ -44,7 +44,7 @@ export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { params, locals, request } = event;
-		const form = await superValidate(event, modifyListGameSchema);
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		if (!locals.user) {
 			throw fail(401);

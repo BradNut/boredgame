@@ -1,5 +1,6 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
+import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { Argon2id } from "oslo/password";
 import db from "$lib/drizzle";
@@ -9,7 +10,7 @@ import type { PageServerLoad } from "./$types";
 import { users } from "../../../../../schema";
 
 export const load: PageServerLoad = async (event) => {
-	const form = await superValidate(event, changeUserPasswordSchema);
+	const form = await superValidate(event, zod(changeUserPasswordSchema));
 	const user = event.locals.user;
 
 	if (!user) {
@@ -28,7 +29,7 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
-		const form = await superValidate(event, changeUserPasswordSchema);
+		const form = await superValidate(event, zod(changeUserPasswordSchema));
 
 		if (!form.valid) {
 			return fail(400, {

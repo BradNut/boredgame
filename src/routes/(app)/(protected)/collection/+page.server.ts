@@ -1,10 +1,11 @@
 import { type Actions, error, fail, redirect } from '@sveltejs/kit';
+import { and, eq } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms/server';
+import { zod } from 'sveltekit-superforms/adapters';
 import { modifyListGameSchema, type ListGame } from '$lib/config/zod-schemas.js';
 import { search_schema } from '$lib/zodValidation.js';
 import type { PageServerLoad } from './$types';
 import db from '$lib/drizzle';
-import { and, eq } from 'drizzle-orm';
 import { collection_items, collections, games } from '../../../../schema';
 
 export const load: PageServerLoad = async ({ fetch, url, locals }) => {
@@ -26,8 +27,8 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 		skip
 	};
 
-	const searchForm = await superValidate(searchData, search_schema);
-	const listManageForm = await superValidate(modifyListGameSchema);
+	const searchForm = await superValidate(searchData, zod(search_schema));
+	const listManageForm = await superValidate(zod(modifyListGameSchema));
 
 	try {
 		const collection = await db.query.collections.findFirst({
@@ -98,7 +99,7 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const form = await superValidate(event, modifyListGameSchema);
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		if (!event.locals.user) {
 			throw fail(401);
@@ -160,7 +161,7 @@ export const actions: Actions = {
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event;
-		const form = await superValidate(event, modifyListGameSchema);
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		if (!locals.user) {
 			throw fail(401);

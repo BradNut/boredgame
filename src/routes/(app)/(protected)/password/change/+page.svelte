@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { changeUserPasswordSchema, userSchema } from '$lib/config/zod-schemas';
+	import { changeUserPasswordSchema, userSchema } from '$lib/validations/zod-schemas.js';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
@@ -9,7 +10,7 @@
 
 	const { form, errors, enhance, delayed, message } = superForm(data.form, {
 		taintedMessage: null,
-		validators: changeUserPasswordSchema,
+		validators: zodClient(changeUserPasswordSchema),
 		delayMs: 0
 	});
 </script>

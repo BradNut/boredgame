@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms/client';
 	import { AlertTriangle, KeyRound } from 'lucide-svelte';
-	import { userSchema } from '$lib/config/zod-schemas';
+	import { profileSchema } from '$lib/validations/account';
 	import * as Alert from "$lib/components/ui/alert";
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$components/ui/input';
@@ -9,16 +10,9 @@
 
 	export let data;
 
-	const profileSchema = userSchema.pick({
-		firstName: true,
-		lastName: true,
-		email: true,
-		username: true
-	});
-
 	const { form, errors, enhance, message } = superForm(data.form, {
 		taintedMessage: null,
-		validators: profileSchema,
+		validators: zodClient(profileSchema),
 		delayMs: 0
 	});
 </script>

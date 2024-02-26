@@ -1,21 +1,17 @@
 import { fail, type Actions } from '@sveltejs/kit';
-import { eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { lucia } from '$lib/server/auth';
 import { Argon2id } from 'oslo/password';
-import { userSchema } from '$lib/config/zod-schemas';
 import db from '$lib/drizzle';
+import { signInSchema } from '$lib/validations/auth'
 import { collections, users, wishlists } from '../../../schema';
 import type { PageServerLoad } from './$types';
 
-const signInSchema = userSchema.pick({
-	username: true,
-	password: true
-});
-
 export const load: PageServerLoad = async (event) => {
-	const form = await superValidate(event, signInSchema);
+	const form = await superValidate(event, zod(signInSchema));
 
 	console.log('login load event', event);
 	if (event.locals.user) {
@@ -31,7 +27,7 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
 	default: async (event) => {
 		const { locals } = event;
-		const form = await superValidate(event, signInSchema);
+		const form = await superValidate(event, zod(signInSchema));
 
 		if (!form.valid) {
 			form.data.password = '';

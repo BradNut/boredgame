@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { quintIn } from 'svelte/easing';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms/client';
 	import * as flashModule from 'sveltekit-flash-message/client';
 	import { ChevronsUpDown } from "lucide-svelte";
 	import { Button } from '$components/ui/button';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
-	import { signUpSchema } from '$lib/config/zod-schemas.js';
+	import { signUpSchema } from '$lib/validations/zod-schemas.js';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Alert from '$lib/components/ui/alert';
 	import { boredState } from '$lib/stores/boredState.js';
@@ -25,7 +26,7 @@
 			},
 		},
     taintedMessage: null,
-    validators: signUpSchema,
+    validators: zodClient(signUpSchema),
     delayMs: 0,
   });
 

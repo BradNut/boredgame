@@ -1,16 +1,18 @@
 <script lang="ts">
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { ConicGradient } from '@skeletonlabs/skeleton';
 	import type { ConicStop } from '@skeletonlabs/skeleton';
+	import { i } from "@inlang/sdk-js";
 	import { superForm } from 'sveltekit-superforms/client';
 	//import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import { userSchema } from '$lib/config/zod-schemas';
+	import { userSchema } from '$lib/validations/zod-schemas';
 	import { AlertTriangle } from 'lucide-svelte';
-	import { i } from "@inlang/sdk-js";
+	import { signInSchema } from '$lib/validations/auth';
 	export let data;
-	const signInSchema = userSchema.pick({ email: true, password: true });
+
 	const { form, errors, enhance, delayed } = superForm(data.form, {
 		taintedMessage: null,
-		validators: signInSchema,
+		validators: zodClient(signInSchema),
 		delayMs: 0
 	});
 	const conicStops: ConicStop[] = [

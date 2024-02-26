@@ -1,11 +1,13 @@
 <script lang="ts">
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { signUpSchema } from '$lib/config/zod-schemas';
+	import { signUpSchema } from '$lib/validations/auth';
+
 	export let data;
 
 	const { form, errors, enhance } = superForm(data.form, {
 		taintedMessage: null,
-		validators: signUpSchema,
+		validators: zodClient(signUpSchema),
 		delayMs: 0
 	});
 	// $: termsValue = $form.terms as Writable<boolean>;
