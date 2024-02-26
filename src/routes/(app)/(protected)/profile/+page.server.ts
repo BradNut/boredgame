@@ -3,21 +3,12 @@ import { eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
-import { userSchema } from '$lib/validations/zod-schemas';
+import { changeEmailSchema, profileSchema } from '$lib/validations/account';
 import type { PageServerLoad } from './$types';
 import { users } from '../../../../schema';
 import db from '$lib/drizzle';
 
-const profileSchema = userSchema.pick({
-	firstName: true,
-	lastName: true,
-	email: true,
-	username: true
-});
-
 export const load: PageServerLoad = async (event) => {
-	const form = await superValidate(event, zod(profileSchema));
-
 	if (!event.locals.user) {
 		const message = { type: 'error', message: 'You are not signed in' } as const;
 		throw redirect(302, '/login', message, event);
@@ -25,14 +16,22 @@ export const load: PageServerLoad = async (event) => {
 
 	const { user } = event.locals;
 
-	form.data = {
-		firstName: user.firstName,
-		lastName: user.lastName,
-		email: user.email,
-		username: user.username
-	};
+	const profileForm = await superValidate(zod(profileSchema), {
+		defaults: {
+			firstName: user.firstName,
+			lastName: user.lastName,
+			username: user.username
+		}
+	});
+	const emailForm = await superValidate(zod(changeEmailSchema), {
+		defaults: {
+			email: user.email
+		}
+	});
+
 	return {
-		form
+		profileForm,
+		emailForm,
 	};
 };
 

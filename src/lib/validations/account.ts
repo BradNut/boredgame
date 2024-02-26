@@ -4,8 +4,11 @@ import { userSchema } from './zod-schemas';
 export const profileSchema = userSchema.pick({
 	firstName: true,
 	lastName: true,
-	email: true,
 	username: true
+});
+
+export const changeEmailSchema = userSchema.pick({
+	email: true,
 });
 
 export const changeUserPasswordSchema = z
