@@ -54,9 +54,12 @@ export const actions: Actions = {
 			const user = event.locals.user;
 
 			const newUsername = form.data.username;
-			const existingUser = await db.query.users.findFirst({
-				where: eq(users.username, newUsername)
-			});
+			const existingUser = await db.query
+				.users
+				.findFirst({
+					where: eq(users.username, newUsername)
+				}
+			);
 
 			if (existingUser && existingUser.id !== user.id) {
 				return setError(form, 'username', 'That username is already taken');
@@ -67,26 +70,9 @@ export const actions: Actions = {
 				.set({
 					first_name: form.data.firstName,
 					last_name: form.data.lastName,
-					email: form.data.email,
 					username: form.data.username
 				})
 				.where(eq(users.id, user.id));
-
-			if (user.email !== form.data.email) {
-				// Send email to confirm new email?
-				// auth.update
-				// await locals.prisma.key.update({
-				// 	where: {
-				// 		id: 'emailpassword:' + user.email
-				// 	},
-				// 	data: {
-				// 		id: 'emailpassword:' + form.data.email
-				// 	}
-				// });
-				// auth.updateUserAttributes(user.user_id, {
-				// 	receiveEmail: false
-				// });
-			}
 		} catch (e) {
 			if (e.message === `AUTH_INVALID_USER_ID`) {
 				// invalid user id
@@ -97,5 +83,49 @@ export const actions: Actions = {
 
 		console.log('profile updated successfully');
 		return message(form, 'Profile updated successfully.');
+	},
+	changeEmail: async (event) => {
+		const form = await superValidate(event, zod(changeEmailSchema));
+
+		const newEmail = form.data?.email;
+		if (!form.valid || !newEmail || newEmail === '') {
+			return fail(400, {
+				form
+			});
+		}
+
+		if (!event.locals.user) {
+			throw redirect(302, '/login');
+		}
+
+		const user = event.locals.user;
+		const existingUser = await db.query.users.findFirst({
+			where: eq(users.email, newEmail)
+		});
+
+		if (existingUser && existingUser.id !== user.id) {
+			return setError(form, 'email', 'That email is already taken');
+		}
+
+		await db
+			.update(users)
+			.set({ email: form.data.email })
+			.where(eq(users.id, user.id));
+
+		if (user.email !== form.data.email) {
+			// Send email to confirm new email?
+			// auth.update
+			// await locals.prisma.key.update({
+			// 	where: {
+			// 		id: 'emailpassword:' + user.email
+			// 	},
+			// 	data: {
+			// 		id: 'emailpassword:' + form.data.email
+			// 	}
+			// });
+			// auth.updateUserAttributes(user.user_id, {
+			// 	receiveEmail: false
+			// });
+		}
 	}
 };

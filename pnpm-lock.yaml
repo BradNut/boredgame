@@ -37,10 +37,10 @@ dependencies:
     version: 5.9.1(prisma@5.9.1)
   '@sentry/sveltekit':
     specifier: ^7.100.1
-    version: 7.100.1(@sveltejs/kit@2.5.1)(svelte@4.2.12)
+    version: 7.100.1(@sveltejs/kit@2.5.2)(svelte@4.2.12)
   '@sveltejs/adapter-vercel':
     specifier: ^5.1.0
-    version: 5.1.0(@sveltejs/kit@2.5.1)
+    version: 5.1.0(@sveltejs/kit@2.5.2)
   '@types/feather-icons':
     specifier: ^4.29.4
     version: 4.29.4
@@ -48,8 +48,8 @@ dependencies:
     specifier: ^0.5.20
     version: 0.5.20
   bits-ui:
-    specifier: ^0.18.2
-    version: 0.18.2(svelte@4.2.12)
+    specifier: ^0.18.3
+    version: 0.18.3(svelte@4.2.12)
   boardgamegeekclient:
     specifier: ^1.9.1
     version: 1.9.1
@@ -64,7 +64,7 @@ dependencies:
     version: 0.6.0
   drizzle-orm:
     specifier: ^0.29.4
-    version: 0.29.4(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.1)(mysql2@3.9.1)(pg@8.11.3)(postgres@3.4.3)
+    version: 0.29.4(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.2)(mysql2@3.9.2)(pg@8.11.3)(postgres@3.4.3)
   feather-icons:
     specifier: ^4.29.1
     version: 4.29.1
@@ -87,17 +87,17 @@ dependencies:
     specifier: 3.0.1
     version: 3.0.1
   lucide-svelte:
-    specifier: ^0.340.0
-    version: 0.340.0(svelte@4.2.12)
+    specifier: ^0.341.0
+    version: 0.341.0(svelte@4.2.12)
   mysql2:
-    specifier: ^3.9.1
-    version: 3.9.1
+    specifier: ^3.9.2
+    version: 3.9.2
   nanoid:
     specifier: ^5.0.6
     version: 5.0.6
   open-props:
-    specifier: ^1.6.19
-    version: 1.6.19
+    specifier: ^1.6.20
+    version: 1.6.20
   oslo:
     specifier: ^1.1.3
     version: 1.1.3
@@ -132,10 +132,10 @@ dependencies:
 devDependencies:
   '@melt-ui/pp':
     specifier: ^0.3.0
-    version: 0.3.0(@melt-ui/svelte@0.74.2)(svelte@4.2.12)
+    version: 0.3.0(@melt-ui/svelte@0.74.3)(svelte@4.2.12)
   '@melt-ui/svelte':
-    specifier: ^0.74.2
-    version: 0.74.2(svelte@4.2.12)
+    specifier: ^0.74.3
+    version: 0.74.3(svelte@4.2.12)
   '@playwright/test':
     specifier: ^1.41.2
     version: 1.41.2
@@ -144,13 +144,13 @@ devDependencies:
     version: 2.6.0
   '@sveltejs/adapter-auto':
     specifier: ^3.1.1
-    version: 3.1.1(@sveltejs/kit@2.5.1)
+    version: 3.1.1(@sveltejs/kit@2.5.2)
   '@sveltejs/enhanced-img':
     specifier: ^0.1.8
     version: 0.1.8(svelte@4.2.12)
   '@sveltejs/kit':
-    specifier: ^2.5.1
-    version: 2.5.1(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
+    specifier: ^2.5.2
+    version: 2.5.2(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
   '@sveltejs/vite-plugin-svelte':
     specifier: ^3.0.2
     version: 3.0.2(svelte@4.2.12)(vite@5.1.4)
@@ -161,8 +161,8 @@ devDependencies:
     specifier: ^20.11.20
     version: 20.11.20
   '@types/pg':
-    specifier: ^8.11.1
-    version: 8.11.1
+    specifier: ^8.11.2
+    version: 8.11.2
   '@typescript-eslint/eslint-plugin':
     specifier: ^6.21.0
     version: 6.21.0(@typescript-eslint/parser@6.21.0)(eslint@8.57.0)(typescript@5.3.3)
@@ -240,13 +240,13 @@ devDependencies:
     version: 2.0.1
   sveltekit-flash-message:
     specifier: ^2.4.2
-    version: 2.4.2(@sveltejs/kit@2.5.1)(svelte@4.2.12)
+    version: 2.4.2(@sveltejs/kit@2.5.2)(svelte@4.2.12)
   sveltekit-rate-limiter:
     specifier: ^0.4.3
-    version: 0.4.3(@sveltejs/kit@2.5.1)
+    version: 0.4.3(@sveltejs/kit@2.5.2)
   sveltekit-superforms:
     specifier: ^2.6.2
-    version: 2.6.2(@sveltejs/kit@2.5.1)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.1)(svelte@4.2.12)
+    version: 2.6.2(@sveltejs/kit@2.5.2)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.1)(svelte@4.2.12)
   tailwindcss:
     specifier: ^3.4.1
     version: 3.4.1(ts-node@10.9.2)
@@ -1982,14 +1982,14 @@ packages:
       - supports-color
     dev: false
 
-  /@melt-ui/pp@0.3.0(@melt-ui/svelte@0.74.2)(svelte@4.2.12):
+  /@melt-ui/pp@0.3.0(@melt-ui/svelte@0.74.3)(svelte@4.2.12):
     resolution: {integrity: sha512-b07Bdh8l2KcwKVCXOY+SoBw1dk9eWvQfMSi6SoacpRVyVmmfpi0kV4oGt3HYF0tUCB3sEmVicxse50ZzZxEzEA==}
     engines: {pnpm: '>=8.6.3'}
     peerDependencies:
       '@melt-ui/svelte': '>= 0.29.0'
       svelte: ^3.55.0 || ^4.0.0 || ^5.0.0-next.1
     dependencies:
-      '@melt-ui/svelte': 0.74.2(svelte@4.2.12)
+      '@melt-ui/svelte': 0.74.3(svelte@4.2.12)
       estree-walker: 3.0.3
       magic-string: 0.30.5
       svelte: 4.2.12
@@ -2007,6 +2007,21 @@ packages:
       focus-trap: 7.5.4
       nanoid: 5.0.6
       svelte: 4.2.12
+    dev: false
+
+  /@melt-ui/svelte@0.74.3(svelte@4.2.12):
+    resolution: {integrity: sha512-eA2Jz3Pf276BdxDumC24mDdpnFuiepfJQSkKWqRSGmSxut0HNVD/kcOAuWfJGDrUfAGPo+aOGJD70P3YIqALVQ==}
+    peerDependencies:
+      svelte: '>=3 <5'
+    dependencies:
+      '@floating-ui/core': 1.6.0
+      '@floating-ui/dom': 1.6.3
+      '@internationalized/date': 3.5.2
+      dequal: 2.0.3
+      focus-trap: 7.5.4
+      nanoid: 5.0.6
+      svelte: 4.2.12
+    dev: true
 
   /@napi-rs/wasm-runtime@0.1.1:
     resolution: {integrity: sha512-ATj9ua659JgrkICjJscaeZdmPr44cb/KFjNWuD0N6pux0SpzaM7+iOuuK11mAnQM2N9q0DT4REu6NkL8ZEhopw==}
@@ -3096,7 +3111,7 @@ packages:
       svelte: 4.2.12
     dev: false
 
-  /@sentry/sveltekit@7.100.1(@sveltejs/kit@2.5.1)(svelte@4.2.12):
+  /@sentry/sveltekit@7.100.1(@sveltejs/kit@2.5.2)(svelte@4.2.12):
     resolution: {integrity: sha512-t6JaivTmw5oIqOpKQ8PNbGjNP99AQY6vMPkhxzVuwPa3A3o2WtmzQoIXNxdrkux5XkoBI9CsT6TsM5TbaMDwjQ==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -3110,7 +3125,7 @@ packages:
       '@sentry/types': 7.100.1
       '@sentry/utils': 7.100.1
       '@sentry/vite-plugin': 0.6.1
-      '@sveltejs/kit': 2.5.1(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
+      '@sveltejs/kit': 2.5.2(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
       magicast: 0.2.8
       sorcery: 0.11.0
     transitivePeerDependencies:
@@ -3199,21 +3214,21 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@sveltejs/adapter-auto@3.1.1(@sveltejs/kit@2.5.1):
+  /@sveltejs/adapter-auto@3.1.1(@sveltejs/kit@2.5.2):
     resolution: {integrity: sha512-6LeZft2Fo/4HfmLBi5CucMYmgRxgcETweQl/yQoZo/895K3S9YWYN4Sfm/IhwlIpbJp3QNvhKmwCHbsqQNYQpw==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
     dependencies:
-      '@sveltejs/kit': 2.5.1(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
+      '@sveltejs/kit': 2.5.2(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
       import-meta-resolve: 4.0.0
     dev: true
 
-  /@sveltejs/adapter-vercel@5.1.0(@sveltejs/kit@2.5.1):
+  /@sveltejs/adapter-vercel@5.1.0(@sveltejs/kit@2.5.2):
     resolution: {integrity: sha512-Z9yRJ4H2/7LcBlvN2/TKu1H0hWoRGonr8kPhP1GJ23LRW76IbiiX5gs/MLc6+ZGogCZYVJ4USmx6m+RFtvQTRw==}
     peerDependencies:
       '@sveltejs/kit': ^2.4.0
     dependencies:
-      '@sveltejs/kit': 2.5.1(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
+      '@sveltejs/kit': 2.5.2(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
       '@vercel/nft': 0.26.2
       esbuild: 0.19.11
     transitivePeerDependencies:
@@ -3232,8 +3247,8 @@ packages:
       - svelte
     dev: true
 
-  /@sveltejs/kit@2.5.1(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4):
-    resolution: {integrity: sha512-TKj08o3mJCoQNLTdRdGkHPePTCPUGTgkew65RDqjVU3MtPVxljsofXQYfXndHfq0P7KoPRO/0/reF6HesU0Djw==}
+  /@sveltejs/kit@2.5.2(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4):
+    resolution: {integrity: sha512-1Pm2lsBYURQsjnLyZa+jw75eVD4gYHxGRwPyFe4DAmB3FjTVR8vRNWGeuDLGFcKMh/B1ij6FTUrc9GrerogCng==}
     engines: {node: '>=18.13'}
     hasBin: true
     requiresBuild: true
@@ -3335,8 +3350,8 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/pg@8.11.1:
-    resolution: {integrity: sha512-tUMU6HRvsosqH0qov7YH0Kj6EnziKoqmHUcREBPlDEQLWT+TxDUBT1MmQ53byHXs171xn3YFPIPwVTkVb16mVg==}
+  /@types/pg@8.11.2:
+    resolution: {integrity: sha512-G2Mjygf2jFMU/9hCaTYxJrwdObdcnuQde1gndooZSOHsNSaCehAuwc7EIuSA34Do8Jx2yZ19KtvW8P0j4EuUXw==}
     dependencies:
       '@types/node': 20.11.20
       pg-protocol: 1.6.0
@@ -3778,8 +3793,8 @@ packages:
       file-uri-to-path: 1.0.0
     dev: false
 
-  /bits-ui@0.18.2(svelte@4.2.12):
-    resolution: {integrity: sha512-N58gPRPmkWUjRZzxH69hPEPNYjGa+wvYGqdBSYhGp0DzfAkqNeXLN7YN3qqpJxF+DFFBz5kLia6LzNLX5djuPA==}
+  /bits-ui@0.18.3(svelte@4.2.12):
+    resolution: {integrity: sha512-kcEJWiOHlHv1R3EAmkVDdTnvucT3A5VL4h5ORkJjGUDrpCtPFoMO7jDF6P9XwpD3qVfIVQhN4OldPRNMXW9/RQ==}
     peerDependencies:
       svelte: ^4.0.0
     dependencies:
@@ -4287,7 +4302,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.29.4(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.1)(mysql2@3.9.1)(pg@8.11.3)(postgres@3.4.3):
+  /drizzle-orm@0.29.4(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.2)(mysql2@3.9.2)(pg@8.11.3)(postgres@3.4.3):
     resolution: {integrity: sha512-ZnSM8TAxFhzH7p1s3+w3pRE/eKaOeNkH9SKitm717pubDVVcV2I0BCDBPGKV+pe02+wMfw37ntlTcCyo2rA3IA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4360,8 +4375,8 @@ packages:
     dependencies:
       '@neondatabase/serverless': 0.8.1
       '@planetscale/database': 1.16.0
-      '@types/pg': 8.11.1
-      mysql2: 3.9.1
+      '@types/pg': 8.11.2
+      mysql2: 3.9.2
       pg: 8.11.3
       postgres: 3.4.3
     dev: false
@@ -4864,7 +4879,7 @@ packages:
     dependencies:
       nanoid: 5.0.6
       svelte: 4.2.12
-      sveltekit-superforms: 2.6.2(@sveltejs/kit@2.5.1)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.1)(svelte@4.2.12)
+      sveltekit-superforms: 2.6.2(@sveltejs/kit@2.5.2)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.1)(svelte@4.2.12)
     dev: false
 
   /fraction.js@4.3.7:
@@ -5486,8 +5501,8 @@ packages:
       oslo: 1.0.1
     dev: false
 
-  /lucide-svelte@0.340.0(svelte@4.2.12):
-    resolution: {integrity: sha512-1l/kRheTpjXVQnahgLLYNu7PF37MUe69FqMG5/T23AnjCuhJCh+malVwKWaJp46AVTgNQOboSakvfdTC81r1eA==}
+  /lucide-svelte@0.341.0(svelte@4.2.12):
+    resolution: {integrity: sha512-RdLUlxgm97pKGS5dKchdhLuxmYBpwpcLvZ5XQH3HPO5rZZU8JvfzFs8vnbZH/tsDeA0UeSzdzZyOYbWkOAbarA==}
     peerDependencies:
       svelte: ^3 || ^4 || ^5.0.0-next.42
     dependencies:
@@ -5687,8 +5702,8 @@ packages:
   /ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
 
-  /mysql2@3.9.1:
-    resolution: {integrity: sha512-3njoWAAhGBYy0tWBabqUQcLtczZUxrmmtc2vszQUekg3kTJyZ5/IeLC3Fo04u6y6Iy5Sba7pIIa2P/gs8D3ZeQ==}
+  /mysql2@3.9.2:
+    resolution: {integrity: sha512-3Cwg/UuRkAv/wm6RhtPE5L7JlPB877vwSF6gfLAS68H+zhH+u5oa3AieqEd0D0/kC3W7qIhYbH419f7O9i/5nw==}
     engines: {node: '>= 8.0'}
     dependencies:
       denque: 2.1.0
@@ -5839,8 +5854,8 @@ packages:
       mimic-fn: 4.0.0
     dev: true
 
-  /open-props@1.6.19:
-    resolution: {integrity: sha512-jf+TFfHH9oH1/8mv9w5IrCCtwwK7SvQlGZbatk2TTWpZQBngfa15XlAmvmXKEfn13as8uL+8WtN/CRecljPCuA==}
+  /open-props@1.6.20:
+    resolution: {integrity: sha512-RwDLtSd785gWnotUZC1rICmFWkeNNQzOd91k3DL0jrwQ7xV5wi9EwGKDK2eiOyPl11/Vx+Btc+dIwCBD2MBpxw==}
     dev: false
 
   /optionator@0.9.3:
@@ -7267,32 +7282,32 @@ packages:
       magic-string: 0.30.7
       periscopic: 3.1.0
 
-  /sveltekit-flash-message@2.4.2(@sveltejs/kit@2.5.1)(svelte@4.2.12):
+  /sveltekit-flash-message@2.4.2(@sveltejs/kit@2.5.2)(svelte@4.2.12):
     resolution: {integrity: sha512-iXZSOp8La7kHQuOsXOcjIp7x24J/Ycs2uPoHwtjsbObVCbjgxZrtvjd0XUfA0mYZBp97BtAQ5SW5owRDJCWq6A==}
     peerDependencies:
       '@sveltejs/kit': 1.x || 2.x
       svelte: 3.x || 4.x || >=5.0.0-next.51
     dependencies:
-      '@sveltejs/kit': 2.5.1(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
+      '@sveltejs/kit': 2.5.2(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
       svelte: 4.2.12
     dev: true
 
-  /sveltekit-rate-limiter@0.4.3(@sveltejs/kit@2.5.1):
+  /sveltekit-rate-limiter@0.4.3(@sveltejs/kit@2.5.2):
     resolution: {integrity: sha512-BKkD2tvgyz5j4Fn1vt0y7FLF0zZ01f9thjWPGDb6fyX3tBXyMrtZ8ISK8M7zjz9Cik/2KrkvFtmldhXF6/hjqw==}
     peerDependencies:
       '@sveltejs/kit': 1.x || 2.x
     dependencies:
       '@isaacs/ttlcache': 1.4.1
-      '@sveltejs/kit': 2.5.1(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
+      '@sveltejs/kit': 2.5.2(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
     dev: true
 
-  /sveltekit-superforms@2.6.2(@sveltejs/kit@2.5.1)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.1)(svelte@4.2.12):
+  /sveltekit-superforms@2.6.2(@sveltejs/kit@2.5.2)(@types/json-schema@7.0.15)(esbuild-runner@2.2.2)(esbuild@0.20.1)(svelte@4.2.12):
     resolution: {integrity: sha512-a2dlCO5v+AiDJjEmVlUfEec4Spx/2VC5lp6yEh97sKsIQsNY63lwL8Uh9PmgzOGerDchUwlB008nAZJJf9PDng==}
     peerDependencies:
       '@sveltejs/kit': 1.x || 2.x
       svelte: 3.x || 4.x || >=5.0.0-next.51
     dependencies:
-      '@sveltejs/kit': 2.5.1(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
+      '@sveltejs/kit': 2.5.2(@sveltejs/vite-plugin-svelte@3.0.2)(svelte@4.2.12)(vite@5.1.4)
       devalue: 4.3.2
       just-clone: 6.2.0
       memoize-weak: 1.0.2

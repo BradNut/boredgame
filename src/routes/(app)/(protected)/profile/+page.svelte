@@ -20,7 +20,7 @@
 		taintedMessage: null,
 		validators: zodClient(changeEmailSchema),
 		delayMs: 0
-	})
+	});
 </script>
 
 <form method="POST" use:profileEnhance>
@@ -56,6 +56,8 @@
 			<small>{$profileErrors.lastName}</small>
 		{/if}
 	</div>
+</form>
+<form method="POST" action="?/changeEmail" use:emailEnhance>
 	<div class="grid gap-2 mt-6">
 		<Label for="email">Email address</Label>
 		<Input
