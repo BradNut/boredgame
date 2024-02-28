@@ -24,8 +24,8 @@ dependencies:
     specifier: ^2.0.1
     version: 2.0.1
   '@neondatabase/serverless':
-    specifier: ^0.8.1
-    version: 0.8.1
+    specifier: ^0.9.0
+    version: 0.9.0
   '@paralleldrive/cuid2':
     specifier: ^2.2.2
     version: 2.2.2
@@ -48,8 +48,8 @@ dependencies:
     specifier: ^0.5.20
     version: 0.5.20
   bits-ui:
-    specifier: ^0.18.3
-    version: 0.18.3(svelte@4.2.12)
+    specifier: ^0.18.4
+    version: 0.18.4(svelte@4.2.12)
   boardgamegeekclient:
     specifier: ^1.9.1
     version: 1.9.1
@@ -64,7 +64,7 @@ dependencies:
     version: 0.6.0
   drizzle-orm:
     specifier: ^0.29.4
-    version: 0.29.4(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.2)(mysql2@3.9.2)(pg@8.11.3)(postgres@3.4.3)
+    version: 0.29.4(@neondatabase/serverless@0.9.0)(@planetscale/database@1.16.0)(@types/pg@8.11.2)(mysql2@3.9.2)(pg@8.11.3)(postgres@3.4.3)
   feather-icons:
     specifier: ^4.29.1
     version: 4.29.1
@@ -227,8 +227,8 @@ devDependencies:
     specifier: ^4.2.12
     version: 4.2.12
   svelte-check:
-    specifier: ^3.6.4
-    version: 3.6.4(postcss-load-config@5.0.3)(postcss@8.4.35)(sass@1.71.1)(svelte@4.2.12)
+    specifier: ^3.6.5
+    version: 3.6.5(postcss-load-config@5.0.3)(postcss@8.4.35)(sass@1.71.1)(svelte@4.2.12)
   svelte-meta-tags:
     specifier: ^3.1.0
     version: 3.1.0(svelte@4.2.12)(typescript@5.3.3)
@@ -1915,13 +1915,6 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@jridgewell/trace-mapping@0.3.22:
-    resolution: {integrity: sha512-Wf963MzWtA2sjrNt+g18IAln9lKnlRp+K2eH4jjIoF1wYeq3aMREpG09xhlhdzS0EjwU7qmUJYangWa+151vZw==}
-    dependencies:
-      '@jridgewell/resolve-uri': 3.1.1
-      '@jridgewell/sourcemap-codec': 1.4.15
-    dev: true
-
   /@jridgewell/trace-mapping@0.3.23:
     resolution: {integrity: sha512-9/4foRoUKp8s96tSkh8DlAAc5A0Ty8vLXld+l9gjKKY6ckwI8G15f0hskGmuLZu78ZlGa1vtsfOa+lnB4vG6Jg==}
     dependencies:
@@ -2033,8 +2026,8 @@ packages:
     dev: false
     optional: true
 
-  /@neondatabase/serverless@0.8.1:
-    resolution: {integrity: sha512-nxZfTLbGqvDrw0W9WnQxzoPn4KC6SLjkvK4grdf6eWVMQSc24X+8udz9inZWOGu8f0O3wJAq586fCZ32r22lwg==}
+  /@neondatabase/serverless@0.9.0:
+    resolution: {integrity: sha512-mmJnUAzlzvxNSZuuhI6kgJjH+JgFdBMYUWxihtq/nj0Tjt+Y5UU3W+SvRFoucnd5NObYkuLYQzk+zV5DGFKGJg==}
     dependencies:
       '@types/pg': 8.6.6
     dev: false
@@ -3793,8 +3786,8 @@ packages:
       file-uri-to-path: 1.0.0
     dev: false
 
-  /bits-ui@0.18.3(svelte@4.2.12):
-    resolution: {integrity: sha512-kcEJWiOHlHv1R3EAmkVDdTnvucT3A5VL4h5ORkJjGUDrpCtPFoMO7jDF6P9XwpD3qVfIVQhN4OldPRNMXW9/RQ==}
+  /bits-ui@0.18.4(svelte@4.2.12):
+    resolution: {integrity: sha512-Xw0DdjT21rJ1ICTy3CHXAKy6is3phXRqjpNwRZldC3A316thRCJn+viEtTifgh4kI+qCm5VutzBqsrimFd+CSA==}
     peerDependencies:
       svelte: ^4.0.0
     dependencies:
@@ -4302,7 +4295,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.29.4(@neondatabase/serverless@0.8.1)(@planetscale/database@1.16.0)(@types/pg@8.11.2)(mysql2@3.9.2)(pg@8.11.3)(postgres@3.4.3):
+  /drizzle-orm@0.29.4(@neondatabase/serverless@0.9.0)(@planetscale/database@1.16.0)(@types/pg@8.11.2)(mysql2@3.9.2)(pg@8.11.3)(postgres@3.4.3):
     resolution: {integrity: sha512-ZnSM8TAxFhzH7p1s3+w3pRE/eKaOeNkH9SKitm717pubDVVcV2I0BCDBPGKV+pe02+wMfw37ntlTcCyo2rA3IA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -4373,7 +4366,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@neondatabase/serverless': 0.8.1
+      '@neondatabase/serverless': 0.9.0
       '@planetscale/database': 1.16.0
       '@types/pg': 8.11.2
       mysql2: 3.9.2
@@ -7113,13 +7106,13 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /svelte-check@3.6.4(postcss-load-config@5.0.3)(postcss@8.4.35)(sass@1.71.1)(svelte@4.2.12):
-    resolution: {integrity: sha512-mY/dqucqm46p72M8yZmn81WPZx9mN6uuw8UVfR3ZKQeLxQg5HDGO3HHm5AZuWZPYNMLJ+TRMn+TeN53HfQ/vsw==}
+  /svelte-check@3.6.5(postcss-load-config@5.0.3)(postcss@8.4.35)(sass@1.71.1)(svelte@4.2.12):
+    resolution: {integrity: sha512-5aLgoQEdadvp8ypvKQ2avhnQ+V9YPQQaWrTFlXFw5g/v8xIQBvo+X/WqxTyD+V/ItDqXg3+abUA53rdDHgUjCA==}
     hasBin: true
     peerDependencies:
       svelte: ^3.55.0 || ^4.0.0-next.0 || ^4.0.0 || ^5.0.0-next.0
     dependencies:
-      '@jridgewell/trace-mapping': 0.3.22
+      '@jridgewell/trace-mapping': 0.3.23
       chokidar: 3.6.0
       fast-glob: 3.3.2
       import-fresh: 3.3.0

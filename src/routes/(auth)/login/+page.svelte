@@ -3,7 +3,7 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import * as flashModule from 'sveltekit-flash-message/client';
 	import { AlertCircle } from "lucide-svelte";
-	import { signInSchema } from '$lib/validations/zod-schemas.js';
+	import { signInSchema } from '$lib/validations/auth';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';

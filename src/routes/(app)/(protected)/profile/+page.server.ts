@@ -16,16 +16,22 @@ export const load: PageServerLoad = async (event) => {
 
 	const { user } = event.locals;
 
+	const dbUser = await db.query
+		.users
+		.findFirst({
+			where: eq(users.id, user.id)
+		});
+
 	const profileForm = await superValidate(zod(profileSchema), {
 		defaults: {
-			firstName: user.firstName,
-			lastName: user.lastName,
-			username: user.username
+			firstName: dbUser?.first_name || '',
+			lastName: dbUser?.last_name || '',
+			username: dbUser?.username || '',
 		}
 	});
 	const emailForm = await superValidate(zod(changeEmailSchema), {
 		defaults: {
-			email: user.email
+			email: dbUser?.email || '',
 		}
 	});
 
@@ -36,7 +42,7 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions: Actions = {
-	default: async (event) => {
+	profileUpdate: async (event) => {
 		const form = await superValidate(event, zod(profileSchema));
 
 		if (!form.valid) {
@@ -82,7 +88,7 @@ export const actions: Actions = {
 		}
 
 		console.log('profile updated successfully');
-		return message(form, 'Profile updated successfully.');
+		return message(form, { type: 'success', message: 'Profile updated successfully!' });
 	},
 	changeEmail: async (event) => {
 		const form = await superValidate(event, zod(changeEmailSchema));
@@ -104,7 +110,7 @@ export const actions: Actions = {
 		});
 
 		if (existingUser && existingUser.id !== user.id) {
-			return setError(form, 'email', 'That email is already taken');
+			return setError(form, 'email', { type: 'error', message: 'That email is already taken' });
 		}
 
 		await db
@@ -127,5 +133,7 @@ export const actions: Actions = {
 			// 	receiveEmail: false
 			// });
 		}
+
+		return message(form, { type: 'success', message: 'Email updated successfully!' });
 	}
 };
