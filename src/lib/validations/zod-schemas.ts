@@ -24,7 +24,6 @@ export const userSchema = z.object({
 	email: z.string()
 		.trim()
 		.max(64, { message: 'Email must be less than 64 characters' })
-		.email({ message: 'Please enter a valid email address' })
 		.optional(),
 	username: z
 		.string()

@@ -1,17 +1,26 @@
 <script lang="ts">
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms/client';
-	import { changeUserPasswordSchema, userSchema } from '$lib/validations/zod-schemas.js';
+	import * as flashModule from 'sveltekit-flash-message/client';
+	import { changeUserPasswordSchema } from '$lib/validations/account';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
-	import { string } from 'zod';
 	export let data;
 
 	const { form, errors, enhance, delayed, message } = superForm(data.form, {
 		taintedMessage: null,
 		validators: zodClient(changeUserPasswordSchema),
-		delayMs: 0
+		delayMs: 500,
+		multipleSubmits: 'prevent',
+		syncFlashMessage: true,
+		flashMessage: {
+			module: flashModule,
+			onError: ({ result }) => {
+				const errorMessage = result.error.message
+				message.set({ type: 'error', message: errorMessage });
+			}
+		}
 	});
 </script>
 

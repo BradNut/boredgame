@@ -1,17 +1,19 @@
-import { type Actions, error, fail, redirect } from '@sveltejs/kit';
+import { type Actions, error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms/server';
 import { zod } from 'sveltekit-superforms/adapters';
-import { modifyListGameSchema, type ListGame } from '$lib/config/zod-schemas.js';
+import { redirect } from 'sveltekit-flash-message/server'
+import { modifyListGameSchema, type ListGame } from '$lib/validations/zod-schemas';
 import { search_schema } from '$lib/zodValidation.js';
-import type { PageServerLoad } from './$types';
 import db from '$lib/drizzle';
 import { collection_items, collections, games } from '../../../../schema';
+import { notSignedInMessage } from '$lib/flashMessages';
 
-export const load: PageServerLoad = async ({ fetch, url, locals }) => {
+export async function load(event) {
+	const { url, locals } = event;
 	const user = locals.user;
 	if (!user) {
-		redirect(302, '/login');
+		redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	// console.log('locals load', locals);

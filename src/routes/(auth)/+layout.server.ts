@@ -1,9 +1,10 @@
-import { redirect } from '@sveltejs/kit';
-import type { LayoutServerLoad } from './$types';
+import { redirect } from 'sveltekit-flash-message/server';
+import { notSignedInMessage } from '$lib/flashMessages';
 
-export const load: LayoutServerLoad = async ({ url, locals }) => {
+export async function load(event) {
+	const { url, locals } = event;
 	if (locals.user) {
-		redirect(302, '/');
+		redirect(302, '/', notSignedInMessage, event);
 	}
 
 	return {

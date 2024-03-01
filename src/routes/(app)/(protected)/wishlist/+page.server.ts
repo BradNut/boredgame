@@ -1,14 +1,17 @@
-import { error, redirect, type Actions } from '@sveltejs/kit';
+import { error, type Actions } from '@sveltejs/kit';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
-import { modifyListGameSchema } from '$lib/config/zod-schemas.js';
+import { redirect } from 'sveltekit-flash-message/server';
+import { modifyListGameSchema } from '$lib/validations/zod-schemas';
 import db from '$lib/drizzle.js';
 import { and, eq } from 'drizzle-orm';
 import { games, wishlist_items, wishlists } from '../../../../schema.js';
+import { notSignedInMessage } from '$lib/flashMessages.js';
 
-export async function load({ params, locals }) {
+export async function load(event) {
+	const { params, locals } = event;
 	if (!locals.user) {
-		redirect(302, '/login');
+		redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	console.log('Wishlist load User id', locals.user.id);
@@ -54,7 +57,7 @@ export const actions: Actions = {
 
 		try {
 			if (!locals.user) {
-				redirect(302, '/login');
+				redirect(302, '/login', notSignedInMessage, event);
 			}
 
 			const game = await db.query.games.findFirst({
@@ -96,9 +99,10 @@ export const actions: Actions = {
 		}
 	},
 	// Create new wishlist
-	create: async ({ locals }) => {
+	create: async (event) => {
+		const { locals } = event;
 		if (!locals.user) {
-			redirect(302, '/login');
+			redirect(302, '/login', notSignedInMessage, event);
 		}
 		return error(405, 'Method not allowed');
 	},
@@ -116,7 +120,7 @@ export const actions: Actions = {
 
 		try {
 			if (!locals.user) {
-				redirect(302, '/login');
+				redirect(302, '/login', notSignedInMessage, event);
 			}
 
 			const game = await db.query.games.findFirst({

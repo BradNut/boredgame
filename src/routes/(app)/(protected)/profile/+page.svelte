@@ -26,7 +26,12 @@
 	const { form: emailForm, errors: emailErrors, enhance: emailEnhance } = superForm(data.emailForm, {
 		taintedMessage: null,
 		validators: zodClient(changeEmailSchema),
-		delayMs: 0
+		delayMs: 500,
+		multipleSubmits: 'prevent',
+		syncFlashMessage: true,
+		flashMessage: {
+			module: flashModule,
+		}
 	});
 </script>
 

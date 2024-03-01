@@ -1,20 +1,22 @@
-import { fail, redirect, type Actions } from "@sveltejs/kit";
+import { fail, type Actions } from "@sveltejs/kit";
 import { eq } from "drizzle-orm";
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
+import { redirect } from 'sveltekit-flash-message/server'
 import { Argon2id } from "oslo/password";
 import db from "$lib/drizzle";
-import { changeUserPasswordSchema } from '$lib/config/zod-schemas.js';
+import { changeUserPasswordSchema } from '$lib/validations/account';
 import { lucia } from '$lib/server/auth.js';
 import type { PageServerLoad } from "./$types";
 import { users } from "../../../../../schema";
+import { notSignedInMessage } from "$lib/flashMessages";
 
 export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, zod(changeUserPasswordSchema));
 	const user = event.locals.user;
 
 	if (!user) {
-		redirect(302, '/login');
+		redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	form.data = {
@@ -39,7 +41,7 @@ export const actions: Actions = {
 
 		console.log('updating profile');
 		if (!event.locals.user) {
-			redirect(302, '/login');
+		  redirect(302, '/login', notSignedInMessage, event);
 		}
 
 		const user = event.locals.user;
@@ -61,7 +63,7 @@ export const actions: Actions = {
 		const currentPasswordVerified = await new Argon2id().verify(dbUser.hashed_password, form.data.current_password);
 
 		if (!currentPasswordVerified) {
-			return setError(form, 'current_password', 'Your password is incorrect.');
+			return setError(form, 'current_password', 'Your password is incorrect');
 		}
 
 		try {
@@ -78,13 +80,22 @@ export const actions: Actions = {
 					country: event.locals.session?.ip,
 				});
 				const sessionCookie = lucia.createSessionCookie(session.id);
-				return new Response(null, {
+				redirect({
 					status: 302,
-					headers: {
-						Location: '/login',
-						'Set-Cookie': sessionCookie.serialize()
-					}
+					location: '/login',
+					message: {
+						type: 'success',
+						text: 'Password changed successfully'
+					},
+					event: sessionCookie.serialize()
 				});
+				// return new Response(null, {
+				// 	status: 302,
+				// 	headers: {
+				// 		Location: '/login',
+				// 		'Set-Cookie': sessionCookie.serialize()
+				// 	}
+				// });
 			} else {
 				return setError(
 					form,

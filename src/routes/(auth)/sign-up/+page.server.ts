@@ -2,14 +2,24 @@ import { fail, error, type Actions, redirect } from '@sveltejs/kit';
 import { Argon2id } from 'oslo/password';
 import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
-import { setError, superValidate } from 'sveltekit-superforms/server';
+import { zod } from 'sveltekit-superforms/adapters';
+import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import type { PageServerLoad } from './$types';
 import { lucia } from '$lib/server/auth';
-import { signUpSchema } from '$lib/config/zod-schemas';
+import { signUpSchema } from '$lib/validations/auth';
 import { add_user_to_role } from '$server/roles';
-import type { Message } from '$lib/types.js';
 import db from '$lib/drizzle';
 import { collections, users, wishlists } from '../../../schema';
+
+const signUpDefaults = {
+	firstName: '',
+	lastName: '',
+	email: '',
+	username: '',
+	password: '',
+	confirm_password: '',
+	terms: true
+};
 
 export const load: PageServerLoad = async (event) => {
 	console.log('sign up load event', event);
@@ -18,13 +28,15 @@ export const load: PageServerLoad = async (event) => {
 	// 	throw redirect(302, '/');
 	// }
 	return {
-		form: await superValidate<typeof signUpSchema, Message>(event, signUpSchema)
+		form: await superValidate(zod(signUpSchema), {
+			defaults: signUpDefaults
+		})
 	};
 };
 
 export const actions: Actions = {
 	default: async (event) => {
-		const form = await superValidate<typeof signUpSchema, Message>(event, signUpSchema);
+		const form = await superValidate(event, zod(signUpSchema));
 		if (!form.valid) {
 			form.data.password = '';
 			form.data.confirm_password = '';

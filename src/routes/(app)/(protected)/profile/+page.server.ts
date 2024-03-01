@@ -1,17 +1,18 @@
 import { fail, type Actions } from '@sveltejs/kit';
+import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { changeEmailSchema, profileSchema } from '$lib/validations/account';
+import { notSignedInMessage } from '$lib/flashMessages';
+import db from '$lib/drizzle';
 import type { PageServerLoad } from './$types';
 import { users } from '../../../../schema';
-import db from '$lib/drizzle';
 
 export const load: PageServerLoad = async (event) => {
 	if (!event.locals.user) {
-		const message = { type: 'error', message: 'You are not signed in' } as const;
-		throw redirect(302, '/login', message, event);
+		redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	const { user } = event.locals;
@@ -41,6 +42,13 @@ export const load: PageServerLoad = async (event) => {
 	};
 };
 
+const changeEmailIfNotEmpty = z.object({
+	email: z.string()
+		.trim()
+		.max(64, { message: 'Email must be less than 64 characters' })
+		.email({ message: 'Please enter a valid email' })
+	});
+
 export const actions: Actions = {
 	profileUpdate: async (event) => {
 		const form = await superValidate(event, zod(profileSchema));
@@ -51,7 +59,7 @@ export const actions: Actions = {
 			});
 		}
 		if (!event.locals.user) {
-			throw redirect(302, '/login');
+			redirect(302, '/login', notSignedInMessage, event);
 		}
 
 		try {
@@ -94,14 +102,14 @@ export const actions: Actions = {
 		const form = await superValidate(event, zod(changeEmailSchema));
 
 		const newEmail = form.data?.email;
-		if (!form.valid || !newEmail || newEmail === '') {
+		if (!form.valid || !newEmail || (newEmail !== '' && changeEmailIfNotEmpty.safeParse(form.data).success === false)) {
 			return fail(400, {
 				form
 			});
 		}
 
 		if (!event.locals.user) {
-			throw redirect(302, '/login');
+		  redirect(302, '/login', notSignedInMessage, event);
 		}
 
 		const user = event.locals.user;
@@ -110,7 +118,7 @@ export const actions: Actions = {
 		});
 
 		if (existingUser && existingUser.id !== user.id) {
-			return setError(form, 'email', { type: 'error', message: 'That email is already taken' });
+			return setError(form, 'email', 'That email is already taken');
 		}
 
 		await db
