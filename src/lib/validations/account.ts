@@ -21,6 +21,8 @@ export const changeUserPasswordSchema = z
 		refinePasswords(confirm_password, password, ctx);
 	});
 
+export type ChangeUserPasswordSchema = typeof changeUserPasswordSchema;
+
 export const updateUserPasswordSchema = userSchema
 	.pick({ password: true, confirm_password: true })
 	.superRefine(({ confirm_password, password }, ctx) => {

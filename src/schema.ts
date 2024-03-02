@@ -138,6 +138,29 @@ export const user_role_relations = relations(user_roles, ({ one }) => ({
 
 export type UserRoles = InferSelectModel<typeof user_roles>;
 
+export const password_reset_tokens = pgTable('password_reset_tokens', {
+	id: varchar('id', {
+		length: 255
+	})
+		.primaryKey()
+		.$defaultFn(() => nanoid()),
+	user_id: varchar('user_id', {
+		length: 255
+	})
+		.notNull()
+		.references(() => users.id, { onDelete: 'cascade' }),
+	expires_at: timestamp('expires_at', {
+		withTimezone: true,
+		mode: 'date',
+		precision: 6
+	}),
+	created_at: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'date',
+		precision: 6
+	}).default(sql`now()`)
+});
+
 export const collections = pgTable('collections', {
 	id: varchar('id', {
 		length: 255

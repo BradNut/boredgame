@@ -1,9 +1,10 @@
-import { fail, error, type Actions, redirect } from '@sveltejs/kit';
+import { fail, error, type Actions } from '@sveltejs/kit';
 import { Argon2id } from 'oslo/password';
 import { eq } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import { zod } from 'sveltekit-superforms/adapters';
-import { message, setError, superValidate } from 'sveltekit-superforms/server';
+import { setError, superValidate } from 'sveltekit-superforms/server';
+import { redirect } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from './$types';
 import { lucia } from '$lib/server/auth';
 import { signUpSchema } from '$lib/validations/auth';
@@ -22,11 +23,13 @@ const signUpDefaults = {
 };
 
 export const load: PageServerLoad = async (event) => {
-	console.log('sign up load event', event);
-	// const session = await event.locals.auth.validate();
-	// if (session) {
-	// 	throw redirect(302, '/');
-	// }
+	// redirect(302, '/waitlist', { type: 'error', message: 'Sign-up not yet available. Please add your email to the waitlist!' }, event);
+
+	if (event.locals.user) {
+		const message = { type: 'success', message: 'You are already signed in' } as const;
+		throw redirect('/', message, event);
+	}
+
 	return {
 		form: await superValidate(zod(signUpSchema), {
 			defaults: signUpDefaults
@@ -36,6 +39,7 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
+		// fail(401, { message: 'Sign-up not yet available. Please add your email to the waitlist!' });
 		const form = await superValidate(event, zod(signUpSchema));
 		if (!form.valid) {
 			form.data.password = '';

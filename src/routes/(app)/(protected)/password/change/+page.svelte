@@ -1,34 +1,25 @@
 <script lang="ts">
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms/client';
-	import * as flashModule from 'sveltekit-flash-message/client';
-	import * as Alert from "$lib/components/ui/alert";
-	import { changeUserPasswordSchema } from '$lib/validations/account';
-	import { Label } from '$components/ui/label';
-	import { Input } from '$components/ui/input';
-	import { Button } from '$components/ui/button';
 	import { AlertTriangle } from 'lucide-svelte';
+	import * as Alert from "$lib/components/ui/alert";
+	import * as Form from '$lib/components/ui/form';
+	import { Input } from '$components/ui/input';
+	import { changeUserPasswordSchema } from '$lib/validations/account';
+
 	export let data;
 
-	const { form, errors, enhance, delayed, message } = superForm(data.form, {
+	const form = superForm(data.form, {
 		taintedMessage: null,
 		validators: zodClient(changeUserPasswordSchema),
 		delayMs: 500,
-		multipleSubmits: 'prevent',
-		syncFlashMessage: true,
-		flashMessage: {
-			module: flashModule,
-			onError: ({ result }) => {
-				console.log('result', result);
-				const errorMessage = result.error.message
-				message.set({ type: 'error', message: errorMessage });
-			}
-		}
+		multipleSubmits: 'prevent'
 	});
+
+	const { form: formData, enhance } = form;
 </script>
 
 <form method="POST" use:enhance>
-	<!--<SuperDebug data={$form} />-->
 	<h3>Change Password</h3>
 	<hr class="!border-t-2 mt-2 mb-6" />
 	<Alert.Root variant="destructive">
@@ -38,39 +29,28 @@
 			Changing your password will log you out of all devices.
 		</Alert.Description>
 	</Alert.Root>
-	{#if $message}
-		<aside class="alert variant-filled-success mt-6">
-			<!-- Message -->
-			<div class="alert-message">
-				<p>{$message}</p>
-			</div>
-		</aside>
-	{/if}
-	<div class="mt-6">
-		<Label for="current_password">Current Password</Label>
-		<Input type="password" id="current_password" name="current_password" placeholder="Current Password" autocomplete="password" data-invalid={$errors.current_password} bind:value={$form.current_password} />
-		{#if $errors.current_password}
-			<small>{$errors.current_password}</small>
-		{/if}
-	</div>
-	<div class="mt-6 grid">
-		<Label for="password">New Password</Label>
-		<Input type="password" id="password" name="password" placeholder="Password" autocomplete="given-name" data-invalid={$errors.password} bind:value={$form.password} />
-		{#if $errors.password}
-			<small>{$errors.password}</small>
-		{/if}
-	</div>
-	<div class="mt-6">
-		<Label for="confirm_password">Confirm New Password</Label>
-		<Input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" autocomplete="family-name" data-invalid={$errors.confirm_password} bind:value={$form.confirm_password} />
-		{#if $errors.confirm_password}
-			<small>{$errors.confirm_password}</small>
-		{/if}
-	</div>
-
-	<div class="mt-6">
-		<Button type="submit" class="w-full">Change Password</Button>
-	</div>
+	<Form.Field {form} name="current_password">
+		<Form.Control let:attrs>
+			<Form.Label for="current_password">Current Password</Form.Label>
+			<Input {...attrs} bind:value={$formData.current_password} />
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+	<Form.Field {form} name="password">
+		<Form.Control let:attrs>
+			<Form.Label for="password">New Password</Form.Label>
+			<Input {...attrs} bind:value={$formData.password} />
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+	<Form.Field {form} name="confirm_password">
+		<Form.Control let:attrs>
+			<Form.Label for="confirm_password">Confirm New Password</Form.Label>
+			<Input {...attrs} bind:value={$formData.confirm_password} />
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+	<Form.Button>Submit</Form.Button>
 </form>
 
 <style lang="postcss">

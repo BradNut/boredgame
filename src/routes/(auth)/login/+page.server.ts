@@ -11,13 +11,12 @@ import { collections, users, wishlists } from '../../../schema';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-	const form = await superValidate(event, zod(signInSchema));
-
-	console.log('login load event', event);
 	if (event.locals.user) {
 		const message = { type: 'success', message: 'You are already signed in' } as const;
 		throw redirect('/', message, event);
 	}
+
+	const form = await superValidate(event, zod(signInSchema));
 
 	return {
 		form
