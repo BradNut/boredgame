@@ -3,9 +3,9 @@ import { eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
-import { lucia } from '$lib/server/auth';
 import { Argon2id } from 'oslo/password';
 import db from '$lib/drizzle';
+import { lucia } from '$lib/server/auth';
 import { signInSchema } from '$lib/validations/auth'
 import { collections, users, wishlists } from '../../../schema';
 import type { PageServerLoad } from './$types';
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async (event) => {
 
 	console.log('login load event', event);
 	if (event.locals.user) {
-		const message = { type: 'info', message: 'You are already signed in' } as const;
+		const message = { type: 'success', message: 'You are already signed in' } as const;
 		throw redirect('/', message, event);
 	}
 
@@ -93,8 +93,7 @@ export const actions: Actions = {
 
 		form.data.username = '';
 		form.data.password = '';
-		const message = { type: 'success', message: 'Signed In!' };
-		// return { form, message };
-		throw redirect('/', message, event);
+		const message = { type: 'success', message: 'Signed In!' } as const;
+		redirect('/', message, event);
 	}
 };

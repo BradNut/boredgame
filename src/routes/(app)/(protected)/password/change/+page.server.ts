@@ -10,6 +10,7 @@ import { lucia } from '$lib/server/auth.js';
 import type { PageServerLoad } from "./$types";
 import { users } from "../../../../../schema";
 import { notSignedInMessage } from "$lib/flashMessages";
+import type { Cookie } from "lucia";
 
 export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, zod(changeUserPasswordSchema));
@@ -44,6 +45,10 @@ export const actions: Actions = {
 		  redirect(302, '/login', notSignedInMessage, event);
 		}
 
+		if (!event.locals.session) {
+			return fail(401);
+		}
+
 		const user = event.locals.user;
 
 		const dbUser = await db.query.users.findFirst({
@@ -65,9 +70,9 @@ export const actions: Actions = {
 		if (!currentPasswordVerified) {
 			return setError(form, 'current_password', 'Your password is incorrect');
 		}
-
-		try {
-			if (user?.username) {
+		if (user?.username) {
+			let sessionCookie: Cookie;
+			try {
 				if (form.data.password !== form.data.confirm_password) {
 					return setError(form, 'Password and confirm password do not match');
 				}
@@ -79,37 +84,29 @@ export const actions: Actions = {
 				const session = await lucia.createSession(user.id, {
 					country: event.locals.session?.ip,
 				});
-				const sessionCookie = lucia.createSessionCookie(session.id);
-				redirect({
-					status: 302,
-					location: '/login',
-					message: {
-						type: 'success',
-						text: 'Password changed successfully'
-					},
-					event: sessionCookie.serialize()
-				});
-				// return new Response(null, {
-				// 	status: 302,
-				// 	headers: {
-				// 		Location: '/login',
-				// 		'Set-Cookie': sessionCookie.serialize()
-				// 	}
-				// });
-			} else {
-				return setError(
-					form,
-					'Error occurred. Please try again or contact support if you need further help.'
-				);
+				sessionCookie = lucia.createBlankSessionCookie();
+			} catch (e) {
+				console.error(e);
+				form.data.password = '';
+				form.data.confirm_password = '';
+				form.data.current_password = '';
+				return setError(form, 'current_password', 'Your password is incorrect.');
 			}
-		} catch (e) {
-			console.error(e);
-			form.data.password = '';
-			form.data.confirm_password = '';
-			form.data.current_password = '';
-			return setError(form, 'current_password', 'Your password is incorrect.');
-		}
+			event.cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: ".",
+				...sessionCookie.attributes
+			});
 
+			const message = {
+				type: 'success',
+				message: 'Password Updated. Please sign in.'
+			} as const;
+			redirect(302, '/login', message, event);
+		}
+		return setError(
+			form,
+			'Error occurred. Please try again or contact support if you need further help.'
+		);
 		// TODO: Add toast instead?
 		// form.data.password = '';
 		// form.data.confirm_password = '';

@@ -2,10 +2,12 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { superForm } from 'sveltekit-superforms/client';
 	import * as flashModule from 'sveltekit-flash-message/client';
+	import * as Alert from "$lib/components/ui/alert";
 	import { changeUserPasswordSchema } from '$lib/validations/account';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
+	import { AlertTriangle } from 'lucide-svelte';
 	export let data;
 
 	const { form, errors, enhance, delayed, message } = superForm(data.form, {
@@ -17,6 +19,7 @@
 		flashMessage: {
 			module: flashModule,
 			onError: ({ result }) => {
+				console.log('result', result);
 				const errorMessage = result.error.message
 				message.set({ type: 'error', message: errorMessage });
 			}
@@ -28,6 +31,13 @@
 	<!--<SuperDebug data={$form} />-->
 	<h3>Change Password</h3>
 	<hr class="!border-t-2 mt-2 mb-6" />
+	<Alert.Root variant="destructive">
+		<AlertTriangle class="h-4 w-4" />
+		<Alert.Title>Heads up!</Alert.Title>
+		<Alert.Description>
+			Changing your password will log you out of all devices.
+		</Alert.Description>
+	</Alert.Root>
 	{#if $message}
 		<aside class="alert variant-filled-success mt-6">
 			<!-- Message -->
