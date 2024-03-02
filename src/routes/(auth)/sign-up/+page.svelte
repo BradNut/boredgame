@@ -8,7 +8,7 @@
 	import { Button } from '$components/ui/button';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
-	import { signUpSchema } from '$lib/validations/zod-schemas.js';
+	import { signUpSchema } from '$lib/validations/auth';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Alert from '$lib/components/ui/alert';
 	import { boredState } from '$lib/stores/boredState.js';
