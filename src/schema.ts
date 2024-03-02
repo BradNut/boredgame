@@ -161,6 +161,13 @@ export const password_reset_tokens = pgTable('password_reset_tokens', {
 	}).default(sql`now()`)
 });
 
+export const password_reset_token_relations = relations(password_reset_tokens, ({ one }) => ({
+	user: one(users, {
+		fields: [password_reset_tokens.user_id],
+		references: [users.id]
+	})
+}));
+
 export const collections = pgTable('collections', {
 	id: varchar('id', {
 		length: 255
