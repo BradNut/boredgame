@@ -36,7 +36,7 @@
 		<SuperDebug collapsible data={data.form} />
 	{/if}
 
-	<GameSearchForm form={data.form} />
+	<GameSearchForm data={data.form} />
 
 	<section class="games">
 		<div>
