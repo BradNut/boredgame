@@ -1,48 +1,46 @@
-import {fail, error, type Actions, redirect} from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms/server';
-import type { PageServerLoad } from './$types';
-import prisma from '$lib/prisma';
-import { lucia } from '$lib/server/auth';
+import { fail, error, type Actions } from '@sveltejs/kit';
 import { Argon2id } from 'oslo/password';
-import { userSchema } from '$lib/config/zod-schemas';
+import { eq } from 'drizzle-orm';
+import { nanoid } from 'nanoid';
+import { zod } from 'sveltekit-superforms/adapters';
+import { setError, superValidate } from 'sveltekit-superforms/server';
+import { redirect } from 'sveltekit-flash-message/server';
+import type { PageServerLoad } from './$types';
+import { lucia } from '$lib/server/auth';
+import { signUpSchema } from '$lib/validations/auth';
 import { add_user_to_role } from '$server/roles';
-import type { Message } from '$lib/types.js';
+import db from '$lib/drizzle';
+import { collections, users, wishlists } from '../../../schema';
 
-const signUpSchema = userSchema
-	.pick({
-		firstName: true,
-		lastName: true,
-		email: true,
-		username: true,
-		password: true,
-		confirm_password: true,
-		terms: true
-	})
-	.superRefine(({ confirm_password, password }, ctx) => {
-		if (confirm_password !== password) {
-			ctx.addIssue({
-				code: 'custom',
-				message: 'Password and Confirm Password must match',
-				path: ['confirm_password']
-			});
-		}
-	});
+const signUpDefaults = {
+	firstName: '',
+	lastName: '',
+	email: '',
+	username: '',
+	password: '',
+	confirm_password: '',
+	terms: true
+};
 
 export const load: PageServerLoad = async (event) => {
-	console.log('sign up load event', event);
-	// const session = await event.locals.auth.validate();
-	// if (session) {
-	// 	throw redirect(302, '/');
-	// }
+	redirect(302, '/waitlist', { type: 'error', message: 'Sign-up not yet available. Please add your email to the waitlist!' }, event);
+
+	if (event.locals.user) {
+		const message = { type: 'success', message: 'You are already signed in' } as const;
+		throw redirect('/', message, event);
+	}
+
 	return {
-		form: await superValidate<typeof signUpSchema, Message>(event, signUpSchema)
+		form: await superValidate(zod(signUpSchema), {
+			defaults: signUpDefaults
+		})
 	};
 };
 
 export const actions: Actions = {
 	default: async (event) => {
-		const { cookies } = event;
-		const form = await superValidate<typeof signUpSchema, Message>(event, signUpSchema);
+		fail(401, { message: 'Sign-up not yet available. Please add your email to the waitlist!' });
+		const form = await superValidate(event, zod(signUpSchema));
 		if (!form.valid) {
 			form.data.password = '';
 			form.data.confirm_password = '';
@@ -54,41 +52,54 @@ export const actions: Actions = {
 		let session;
 		let sessionCookie;
 		// Adding user to the db
+		console.log('Check if user already exists');
+
+		const existing_user = await db.query
+			.users
+			.findFirst({ where: eq(users.username, form.data.username) });
+
+		if (existing_user) {
+			return setError(form, 'username', 'You cannot create an account with that username');
+		}
+
+		console.log('Creating user');
+
+		const hashedPassword = await new Argon2id().hash(form.data.password);
+
+		const user = await db.insert(users)
+			.values({
+				username: form.data.username,
+				hashed_password: hashedPassword,
+				email: form.data.email,
+				first_name: form.data.firstName || '',
+				last_name: form.data.lastName || '',
+				verified: false,
+				receive_email: false,
+				theme: 'system'
+			}).returning();
+		console.log('signup user', user);
+
+		if (!user || user.length === 0) {
+			return fail(400, {
+				form,
+				message: `Could not create your account. Please try again. If the problem persists, please contact support. Error ID: ${nanoid()}`
+			});
+		}
+
+		add_user_to_role(user[0].id, 'user');
+		await db.insert(collections)
+			.values({
+				user_id: user[0].id
+			});
+		await db.insert(wishlists)
+			.values({
+				user_id: user[0].id
+			});
+
 		try {
-			console.log('Creating user');
-
-			const hashedPassword = await new Argon2id().hash(form.data.password);
-
-			const user = await prisma.user.create({
-				data: {
-					username: form.data.username,
-					hashed_password: hashedPassword,
-					email: form.data.email || '',
-					firstName: form.data.firstName || '',
-					lastName: form.data.lastName || '',
-					verified: false,
-					receiveEmail: false,
-					theme: 'system'
-				}
-			});
-			console.log('signup user', user);
-			add_user_to_role(user.id, 'user');
-			await prisma.collection.create({
-				data: {
-					user_id: user.id
-				}
-			});
-			await prisma.wishlist.create({
-				data: {
-					user_id: user.id
-				}
-			});
-
-			console.log('User', user);
-
-			session = await lucia.createSession(user.id, {
-				ipCountry: event.locals.session?.ipCountry,
-				ipAddress: event.locals.session?.ipAddress
+			session = await lucia.createSession(user[0].id, {
+				ip_country: event.locals.ip,
+				ip_address: event.locals.country
 			});
 			sessionCookie = lucia.createSessionCookie(session.id);
 		} catch (e: any) {
@@ -112,7 +123,7 @@ export const actions: Actions = {
 		});
 
 		redirect(302, '/');
-			// const message = { type: 'success', message: 'Signed Up!' } as const;
-			// throw flashRedirect(message, event);
+		// const message = { type: 'success', message: 'Signed Up!' } as const;
+		// throw flashRedirect(message, event);
 	}
 };

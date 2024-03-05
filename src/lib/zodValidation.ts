@@ -117,6 +117,10 @@ export const search_schema = z
 
 export type SearchSchema = typeof search_schema;
 
+export const BggForm = z.object({
+	link: z.string().trim().startsWith('https://boardgamegeek.com/boardgame/')
+})
+
 export const collection_search_schema = Search.extend({
 	collection_id: z.string()
 });
@@ -222,7 +226,6 @@ const gameSchema = z.object({
 	image_url: z.string().optional(),
 	thumb_url: z.string().optional(),
 	url: z.string().optional(),
-	rules_url: z.string().optional(),
 	weight_amount: z.number().optional(),
 	weight_units: z.enum(['Medium', 'Heavy']).optional(),
 	categories: z.array(category_schema).optional(),

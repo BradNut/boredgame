@@ -29,9 +29,11 @@
 		...$page.data.metaTagsChild
 	}
 
-	// const flash = getFlash(page, {
-	// 	clearAfterMs: 6000
-	// });
+	const flash = getFlash(page, {
+    clearOnNavigate: true,
+    clearAfterMs: 3000,
+    clearArray: true
+  });
 
 	onMount(() => {
 		// set the theme to the user's active theme
@@ -39,6 +41,20 @@
 		document.querySelector('html')?.setAttribute('data-theme', $theme);
 	});
 
+
+	$: if ($flash) {
+		if ($flash.type === 'success') {
+			toast.success($flash.message);
+		} else {
+			toast.error($flash.message, {
+				duration: 5000
+			});
+		}
+
+		// Clearing the flash message could sometimes
+		// be required here to avoid double-toasting.
+		flash.set(undefined);
+	}
 	// flash.subscribe(($flash) => {
 	// 	if (!$flash) return;
 

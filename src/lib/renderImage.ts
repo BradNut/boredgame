@@ -5,7 +5,7 @@ import { dev } from '$app/environment';
 import { read } from '$app/server';
 
 // we use a Vite plugin to turn this import into the result of fs.readFileSync during build
-import firaSansSemiBold from '$lib/fonts/FiraSans-SemiBold.ttf';
+import firaSansSemiBold from '$lib/fonts/FiraSans-Bold.ttf';
 
 const fontData = read(firaSansSemiBold).arrayBuffer();
 

@@ -1,6 +1,7 @@
 import type { GameType, SavedGameType } from '$lib/types';
 import type { Game } from '@prisma/client';
 import kebabCase from 'just-kebab-case';
+import type { Games } from '../../schema';
 
 export function convertToSavedGame(game: GameType | SavedGameType): SavedGameType {
 	return {
@@ -43,10 +44,9 @@ export function mapSavedGameToGame(game: SavedGameType): GameType {
 	};
 }
 
-export function mapAPIGameToBoredGame(game: GameType): Game {
+export function mapAPIGameToBoredGame(game: GameType): Games {
 	// TODO: Fix types
 	return {
-		external_id: game.external_id,
 		name: game.name,
 		slug: kebabCase(game.name),
 		thumb_url: game.thumbnail,
@@ -57,7 +57,6 @@ export function mapAPIGameToBoredGame(game: GameType): Game {
 		min_playtime: game.min_playtime,
 		max_playtime: game.max_playtime,
 		min_age: game.min_age,
-		description: game.description,
-		playtime: game.playing_time
+		description: game.description
 	};
 }

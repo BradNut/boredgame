@@ -1,43 +1,47 @@
-import { error, redirect, type Actions } from '@sveltejs/kit';
+import { error, type Actions } from '@sveltejs/kit';
+import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
-import prisma from '$lib/prisma';
-import { modifyListGameSchema } from '$lib/config/zod-schemas.js';
+import { redirect } from 'sveltekit-flash-message/server';
+import { modifyListGameSchema } from '$lib/validations/zod-schemas';
+import db from '$lib/drizzle.js';
+import { and, eq } from 'drizzle-orm';
+import { games, wishlist_items, wishlists } from '../../../../schema.js';
+import { notSignedInMessage } from '$lib/flashMessages.js';
 
-export async function load({ params, locals }) {
+export async function load(event) {
+	const { params, locals } = event;
 	if (!locals.user) {
-		redirect(302, '/login');
+		redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	console.log('Wishlist load User id', locals.user.id);
 
 	try {
-		const wishlist = await prisma.wishlist.findUnique({
-			where: {
-				user_id: locals.user.id
-			},
-			include: {
-				items: {
-					include: {
-						game: {
-							select: {
-								id: true,
-								name: true,
-								thumb_url: true
-							}
-						}
-					}
-				}
-			}
+		const wishlist = await db.query.wishlists.findFirst({
+			where: eq(wishlists.user_id, locals.user.id)
 		});
 
 		if (!wishlist) {
 			redirect(302, '/404');
 		}
 
+		const items = await db.query.wishlist_items.findMany({
+			where: eq(wishlist_items.wishlist_id, wishlist.id),
+			with: {
+				game: {
+					columns: {
+						id: true,
+						name: true,
+						thumb_url: true
+					}
+				}
+			}
+		});
+
 		console.log('wishlist', wishlist);
 
 		return {
-			items: wishlist?.items
+			items
 		};
 	} catch (e) {
 		console.error(e);
@@ -49,17 +53,15 @@ export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { locals } = event;
-		const form = await superValidate(event, modifyListGameSchema);
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		try {
 			if (!locals.user) {
-				redirect(302, '/login');
+				redirect(302, '/login', notSignedInMessage, event);
 			}
 
-			const game = await prisma.game.findUnique({
-				where: {
-					id: form.data.id
-				}
+			const game = await db.query.games.findFirst({
+				where: eq(games.id, form.data.id)
 			});
 
 			if (!game) {
@@ -73,10 +75,8 @@ export const actions: Actions = {
 			}
 
 			if (game) {
-				const wishlist = await prisma.wishlist.findUnique({
-					where: {
-						user_id: locals.user.id
-					}
+				const wishlist = await db.query.wishlists.findFirst({
+					where: eq(wishlists.user_id, locals.user.id)
 				});
 
 				if (!wishlist) {
@@ -84,11 +84,9 @@ export const actions: Actions = {
 					return error(404, 'Wishlist not found');
 				}
 
-				await prisma.wishlistItem.create({
-					data: {
+				await db.insert(wishlist_items).values({
 						game_id: game.id,
 						wishlist_id: wishlist.id
-					}
 				});
 			}
 
@@ -101,9 +99,10 @@ export const actions: Actions = {
 		}
 	},
 	// Create new wishlist
-	create: async ({ locals }) => {
+	create: async (event) => {
+		const { locals } = event;
 		if (!locals.user) {
-			redirect(302, '/login');
+			redirect(302, '/login', notSignedInMessage, event);
 		}
 		return error(405, 'Method not allowed');
 	},
@@ -117,17 +116,15 @@ export const actions: Actions = {
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event;
-		const form = await superValidate(event, modifyListGameSchema);
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		try {
 			if (!locals.user) {
-				redirect(302, '/login');
+				redirect(302, '/login', notSignedInMessage, event);
 			}
 
-			const game = await prisma.game.findUnique({
-				where: {
-					id: form.data.id
-				}
+			const game = await db.query.games.findFirst({
+				where: eq(games.id, form.data.id)
 			});
 
 			if (!game) {
@@ -141,10 +138,8 @@ export const actions: Actions = {
 			}
 
 			if (game) {
-				const wishlist = await prisma.wishlist.findUnique({
-					where: {
-						user_id: locals.user.id
-					}
+				const wishlist = await db.query.wishlists.findFirst({
+					where: eq(wishlists.user_id, locals.user.id)
 				});
 
 				if (!wishlist) {
@@ -152,12 +147,10 @@ export const actions: Actions = {
 					return error(404, 'Wishlist not found');
 				}
 
-				await prisma.wishlistItem.delete({
-					where: {
-						wishlist_id: wishlist.id,
-						game_id: game.id
-					}
-				});
+				await db.delete(wishlist_items).where(and(
+					eq(wishlist_items.wishlist_id, wishlist.id),
+					eq(wishlist_items.game_id, game.id)
+				));
 			}
 
 			return {

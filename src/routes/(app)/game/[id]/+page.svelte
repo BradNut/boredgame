@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { fade, fly } from 'svelte/transition';
 	import { Image } from 'svelte-lazy-loader';
 	import { Dices, ExternalLinkIcon, MinusIcon, PlusIcon } from 'lucide-svelte';
 	import type { SavedGameType } from '$lib/types';

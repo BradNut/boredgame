@@ -1,14 +1,19 @@
-import { type Actions, error, fail, redirect } from '@sveltejs/kit';
+import { type Actions, error, fail } from '@sveltejs/kit';
+import { and, eq } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms/server';
-import prisma from '$lib/prisma';
-import { modifyListGameSchema, type ListGame } from '$lib/config/zod-schemas.js';
+import { zod } from 'sveltekit-superforms/adapters';
+import { redirect } from 'sveltekit-flash-message/server'
+import { modifyListGameSchema, type ListGame } from '$lib/validations/zod-schemas';
 import { search_schema } from '$lib/zodValidation.js';
-import type { PageServerLoad } from './$types';
+import db from '$lib/drizzle';
+import { collection_items, collections, games } from '../../../../schema';
+import { notSignedInMessage } from '$lib/flashMessages';
 
-export const load: PageServerLoad = async ({ fetch, url, locals }) => {
+export async function load(event) {
+	const { url, locals } = event;
 	const user = locals.user;
 	if (!user) {
-		redirect(302, '/login');
+		redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	// console.log('locals load', locals);
@@ -24,14 +29,12 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 		skip
 	};
 
-	const searchForm = await superValidate(searchData, search_schema);
-	const listManageForm = await superValidate(modifyListGameSchema);
+	const searchForm = await superValidate(searchData, zod(search_schema));
+	const listManageForm = await superValidate(zod(modifyListGameSchema));
 
 	try {
-		let collection = await prisma.collection.findUnique({
-			where: {
-				user_id: user.id
-			}
+		const collection = await db.query.collections.findFirst({
+			where: eq(collections.user_id, user.id)
 		});
 		console.log('collection', collection);
 
@@ -45,27 +48,25 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 			// 	});
 		}
 
-		let collection_items = await prisma.collectionItem.findMany({
-			where: {
-				collection_id: collection.id
-			},
-			include: {
+		const collectionItems = await db.query.collection_items.findMany({
+			where: eq(collection_items.collection_id, collection.id),
+			with: {
 				game: {
-					select: {
+					columns: {
 						id: true,
 						name: true,
 						thumb_url: true
 					}
 				}
 			},
-			skip,
-			take: limit
+			offset: skip,
+			limit
 		});
 
-		console.log('collection_items', collection_items);
+		console.log('collection_items', collectionItems);
 
-		let collectionItems: ListGame[] = [];
-		for (const item of collection_items) {
+		const items: ListGame[] = [];
+		for (const item of collectionItems) {
 			console.log('item', item);
 			const game = item.game;
 			if (game) {
@@ -77,14 +78,14 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 					times_played: item.times_played,
 					in_collection: true
 				};
-				collectionItems.push(collectionItem);
+				items.push(collectionItem);
 			}
 		}
 
 		return {
 			searchForm,
 			listManageForm,
-			collection: collectionItems
+			collection: items
 		};
 	} catch (e) {
 		console.error(e);
@@ -100,18 +101,15 @@ export const load: PageServerLoad = async ({ fetch, url, locals }) => {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const { params, locals, request } = event;
-		const form = await superValidate(event, modifyListGameSchema);
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		if (!event.locals.user) {
 			throw fail(401);
 		}
 
 		const user = event.locals.user;
-		let game = await prisma.game.findUnique({
-			where: {
-				id: form.data.id
-			}
+		const game = await db.query.games.findFirst({
+			where: eq(games.id, form.data.id)
 		});
 
 		if (!game) {
@@ -125,10 +123,8 @@ export const actions: Actions = {
 		}
 
 		try {
-			const collection = await prisma.collection.findUnique({
-				where: {
-					user_id: user.id
-				}
+			const collection = await db.query.collections.findFirst({
+				where: eq(collections.user_id, user.id)
 			});
 
 			if (!collection) {
@@ -136,12 +132,10 @@ export const actions: Actions = {
 				return error(404, 'Wishlist not found');
 			}
 
-			await prisma.collectionItem.create({
-				data: {
-					game_id: game.id,
-					collection_id: collection.id,
-					times_played: 0
-				}
+			await db.insert(collection_items).values({
+				game_id: game.id,
+				collection_id: collection.id,
+				times_played: 0
 			});
 
 			return {
@@ -153,14 +147,14 @@ export const actions: Actions = {
 		}
 	},
 	// Create new wishlist
-	create: async ({ params, locals, request }) => {
+	create: async ({ locals }) => {
 		if (!locals.user) {
 			throw fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
-	delete: async ({ params, locals, request }) => {
+	delete: async ({ locals }) => {
 		if (!locals.user) {
 			throw fail(401);
 		}
@@ -168,17 +162,15 @@ export const actions: Actions = {
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
-		const { params, locals, request } = event;
-		const form = await superValidate(event, modifyListGameSchema);
+		const { locals } = event;
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		if (!locals.user) {
 			throw fail(401);
 		}
 
-		let game = await prisma.game.findUnique({
-			where: {
-				id: form.data.id
-			}
+		const game = await db.query.games.findFirst({
+			where: eq(games.id, form.data.id)
 		});
 
 		if (!game) {
@@ -187,10 +179,8 @@ export const actions: Actions = {
 		}
 
 		try {
-			const collection = await prisma.collection.findUnique({
-				where: {
-					user_id: locals.user.id
-				}
+			const collection = await db.query.collections.findFirst({
+				where: eq(collections.user_id, locals.user.id)
 			});
 
 			if (!collection) {
@@ -198,12 +188,10 @@ export const actions: Actions = {
 				return error(404, 'Collection not found');
 			}
 
-			await prisma.collectionItem.delete({
-				where: {
-					collection_id: collection.id,
-					game_id: game.id
-				}
-			});
+			await db.delete(collection_items).where(and(
+					eq(collection_items.collection_id, collection.id),
+					eq(collection_items.game_id, game.id)
+			));
 
 			return {
 				form

@@ -1,4 +1,5 @@
 import { error } from '@sveltejs/kit';
+import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
 import kebabCase from 'just-kebab-case';
 import type { GameType, SearchQuery } from '$lib/types';
@@ -6,27 +7,17 @@ import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import { search_schema } from '$lib/zodValidation';
 import type { PageServerLoad } from '../$types.js';
 import type { BggThingDto } from 'boardgamegeekclient/dist/esm/dto/index.js';
-import type { BggLinkDto } from 'boardgamegeekclient/dist/esm/dto/concrete/subdto/BggLinkDto.js';
-import {
-	createArtist,
-	createCategory,
-	createDesigner,
-	createMechanic,
-	createOrUpdateGame,
-	createOrUpdateGameMinimal,
-	createPublisher
-} from '$lib/utils/dbUtils.js';
-// import { listGameSchema } from '$lib/config/zod-schemas.js';
+import { createOrUpdateGameMinimal } from '$lib/utils/db/gameUtils';
 
 async function searchForGames(
 	locals: App.Locals,
-	eventFetch: Function,
+	eventFetch,
 	urlQueryParams: SearchQuery
 ) {
 	try {
 		console.log('urlQueryParams search games', urlQueryParams);
 
-		const headers: HeadersInit = new Headers();
+		const headers = new Headers();
 		headers.set('Content-Type', 'application/json');
 		const requestInit: RequestInit = {
 			method: 'GET',
@@ -82,8 +73,8 @@ async function searchForGames(
 					if (externalGameResponse.ok) {
 						const externalGame = await externalGameResponse.json();
 						console.log('externalGame', externalGame);
-						let boredGame = mapAPIGameToBoredGame(externalGame);
-						games.push(createOrUpdateGameMinimal(locals, boredGame));
+						const boredGame = mapAPIGameToBoredGame(externalGame);
+						games.push(createOrUpdateGameMinimal(locals, boredGame, externalGame.id));
 					}
 				}
 			}
@@ -122,12 +113,13 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 		skip: Number(searchParams.skip || defaults.skip),
 		limit: Number(searchParams.limit || defaults.limit),
 		exact: searchParams.exact ? searchParams.exact === 'true' : defaults.exact
-	}, search_schema);
+	}, zod(search_schema));
 
 	const queryParams: SearchQuery = {
 		limit: form.data?.limit,
 		skip: form.data?.skip,
-		q: form.data?.q
+		q: form.data?.q,
+		exact: form.data?.exact
 	};
 
 	try {
@@ -198,7 +190,7 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 
 export const actions = {
 	random: async ({ request, locals, fetch }): Promise<any> => {
-		const form = await superValidate(request, search_schema);
+		const form = await superValidate(request, zod(search_schema));
 		const queryParams: SearchQuery = {
 			order_by: 'rank',
 			ascending: false,

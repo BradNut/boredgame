@@ -50,8 +50,6 @@
 
 <style lang="postcss">
 	.container {
-		/* display: none;
-		position: relative; */
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -59,10 +57,10 @@
 		height: 100%;
 		min-height: 100vh;
 
-		@media (min-width: 768px) {
+		@media (width >= 768px) {
 			display: grid
 		}
-		@media (min-width: 1024px) {
+		@media (width >= 1024px) {
 			padding-left: 0;
 			padding-right: 0;
 			grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -77,7 +75,7 @@
 			height: 100%;
 			color: #ffffff;
 
-			@media (min-width: 1024px) {
+			@media (width >= 1024px) {
 				display: flex;
 			}
 
@@ -112,7 +110,7 @@
 		}
 
 		.auth-form {
-			@media (min-width: 1024px) {
+			@media (width >= 1024px) {
 				padding: 2rem;
 			}
 		}
@@ -123,13 +121,13 @@
 		top: 1rem;
 		right: 1rem;
 
-		@media (min-width: 768px) {
+		@media (min-width >= 768px) {
 			top: 2rem;
 			right: 2rem;
 		}
 	}
 
-	:global(.auth-logo) {
+	.auth-logo {
 		display: flex;
 		position: relative;
 		z-index: 20;
@@ -141,6 +139,8 @@
 		transition-property: color, background-color, border-color,text-decoration-color, fill, stroke;
 		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 		transition-duration: 300ms;
+		top: 1rem;
+		left: 1rem;
 
 		&:hover {
 			color: hsl(var(--muted-foreground));
@@ -151,20 +151,19 @@
 			height: 2rem;
 		}
 
-		@media (max-width: 768px) {
+		@media (width <= 768px) {
 			position: absolute;
-			top: 1rem;
-			left: 1rem;
+
 		}
 
-		@media (min-width: 768px) {
+		@media (width > 768px) {
 			position: absolute;
-			top: 2rem;
-			left: 2rem;
+			--fg: #2c3e50;
 		}
 
-		@media (min-width: 1024px) {
+		@media (width >= 1024px) {
 			color: white;
+			--fg: white;
 		}
 	}
 </style>

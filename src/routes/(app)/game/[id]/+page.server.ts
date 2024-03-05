@@ -1,52 +1,52 @@
 import { error } from '@sveltejs/kit';
-import type { Game } from '@prisma/client';
-import {
-	createArtist,
-	createCategory,
-	createDesigner,
-	createExpansion,
-	createMechanic,
-	createOrUpdateGame,
-	createPublisher
-} from '$lib/utils/dbUtils.js';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
-import prisma from '$lib/prisma';
 import type { PageServerLoad } from './$types';
+import { createCategory } from '$lib/utils/db/categoryUtils';
+import { createMechanic } from '$lib/utils/db/mechanicUtils';
+import { createPublisher } from '$lib/utils/db/publisherUtils';
+import { createExpansion } from '$lib/utils/db/expansionUtils';
+import { createOrUpdateGame } from '$lib/utils/db/gameUtils';
+import db from '$lib/drizzle';
+import { and, eq } from 'drizzle-orm';
+import { collection_items, collections, expansions, games, wishlist_items, wishlists } from '../../../../schema';
 
 export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 	try {
 		const { user } = locals;
 		const { id } = params;
-		const game = await prisma.game.findUnique({
-			where: {
-				id
-			},
-			include: {
-				artists: true,
-				designers: true,
-				publishers: true,
-				mechanics: true,
-				categories: true,
-				expansions: {
-					include: {
-						game: {
-							select: {
+		const game = await db.query.games.findFirst({
+			where: eq(games.id, id),
+			with: {
+				publishers_to_games: {
+					with: {
+						publisher: {
+							columns: {
 								id: true,
 								name: true
 							}
 						}
 					}
 				},
-				expansion_of: {
-					include: {
-						base_game: {
-							select: {
+				mechanics_to_games: {
+					with: {
+						mechanic: {
+							columns: {
 								id: true,
 								name: true
 							}
 						}
 					}
-				}
+				},
+				categories_to_games: {
+					with: {
+						category: {
+							columns: {
+								id: true,
+								name: true
+							}
+						}
+					}
+				},
 			}
 		});
 		console.log('found game', game);
@@ -64,45 +64,54 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 			await syncGameAndConnectedData(locals, game, fetch);
 		}
 
-		let wishlist;
-		let collection;
-		if (user) {
-			wishlist = await prisma.wishlist.findUnique({
-				where: {
-					user_id: user.id
-				},
-				include: {
-					items: {
-						where: {
-							game_id: game.id
-						}
+		const gameExpansions = await db.query.expansions.findMany({
+			where: eq(expansions.base_game_id, game.id),
+			with: {
+				game: {
+					columns: {
+						id: true,
+						name: true,
+						thumb_url: true
 					}
 				}
+			}
+		});
+
+		let collectionItem;
+		let wishlistItem;
+		if (user) {
+			const wishlist = await db.query.wishlists.findFirst({
+				where: eq(wishlists.user_id, user.id),
 			});
 
-			collection = await prisma.collection.findUnique({
-				where: {
-					user_id: user.id
-				},
-				include: {
-					items: {
-						where: {
-							game_id: game.id
-						}
-					}
-				}
+			// TODO: Select wishlist items based on wishlist
+			if (wishlist) {
+				wishlistItem = await db.query.wishlist_items.findFirst({
+					where: and(eq(wishlist_items.wishlist_id, wishlist.id), eq(wishlist_items.game_id, game.id)),
+				})
+			}
+
+			const collection = await db.query.collections.findFirst({
+				where: eq(collections.user_id, user.id),
 			});
+
+			// TODO: Select collection items based on collection
+
+			if (collection) {
+				collectionItem = await db.query.collection_items.findFirst({
+					where: and(eq(collection_items.collection_id, collection.id), eq(collection_items.game_id, game.id)),
+				})
+			}
 		}
 
 		console.log('Returning game', game);
 
 		return {
 			game,
+			expansions: gameExpansions,
 			user,
-			in_wishlist: wishlist?.items?.length !== 0 || false,
-			in_collection: collection?.items?.length !== 0 || false,
-			wishlist,
-			collection
+			in_wishlist: wishlistItem !== undefined || false,
+			in_collection: collectionItem !== undefined || false,
 		};
 	} catch (error) {
 		console.log(error);
@@ -119,51 +128,39 @@ async function syncGameAndConnectedData(locals: App.Locals, game: Game, eventFet
 	if (externalGameResponse.ok) {
 		const externalGame = await externalGameResponse.json();
 		console.log('externalGame', externalGame);
-		let categories = [];
-		let mechanics = [];
-		let artists = [];
-		let designers = [];
-		let publishers = [];
+		const categories = [];
+		const mechanics = [];
+		const publishers = [];
 		for (const externalCategory of externalGame.categories) {
-			const category = await createCategory(locals, externalCategory);
+			const category = await createCategory(locals, externalCategory, externalGame.external_id);
 			categories.push({
 				id: category.id
 			});
 		}
 		for (const externalMechanic of externalGame.mechanics) {
-			const mechanic = await createMechanic(locals, externalMechanic);
+			const mechanic = await createMechanic(locals, externalMechanic, externalGame.external_id);
 			mechanics.push({ id: mechanic.id });
 		}
-		for (const externalArtist of externalGame.artists) {
-			const artist = await createArtist(locals, externalArtist);
-			artists.push({ id: artist.id });
-		}
-		for (const externalDesigner of externalGame.designers) {
-			const designer = await createDesigner(locals, externalDesigner);
-			designers.push({ id: designer.id });
-		}
 		for (const externalPublisher of externalGame.publishers) {
-			const publisher = await createPublisher(locals, externalPublisher);
+			const publisher = await createPublisher(locals, externalPublisher, externalGame.external_id);
 			publishers.push({ id: publisher.id });
 		}
 
 		for (const externalExpansion of externalGame.expansions) {
 			console.log('Inbound?', externalExpansion.inbound);
 			if (externalExpansion?.inbound === true) {
-				createExpansion(locals, game, externalExpansion, false, eventFetch);
+				createExpansion(locals, externalExpansion);
 			} else {
-				createExpansion(locals, game, externalExpansion, true, eventFetch);
+				createExpansion(locals,externalExpansion);
 			}
 		}
 
-		let boredGame = mapAPIGameToBoredGame(externalGame);
+		const boredGame = mapAPIGameToBoredGame(externalGame);
 
 		boredGame.categories = categories;
 		boredGame.mechanics = mechanics;
-		boredGame.designers = designers;
-		boredGame.artists = artists;
 		boredGame.publishers = publishers;
 		// boredGame.expansions = expansions;
-		return createOrUpdateGame(locals, boredGame);
+		return createOrUpdateGame(locals, boredGame, externalGame.external_id);
 	}
 }

@@ -158,7 +158,6 @@ model Game {
   image_url               String?
   thumb_url               String?
   url                     String?
-  rules_url               String?
   categories              Category[]
   mechanics               Mechanic[]
   designers               Designer[]

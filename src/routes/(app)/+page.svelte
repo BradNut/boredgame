@@ -1,63 +1,40 @@
 <script lang="ts">
-	// import TextSearch from '$lib/components/search/textSearch/header.svelte';
-	import RandomSearch from '$lib/components/search/random/index.svelte';
-	import Game from '$components/Game.svelte';
-	import logo from '$lib/assets/bored-game.png';
-
-	// import Random from '$lib/components/random/header.svelte';
-
-	export let data;
-
-	const { randomGames } = data;
+	import Logo from "$components/logo.svelte";
 </script>
 
-<h1>Search Boardgames!</h1>
-<div class="game-search">
-	<section>
-		<p style="margin: 1rem 0;">
-			Input your requirements to search for board games that match your criteria.
-		</p>
-		<p>Or pick a random game!</p>
-		<div class="random-buttons">
-			<RandomSearch data={data.form} />
-			<!-- <Random /> -->
+<div class="container">
+	<div class="site-logo">
+		<div class="logo">
+			<Logo />
 		</div>
-	</section>
-	<!-- <TextSearch showButton advancedSearch data={data.form} /> -->
+		Bored Game
+	</div>
+	<h1>Welcome to Bored Game!</h1>
+	<h2>Track the board games you own, the ones you want, and whether you play them enough.</h2>
+	<p>Get started by joining the <a href="/waitlist">wait list</a> or <a href="/login">log in</a> if you already have an account.</p>
 </div>
 
-<section class="random-games">
-	{#each randomGames as game (game.id)}
-		<Game variant='compact' {game} />
-	{/each}
-</section>
-
 <style lang="postcss">
-	.game-search {
-		display: grid;
-		gap: 2rem;
-
-		section {
-			display: grid;
-			gap: 1rem;
-		}
+	a {
+		text-decoration: underline;
 	}
 
-	.random-games {
-		margin-top: 1rem;
-		display: grid;
-		gap: 0.5rem;
-		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-	}
-
-	.random-buttons {
+	.site-logo {
 		display: flex;
-		place-content: space-between;
 		place-items: center;
+	}
 
-		@media (max-width: 650px) {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-		}
+	.container {
+		display: grid;
+		place-content: center;
+		max-width: 900px;
+		gap: 0.25rem;
+	}
+
+	.logo {
+		display: flex;
+		align-items: center;
+		width: 4rem;
+		height: 4rem;
 	}
 </style>
