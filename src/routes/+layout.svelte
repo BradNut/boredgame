@@ -1,166 +1,108 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { navigating } from '$app/stores';
-	import debounce from 'just-debounce-it';
-	import { Toy } from '@leveluptuts/svelte-toy';
-	// import '../app.postcss';
-	import Analytics from '$lib/components/analytics.svelte';
-	import Header from '$root/lib/components/header/index.svelte';
-	import Footer from '$lib/components/footer.svelte';
-	import Loading from '$lib/components/loading.svelte';
-	import Transition from '$lib/components/transition/index.svelte';
-	import Portal from '$lib/Portal.svelte';
-	import { boredState } from '$lib/stores/boredState';
-	import { collectionStore } from '$lib/stores/collectionStore';
-	import { wishlistStore } from '$root/lib/stores/wishlistStore';
-	import { gameStore } from '$lib/stores/gameSearchStore';
-	import { toast } from '$lib/components/toast/toast';
-	import Toast from '$lib/components/toast/Toast.svelte';
-	import '$root/styles/styles.pcss';
-  import type { SavedGameType } from '$root/lib/types';
-
-	$: {
-		if ($navigating) {
-			debounce(() => {
-				boredState.update((n) => ({ ...n, loading: true }));
-			}, 250);
-		}
-		if (!$navigating) {
-			boredState.update((n) => ({ ...n, loading: false }));
-		}
-	}
-
-	$: isOpen = $boredState?.dialog?.isOpen;
-
-	if (browser) {
-		let collectionEmpty = $collectionStore.length === 0 || false;
-		let wishlistEmpty = $wishlistStore.length === 0 || false;
-		if (wishlistEmpty && localStorage?.wishlist && localStorage?.wishlist?.length !== 0) {
-			const wishlist: SavedGameType[] = JSON.parse(localStorage.wishlist);
-			if (wishlist?.length !== 0) {
-				for (const item of wishlist) {
-					if (!item?.searchTerms) {
-						item.searchTerms = `${item?.name?.toLowerCase()}`;
-					}
-				}
-				wishlistStore.addAll(wishlist);
-			}
-		}
-		if (collectionEmpty && localStorage?.collection && localStorage?.collection?.length !== 0) {
-			const collection: SavedGameType[] = JSON.parse(localStorage.collection);
-			if (collection?.length !== 0) {
-				for (const item of collection) {
-					if (!item?.searchTerms) {
-						item.searchTerms = `${item?.name?.toLowerCase()}`;
-					}
-				}
-				collectionStore.addAll(collection);
-			}
-		}
-	}
+	import "$lib/styles/app.pcss";
+	import { onMount } from "svelte";
+	import { getFlash } from 'sveltekit-flash-message/client';
+	import toast, { Toaster } from 'svelte-french-toast';
+	import { MetaTags } from 'svelte-meta-tags';
+	import 'iconify-icon';
+  import { page } from '$app/stores';
+	import { onNavigate } from "$app/navigation";
+	import Analytics from '$components/Analytics.svelte';
+	import Loading from '$lib/components/Loading.svelte';
+	import { theme } from '$state/theme';
+	import PageLoadingIndicator from '$lib/page_loading_indicator.svelte';
 
 	const dev = process.env.NODE_ENV !== 'production';
 
 	export let data;
+	$: ({ user } = data);
+
+	$: metaTags = {
+		titleTemplate: '%s | Bored Game',
+		description: 'Bored Game, keep track of your games.',
+		openGraph: {
+			type: 'website',
+			titleTemplate: '%s | Bored Game',
+			locale: 'en_US',
+			description: 'Bored Game, keep track of your games',
+		},
+		...$page.data.metaTagsChild
+	}
+
+	const flash = getFlash(page, {
+    clearOnNavigate: true,
+    clearAfterMs: 3000,
+    clearArray: true
+  });
+
+	onMount(() => {
+		// set the theme to the user's active theme
+		$theme = user?.theme || 'system';
+		document.querySelector('html')?.setAttribute('data-theme', $theme);
+	});
+
+
+	$: if ($flash) {
+		if ($flash.type === 'success') {
+			toast.success($flash.message);
+		} else {
+			toast.error($flash.message, {
+				duration: 5000
+			});
+		}
+
+		// Clearing the flash message could sometimes
+		// be required here to avoid double-toasting.
+		flash.set(undefined);
+	}
+	// flash.subscribe(($flash) => {
+	// 	if (!$flash) return;
+
+	// 	if ($flash.type === 'success') {
+	// 		toast.success($flash.message);
+	// 	} else {
+	// 		toast.error($flash.message, {
+	// 			duration: 5000
+	// 		});
+	// 	}
+
+	// 	// Clearing the flash message could sometimes
+	// 	// be required here to avoid double-toasting.
+	// 	flash.set(undefined);
+	// });
+
+	onNavigate(async (navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((oldStateCaptureResolve) => {
+			document.startViewTransition(async () => {
+				oldStateCaptureResolve();
+				await navigation.complete;
+			})
+		})
+	});
 </script>
 
 {#if !dev}
 	<Analytics />
 {/if}
 
-{#if dev}
-	<Toy
-		register={{
-			boredState,
-			collectionStore,
-			wishlistStore,
-			gameStore,
-			toast
-		}}
-	/>
-{/if}
+<MetaTags {...metaTags} />
 
-<!-- <Transition transition={{ type: 'fade', duration: 250 }}> -->
-	<div class="wrapper">
-		<Header />
-			<main>
-				<Transition url={data.url} transition={{ type: 'page' }}>
-					<slot />
-				</Transition>
-			</main>
-		<Footer />
-	</div>
-	{#if $boredState?.loading}
-		<Portal>
-			<!-- <Transition transition={{ type: 'fade', duration: 0 }}> -->
-				<div class="loading">
-					<Loading />
-					<h3>Loading...</h3>
-				</div>
-			<!-- </Transition> -->
-			<div class="background" />
-		</Portal>
-	{/if}
-	{#if isOpen}
-		<div class="container">
-			<svelte:component this={$boredState?.dialog?.content} />
-		</div>
-	{/if}
-	<Toast />
-<!-- </Transition> -->
+<PageLoadingIndicator />
+
+<div class="layout">
+	<slot />
+</div>
+
+<Toaster />
+<!-- <Loading /> -->
 
 <style lang="postcss">
-	.loading {
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 101;
-		display: grid;
-		place-items: center;
-		gap: 1rem;
-
-		h3 {
-			color: white;
-		}
-	}
-
-	.background {
-		background: black;
-		opacity: 0.8;
-		cursor: none;
-		inset: 0;
-		position: fixed;
-		z-index: 100;
-	}
-
-	.wrapper {
-		display: grid;
-		grid-template-rows: auto 1fr auto;
-		min-height: 100vh;
-	}
-
-	main {
-		flex: 1;
+	.layout {
 		display: flex;
+		position: relative;
 		flex-direction: column;
-		max-width: 850px;
-		margin: 0 auto;
-		padding: 2rem 0rem;
-		max-width: 80vw;
-
-		@media (min-width: 1600px) {
-			max-width: 65vw;
-		}
-
-		box-sizing: border-box;
-	}
-
-	:global(.dialog-overlay) {
-		position: fixed;
-		inset: 0;
-		z-index: 100;
-		background-color: rgb(0 0 0);
-		opacity: 0.8;
+		min-height: 100vh;
 	}
 </style>

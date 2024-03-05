@@ -1,17 +1,17 @@
 <script lang="ts">
-	import type { ActionData } from './$types';
 	import { boredState } from '$lib/stores/boredState';
-  import type { PageData } from '.svelte-kit/types/src/routes/$types';
 
-	export let data: PageData;
-	console.log('advanced search data', data);
+	export let form;
+	export let errors;
+	export let constraints;
+	console.log('advanced search data', $form);
 
 	let submitting = $boredState?.loading;
-	let minAge = +data?.minAge || 1;
-	let minPlayers = +data?.minPlayers || 1;
-	let maxPlayers = +data?.maxPlayers || 1;
-	let exactMinPlayers = Boolean(data?.exactMinPlayers) || false;
-	let exactMaxPlayers = Boolean(data?.exactMaxPlayers) || false;
+	let minAge = +$form?.minAge || 1;
+	let minPlayers = +$form?.minPlayers || 1;
+	let maxPlayers = +$form?.maxPlayers || 1;
+	let exactMinPlayers = Boolean($form?.exactMinPlayers) || false;
+	let exactMaxPlayers = Boolean($form?.exactMaxPlayers) || false;
 </script>
 
 <fieldset class="advanced-search" aria-busy={submitting} disabled={submitting}>
@@ -20,10 +20,10 @@
 			Min Age
 			<input id="minAge" name="minAge" bind:value={minAge} type="number" min={1} max={120} />
 		</label>
-		{#if data?.errors?.minAge}
+		{#if $errors?.minAge}
 			<div id="minPlayers-error" class="error">
-				<p aria-label={`Error: ${data?.errors?.minAge}`} class="center">
-					{data?.errors?.minAge}
+				<p aria-label={`Error: ${$errors?.minAge}`} class="center">
+					{$errors?.minAge}
 				</p>
 			</div>
 		{/if}
@@ -50,10 +50,10 @@
 				bind:value={exactMinPlayers}
 			/>
 		</label>
-		{#if data?.errors?.minPlayers}
+		{#if $errors?.minPlayers}
 			<div id="minPlayers-error" class="error">
-				<p aria-label={`Error: ${data?.errors?.minPlayers}`} class="center">
-					{data?.errors?.minPlayers}
+				<p aria-label={`Error: ${$errors?.minPlayers}`} class="center">
+					{$errors?.minPlayers}
 				</p>
 			</div>
 		{/if}
@@ -80,10 +80,10 @@
 				bind:value={exactMaxPlayers}
 			/>
 		</label>
-		{#if data?.error?.id === 'maxPlayers'}
+		{#if $errors?.id === 'maxPlayers'}
 			<div id="maxPlayers-error" class="error">
-				<p aria-label={`Error: ${data.error.message}`} class="center">
-					Error: {data.error.message}
+				<p aria-label={`Error: ${$errors.message}`} class="center">
+					Error: {$errors.message}
 				</p>
 			</div>
 		{/if}

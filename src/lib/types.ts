@@ -1,8 +1,10 @@
 import type { SvelteComponent } from 'svelte';
 
+export type Message = { status: 'error' | 'success' | 'warning' | 'info'; text: string };
+
 export type Dialog = {
 	isOpen: boolean;
-	content?: typeof SvelteComponent;
+	content?: typeof SvelteComponent<any>;
 	additionalData?: SavedGameType | GameType;
 };
 
@@ -57,10 +59,56 @@ export type SavedGameType = {
 	includeInRandom: boolean;
 };
 
+export type ListGameType = {
+	id: string;
+	game_id: string;
+	collection_id: string | undefined;
+	wishlist_id: string | undefined;
+	times_played: number;
+	thumb_url: string;
+};
+
+export type MechanicType = {
+	id: string;
+};
+
+export type CategoryType = {
+	id: string;
+};
+
+export type PublisherType = {
+	id: string;
+};
+
+export type DesignerType = {
+	id: string;
+};
+
+export type ArtistType = {
+	id: string;
+}
+
+export type ExpansionType = {
+	id: string;
+}
+
+export type BGGLinkType =
+	| 'boardgamecategory'
+	| 'boardgamemechanic'
+	| 'boardgameexpansion'
+	| 'boardgameartist'
+	| 'boardgamepublisher';
+
+export type BGGLink = {
+	id: number;
+	type: BGGLinkType;
+	value: string;
+};
+
 export type GameType = {
 	id: string;
-	handle: string;
 	name: string;
+	slug: string;
 	url: string;
 	edit_url: string;
 	thumb_url: string;
@@ -71,28 +119,34 @@ export type GameType = {
 	price_au: number;
 	msrp: number;
 	year_published: number;
+	categories: CategoryType[];
+	mechanics: MechanicType[];
+	primary_publisher: PublisherType;
+	publishers: PublisherType[];
+	primary_designer: DesignerType;
+	designers: DesignerType[];
+	developers: String[];
+	artists: ArtistType[];
+	expansions: ExpansionType[];
 	min_players: number;
 	max_players: number;
 	min_playtime: number;
 	max_playtime: number;
 	min_age: number;
 	description: string;
-	description_preview: string;
 	players: string;
-	playtime: string;
+	playtime: number;
+	external_id: number;
 };
 
 export type SearchQuery = {
-	client_id: string;
 	limit?: number;
 	skip?: number;
 	ids?: string[];
 	list_id?: string;
-	kickstarter?: boolean;
 	random?: boolean;
-	name?: string;
+	q?: string;
 	exact?: boolean;
-	fuzzy_match?: boolean;
 	designer?: string;
 	publisher?: string;
 	artist?: string;
@@ -112,23 +166,11 @@ export type SearchQuery = {
 	gt_max_playtime?: number;
 	gt_min_age?: number;
 	gt_year_published?: number;
-	gt_price?: bigint;
-	gt_msrp?: bigint;
-	gt_discount?: bigint;
-	gt_reddit_count?: number;
-	gt_reddit_week_count?: number;
-	gt_reddit_day_count?: number;
 	lt_min_players?: number;
 	lt_max_players?: number;
 	lt_min_playtime?: number;
 	lt_max_playtime?: number;
 	lt_min_age?: number;
 	lt_year_published?: number;
-	lt_price?: bigint;
-	lt_msrp?: bigint;
-	lt_discount?: bigint;
-	lt_reddit_count?: number;
-	lt_reddit_week_count?: number;
-	lt_reddit_day_count?: number;
 	fields?: string;
 };

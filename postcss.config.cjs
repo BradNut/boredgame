@@ -1,19 +1,23 @@
+const tailwindcss = require("tailwindcss");
+const tailwindNesting = require('tailwindcss/nesting');
 const autoprefixer = require('autoprefixer');
-const postcssMediaMinmax = require('postcss-media-minmax');
-const customMedia = require('postcss-custom-media');
+const postcssPresetEnv = require('postcss-preset-env');
 const atImport = require('postcss-import');
-const postcssNested = require('postcss-nested');
-const postcssEnvFunction = require('postcss-env-function');
 
 const config = {
-  plugins: [
-    autoprefixer(),
-    postcssMediaMinmax,
-    customMedia,
-    atImport(),
-    postcssNested,
-    postcssEnvFunction(),
-  ]
+	plugins: [
+		atImport(),
+		tailwindNesting(),
+		tailwindcss(),
+		postcssPresetEnv({
+			stage: 3,
+			features: {
+				'nesting-rules': false,
+				'custom-media-queries': true,
+				'media-query-ranges': true
+			}
+		}),
+	] //Some plugins, like tailwindcss/nesting, need to run before Tailwind, tailwindcss(), //But others, like autoprefixer, need to run after, autoprefixer]
 };
 
 module.exports = config;

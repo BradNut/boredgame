@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { type SvelteComponent, createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import {
-		Dialog,
-		DialogDescription,
-		DialogOverlay,
-		DialogTitle
-	} from '@rgossiaux/svelte-headlessui';
-	import { boredState } from '$root/lib/stores/boredState';
+	// import {
+	// 	Dialog,
+	// 	DialogDescription,
+	// 	DialogOverlay,
+	// 	DialogTitle
+	// } from '@rgossiaux/svelte-headlessui';
+	import { boredState } from '$lib/stores/boredState';
 
 	export let title: string;
 	export let description: string;
@@ -16,7 +16,7 @@
 	export let passive = false;
 	export let primaryButtonText = '';
 	export let primaryButtonDisabled = false;
-	export let primaryButtonIcon: typeof SvelteComponent = undefined;
+	export let primaryButtonIcon: typeof SvelteComponent<any> = undefined;
 	export let primaryButtonIconDescription = '';
 	export let secondaryButtonText = '';
 
@@ -25,19 +25,19 @@
 	$: isOpen = $boredState?.dialog?.isOpen;
 </script>
 
-<Dialog
+<!-- <Dialog
 	open={isOpen}
 	on:close={() => {
 		dispatch('close');
 	}}
 	static
->
-	<div transition:fade>
-		<DialogOverlay class="dialog-overlay" />
+> -->
+	<div transition:fade|global>
+		<!-- <DialogOverlay class="dialog-overlay" /> -->
 		<div class="dialog">
-			<DialogTitle>{title}</DialogTitle>
+			<!-- <DialogTitle>{title}</DialogTitle> -->
 			{#if description}
-				<DialogDescription>{description}</DialogDescription>
+				<!-- <DialogDescription>{description}</DialogDescription> -->
 			{/if}
 
 			<div class="dialog-footer">
@@ -72,7 +72,7 @@
 			</div>
 		</div>
 	</div>
-</Dialog>
+<!-- </Dialog> -->
 
 <style lang="scss">
 	.dialog {

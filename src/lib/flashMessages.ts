@@ -1,0 +1,1 @@
+export const notSignedInMessage = { type: 'error', message: 'You are not signed in' } as const;

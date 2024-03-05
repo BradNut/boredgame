@@ -1,11 +1,47 @@
+// import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vite';
+import { defineConfig } from 'vite';
 
-const config: UserConfig = {
-	plugins: [sveltekit()],
+// TODO: Fix Sentry
+export default defineConfig({
+	plugins: [
+		// sentrySvelteKit({
+		// 	sourceMapsUploadOptions: {
+		// 		org: process.env.SENTRY_ORG,
+		// 		project: process.env.SENTRY_PROJECT,
+		// 		authToken: process.env.SENTRY_AUTH_TOKEN,
+		// 		cleanArtifacts: true,
+		// 	}
+		// }),
+		sveltekit()
+	],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
-};
+	},
+	define: {
+		SUPERFORMS_LEGACY: true
+	},
+	css: {
+		devSourcemap: true,
+		preprocessorOptions: {
+			postcss: {
+				additionalData: `
+				@custom-media --below_small (width < 400px);
+				@custom-media --below_med (width < 700px);
+				@custom-media --below_large (width < 900px);
+				@custom-media --below_xlarge (width < 1200px);
 
-export default config;
+				@custom-media --above_small (width > 400px);
+				@custom-media --above_med (width > 700px);
+				@custom-media --above_large (width > 900px);
+				@custom-media --above_xlarge (width > 1200px);
+				`
+			}
+		}
+	},
+	resolve: {
+		alias: {
+			'.prisma/client/index-browser': './node_modules/@prisma/client/index-browser.js'
+		}
+	}
+});

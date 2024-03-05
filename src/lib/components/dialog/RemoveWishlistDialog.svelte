@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import {
-		Dialog,
-		DialogDescription,
-		DialogOverlay,
-		DialogTitle
-	} from '@rgossiaux/svelte-headlessui';
-	import { boredState } from '$root/lib/stores/boredState';
-	import { wishlistStore } from '$root/lib/stores/wishlistStore';
-	import { removeFromWishlist } from '$root/lib/util/manipulateWishlist';
+	// import {
+	// 	Dialog,
+	// 	DialogDescription,
+	// 	DialogOverlay,
+	// 	DialogTitle
+	// } from '@rgossiaux/svelte-headlessui';
+	import { boredState } from '$lib/stores/boredState';
+	import { wishlistStore } from '$lib/stores/wishlistStore';
+	import { removeFromWishlist } from '$lib/utils/manipulateWishlist';
 	import { browser } from '$app/environment';
 
 	function removeGame() {
@@ -24,18 +24,18 @@
 	$: isOpen = $boredState?.dialog?.isOpen;
 </script>
 
-<Dialog
+<!-- <Dialog
 	open={isOpen}
 	on:close={() => {
 		boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
 	}}
 	static
->
-	<div transition:fade>
-		<DialogOverlay class="dialog-overlay" />
+> -->
+	<div transition:fade|global>
+		<!-- <DialogOverlay class="dialog-overlay" /> -->
 		<div class="dialog">
-			<DialogTitle>Remove from wishlist</DialogTitle>
-			<DialogDescription>Are you sure you want to remove from your wishlist?</DialogDescription>
+			<!-- <DialogTitle>Remove from wishlist</DialogTitle> -->
+			<!-- <DialogDescription>Are you sure you want to remove from your wishlist?</DialogDescription> -->
 
 			<div class="dialog-footer">
 				<button class="remove" on:click={removeGame}>Remove</button>
@@ -47,7 +47,7 @@
 			</div>
 		</div>
 	</div>
-</Dialog>
+<!-- </Dialog> -->
 
 <style lang="scss">
 	.dialog {

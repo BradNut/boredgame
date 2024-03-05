@@ -16,6 +16,13 @@ export const saved_game_schema = z.object({
 	playtime: IntegerString(z.number())
 });
 
+export const list_game_request_schema = z.object({
+	id: z.string(),
+	externalId: z.string()
+});
+
+export type ListGameSchema = typeof list_game_request_schema;
+
 // https://github.com/colinhacks/zod/discussions/330
 function IntegerString<schema extends ZodNumber | ZodOptional<ZodNumber>>(schema: schema) {
 	return z.preprocess(
@@ -29,15 +36,42 @@ function IntegerString<schema extends ZodNumber | ZodOptional<ZodNumber>>(schema
 	);
 }
 
+const Search = z.object({
+	q: z.string().trim().optional().default(''),
+	minAge: IntegerString(z.number().min(1).max(120).optional()),
+	minPlayers: IntegerString(z.number().min(1).max(50).optional()),
+	maxPlayers: IntegerString(z.number().min(1).max(50).optional()),
+	exactMinAge: z.preprocess((a) => Boolean(a), z.boolean().optional()),
+	exactMinPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
+	exactMaxPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
+	sort: z.enum(['asc', 'desc']).optional(),
+	sortBy: z.enum(['name', 'min_players', 'max_players', 'min_age', 'times_played']).optional(),
+	limit: z.number().min(10).max(100).default(10),
+	skip: z.number().min(0).default(0)
+});
+
+// minAge: z
+// 		.string()
+// 		.min(1)
+// 		.transform((v) => +v)
+// 		.refine((minAge) => !isNaN(minAge), { message: 'Must be a number' })
+// 		.refine((minAge) => minAge >= 1 && minAge <= 120, { message: 'Must be between 1 and 120' })
+// 		.optional(),
+
 export const search_schema = z
 	.object({
-		name: z.string().trim().optional(),
+		q: z.string().trim().optional().default(''),
+		exact: z.preprocess((a) => Boolean(a), z.boolean().default(true)),
 		minAge: IntegerString(z.number().min(1).max(120).optional()),
 		minPlayers: IntegerString(z.number().min(1).max(50).optional()),
 		maxPlayers: IntegerString(z.number().min(1).max(50).optional()),
 		exactMinAge: z.preprocess((a) => Boolean(a), z.boolean().optional()),
 		exactMinPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
-		exactMaxPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional())
+		exactMaxPlayers: z.preprocess((a) => Boolean(a), z.boolean().optional()),
+		sort: z.enum(['asc', 'desc']).optional(),
+		order: z.enum(['name', 'min_players', 'max_players', 'min_age', 'times_played']).optional(),
+		limit: z.number().min(10).max(100).default(10),
+		skip: z.number().min(0).default(0)
 	})
 	.superRefine(
 		({ minPlayers, maxPlayers, minAge, exactMinAge, exactMinPlayers, exactMaxPlayers }, ctx) => {
@@ -80,6 +114,18 @@ export const search_schema = z
 			}
 		}
 	);
+
+export type SearchSchema = typeof search_schema;
+
+export const BggForm = z.object({
+	link: z.string().trim().startsWith('https://boardgamegeek.com/boardgame/')
+})
+
+export const collection_search_schema = Search.extend({
+	collection_id: z.string()
+});
+
+export type CollectionSearchSchema = typeof collection_search_schema;
 
 export const search_result_schema = z.object({
 	client_id: z.string(),
@@ -132,6 +178,8 @@ export const search_result_schema = z.object({
 	fields: z.string()
 });
 
+export type SearchResultSchema = typeof search_result_schema;
+
 export const game_schema = z.object({
 	id: z.string(),
 	handle: z.string(),
@@ -152,6 +200,86 @@ export const game_schema = z.object({
 	description: z.string(),
 	players: z.string(),
 	playtime: z.string()
+});
+
+export const category_schema = z.object({
+	id: z.string(),
+	name: z.string()
+});
+
+export const mechanics_schema = z.object({
+	id: z.string(),
+	name: z.string(),
+	description: z.string().optional()
+});
+
+const gameSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	description: z.string().optional(),
+	year_published: z.number().optional(),
+	min_players: z.number().optional(),
+	max_players: z.number().optional(),
+	min_playtime: z.number().optional(),
+	max_playtime: z.number().optional(),
+	min_age: z.number().optional(),
+	image_url: z.string().optional(),
+	thumb_url: z.string().optional(),
+	url: z.string().optional(),
+	weight_amount: z.number().optional(),
+	weight_units: z.enum(['Medium', 'Heavy']).optional(),
+	categories: z.array(category_schema).optional(),
+	mechanics: z.array(mechanics_schema).optional(),
+	designers: z
+		.array(
+			z.object({
+				id: z.string(),
+				name: z.string()
+			})
+		)
+		.optional(),
+	publishers: z
+		.array(
+			z.object({
+				id: z.string(),
+				name: z.string()
+			})
+		)
+		.optional(),
+	artists: z
+		.array(
+			z.object({
+				id: z.string(),
+				name: z.string()
+			})
+		)
+		.optional(),
+	names: z.array(z.string()).optional(),
+	expansions: z
+		.array(
+			z.object({
+				id: z.string(),
+				name: z.string(),
+				year_published: z.number().optional()
+			})
+		)
+		.optional(),
+	primary_publisher: z
+		.object({
+			id: z.string(),
+			name: z.string()
+		})
+		.optional()
+});
+
+const searchResultSchema = z.object({
+	games: z.array(gameSchema),
+	count: z.number()
+});
+
+export const WishlistSchema = z.object({
+	name: z.string(),
+	id: z.string()
 });
 
 // export const game_raw_schema_json = zodToJsonSchema(game_schema, {

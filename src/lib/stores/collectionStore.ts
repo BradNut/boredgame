@@ -15,6 +15,13 @@ const state = () => {
     update((store) => [...store, game]);
   }
 
+  function addSorted(game: SavedGameType, index: number) {
+    update((store) => {
+      store.splice(index, 0, game);
+      return store;
+    });
+  }
+
   function remove(id: string) {
     update((store) => {
       const newStore = store.filter((item: SavedGameType) => item.id !== id);
@@ -28,7 +35,7 @@ const state = () => {
     });
   }
 
-  return { subscribe, set, update, add, addAll, remove, removeAll };
+  return { subscribe, set, update, add, addSorted, addAll, remove, removeAll };
 };
 
 export const collectionStore = state();

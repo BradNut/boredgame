@@ -1,16 +1,16 @@
 <script>
-  import { Switch } from '@rgossiaux/svelte-headlessui';
+  // import { Switch } from '@rgossiaux/svelte-headlessui';
   let enabled = false;
 </script>
 
-<Switch
+<!-- <Switch
   checked={enabled}
   on:change={(e) => (enabled = e.detail)}
   class={enabled ? 'switch switch-enabled' : 'switch switch-disabled'}
 >
   <span class="sr-only">Dark Mode</span>
   <span class="toggle" class:toggle-on={enabled} class:toggle-off={!enabled} />
-</Switch>
+</Switch> -->
 
 <style>
   :global(.switch) {

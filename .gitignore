@@ -5,8 +5,12 @@ node_modules
 /package
 .env
 .env.*
+*.xdp*
 !.env.example
 .vercel
 .output
 .idea
 .fleet
+
+# Sentry Config File
+.sentryclirc
