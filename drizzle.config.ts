@@ -11,7 +11,7 @@ export default defineConfig({
 		user: process.env.DATABASE_USER,
 		password: process.env.DATABASE_PASSWORD,
 		database: process.env.DATABASE || 'boredgame',
-		ssl: true
+		ssl: process.env.DATABASE_HOST === 'localhost' ? false : true,
 	},
 	// Print all statements
 	verbose: true,

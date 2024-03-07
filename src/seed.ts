@@ -10,7 +10,7 @@ const pool = new pg.Pool({
 	host: process.env.DATABASE_HOST,
 	port: new Number(process.env.DATABASE_PORT).valueOf(),
 	database: process.env.DATABASE_DB,
-	ssl: true,
+	ssl: process.env.DATABASE_HOST === 'localhost' ? false : true,
 });
 
 const db = drizzle(pool, { schema: schema });

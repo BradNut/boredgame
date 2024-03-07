@@ -2,10 +2,6 @@
 // for information about these interfaces
 // and what to do when importing types
 
-import type { PrismaClient, User } from '@prisma/client';
-
-type User = Omit<User, 'created_at' | 'updated_at'>;
-
 // src/app.d.ts
 declare global {
 	namespace App {
@@ -16,7 +12,6 @@ declare global {
 			auth: import('lucia').AuthRequest;
 			user: import('lucia').User | null;
 			session: import('lucia').Session | null;
-			prisma: PrismaClient;
 			startTimer: number;
 			ip: string;
 			country: string;

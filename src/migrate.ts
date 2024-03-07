@@ -9,7 +9,7 @@ const connection = postgres({
 	user: process.env.DATABASE_USER || 'root',
 	password: process.env.DATABASE_PASSWORD || '',
 	database: process.env.DATABASE_DB || 'boredgame',
-	ssl: 'require',
+	ssl: process.env.DATABASE_HOST === 'localhost' ? false : 'require',
 	max: 1
 });
 const db = drizzle(connection);

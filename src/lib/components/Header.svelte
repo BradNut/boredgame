@@ -1,15 +1,22 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
-	import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte';
+	import { ListChecks, ListTodo, LogOut } from 'lucide-svelte';
 	import * as DropdownMenu from "$components/ui/dropdown-menu";
 	import * as Avatar from "$components/ui/avatar";
 	import { invalidateAll } from '$app/navigation';
 	import Logo from '$components/logo.svelte';
+	import type { Users } from '../../schema';
 
-	export let user: User | null;
+	export let user: Users;
 
-	let avatar = user?.username.slice(0, 1).toUpperCase() || '?';
+	let avatar: string;
+	let loggedIn = false;
+
+	$: if (user) {
+		avatar = user.username?.slice(0, 1).toUpperCase() || '?';
+		loggedIn = true;
+	}
 </script>
 
 <header>
@@ -23,7 +30,7 @@
 	</div>
 	<!-- <TextSearch /> -->
 	<nav>
-		{#if user}
+		{#if loggedIn}
 			<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
 			<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
 			<DropdownMenu.Root>
@@ -89,7 +96,7 @@
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		{/if}
-		{#if !user}
+		{#if !loggedIn}
 			<a href="/login">
 				<span class="flex-auto">Login</span></a
 			>

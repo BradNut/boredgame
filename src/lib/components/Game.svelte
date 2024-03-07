@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { GameType, SavedGameType } from '$lib/types';
 	import * as Card from "$lib/components/ui/card";
-	import type { CollectionItem } from '@prisma/client';
+	import type { CollectionItems } from '../../schema';
 
-	export let game: GameType | CollectionItem;
+	export let game: GameType | CollectionItems;
 	export let detailed: boolean = false;
 	export let variant: 'default' | 'compact' = 'default';
 
@@ -18,10 +18,10 @@
 		<Card.Header>
 			<Card.Title class="game-card-header">
 				<span style:--transition-name="game-name-{game.slug}">
-					{game.name}
+					<!-- {game.name}
 					{#if game?.year_published}
 						({game?.year_published})
-					{/if}
+					{/if} -->
 				</span>
 			</Card.Title>
 		</Card.Header>
@@ -32,7 +32,7 @@
 				title={`View ${game.name}`}
 				data-sveltekit-preload-data
 			>
-				<img src={game.thumb_url} alt={`Image of ${game.name}`} loading="lazy" decoding="async" />
+				<!-- <img src={game.thumb_url} alt={`Image of ${game.name}`} loading="lazy" decoding="async" />
 				<div class="game-details">
 					{#if game?.players}
 						<p>Players: {game.players}</p>
@@ -44,7 +44,7 @@
 							<div class="description">{@html game.description}</div>
 						{/if}
 					{/if}
-				</div>
+				</div> -->
 			</a>
 		</Card.Content>
 	</Card.Root>

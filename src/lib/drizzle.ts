@@ -16,7 +16,7 @@ const pool = new pg.Pool({
 	host: DATABASE_HOST,
 	port: Number(DATABASE_PORT).valueOf(),
 	database: DATABASE_DB,
-	ssl: true,
+	ssl: DATABASE_HOST === 'localhost' ? false : true,
 });
 
 // user: DATABASE_USER,

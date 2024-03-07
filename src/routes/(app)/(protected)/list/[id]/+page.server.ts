@@ -1,6 +1,9 @@
 import { type Actions, fail, redirect } from "@sveltejs/kit";
+import { and, eq } from "drizzle-orm";
+import db from "$lib/drizzle.js";
 import { superValidate } from 'sveltekit-superforms/server';
-import prisma from '$lib/prisma';
+import { games, wishlist_items, wishlists } from "../../../../../schema.js";
+import { zod } from "sveltekit-superforms/adapters";
 
 export async function load({ params, locals }) {
 	const user = locals.user;
@@ -9,27 +12,32 @@ export async function load({ params, locals }) {
 	}
 
 	try {
-		let wishlist = await prisma.wishlist.findUnique({
-			where: {
-				id: params.id,
-				AND: {
-					user_id: user.id
-				}
+		const wishlist = await db.select({
+			wishlistId: wishlists.id,
+			wishlistName: wishlists.name,
+			wishlistItems: {
+				id: wishlist_items.id,
+				gameId: wishlist_items.game_id,
+				gameName: games.name,
+				gameThumbUrl: games.thumb_url
 			},
-			include: {
-				items: {
-					include: {
-						game: {
-							select: {
-								id: true,
-								name: true,
-								thumb_url: true
-							}
-						}
-					}
-				}
-			}
-		});
+		}).from(wishlists).leftJoin(wishlist_items, eq(wishlists.id, wishlist_items.wishlist_id)).leftJoin(games, eq(games.id, wishlist_items.game_id)).where(eq(wishlists.id, params.id));
+		// let wishlist = await db.query.wishlists.findFirst({
+		// 	where: and(eq(wishlists.id, params.id), eq(wishlists.user_id, user.id)),
+		// 	with: {
+		// 		: {
+		// 			include: {
+		// 				game: {
+		// 					select: {
+		// 						id: true,
+		// 						name: true,
+		// 						thumb_url: true
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// });
 
 		return {
 			wishlist
@@ -51,10 +59,8 @@ export const actions: Actions = {
 		}
 
 
-		let game = await prisma.game.findUnique({
-			where: {
-				id: form.id
-			}
+		let game = await db.query.games.findFirst({
+			where: eq(games.id, form.id)
 		});
 
 		if (!game) {
@@ -68,10 +74,8 @@ export const actions: Actions = {
 			});
 		}
 
-		const wishlist = await prisma.wishlist.findUnique({
-			where: {
-				id: params.id
-			}
+		const wishlist = await db.query.wishlists.findFirst({
+			where: eq(wishlists.id, params.id)
 		});
 
 		if (wishlist?.user_id !== locals.user.id) {

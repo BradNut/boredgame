@@ -1,20 +1,17 @@
-import type { User } from '@prisma/client';
-import { prisma_client } from '../hooks.server';
+import db from '$lib/drizzle';
+import { eq } from 'drizzle-orm';
+import { users, type Users } from '../schema';
 import { add_user_to_role } from './roles';
 
-export function create_user(user: User) {
-	return prisma_client.user.create({
-		data: {
-			username: user.username
-		}
+export function create_user(user: Users) {
+	return db.insert(users).values({
+		username: user.username
 	});
 }
 
-export async function find_or_create_user(user: User) {
-	const existing_user = await prisma_client.user.findUnique({
-		where: {
-			username: user.username
-		}
+export async function find_or_create_user(user: Users) {
+	const existing_user = await db.query.users.findFirst({
+		where: eq(users.username, user.username),
 	});
 	if (existing_user) {
 		return existing_user;
@@ -26,14 +23,12 @@ export async function find_or_create_user(user: User) {
 }
 
 export async function find_user_with_roles(user_id: string) {
-	const user_with_roles = await prisma_client.user.findUnique({
-		where: {
-			id: user_id
-		},
-		include: {
-			roles: {
-				select: {
-					role: {
+	const user_with_roles = await db.query.users.findFirst({
+		where: eq(users.id, user_id),
+		with: {
+			user_roles: {
+				with: {
+					roles: {
 						select: {
 							name: true
 						}
