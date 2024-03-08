@@ -1,12 +1,12 @@
 import { error, type Actions } from '@sveltejs/kit';
+import { and, eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { modifyListGameSchema } from '$lib/validations/zod-schemas';
 import db from '$lib/drizzle.js';
-import { and, eq } from 'drizzle-orm';
-import { games, wishlist_items, wishlists } from '../../../../schema.js';
 import { notSignedInMessage } from '$lib/flashMessages.js';
+import { games, wishlist_items, wishlists } from '../../../../schema.js';
 
 export async function load(event) {
 	const { params, locals } = event;

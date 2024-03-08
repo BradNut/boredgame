@@ -1,5 +1,7 @@
 import { error, json } from '@sveltejs/kit';
-import prisma from '$lib/prisma';
+import { eq } from 'drizzle-orm';
+import db from '$lib/drizzle.js';
+import { collection_items, collection_items, users } from '../../../../../schema.js';
 
 // Search a user's collection
 export async function GET({ url, locals, params }) {
@@ -18,10 +20,8 @@ export async function GET({ url, locals, params }) {
 		error(401, { message: 'Unauthorized' });
 	}
 
-	let collection = await prisma.collection.findUnique({
-		where: {
-			user_id: locals.user.userId
-		}
+	const collection = await db.query.collections.findFirst({
+		where: eq(users.id, locals?.user?.userId)
 	});
 	console.log('collection', collection);
 
@@ -32,9 +32,8 @@ export async function GET({ url, locals, params }) {
 
 	try {
 		const orderBy = { [sort]: order };
-		let collection_items = await prisma.collectionItem.findMany({
-			where: {
-				collection_id,
+		let collection_items = await db.query.collection_items.findMany({
+			where: eq(collection_items.collection_id, collection_id),
 				AND: [
 					{
 						game: {
