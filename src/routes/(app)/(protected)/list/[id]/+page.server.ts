@@ -51,15 +51,20 @@ export async function load({ params, locals }) {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const { params, locals, request } = event;
+		const { params, locals } = event;
 		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		if (!locals.user) {
 			throw fail(401);
 		}
 
+		if (!params?.id) {
+			throw fail(400, {
+				message: 'Invalid Request'
+			});
+		}
 
-		let game = await db.query.games.findFirst({
+		const game = await db.query.games.findFirst({
 			where: eq(games.id, form.id)
 		});
 
@@ -88,11 +93,9 @@ export const actions: Actions = {
 			redirect(302, '/404');
 		}
 
-		const wishlistItem = await prisma.wishlistItem.create({
-			data: {
-				game_id: game.id,
-				wishlist_id: wishlist.id
-			}
+		const wishlistItem = await db.insert(wishlist_items).values({
+			game_id: game.id,
+			wishlist_id: wishlist.id
 		});
 
 		if (!wishlistItem) {
@@ -106,19 +109,19 @@ export const actions: Actions = {
 		};
 	},
 	// Create new wishlist
-	create: async ({ params, locals, request }) => {
+	create: async ({ locals }) => {
 		if (!locals.user) {
 			throw fail(401);
 		}
 	},
 	// Delete a wishlist
-	delete: async ({ params, locals, request }) => {
+	delete: async ({ locals}) => {
 		if (!locals.user) {
 			throw fail(401);
 		}
 	},
 	// Remove game from a wishlist
-	remove: async ({ params, locals, request }) => {
+	remove: async ({  locals }) => {
 		if (!locals.user) {
 			throw fail(401);
 		}

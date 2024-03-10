@@ -1,5 +1,8 @@
 import { error, json } from '@sveltejs/kit';
 import prisma from '$lib/prisma';
+import { and, eq } from 'drizzle-orm';
+import { collection_items } from '../../../../../schema.js';
+import db from '$lib/drizzle.js';
 
 // Search a user's collection
 export async function GET({ url, locals, params }) {
@@ -10,17 +13,18 @@ export async function GET({ url, locals, params }) {
 	const order = searchParams?.order || 'asc';
 	const sort = searchParams?.sort || 'name';
 	const collection_id = params.id;
-	const session = await locals.auth.validate();
 	console.log('url', url);
 	console.log('username', locals?.user?.id);
 
-	if (!session) {
-		error(401, { message: 'Unauthorized' });
+	if (!locals.user) {
+		return new Response(null, {
+			status: 401
+		});
 	}
 
-	let collection = await prisma.collection.findUnique({
+	const collection = await db.collection.findUnique({
 		where: {
-			user_id: locals.user.userId
+			user_id: locals.user.id
 		}
 	});
 	console.log('collection', collection);
@@ -31,39 +35,38 @@ export async function GET({ url, locals, params }) {
 	}
 
 	try {
-		const orderBy = { [sort]: order };
-		let collection_items = await prisma.collectionItem.findMany({
-			where: {
-				collection_id,
-				AND: [
-					{
-						game: {
-							name: {
-								contains: q
-							}
-						}
-					}
-				]
-			},
-			orderBy: [
-				{
-					game: {
-						...orderBy
-					}
-				}
-			],
-			include: {
+		const itemsInCollection = await db.query.collection_items.findMany({
+			where: eq(collection_items.collection_id, collection_id),
+			with: {
 				game: {
-					select: {
+					columns: {
 						id: true,
 						name: true,
-						thumb_url: true
-					}
+						thumb_url: true,
+					},
 				}
 			},
-			skip,
-			take: limit
+			orderBy: (collection_items, { asc, desc }) => {
+				const dbSort = sort === 'dateAdded' ? collection_items.created_at : collection_items.times_played;
+				if (order === 'asc') {
+					return asc(dbSort);
+				} else {
+					return desc(dbSort);
+				}
+			},
+			offset: skip,
+			limit
 		});
+
+		// include: {
+		// 		game: {
+		// 			select: {
+		// 				id: true,
+		// 				name: true,
+		// 				thumb_url: true
+		// 			}
+		// 		}
+		// 	},
 
 		return json(collection_items);
 	} catch (e) {
