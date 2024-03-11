@@ -23,7 +23,7 @@ const signUpDefaults = {
 };
 
 export const load: PageServerLoad = async (event) => {
-	redirect(302, '/waitlist', { type: 'error', message: 'Sign-up not yet available. Please add your email to the waitlist!' }, event);
+	// redirect(302, '/waitlist', { type: 'error', message: 'Sign-up not yet available. Please add your email to the waitlist!' }, event);
 
 	if (event.locals.user) {
 		const message = { type: 'success', message: 'You are already signed in' } as const;
@@ -39,7 +39,7 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
-		fail(401, { message: 'Sign-up not yet available. Please add your email to the waitlist!' });
+		// fail(401, { message: 'Sign-up not yet available. Please add your email to the waitlist!' });
 		const form = await superValidate(event, zod(signUpSchema));
 		if (!form.valid) {
 			form.data.password = '';

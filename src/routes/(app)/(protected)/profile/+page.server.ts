@@ -25,14 +25,14 @@ export const load: PageServerLoad = async (event) => {
 
 	const profileForm = await superValidate(zod(profileSchema), {
 		defaults: {
-			firstName: dbUser?.first_name || '',
-			lastName: dbUser?.last_name || '',
-			username: dbUser?.username || '',
+			firstName: dbUser?.first_name ?? '',
+			lastName: dbUser?.last_name ?? '',
+			username: dbUser?.username ?? '',
 		}
 	});
 	const emailForm = await superValidate(zod(changeEmailSchema), {
 		defaults: {
-			email: dbUser?.email || '',
+			email: dbUser?.email ?? '',
 		}
 	});
 
@@ -66,7 +66,6 @@ export const actions: Actions = {
 			console.log('updating profile');
 
 			const user = event.locals.user;
-
 			const newUsername = form.data.username;
 			const existingUser = await db.query
 				.users
@@ -102,7 +101,7 @@ export const actions: Actions = {
 		const form = await superValidate(event, zod(changeEmailSchema));
 
 		const newEmail = form.data?.email;
-		if (!form.valid || !newEmail || (newEmail !== '' && changeEmailIfNotEmpty.safeParse(form.data).success === false)) {
+		if (!form.valid || !newEmail || (newEmail !== '' && !changeEmailIfNotEmpty.safeParse(form.data).success)) {
 			return fail(400, {
 				form
 			});

@@ -1,9 +1,9 @@
+import { error } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
 import kebabCase from 'just-kebab-case';
+import { PUBLIC_SITE_URL } from '$env/static/public';
 import db from '$lib/drizzle';
 import { externalIds, type Mechanics, type Categories, categories, categoriesToExternalIds } from '../../../schema';
-import { eq } from 'drizzle-orm';
-import { error } from '@sveltejs/kit';
-import { PUBLIC_SITE_URL } from '$env/static/public';
 
 export async function createCategory(locals: App.Locals, category: Categories, externalId: string) {
 	if (!category || !externalId || externalId === '') {
@@ -44,7 +44,7 @@ export async function createCategory(locals: App.Locals, category: Categories, e
 				.insert(categories)
 				.values({
 					name: category.name,
-					slug: kebabCase(category.name || category.slug || '')
+					slug: kebabCase(category.name ?? category.slug ?? '')
 				})
 				.returning();
 			const dbExternalIds = await transaction

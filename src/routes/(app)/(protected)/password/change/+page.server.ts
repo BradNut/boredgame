@@ -55,7 +55,7 @@ export const actions: Actions = {
 			where: eq(users.id, user.id)
 		});
 
-		if (!dbUser || !dbUser.hashed_password) {
+		if (!dbUser?.hashed_password) {
 			form.data.password = '';
 			form.data.confirm_password = '';
 			form.data.current_password = '';
@@ -81,8 +81,8 @@ export const actions: Actions = {
 				await db.update(users)
 					.set({ hashed_password: hashedPassword })
 					.where(eq(users.id, user.id));
-				const session = await lucia.createSession(user.id, {
-					country: event.locals.session?.ip,
+				await lucia.createSession(user.id, {
+					country: event.locals.session?.ipCountry ?? 'unknown',
 				});
 				sessionCookie = lucia.createBlankSessionCookie();
 			} catch (e) {

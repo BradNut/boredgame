@@ -1,8 +1,8 @@
 import { fail } from '@sveltejs/kit';
-import { lucia } from '$lib/server/auth';
-import type { Actions } from "./$types";
 import { redirect } from 'sveltekit-flash-message/server';
+import { lucia } from '$lib/server/auth';
 import { notSignedInMessage } from '$lib/flashMessages';
+import type { Actions } from "./$types";
 
 export const actions: Actions = {
 	default: async (event) => {

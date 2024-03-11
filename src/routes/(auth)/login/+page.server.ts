@@ -77,7 +77,9 @@ export const actions: Actions = {
 				ip_country: locals.country,
 				ip_address: locals.ip
 			});
+			console.log('logging in session', session);
 			sessionCookie = lucia.createSessionCookie(session.id);
+			console.log('logging in session cookie', sessionCookie);
 		} catch (e) {
 			// TODO: need to return error message to the client
 			console.error(e);
@@ -93,6 +95,6 @@ export const actions: Actions = {
 		form.data.username = '';
 		form.data.password = '';
 		const message = { type: 'success', message: 'Signed In!' } as const;
-		redirect('/', message, event);
+		redirect(302, '/', message, event);
 	}
 };

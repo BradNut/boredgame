@@ -6,9 +6,11 @@
 	import * as Avatar from "$components/ui/avatar";
 	import { invalidateAll } from '$app/navigation';
 	import Logo from '$components/logo.svelte';
-	import type { Users } from '../../schema';
+	import type { Users } from "../../schema";
 
-	export let user: Users;
+	export let user: Users | null = null;
+
+	console.log('header user', user);
 
 	let avatar: string;
 	let loggedIn = false;
@@ -30,7 +32,7 @@
 	</div>
 	<!-- <TextSearch /> -->
 	<nav>
-		{#if loggedIn}
+		{#if user}
 			<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
 			<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
 			<DropdownMenu.Root>
@@ -95,8 +97,7 @@
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
-		{/if}
-		{#if !loggedIn}
+		{:else}
 			<a href="/login">
 				<span class="flex-auto">Login</span></a
 			>

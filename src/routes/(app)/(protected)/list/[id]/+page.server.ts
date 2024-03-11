@@ -1,9 +1,10 @@
 import { type Actions, fail, redirect } from "@sveltejs/kit";
-import { and, eq } from "drizzle-orm";
-import db from "$lib/drizzle.js";
-import { superValidate } from 'sveltekit-superforms/server';
-import { games, wishlist_items, wishlists } from "../../../../../schema.js";
+import { eq } from "drizzle-orm";
 import { zod } from "sveltekit-superforms/adapters";
+import { superValidate } from 'sveltekit-superforms/server';
+import db from "$lib/drizzle.js";
+import { modifyListGameSchema } from "$lib/validations/zod-schemas";
+import { games, wishlist_items, wishlists } from "../../../../../schema.js";
 
 export async function load({ params, locals }) {
 	const user = locals.user;
@@ -14,31 +15,16 @@ export async function load({ params, locals }) {
 	try {
 		const wishlist = await db.select({
 			wishlistId: wishlists.id,
-			wishlistName: wishlists.name,
 			wishlistItems: {
 				id: wishlist_items.id,
 				gameId: wishlist_items.game_id,
 				gameName: games.name,
 				gameThumbUrl: games.thumb_url
 			},
-		}).from(wishlists).leftJoin(wishlist_items, eq(wishlists.id, wishlist_items.wishlist_id)).leftJoin(games, eq(games.id, wishlist_items.game_id)).where(eq(wishlists.id, params.id));
-		// let wishlist = await db.query.wishlists.findFirst({
-		// 	where: and(eq(wishlists.id, params.id), eq(wishlists.user_id, user.id)),
-		// 	with: {
-		// 		: {
-		// 			include: {
-		// 				game: {
-		// 					select: {
-		// 						id: true,
-		// 						name: true,
-		// 						thumb_url: true
-		// 					}
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// });
-
+		}).from(wishlists)
+				.leftJoin(wishlist_items, eq(wishlists.id, wishlist_items.wishlist_id))
+				.leftJoin(games, eq(games.id, wishlist_items.game_id))
+				.where(eq(wishlists.id, params.id));
 		return {
 			wishlist
 		};
@@ -69,11 +55,6 @@ export const actions: Actions = {
 		});
 
 		if (!game) {
-			// game = await prisma.game.create({
-			// 	data: {
-			// 		name: form.name
-			// 	}
-			// });
 			return fail(400, {
 				message: 'Game not found'
 			});
