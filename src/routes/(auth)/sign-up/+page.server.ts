@@ -5,12 +5,18 @@ import { nanoid } from 'nanoid';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
+import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import type { PageServerLoad } from './$types';
 import { lucia } from '$lib/server/auth';
 import { signUpSchema } from '$lib/validations/auth';
 import { add_user_to_role } from '$server/roles';
 import db from '$lib/drizzle';
 import { collections, users, wishlists } from '../../../schema';
+
+const limiter = new RateLimiter({
+	// A rate is defined by [number, unit]
+	IPUA: [5, 'm']
+});
 
 const signUpDefaults = {
 	firstName: '',
@@ -39,6 +45,9 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
+		if (await limiter.isLimited(event)) {
+			throw error(429);
+		}
 		// fail(401, { message: 'Sign-up not yet available. Please add your email to the waitlist!' });
 		const form = await superValidate(event, zod(signUpSchema));
 		if (!form.valid) {
@@ -54,9 +63,9 @@ export const actions: Actions = {
 		// Adding user to the db
 		console.log('Check if user already exists');
 
-		const existing_user = await db.query
-			.users
-			.findFirst({ where: eq(users.username, form.data.username) });
+		const existing_user = await db.query.users.findFirst({
+			where: eq(users.username, form.data.username)
+		});
 
 		if (existing_user) {
 			return setError(form, 'username', 'You cannot create an account with that username');
@@ -66,7 +75,8 @@ export const actions: Actions = {
 
 		const hashedPassword = await new Argon2id().hash(form.data.password);
 
-		const user = await db.insert(users)
+		const user = await db
+			.insert(users)
 			.values({
 				username: form.data.username,
 				hashed_password: hashedPassword,
@@ -76,7 +86,8 @@ export const actions: Actions = {
 				verified: false,
 				receive_email: false,
 				theme: 'system'
-			}).returning();
+			})
+			.returning();
 		console.log('signup user', user);
 
 		if (!user || user.length === 0) {
@@ -87,14 +98,12 @@ export const actions: Actions = {
 		}
 
 		add_user_to_role(user[0].id, 'user');
-		await db.insert(collections)
-			.values({
-				user_id: user[0].id
-			});
-		await db.insert(wishlists)
-			.values({
-				user_id: user[0].id
-			});
+		await db.insert(collections).values({
+			user_id: user[0].id
+		});
+		await db.insert(wishlists).values({
+			user_id: user[0].id
+		});
 
 		try {
 			session = await lucia.createSession(user[0].id, {
@@ -118,7 +127,7 @@ export const actions: Actions = {
 		}
 
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: ".",
+			path: '.',
 			...sessionCookie.attributes
 		});
 

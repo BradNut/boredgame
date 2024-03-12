@@ -1,1 +1,0 @@
-DROP TABLE "expansions_to_external_ids";

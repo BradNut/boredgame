@@ -1,4 +1,4 @@
-import { fail, type Actions } from '@sveltejs/kit';
+import { fail, error, type Actions } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
@@ -6,9 +6,10 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { Argon2id } from 'oslo/password';
 import db from '$lib/drizzle';
 import { lucia } from '$lib/server/auth';
-import { signInSchema } from '$lib/validations/auth'
+import { signInSchema } from '$lib/validations/auth';
 import { collections, users, wishlists } from '../../../schema';
 import type { PageServerLoad } from './$types';
+import { RateLimiter } from 'sveltekit-rate-limiter/server';
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) {
@@ -23,8 +24,17 @@ export const load: PageServerLoad = async (event) => {
 	};
 };
 
+const limiter = new RateLimiter({
+	// A rate is defined by [number, unit]
+	IPUA: [5, 'm']
+});
+
 export const actions: Actions = {
 	default: async (event) => {
+		if (await limiter.isLimited(event)) {
+			throw error(429);
+		}
+
 		const { locals } = event;
 		const form = await superValidate(event, zod(signInSchema));
 
@@ -87,8 +97,9 @@ export const actions: Actions = {
 			return setError(form, '', 'Your username or password is incorrect.');
 		}
 
+		console.log('setting session cookie', sessionCookie);
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: ".",
+			path: '.',
 			...sessionCookie.attributes
 		});
 

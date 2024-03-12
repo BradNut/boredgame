@@ -2,55 +2,34 @@ import { relations, sql, type InferSelectModel } from 'drizzle-orm';
 import {
 	pgTable,
 	timestamp,
-	varchar,
+	text,
 	boolean,
 	integer,
-	text,
 	index,
 	pgEnum,
-	primaryKey
+	primaryKey,
+	uuid
 } from 'drizzle-orm/pg-core';
-import { nanoid } from 'nanoid';
+import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { tsvector } from './tsVector';
 
 // User Related Schemas
 
 export const users = pgTable('users', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	username: varchar('username', {
-		length: 255
-	}).unique(),
-	hashed_password: varchar('hashed_password', {
-		length: 255
-	}),
-	email: varchar('email', {
-		length: 255
-	}).unique(),
-	first_name: varchar('first_name', {
-		length: 255
-	}),
-	last_name: varchar('last_name', {
-		length: 255
-	}),
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	username: text('username').unique(),
+	hashed_password: text('hashed_password'),
+	email: text('email').unique(),
+	first_name: text('first_name'),
+	last_name: text('last_name'),
 	verified: boolean('verified').default(false),
 	receive_email: boolean('receive_email').default(false),
-	theme: varchar('theme', {
-		length: 255
-	}).default('system'),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	theme: text('theme').default('system'),
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export const user_relations = relations(users, ({ many }) => ({
@@ -60,35 +39,24 @@ export const user_relations = relations(users, ({ many }) => ({
 export type Users = InferSelectModel<typeof users>;
 
 export const sessions = pgTable('sessions', {
-	id: varchar('id', {
-		length: 255
-	}).primaryKey(),
-	userId: varchar('user_id', {
-		length: 255
-	})
+	id: text('id').primaryKey(),
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id),
 	expiresAt: timestamp('expires_at', {
 		withTimezone: true,
 		mode: 'date'
 	}).notNull(),
-	ipCountry: varchar('ip_country', {
-		length: 255
-	}),
-	ipAddress: varchar('ip_address', {
-		length: 255
-	})
+	ipCountry: text('ip_country'),
+	ipAddress: text('ip_address')
 });
 
 export const roles = pgTable('roles', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	name: varchar('name', {
-		length: 255
-	}).unique()
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	name: text('name').unique()
 });
 
 export type Roles = InferSelectModel<typeof roles>;
@@ -98,31 +66,18 @@ export const role_relations = relations(roles, ({ many }) => ({
 }));
 
 export const user_roles = pgTable('user_roles', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	user_id: varchar('user_id', {
-		length: 255
-	})
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	user_id: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	role_id: varchar('role_id', {
-		length: 255
-	})
+	role_id: uuid('role_id')
 		.notNull()
 		.references(() => roles.id, { onDelete: 'cascade' }),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export const user_role_relations = relations(user_roles, ({ one }) => ({
@@ -139,14 +94,10 @@ export const user_role_relations = relations(user_roles, ({ one }) => ({
 export type UserRoles = InferSelectModel<typeof user_roles>;
 
 export const password_reset_tokens = pgTable('password_reset_tokens', {
-	id: varchar('id', {
-		length: 255
-	})
+	id: text('id')
 		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	user_id: varchar('user_id', {
-		length: 255
-	})
+		.$defaultFn(() => cuid2()),
+	user_id: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	expires_at: timestamp('expires_at', {
@@ -154,11 +105,7 @@ export const password_reset_tokens = pgTable('password_reset_tokens', {
 		mode: 'date',
 		precision: 6
 	}),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	created_at: timestamp('created_at').notNull().defaultNow()
 });
 
 export const password_reset_token_relations = relations(password_reset_tokens, ({ one }) => ({
@@ -169,26 +116,15 @@ export const password_reset_token_relations = relations(password_reset_tokens, (
 }));
 
 export const collections = pgTable('collections', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	user_id: varchar('user_id', {
-		length: 255
-	})
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	user_id: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export const collection_relations = relations(collections, ({ one }) => ({
@@ -199,32 +135,19 @@ export const collection_relations = relations(collections, ({ one }) => ({
 }));
 
 export const collection_items = pgTable('collection_items', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	collection_id: varchar('collection_id', {
-		length: 255
-	})
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	collection_id: uuid('collection_id')
 		.notNull()
 		.references(() => collections.id, { onDelete: 'cascade' }),
-	game_id: varchar('game_id', {
-		length: 255
-	})
+	game_id: uuid('game_id')
 		.notNull()
 		.references(() => games.id, { onDelete: 'cascade' }),
 	times_played: integer('times_played').default(0),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export type CollectionItems = InferSelectModel<typeof collection_items>;
@@ -241,26 +164,15 @@ export const collection_item_relations = relations(collection_items, ({ one }) =
 }));
 
 export const wishlists = pgTable('wishlists', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	user_id: varchar('user_id', {
-		length: 255
-	})
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	user_id: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export type Wishlists = InferSelectModel<typeof wishlists>;
@@ -269,35 +181,22 @@ export const wishlists_relations = relations(wishlists, ({ one }) => ({
 	user: one(users, {
 		fields: [wishlists.user_id],
 		references: [users.id]
-	}),
+	})
 }));
 
 export const wishlist_items = pgTable('wishlist_items', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	wishlist_id: varchar('wishlist_id', {
-		length: 255
-	})
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	wishlist_id: uuid('wishlist_id')
 		.notNull()
 		.references(() => wishlists.id, { onDelete: 'cascade' }),
-	game_id: varchar('game_id', {
-		length: 255
-	})
+	game_id: uuid('game_id')
 		.notNull()
 		.references(() => games.id, { onDelete: 'cascade' }),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export type WishlistItems = InferSelectModel<typeof wishlist_items>;
@@ -325,15 +224,12 @@ export const externalIdType = pgEnum('external_id_type', [
 ]);
 
 export const externalIds = pgTable('external_ids', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
 	type: externalIdType('type').notNull(),
-	externalId: varchar('external_id', {
-		length: 255
-	}).notNull()
+	externalId: text('external_id').notNull()
 });
 
 export type ExternalIds = InferSelectModel<typeof externalIds>;
@@ -341,17 +237,12 @@ export type ExternalIds = InferSelectModel<typeof externalIds>;
 export const games = pgTable(
 	'games',
 	{
-		id: varchar('id', {
-			length: 255
-		})
-			.primaryKey()
-			.$defaultFn(() => nanoid()),
-		name: varchar('name', {
-			length: 255
-		}),
-		slug: varchar('slug', {
-			length: 255
-		}),
+		id: uuid('id').primaryKey(),
+		cuid: text('cuid')
+			.unique()
+			.$defaultFn(() => cuid2()),
+		name: text('name'),
+		slug: text('slug'),
 		description: text('description'),
 		year_published: integer('year_published'),
 		min_players: integer('min_players'),
@@ -360,31 +251,17 @@ export const games = pgTable(
 		min_playtime: integer('min_playtime'),
 		max_playtime: integer('max_playtime'),
 		min_age: integer('min_age'),
-		image_url: varchar('image_url', {
-			length: 255
-		}),
-		thumb_url: varchar('thumb_url', {
-			length: 255
-		}),
-		url: varchar('url', {
-			length: 255
-		}),
+		image_url: text('image_url'),
+		thumb_url: text('thumb_url'),
+		url: text('url'),
 		text_searchable_index: tsvector('text_searchable_index'),
 		last_sync_at: timestamp('last_sync_at', {
 			withTimezone: true,
 			mode: 'date',
 			precision: 6
 		}),
-		created_at: timestamp('created_at', {
-			withTimezone: true,
-			mode: 'date',
-			precision: 6
-		}).default(sql`now()`),
-		updated_at: timestamp('updated_at', {
-			withTimezone: true,
-			mode: 'date',
-			precision: 6
-		}).default(sql`now()`)
+		created_at: timestamp('created_at').notNull().defaultNow(),
+		updated_at: timestamp('updated_at').notNull().defaultNow()
 	},
 	(table) => {
 		return {
@@ -400,14 +277,10 @@ export type Games = InferSelectModel<typeof games>;
 export const gamesToExternalIds = pgTable(
 	'games_to_external_ids',
 	{
-		gameId: varchar('game_id', {
-			length: 255
-		})
+		gameId: uuid('game_id')
 			.notNull()
 			.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-		externalId: varchar('external_id', {
-			length: 255
-		})
+		externalId: uuid('external_id')
 			.notNull()
 			.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
 	},
@@ -428,31 +301,18 @@ export const gameRelations = relations(games, ({ many }) => ({
 }));
 
 export const expansions = pgTable('expansions', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	base_game_id: varchar('base_game_id', {
-		length: 255
-	})
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	base_game_id: uuid('base_game_id')
 		.notNull()
 		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-	game_id: varchar('game_id', {
-		length: 255
-	})
+	game_id: uuid('game_id')
 		.notNull()
 		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export type Expansions = InferSelectModel<typeof expansions>;
@@ -469,49 +329,36 @@ export const expansion_relations = relations(expansions, ({ one }) => ({
 }));
 
 export const publishers = pgTable('publishers', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	name: varchar('name', {
-		length: 255
-	}),
-	slug: varchar('slug', {
-		length: 255
-	}),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	name: text('name'),
+	slug: text('slug'),
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export type Publishers = InferSelectModel<typeof publishers>;
 
-export const publishersToExternalIds = pgTable('publishers_to_external_ids', {
-	publisherId: varchar('publisher_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => publishers.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-	externalId: varchar('external_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
-}, (table) => {
-	return {
-		publishersToExternalIdsPkey: primaryKey({
-			columns: [table.publisherId, table.externalId]
-		})
+export const publishersToExternalIds = pgTable(
+	'publishers_to_external_ids',
+	{
+		publisherId: uuid('publisher_id')
+			.notNull()
+			.references(() => publishers.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+		externalId: uuid('external_id')
+			.notNull()
+			.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+	},
+	(table) => {
+		return {
+			publishersToExternalIdsPkey: primaryKey({
+				columns: [table.publisherId, table.externalId]
+			})
+		};
 	}
-});
+);
 
 export const publishers_relations = relations(publishers, ({ many }) => ({
 	publishers_to_games: many(publishers_to_games),
@@ -519,68 +366,55 @@ export const publishers_relations = relations(publishers, ({ many }) => ({
 }));
 
 export const categories = pgTable('categories', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	name: varchar('name', {
-		length: 255
-	}),
-	slug: varchar('slug', {
-		length: 255
-	}),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	name: text('name'),
+	slug: text('slug'),
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export type Categories = InferSelectModel<typeof categories>;
 
-export const categoriesToExternalIds = pgTable('categories_to_external_ids', {
-	categoryId: varchar('category_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => categories.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-	externalId: varchar('external_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
-}, (table) => {
-	return {
-		categoriesToExternalIdsPkey: primaryKey({
-			columns: [table.categoryId, table.externalId]
-		})
+export const categoriesToExternalIds = pgTable(
+	'categories_to_external_ids',
+	{
+		categoryId: uuid('category_id')
+			.notNull()
+			.references(() => categories.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+		externalId: uuid('external_id')
+			.notNull()
+			.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+	},
+	(table) => {
+		return {
+			categoriesToExternalIdsPkey: primaryKey({
+				columns: [table.categoryId, table.externalId]
+			})
+		};
 	}
-});
+);
 
-export const categories_to_games = pgTable('categories_to_games', {
-	category_id: varchar('category_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => categories.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-	game_id: varchar('game_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' })
-}, (table) => {
-	return {
-		categoriesToGamesPkey: primaryKey({
-			columns: [table.category_id, table.game_id]
-		})
+export const categories_to_games = pgTable(
+	'categories_to_games',
+	{
+		category_id: uuid('category_id')
+			.notNull()
+			.references(() => categories.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+		game_id: uuid('game_id')
+			.notNull()
+			.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+	},
+	(table) => {
+		return {
+			categoriesToGamesPkey: primaryKey({
+				columns: [table.category_id, table.game_id]
+			})
+		};
 	}
-});
+);
 
 export const categories_to_games_relations = relations(categories_to_games, ({ one }) => ({
 	category: one(categories, {
@@ -599,73 +433,60 @@ export const categories_relations = relations(categories, ({ many }) => ({
 }));
 
 export const mechanics = pgTable('mechanics', {
-	id: varchar('id', {
-		length: 255
-	})
-		.primaryKey()
-		.$defaultFn(() => nanoid()),
-	name: varchar('name', {
-		length: 255
-	}),
-	slug: varchar('slug', {
-		length: 255
-	}),
-	created_at: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`),
-	updated_at: timestamp('updated_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6
-	}).default(sql`now()`)
+	id: uuid('id').primaryKey(),
+	cuid: text('cuid')
+		.unique()
+		.$defaultFn(() => cuid2()),
+	name: text('name'),
+	slug: text('slug'),
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow()
 });
 
 export type Mechanics = InferSelectModel<typeof mechanics>;
 
-export const mechanicsToExternalIds = pgTable('mechanics_to_external_ids', {
-	mechanicId: varchar('mechanic_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => mechanics.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-	externalId: varchar('external_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
-}, (table) => {
-	return {
-		mechanicsToExternalIdsPkey: primaryKey({
-			columns: [table.mechanicId, table.externalId]
-		})
+export const mechanicsToExternalIds = pgTable(
+	'mechanics_to_external_ids',
+	{
+		mechanicId: uuid('mechanic_id')
+			.notNull()
+			.references(() => mechanics.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+		externalId: uuid('external_id')
+			.notNull()
+			.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+	},
+	(table) => {
+		return {
+			mechanicsToExternalIdsPkey: primaryKey({
+				columns: [table.mechanicId, table.externalId]
+			})
+		};
 	}
-});
+);
 
 export const mechanic_relations = relations(mechanics, ({ many }) => ({
 	mechanics_to_games: many(mechanics_to_games),
 	mechanicsToExternalIds: many(mechanicsToExternalIds)
 }));
 
-export const mechanics_to_games = pgTable('mechanics_to_games', {
-	mechanic_id: varchar('mechanic_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => mechanics.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-	game_id: varchar('game_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' })
-}, (table) => {
-	return {
-		mechanicsToGamesPkey: primaryKey({
-			columns: [table.mechanic_id, table.game_id]
-		})
+export const mechanics_to_games = pgTable(
+	'mechanics_to_games',
+	{
+		mechanic_id: uuid('mechanic_id')
+			.notNull()
+			.references(() => mechanics.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+		game_id: uuid('game_id')
+			.notNull()
+			.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+	},
+	(table) => {
+		return {
+			mechanicsToGamesPkey: primaryKey({
+				columns: [table.mechanic_id, table.game_id]
+			})
+		};
 	}
-});
+);
 
 export const mechanics_to_games_relations = relations(mechanics_to_games, ({ one }) => ({
 	mechanic: one(mechanics, {
@@ -678,24 +499,24 @@ export const mechanics_to_games_relations = relations(mechanics_to_games, ({ one
 	})
 }));
 
-export const publishers_to_games = pgTable('publishers_to_games', {
-	publisher_id: varchar('publisher_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => publishers.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-	game_id: varchar('game_id', {
-		length: 255
-	})
-		.notNull()
-		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' })
-}, (table) => {
-	return {
-		publishersToGamesPkey: primaryKey({
-			columns: [table.publisher_id, table.game_id]
-		})
+export const publishers_to_games = pgTable(
+	'publishers_to_games',
+	{
+		publisher_id: uuid('publisher_id')
+			.notNull()
+			.references(() => publishers.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+		game_id: uuid('game_id')
+			.notNull()
+			.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' })
+	},
+	(table) => {
+		return {
+			publishersToGamesPkey: primaryKey({
+				columns: [table.publisher_id, table.game_id]
+			})
+		};
 	}
-});
+);
 
 export const publishers_to_games_relations = relations(publishers_to_games, ({ one }) => ({
 	publisher: one(publishers, {

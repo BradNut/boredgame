@@ -1,7 +1,6 @@
 // lib/server/lucia.ts
 import { Lucia, TimeSpan } from 'lucia';
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
-import { dev } from '$app/environment';
 import db from '$lib/drizzle';
 import { sessions, users } from '../../schema';
 
@@ -29,9 +28,9 @@ export const lucia = new Lucia(adapter, {
 		expires: false, // session cookies have very long lifespan (2 years)
 		attributes: {
 			// set to `true` when using HTTPS
-			secure: !dev,
+			secure: process.env.NODE_ENV === 'production',
 			sameSite: 'strict',
-			domain: dev ? 'localhost' : 'boredgame.vercel.app',
+			domain:  process.env.NODE_ENV === 'production' ? 'boredgame.vercel.app' : 'localhost',
 		}
 	},
 });
