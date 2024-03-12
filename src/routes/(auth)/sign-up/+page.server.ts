@@ -1,7 +1,6 @@
 import { fail, error, type Actions } from '@sveltejs/kit';
 import { Argon2id } from 'oslo/password';
 import { eq } from 'drizzle-orm';
-import { nanoid } from 'nanoid';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
@@ -12,6 +11,7 @@ import { signUpSchema } from '$lib/validations/auth';
 import { add_user_to_role } from '$server/roles';
 import db from '$lib/drizzle';
 import { collections, users, wishlists } from '../../../schema';
+import { createId as cuid2 } from '@paralleldrive/cuid2';
 
 const limiter = new RateLimiter({
 	// A rate is defined by [number, unit]
@@ -93,7 +93,7 @@ export const actions: Actions = {
 		if (!user || user.length === 0) {
 			return fail(400, {
 				form,
-				message: `Could not create your account. Please try again. If the problem persists, please contact support. Error ID: ${nanoid()}`
+				message: `Could not create your account. Please try again. If the problem persists, please contact support. Error ID: ${cuid2()}`
 			});
 		}
 
