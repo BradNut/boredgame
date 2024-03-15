@@ -8,7 +8,7 @@ export const profileSchema = userSchema.pick({
 });
 
 export const changeEmailSchema = userSchema.pick({
-	email: true,
+	email: true
 });
 
 export const changeUserPasswordSchema = z
@@ -104,3 +104,11 @@ const checkPasswordStrength = async function (password: string, ctx: z.Refinemen
 		});
 	}
 };
+
+export const addRoleSchema = z.object({
+	roles: z.array(z.string()).refine((value) => value.some((item) => item), {
+		message: 'You have to select at least one item.'
+	})
+});
+
+export type AddRoleSchema = typeof addRoleSchema;

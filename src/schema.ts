@@ -16,7 +16,7 @@ import { tsvector } from './tsVector';
 // User Related Schemas
 
 export const users = pgTable('users', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -52,11 +52,12 @@ export const sessions = pgTable('sessions', {
 });
 
 export const roles = pgTable('roles', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
-		.$defaultFn(() => cuid2()),
-	name: text('name').unique()
+		.$defaultFn(() => cuid2())
+		.notNull(),
+	name: text('name').unique().notNull()
 });
 
 export type Roles = InferSelectModel<typeof roles>;
@@ -66,7 +67,7 @@ export const role_relations = relations(roles, ({ many }) => ({
 }));
 
 export const user_roles = pgTable('user_roles', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -116,7 +117,7 @@ export const password_reset_token_relations = relations(password_reset_tokens, (
 }));
 
 export const collections = pgTable('collections', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -135,7 +136,7 @@ export const collection_relations = relations(collections, ({ one }) => ({
 }));
 
 export const collection_items = pgTable('collection_items', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -164,7 +165,7 @@ export const collection_item_relations = relations(collection_items, ({ one }) =
 }));
 
 export const wishlists = pgTable('wishlists', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -185,7 +186,7 @@ export const wishlists_relations = relations(wishlists, ({ one }) => ({
 }));
 
 export const wishlist_items = pgTable('wishlist_items', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -224,7 +225,7 @@ export const externalIdType = pgEnum('external_id_type', [
 ]);
 
 export const externalIds = pgTable('external_ids', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -237,7 +238,7 @@ export type ExternalIds = InferSelectModel<typeof externalIds>;
 export const games = pgTable(
 	'games',
 	{
-		id: uuid('id').primaryKey(),
+		id: uuid('id').primaryKey().defaultRandom(),
 		cuid: text('cuid')
 			.unique()
 			.$defaultFn(() => cuid2()),
@@ -301,7 +302,7 @@ export const gameRelations = relations(games, ({ many }) => ({
 }));
 
 export const expansions = pgTable('expansions', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -329,7 +330,7 @@ export const expansion_relations = relations(expansions, ({ one }) => ({
 }));
 
 export const publishers = pgTable('publishers', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -366,7 +367,7 @@ export const publishers_relations = relations(publishers, ({ many }) => ({
 }));
 
 export const categories = pgTable('categories', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
@@ -433,7 +434,7 @@ export const categories_relations = relations(categories, ({ many }) => ({
 }));
 
 export const mechanics = pgTable('mechanics', {
-	id: uuid('id').primaryKey(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),

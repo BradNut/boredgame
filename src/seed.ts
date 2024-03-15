@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 import * as schema from './schema';
 
@@ -10,24 +10,32 @@ const pool = new pg.Pool({
 	host: process.env.DATABASE_HOST,
 	port: new Number(process.env.DATABASE_PORT).valueOf(),
 	database: process.env.DATABASE_DB,
-	ssl: process.env.DATABASE_HOST === 'localhost' ? false : true,
+	ssl: process.env.DATABASE_HOST === 'localhost' ? false : true
 });
 
 const db = drizzle(pool, { schema: schema });
 
 const existingRoles = await db.query.roles.findMany();
 console.log('Existing roles', existingRoles);
-if (existingRoles.length === 0) {
-	console.log('Creating roles ...');
-	await db.insert(schema.roles).values([{
-		name: 'admin'
-	}, {
-		name: 'user'
-	}]);
-	console.log('Roles created.');
-} else {
-	console.log('Roles already exist. No action taken.');
-}
+console.log('Creating roles ...');
+await db
+	.insert(schema.roles)
+	.values([{ name: 'admin' }])
+	.onConflictDoNothing();
+await db
+	.insert(schema.roles)
+	.values([{ name: 'user' }])
+	.onConflictDoNothing();
+await db
+	.insert(schema.roles)
+	.values([{ name: 'editor' }])
+	.onConflictDoNothing();
+console.log('Roles created.');
+await db
+	.insert(schema.roles)
+	.values([{ name: 'moderator' }])
+	.onConflictDoNothing();
+console.log('Roles created.');
 
 await pool.end();
 process.exit();
