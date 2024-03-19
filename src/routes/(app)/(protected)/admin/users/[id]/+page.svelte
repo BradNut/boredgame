@@ -5,6 +5,8 @@
 	// import AddRolesForm from './add-roles-form.svelte';
 
 	export let data;
+	export let form;
+
 	const { user, availableRoles } = data;
 	const { user_roles }: { user_roles: { role: { name: string, cuid: string } }[] } = user;
 </script>
@@ -17,15 +19,29 @@
 
 <h2>User Roles</h2>
 {#each user_roles as user_role}
-	<p>{capitalize(user_role?.role?.name)}</p>
+	{#if user_role?.role?.name !== 'user'}
+	<form action="?/removeRole" method="POST" use:enhance data-sveltekit-reload>
+		<div class="flex flex-row space-x-3 place-items-center mt-2">
+			<input id="role" type="hidden" name="role" value={user_role?.role?.cuid} />
+			<Button type="submit">Remove</Button>
+			<p>{capitalize(user_role?.role?.name)}</p>
+		</div>
+	</form>
+	{:else}
+		<p>{capitalize(user_role?.role?.name)}</p>
+	{/if}
 {/each}
+
+{#if form?.success}
+	<p>Sucessfully added role</p>
+{/if}
 
 <h2>Roles Available to Assign</h2>
 <!--<AddRolesForm {availableRoles} />-->
 {#each availableRoles as role}
-	<form action="?/addRole" method="POST" use:enhance>
+	<form action="?/addRole" method="POST" use:enhance data-sveltekit-reload>
 		<div class="flex flex-row space-x-3 place-items-center mt-2">
-			<input type="hidden" name="role" value={role?.cuid} />
+			<input id="role" type="hidden" name="role" value={role?.cuid} />
 			<Button type="submit">Add</Button>
 			<p>{capitalize(role?.name)}</p>
 		</div>

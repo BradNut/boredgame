@@ -29,12 +29,12 @@ const signUpDefaults = {
 };
 
 export const load: PageServerLoad = async (event) => {
-	redirect(
-		302,
-		'/waitlist',
-		{ type: 'error', message: 'Sign-up not yet available. Please add your email to the waitlist!' },
-		event
-	);
+	// redirect(
+	// 	302,
+	// 	'/waitlist',
+	// 	{ type: 'error', message: 'Sign-up not yet available. Please add your email to the waitlist!' },
+	// 	event
+	// );
 
 	if (event.locals.user) {
 		const message = { type: 'success', message: 'You are already signed in' } as const;

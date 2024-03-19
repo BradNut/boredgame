@@ -1,20 +1,20 @@
 <script lang="ts">
-	import * as Form from "$lib/components/ui/form";
-	import { Input } from "$lib/components/ui/input";
-	import { Checkbox } from "$lib/components/ui/checkbox/index.js";
+	import * as Form from '$lib/components/ui/form';
+	import { Input } from '$lib/components/ui/input';
+	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 	import { addRoleSchema, type AddRoleSchema } from '$lib/validations/account';
 	import {
 		type SuperValidated,
 		type Infer,
-		superForm,
-	} from "sveltekit-superforms";
-	import { zodClient } from "sveltekit-superforms/adapters";
+		superForm
+	} from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 
 	export let availableRoles: { name: string; cuid: string }[] = [];
 	const data: SuperValidated<Infer<AddRoleSchema>> = availableRoles;
 
 	const form = superForm(data, {
-		validators: zodClient(addRoleSchema),
+		validators: zodClient(addRoleSchema)
 		// onUpdated: ({ form: f }) => {
 		// 	if (f.valid) {
 		// 		toast.success("You submitted" + JSON.stringify(f.data, null, 2));

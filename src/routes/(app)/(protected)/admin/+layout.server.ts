@@ -1,7 +1,7 @@
 import { redirect } from 'sveltekit-flash-message/server';
 import { notSignedInMessage } from '$lib/flashMessages';
-import db from '$lib/drizzle';
 import { eq } from 'drizzle-orm';
+import db from '$lib/drizzle';
 import { user_roles } from '../../../../schema';
 
 export async function load(event) {
