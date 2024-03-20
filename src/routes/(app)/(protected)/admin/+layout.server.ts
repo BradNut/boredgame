@@ -1,10 +1,10 @@
-import { redirect } from 'sveltekit-flash-message/server';
-import { notSignedInMessage } from '$lib/flashMessages';
+import { redirect, loadFlash } from 'sveltekit-flash-message/server';
+import { forbiddenMessage, notSignedInMessage } from '$lib/flashMessages';
 import { eq } from 'drizzle-orm';
 import db from '$lib/drizzle';
 import { user_roles } from '../../../../schema';
 
-export async function load(event) {
+export const load = loadFlash(async (event) => {
 	const { locals } = event;
 	if (!locals?.user) {
 		redirect(302, '/login', notSignedInMessage, event);
@@ -25,8 +25,8 @@ export async function load(event) {
 	const containsAdminRole = userRoles.some((user_role) => user_role?.role?.name === 'admin');
 	if (!userRoles?.length || !containsAdminRole) {
 		console.log('Not an admin');
-		redirect(302, '/login', notSignedInMessage, event);
+		redirect(302, '/', forbiddenMessage, event);
 	}
 
 	return {};
-}
+});

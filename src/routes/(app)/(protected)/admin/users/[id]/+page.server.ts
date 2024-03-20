@@ -8,7 +8,6 @@ import { roles, user_roles, users } from '../../../../../../schema';
 export const load: PageServerLoad = async (event) => {
 	const { params } = event;
 	const { id } = params;
-	const { user } = event.locals;
 
 	// TODO: Ensure admin user
 	if (!event.locals.user) {
@@ -67,7 +66,7 @@ export const actions = {
 		}
 
 		const userRoles = await db.query.user_roles.findMany({
-			where: eq(users.id, user.id),
+			where: eq(user_roles.user_id, user.id),
 			with: {
 				role: {
 					columns: {
@@ -78,9 +77,12 @@ export const actions = {
 			}
 		});
 
+		console.log('userRoles', userRoles);
+
 		const containsAdminRole = userRoles.some((user_role) => user_role?.role?.name === 'admin');
+		console.log('containsAdminRole', containsAdminRole);
 		if (!containsAdminRole) {
-			redirect(302, '/login', forbiddenMessage, event);
+			redirect(302, '/', forbiddenMessage, event);
 		}
 
 		const data = await request.formData();
@@ -94,9 +96,9 @@ export const actions = {
 				user_id: user.id,
 				role_id: dbRole.id
 			});
-			return {
-				success: true
-			};
+			redirect({ type: 'success', message: `Successfully added role ${dbRole.name}!` }, event);
+		} else {
+			redirect({ type: 'error', message: `Failed to add role ${dbRole.name}!` }, event);
 		}
 	},
 	removeRole: async (event) => {
@@ -107,7 +109,7 @@ export const actions = {
 		}
 
 		const userRoles = await db.query.user_roles.findMany({
-			where: eq(users.id, user.id),
+			where: eq(user_roles.user_id, user.id),
 			with: {
 				role: {
 					columns: {
@@ -120,7 +122,7 @@ export const actions = {
 
 		const containsAdminRole = userRoles.some((user_role) => user_role?.role?.name === 'admin');
 		if (!containsAdminRole) {
-			redirect(302, '/login', forbiddenMessage, event);
+			redirect(302, '/', forbiddenMessage, event);
 		}
 
 		const data = await request.formData();
@@ -133,9 +135,9 @@ export const actions = {
 			await db
 				.delete(user_roles)
 				.where(and(eq(user_roles.user_id, user.id), eq(user_roles.role_id, dbRole.id)));
-			return {
-				success: true
-			};
+			redirect({ type: 'success', message: `Successfully removed role ${dbRole.name}!` }, event);
+		} else {
+			redirect({ type: 'error', message: `Failed to remove role ${dbRole.name} !` }, event);
 		}
 	}
 };
