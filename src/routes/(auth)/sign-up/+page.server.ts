@@ -102,7 +102,7 @@ export const actions: Actions = {
 			});
 		}
 
-		add_user_to_role(user[0].id, 'user');
+		add_user_to_role(user[0].id, 'user', true);
 		await db.insert(collections).values({
 			user_id: user[0].id
 		});

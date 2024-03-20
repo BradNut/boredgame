@@ -77,6 +77,7 @@ export const user_roles = pgTable('user_roles', {
 	role_id: uuid('role_id')
 		.notNull()
 		.references(() => roles.id, { onDelete: 'cascade' }),
+	primary: boolean('primary').default(false),
 	created_at: timestamp('created_at').notNull().defaultNow(),
 	updated_at: timestamp('updated_at').notNull().defaultNow()
 });

@@ -11,13 +11,13 @@ export function create_user(user: Users) {
 
 export async function find_or_create_user(user: Users) {
 	const existing_user = await db.query.users.findFirst({
-		where: eq(users.username, user.username),
+		where: eq(users.username, user.username)
 	});
 	if (existing_user) {
 		return existing_user;
 	} else {
 		const new_user = await create_user(user);
-		add_user_to_role(new_user.id, 'user');
+		add_user_to_role(new_user.id, 'user', true);
 		return new_user;
 	}
 }
