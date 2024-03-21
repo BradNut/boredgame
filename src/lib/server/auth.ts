@@ -1,6 +1,6 @@
 // lib/server/lucia.ts
 import { Lucia, TimeSpan } from 'lucia';
-import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
+import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
 import db from '$lib/drizzle';
 import { sessions, users } from '../../schema';
 
@@ -22,7 +22,7 @@ export const lucia = new Lucia(adapter, {
 			theme: attributes.theme
 		};
 	},
-	sessionExpiresIn: new TimeSpan(30, "d"), // 30 days
+	sessionExpiresIn: new TimeSpan(30, 'd'), // 30 days
 	sessionCookie: {
 		name: 'session',
 		expires: false, // session cookies have very long lifespan (2 years)
@@ -30,12 +30,15 @@ export const lucia = new Lucia(adapter, {
 			// set to `true` when using HTTPS
 			secure: process.env.NODE_ENV === 'production',
 			sameSite: 'strict',
-			domain:  process.env.NODE_ENV === 'production' ? 'boredgame.vercel.app' : 'localhost',
+			domain:
+				process.env.NODE_ENV === 'production'
+					? process.env.VERCEL_URL ?? 'boredgame.vercel.app'
+					: 'localhost'
 		}
-	},
+	}
 });
 
-declare module "lucia" {
+declare module 'lucia' {
 	interface Register {
 		Lucia: typeof lucia;
 		DatabaseUserAttributes: DatabaseUserAttributes;

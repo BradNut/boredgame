@@ -5,7 +5,7 @@ import {
 	DATABASE_PASSWORD,
 	DATABASE_HOST,
 	DATABASE_DB,
-	DATABASE_PORT,
+	DATABASE_PORT
 } from '$env/static/private';
 import * as schema from '../schema';
 
@@ -16,7 +16,7 @@ const pool = new pg.Pool({
 	host: DATABASE_HOST,
 	port: Number(DATABASE_PORT).valueOf(),
 	database: DATABASE_DB,
-	ssl: DATABASE_HOST === 'localhost' ? false : true,
+	ssl: DATABASE_HOST !== 'localhost'
 });
 
 // user: DATABASE_USER,
