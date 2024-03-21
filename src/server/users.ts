@@ -28,7 +28,7 @@ export async function find_user_with_roles(user_id: string) {
 		with: {
 			user_roles: {
 				with: {
-					roles: {
+					role: {
 						select: {
 							name: true
 						}
@@ -41,10 +41,8 @@ export async function find_user_with_roles(user_id: string) {
 		throw new Error('User not found');
 	}
 
-	const user = {
+	return {
 		...user_with_roles,
-		roles: user_with_roles.roles.map((user_role) => user_role.role.name)
+		roles: user_with_roles.role.map((user_role) => user_role.role.name)
 	};
-
-	return user;
 }

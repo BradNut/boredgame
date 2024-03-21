@@ -13,11 +13,9 @@
 	console.log('header user', user);
 
 	let avatar: string;
-	let loggedIn = false;
 
 	$: if (user) {
-		avatar = user.username?.slice(0, 1).toUpperCase() || '?';
-		loggedIn = true;
+		avatar = user.username?.slice(0, 1).toUpperCase() || ':)';
 	}
 </script>
 
@@ -27,14 +25,12 @@
 			<div class="logo-image">
 				<Logo />
 			</div>
-			Bored Game
+			<span class="logo-text">Bored Game</span>
 		</a>
 	</div>
 	<!-- <TextSearch /> -->
 	<nav>
 		{#if user}
-			<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
-			<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
 					<Avatar.Root asChild>
@@ -139,6 +135,17 @@
 	.logo-image {
 		width: 2rem;
 		height: 2rem;
+
+		@media (width < 640px) {
+			width: 3rem;
+			height: 3rem;
+		}
+	}
+
+	.logo-text {
+		@media (width < 640px) {
+			display: none;
+		}
 	}
 
 	nav {

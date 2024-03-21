@@ -55,6 +55,6 @@
 
 <style lang="postcss">
 	form {
-		width: 20rem;
+		max-width: 20rem;
 	}
 </style>
