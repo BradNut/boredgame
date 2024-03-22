@@ -6,6 +6,15 @@ import { sessions, users } from '../../schema';
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users);
 
+let domain;
+if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
+	domain = 'boredgame.vercel.app';
+} else if (process.env.VERCEL_ENV === 'preview' || process.env.VERCEL_ENV === 'development') {
+	domain = process.env.VERCEL_BRANCH_URL;
+} else {
+	domain = 'localhost';
+}
+
 export const lucia = new Lucia(adapter, {
 	getSessionAttributes: (attributes) => {
 		return {
@@ -30,10 +39,7 @@ export const lucia = new Lucia(adapter, {
 			// set to `true` when using HTTPS
 			secure: process.env.NODE_ENV === 'production',
 			sameSite: 'strict',
-			domain:
-				process.env.NODE_ENV === 'production'
-					? process.env.VERCEL_URL ?? 'boredgame.vercel.app'
-					: 'localhost'
+			domain
 		}
 	}
 });
