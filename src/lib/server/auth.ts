@@ -48,6 +48,7 @@ declare module 'lucia' {
 	interface Register {
 		Lucia: typeof lucia;
 		DatabaseUserAttributes: DatabaseUserAttributes;
+		DatabaseSessionAttributes: DatabaseSessionAttributes;
 	}
 	interface DatabaseSessionAttributes {
 		ip_country: string;
@@ -59,5 +60,6 @@ declare module 'lucia' {
 		firstName: string;
 		lastName: string;
 		theme: string;
+		two_factor_secret: string | null;
 	}
 }

@@ -28,6 +28,7 @@ export const users = pgTable('users', {
 	verified: boolean('verified').default(false),
 	receive_email: boolean('receive_email').default(false),
 	theme: text('theme').default('system'),
+	two_factor_secret: text('two_factor_secret'),
 	created_at: timestamp('created_at').notNull().defaultNow(),
 	updated_at: timestamp('updated_at').notNull().defaultNow()
 });

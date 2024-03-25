@@ -12,6 +12,8 @@
 
 	export let data;
 
+	const hasSetupTwoFactor = data.hasSetupTwoFactor;
+
 	const { form: profileForm, errors: profileErrors, enhance: profileEnhance } = superForm(data.profileForm, {
 		taintedMessage: null,
 		validators: zodClient(profileSchema),
@@ -90,12 +92,25 @@
 		{/if}
 	</div>
 </form>
-	<div class="mt-6">
-		<Button variant="link" class="text-secondary-foreground" href="/password/change">
+<div class="mt-6">
+	{#if !hasSetupTwoFactor}
+		<Button variant="link" class="text-secondary-foreground" href="/two-factor/setup">
 			<KeyRound class="mr-2 h-4 w-4" />
-			Change Password
+			Setup 2FA
 		</Button>
-	</div>
+	{:else}
+		<Button variant="link" class="text-secondary-foreground" href="/two-factor/disable">
+			<KeyRound class="mr-2 h-4 w-4" />
+			Disable 2FA
+		</Button>
+	{/if}
+</div>
+<div class="mt-6">
+	<Button variant="link" class="text-secondary-foreground" href="/password/change">
+		<KeyRound class="mr-2 h-4 w-4" />
+		Change Password
+	</Button>
+</div>
 
 <style lang="postcss">
 	form {

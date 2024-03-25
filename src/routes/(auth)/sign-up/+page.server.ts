@@ -1,17 +1,17 @@
-import { fail, error, type Actions } from '@sveltejs/kit';
-import { Argon2id } from 'oslo/password';
-import { eq } from 'drizzle-orm';
-import { zod } from 'sveltekit-superforms/adapters';
-import { setError, superValidate } from 'sveltekit-superforms/server';
-import { redirect } from 'sveltekit-flash-message/server';
-import { RateLimiter } from 'sveltekit-rate-limiter/server';
-import type { PageServerLoad } from './$types';
-import { lucia } from '$lib/server/auth';
-import { signUpSchema } from '$lib/validations/auth';
-import { add_user_to_role } from '$server/roles';
+import {fail, error, type Actions} from '@sveltejs/kit';
+import {Argon2id} from 'oslo/password';
+import {eq} from 'drizzle-orm';
+import {zod} from 'sveltekit-superforms/adapters';
+import {setError, superValidate} from 'sveltekit-superforms/server';
+import {redirect} from 'sveltekit-flash-message/server';
+import {RateLimiter} from 'sveltekit-rate-limiter/server';
+import type {PageServerLoad} from './$types';
+import {lucia} from '$lib/server/auth';
+import {signUpSchema} from '$lib/validations/auth';
+import {add_user_to_role} from '$server/roles';
 import db from '$lib/drizzle';
-import { collections, users, wishlists } from '../../../schema';
-import { createId as cuid2 } from '@paralleldrive/cuid2';
+import {collections, users, wishlists} from '../../../schema';
+import {createId as cuid2} from '@paralleldrive/cuid2';
 
 const limiter = new RateLimiter({
 	// A rate is defined by [number, unit]
@@ -37,7 +37,7 @@ export const load: PageServerLoad = async (event) => {
 	// );
 
 	if (event.locals.user) {
-		const message = { type: 'success', message: 'You are already signed in' } as const;
+		const message = {type: 'success', message: 'You are already signed in'} as const;
 		throw redirect('/', message, event);
 	}
 
@@ -81,18 +81,19 @@ export const actions: Actions = {
 		const hashedPassword = await new Argon2id().hash(form.data.password);
 
 		const user = await db
-			.insert(users)
-			.values({
-				username: form.data.username,
-				hashed_password: hashedPassword,
-				email: form.data.email,
-				first_name: form.data.firstName || '',
-				last_name: form.data.lastName || '',
-				verified: false,
-				receive_email: false,
-				theme: 'system'
-			})
-			.returning();
+				.insert(users)
+				.values({
+					username: form.data.username,
+					hashed_password: hashedPassword,
+					email: form.data.email,
+					first_name: form.data.firstName ?? '',
+					last_name: form.data.lastName ?? '',
+					verified: false,
+					receive_email: false,
+					theme: 'system',
+					two_factor_secret: null
+				})
+				.returning();
 		console.log('signup user', user);
 
 		if (!user || user.length === 0) {
