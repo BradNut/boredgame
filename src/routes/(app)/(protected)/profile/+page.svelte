@@ -94,19 +94,19 @@
 </form>
 <div class="mt-6">
 	{#if !hasSetupTwoFactor}
-		<Button variant="link" class="text-secondary-foreground" href="/two-factor/setup">
+		<Button variant="link" class="text-secondary-foreground" href="/profile/security/two-factor">
 			<KeyRound class="mr-2 h-4 w-4" />
 			Setup 2FA
 		</Button>
 	{:else}
-		<Button variant="link" class="text-secondary-foreground" href="/two-factor/disable">
+		<Button variant="link" class="text-secondary-foreground" href="/profile/security/two-factor">
 			<KeyRound class="mr-2 h-4 w-4" />
 			Disable 2FA
 		</Button>
 	{/if}
 </div>
 <div class="mt-6">
-	<Button variant="link" class="text-secondary-foreground" href="/password/change">
+	<Button variant="link" class="text-secondary-foreground" href="/profile/security/password/change">
 		<KeyRound class="mr-2 h-4 w-4" />
 		Change Password
 	</Button>

@@ -23,6 +23,13 @@ export const changeUserPasswordSchema = z
 
 export type ChangeUserPasswordSchema = typeof changeUserPasswordSchema;
 
+export const addTwoFactorSchema = z.object({
+	current_password: z.string({ required_error: 'Current Password is required' }),
+	two_factor_code: z.string({ required_error: 'Two Factor Code is required' }).trim()
+});
+
+export type AddTwoFactorSchema = typeof addTwoFactorSchema;
+
 export const updateUserPasswordSchema = userSchema
 	.pick({ password: true, confirm_password: true })
 	.superRefine(({ confirm_password, password }, ctx) => {
