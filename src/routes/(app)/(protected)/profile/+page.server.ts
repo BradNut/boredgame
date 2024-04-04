@@ -17,38 +17,37 @@ export const load: PageServerLoad = async (event) => {
 
 	const { user } = event.locals;
 
-	const dbUser = await db.query
-		.users
-		.findFirst({
-			where: eq(users.id, user.id)
-		});
+	const dbUser = await db.query.users.findFirst({
+		where: eq(users.id, user.id),
+	});
 
 	const profileForm = await superValidate(zod(profileSchema), {
 		defaults: {
 			firstName: dbUser?.first_name ?? '',
 			lastName: dbUser?.last_name ?? '',
 			username: dbUser?.username ?? '',
-		}
+		},
 	});
 	const emailForm = await superValidate(zod(changeEmailSchema), {
 		defaults: {
 			email: dbUser?.email ?? '',
-		}
+		},
 	});
 
 	return {
 		profileForm,
 		emailForm,
-		hasSetupTwoFactor: !!dbUser?.two_factor_secret
+		hasSetupTwoFactor: !!dbUser?.two_factor_secret,
 	};
 };
 
 const changeEmailIfNotEmpty = z.object({
-	email: z.string()
+	email: z
+		.string()
 		.trim()
 		.max(64, { message: 'Email must be less than 64 characters' })
-		.email({ message: 'Please enter a valid email' })
-	});
+		.email({ message: 'Please enter a valid email' }),
+});
 
 export const actions: Actions = {
 	profileUpdate: async (event) => {
@@ -56,7 +55,7 @@ export const actions: Actions = {
 
 		if (!form.valid) {
 			return fail(400, {
-				form
+				form,
 			});
 		}
 		if (!event.locals.user) {
@@ -68,12 +67,9 @@ export const actions: Actions = {
 
 			const user = event.locals.user;
 			const newUsername = form.data.username;
-			const existingUser = await db.query
-				.users
-				.findFirst({
-					where: eq(users.username, newUsername)
-				}
-			);
+			const existingUser = await db.query.users.findFirst({
+				where: eq(users.username, newUsername),
+			});
 
 			if (existingUser && existingUser.id !== user.id) {
 				return setError(form, 'username', 'That username is already taken');
@@ -84,7 +80,7 @@ export const actions: Actions = {
 				.set({
 					first_name: form.data.firstName,
 					last_name: form.data.lastName,
-					username: form.data.username
+					username: form.data.username,
 				})
 				.where(eq(users.id, user.id));
 		} catch (e) {
@@ -102,29 +98,30 @@ export const actions: Actions = {
 		const form = await superValidate(event, zod(changeEmailSchema));
 
 		const newEmail = form.data?.email;
-		if (!form.valid || !newEmail || (newEmail !== '' && !changeEmailIfNotEmpty.safeParse(form.data).success)) {
+		if (
+			!form.valid ||
+			!newEmail ||
+			(newEmail !== '' && !changeEmailIfNotEmpty.safeParse(form.data).success)
+		) {
 			return fail(400, {
-				form
+				form,
 			});
 		}
 
 		if (!event.locals.user) {
-		  redirect(302, '/login', notSignedInMessage, event);
+			redirect(302, '/login', notSignedInMessage, event);
 		}
 
 		const user = event.locals.user;
 		const existingUser = await db.query.users.findFirst({
-			where: eq(users.email, newEmail)
+			where: eq(users.email, newEmail),
 		});
 
 		if (existingUser && existingUser.id !== user.id) {
 			return setError(form, 'email', 'That email is already taken');
 		}
 
-		await db
-			.update(users)
-			.set({ email: form.data.email })
-			.where(eq(users.id, user.id));
+		await db.update(users).set({ email: form.data.email }).where(eq(users.id, user.id));
 
 		if (user.email !== form.data.email) {
 			// Send email to confirm new email?
@@ -143,5 +140,5 @@ export const actions: Actions = {
 		}
 
 		return message(form, { type: 'success', message: 'Email updated successfully!' });
-	}
+	},
 };

@@ -91,7 +91,8 @@ export const actions: Actions = {
 					verified: false,
 					receive_email: false,
 					theme: 'system',
-					two_factor_secret: null
+					two_factor_secret: '',
+					two_factor_enabled: false
 				})
 				.returning();
 		console.log('signup user', user);

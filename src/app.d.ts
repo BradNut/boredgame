@@ -6,7 +6,7 @@
 declare global {
 	namespace App {
 		interface PageData {
-			flash?: { type: 'success' | 'error' | 'info'; message: string };
+			flash?: { type: 'success' | 'error' | 'info'; message: string; data: any };
 		}
 		interface Locals {
 			auth: import('lucia').AuthRequest;
