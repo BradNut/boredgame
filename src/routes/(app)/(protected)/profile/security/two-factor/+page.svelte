@@ -18,6 +18,8 @@
 		multipleSubmits: 'prevent',
 	});
 
+	console.log('Two Factor: ', twoFactorEnabled, recoveryCodes);
+
 	const { form: formData, enhance } = form;
 </script>
 
@@ -25,16 +27,10 @@
 
 {#if twoFactorEnabled}
 	<h2>Two-Factor Authentication is <span class="text-green-500">enabled</span></h2>
-	{#if recoveryCodes.length > 0}
-		Please copy the recovery codes below as they will not be shown again.
-		{#each recoveryCodes as code}
-			<p>{code}</p>
-		{/each}
-	{/if}
 {:else}
 	<h2>Please scan the following QR Code</h2>
 	<img src={qrCode} alt="QR Code" />
-	<form method="POST" use:enhance>
+	<form method="POST" use:enhance data-sveltekit-replacestate>
 		<Form.Field {form} name="two_factor_code">
 			<Form.Control let:attrs>
 				<Form.Label for="code">Enter Code</Form.Label>

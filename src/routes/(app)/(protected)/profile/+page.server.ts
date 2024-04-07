@@ -37,7 +37,7 @@ export const load: PageServerLoad = async (event) => {
 	return {
 		profileForm,
 		emailForm,
-		hasSetupTwoFactor: !!dbUser?.two_factor_secret,
+		hasSetupTwoFactor: !!dbUser?.two_factor_enabled,
 	};
 };
 

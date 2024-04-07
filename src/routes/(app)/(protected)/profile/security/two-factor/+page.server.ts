@@ -1,19 +1,18 @@
 import { type Actions, fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { encodeHex, decodeHex } from 'oslo/encoding';
 import { Argon2id } from 'oslo/password';
 import { createTOTPKeyURI, TOTPController } from 'oslo/otp';
 import { HMAC } from 'oslo/crypto';
 import QRCode from 'qrcode';
 import { zod } from 'sveltekit-superforms/adapters';
-import { message, setError, superValidate } from 'sveltekit-superforms/server';
+import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from '../../$types';
 import { addTwoFactorSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
 import db from '$lib/drizzle';
-import { recovery_codes, users } from '../../../../../../schema';
+import { users } from '../../../../../../schema';
 
 export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, zod(addTwoFactorSchema));
@@ -21,41 +20,6 @@ export const load: PageServerLoad = async (event) => {
 
 	if (!user) {
 		redirect(302, '/login', notSignedInMessage, event);
-	}
-
-	const dbUser = await db.query.users.findFirst({
-		where: eq(users.id, user.id),
-	});
-
-	if (dbUser?.two_factor_enabled) {
-		const recoveryCodes = await db.query.recovery_codes.findMany({
-			where: eq(recovery_codes.userId, user.id),
-		});
-
-		if (recoveryCodes.length === 0) {
-			const recoveryCodes = generateRecoveryCodes();
-			if (recoveryCodes) {
-				for (const code of recoveryCodes) {
-					await db.insert(recovery_codes).values({
-						userId: user.id,
-						code: await new Argon2id().hash(code),
-					});
-				}
-			}
-			return {
-				form,
-				twoFactorEnabled: true,
-				recoveryCodes,
-				totpUri: '',
-				qrCode: '',
-			};
-		}
-
-		const message = {
-			type: 'info',
-			message: 'Two-Factor Authentication is already enabled',
-		} as const;
-		throw redirect('/profile', message, event);
 	}
 
 	const twoFactorSecret = await new HMAC('SHA-1').generateKey();
@@ -71,8 +35,6 @@ export const load: PageServerLoad = async (event) => {
 	const accountName = user.email || user.username;
 	// pass the website's name and the user identifier (e.g. email, username)
 	const totpUri = createTOTPKeyURI(issuer, accountName, twoFactorSecret);
-	const qrCode = await QRCode.toDataURL(totpUri);
-	console.log('QR Code: ', qrCode);
 
 	form.data = {
 		current_password: '',
@@ -83,7 +45,7 @@ export const load: PageServerLoad = async (event) => {
 		twoFactorEnabled: false,
 		recoveryCodes: [],
 		totpUri,
-		qrCode,
+		qrCode: await QRCode.toDataURL(totpUri),
 	};
 };
 
@@ -154,15 +116,6 @@ export const actions: Actions = {
 
 		await db.update(users).set({ two_factor_enabled: true }).where(eq(users.id, user.id));
 
-		form.data.current_password = '';
-		form.data.two_factor_code = '';
-		return {
-			form,
-			twoFactorEnabled: true,
-		};
+		redirect(302, '/profile/security/two-factor/recovery-codes');
 	},
 };
-
-function generateRecoveryCodes() {
-	return Array.from({ length: 5 }, () => cuid2());
-}
