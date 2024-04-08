@@ -47,6 +47,10 @@
 		<Input type="text" id="username" name="username" placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} required />
 		<Label for="password">Password</Label>
 		<Input type="password" id="password" name="password" placeholder="Password" autocomplete="password" data-invalid={$errors.password} bind:value={$form.password} required />
+		{#if $errors.totpToken}
+			<Label for="totpToken">2FA Code</Label>
+			<Input type="text" id="totpToken" name="totpToken" placeholder="2FA Code" autocomplete="one-time-code" data-invalid={$errors.totpToken} bind:value={$form.totpToken} />
+		{/if}
 		<Button type="submit">Login</Button>
 		{#if $errors._errors}
 			<Alert.Root variant="destructive">
