@@ -84,11 +84,10 @@ export const actions: Actions = {
 				.onConflictDoNothing();
 
 			if (user?.two_factor_enabled && user?.two_factor_secret && !form?.data?.totpToken) {
-				return setError(
+				return fail(400, {
 					form,
-					'totpToken',
-					'Two factor authentication is enabled. Please enter your 2FA code.',
-				);
+					twoFactorRequired: true,
+				});
 			} else if (user?.two_factor_enabled && user?.two_factor_secret && form?.data?.totpToken) {
 				console.log('totpToken', form.data.totpToken);
 				const validOTP = await new TOTPController().verify(
@@ -96,8 +95,12 @@ export const actions: Actions = {
 					decodeHex(user.two_factor_secret)
 				);
 				console.log('validOTP', validOTP);
+				form.errors.totpToken = ['Invalid TOTP code'];
 				if (!validOTP) {
-					return setError(form, 'totpToken', 'Invalid 2FA code');
+					return fail(400, {
+						form,
+						twoFactorRequired: true,
+					});
 				}
 			}
 			console.log('ip', locals.ip);

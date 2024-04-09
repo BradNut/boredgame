@@ -26,4 +26,4 @@ export const signInSchema = z.object({
 			.string({ required_error: 'Password is required' })
 			.trim(),
 	totpToken: z.string().trim().min(6).max(6).optional()
-})
+});
