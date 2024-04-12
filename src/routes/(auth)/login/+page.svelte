@@ -65,7 +65,7 @@
 		{#if form?.twoFactorRequired}
 			<Form.Field form={superLoginForm} name="totpToken">
 				<Form.Control let:attrs>
-					<Form.Label for="totpToken">2FA Code</Form.Label>
+					<Form.Label for="totpToken">Two Factor Code or Recovery Code</Form.Label>
 					<Input {...attrs} autocomplete="one-time-code" bind:value={$loginForm.totpToken} />
 				</Form.Control>
 				<Form.FieldErrors />

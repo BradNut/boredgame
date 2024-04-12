@@ -45,6 +45,8 @@ export const recovery_codes = pgTable('recovery_codes', {
 	updated_at: timestamp('updated_at').notNull().defaultNow(),
 });
 
+export type RecoveryCodes = InferSelectModel<typeof recovery_codes>;
+
 export const user_relations = relations(users, ({ many }) => ({
 	user_roles: many(user_roles),
 }));

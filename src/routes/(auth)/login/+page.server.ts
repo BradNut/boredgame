@@ -1,5 +1,5 @@
 import { fail, error, type Actions } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { and, eq, ne } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 import { decodeHex } from 'oslo/encoding';
 import { TOTPController } from 'oslo/otp';
@@ -10,7 +10,7 @@ import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '$lib/drizzle';
 import { lucia } from '$lib/server/auth';
 import { signInSchema } from '$lib/validations/auth';
-import { collections, users, wishlists } from '../../../schema';
+import { users, recovery_codes } from '../../../schema';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -70,18 +70,18 @@ export const actions: Actions = {
 				return setError(form, '', 'Your username or password is incorrect.');
 			}
 
-			await db
-				.insert(collections)
-				.values({
-					user_id: user.id,
-				})
-				.onConflictDoNothing();
-			await db
-				.insert(wishlists)
-				.values({
-					user_id: user.id,
-				})
-				.onConflictDoNothing();
+			// await db
+			// 	.insert(collections)
+			// 	.values({
+			// 		user_id: user.id,
+			// 	})
+			// 	.onConflictDoNothing();
+			// await db
+			// 	.insert(wishlists)
+			// 	.values({
+			// 		user_id: user.id,
+			// 	})
+			// 	.onConflictDoNothing();
 
 			if (user?.two_factor_enabled && user?.two_factor_secret && !form?.data?.totpToken) {
 				return fail(400, {
@@ -92,15 +92,21 @@ export const actions: Actions = {
 				console.log('totpToken', form.data.totpToken);
 				const validOTP = await new TOTPController().verify(
 					form.data.totpToken,
-					decodeHex(user.two_factor_secret)
+					decodeHex(user.two_factor_secret),
 				);
 				console.log('validOTP', validOTP);
-				form.errors.totpToken = ['Invalid TOTP code'];
+
 				if (!validOTP) {
-					return fail(400, {
-						form,
-						twoFactorRequired: true,
-					});
+					console.log('invalid TOTP code check for recovery codes');
+					const usedRecoveryCode = await checkRecoveryCode(form?.data?.totpToken, user.id);
+					if (!usedRecoveryCode) {
+						console.log('invalid TOTP code');
+						form.errors.totpToken = ['Invalid code'];
+						return fail(400, {
+							form,
+							twoFactorRequired: true,
+						});
+					}
 				}
 			}
 			console.log('ip', locals.ip);
@@ -131,3 +137,22 @@ export const actions: Actions = {
 		redirect(302, '/', message, event);
 	},
 };
+
+async function checkRecoveryCode(recoveryCode: string, userId: string) {
+	const userRecoveryCodes = await db.query.recovery_codes.findMany({
+		where: and(eq(recovery_codes.used, false), eq(recovery_codes.userId, userId)),
+	});
+	for (const code of userRecoveryCodes) {
+		const validRecoveryCode = await new Argon2id().verify(code.code, recoveryCode);
+		if (validRecoveryCode) {
+			await db
+				.update(recovery_codes)
+				.set({
+					used: true,
+				})
+				.where(eq(recovery_codes.id, code.id));
+			return true;
+		}
+	}
+	return false;
+}

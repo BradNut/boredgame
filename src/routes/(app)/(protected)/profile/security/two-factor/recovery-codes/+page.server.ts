@@ -1,11 +1,11 @@
-import db from "$lib/drizzle";
-import {eq} from "drizzle-orm";
-import {Argon2id} from "oslo/password";
-import {alphabet, generateRandomString} from "oslo/crypto";
-import {redirect} from "sveltekit-flash-message/server";
-import {notSignedInMessage} from "$lib/flashMessages";
+import db from '$lib/drizzle';
+import { eq } from 'drizzle-orm';
+import { Argon2id } from 'oslo/password';
+import { alphabet, generateRandomString } from 'oslo/crypto';
+import { redirect } from 'sveltekit-flash-message/server';
+import { notSignedInMessage } from '$lib/flashMessages';
 import type { PageServerLoad } from '../../../$types';
-import {recovery_codes, users} from "../../../../../../../schema";
+import { recovery_codes, users } from '../../../../../../../schema';
 
 export const load: PageServerLoad = async (event) => {
 	const user = event.locals.user;
@@ -24,12 +24,16 @@ export const load: PageServerLoad = async (event) => {
 		});
 
 		if (recoveryCodes.length === 0) {
-			const recoveryCodes = Array.from({length: 5}, () => generateRandomString(10, alphabet('A-Z', '0-9')));
+			const recoveryCodes = Array.from({ length: 5 }, () =>
+				generateRandomString(10, alphabet('A-Z', '0-9')),
+			);
 			if (recoveryCodes) {
 				for (const code of recoveryCodes) {
+					const hashedCode = await new Argon2id().hash(code);
+					console.log('Inserting recovery code', code, hashedCode);
 					await db.insert(recovery_codes).values({
 						userId: user.id,
-						code: await new Argon2id().hash(code),
+						code: hashedCode,
 					});
 				}
 			}
@@ -39,8 +43,13 @@ export const load: PageServerLoad = async (event) => {
 		}
 		return {
 			recoveryCodes: [],
-		}
+		};
 	} else {
-		redirect(302, '/profile', { message: 'Two-Factor Authentication is not enabled', type: 'error' }, event);
+		redirect(
+			302,
+			'/profile',
+			{ message: 'Two-Factor Authentication is not enabled', type: 'error' },
+			event,
+		);
 	}
-}
+};

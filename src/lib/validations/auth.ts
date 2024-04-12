@@ -1,6 +1,6 @@
-import { refinePasswords } from "./account";
-import { userSchema } from "./zod-schemas";
-import {z} from "zod";
+import { refinePasswords } from './account';
+import { userSchema } from './zod-schemas';
+import { z } from 'zod';
 
 export const signUpSchema = userSchema
 	.pick({
@@ -10,7 +10,7 @@ export const signUpSchema = userSchema
 		username: true,
 		password: true,
 		confirm_password: true,
-		terms: true
+		terms: true,
 	})
 	.superRefine(({ confirm_password, password }, ctx) => {
 		refinePasswords(confirm_password, password, ctx);
@@ -18,12 +18,10 @@ export const signUpSchema = userSchema
 
 export const signInSchema = z.object({
 	username: z
-			.string()
-			.trim()
-			.min(3, { message: 'Username must be at least 3 characters' })
-			.max(50, { message: 'Username must be less than 50 characters' }),
-	password: z
-			.string({ required_error: 'Password is required' })
-			.trim(),
-	totpToken: z.string().trim().min(6).max(6).optional()
+		.string()
+		.trim()
+		.min(3, { message: 'Username must be at least 3 characters' })
+		.max(50, { message: 'Username must be less than 50 characters' }),
+	password: z.string({ required_error: 'Password is required' }).trim(),
+	totpToken: z.string().trim().min(6).max(10).optional(),
 });
