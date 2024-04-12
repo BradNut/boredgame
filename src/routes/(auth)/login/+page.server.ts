@@ -1,13 +1,16 @@
-import { fail, type Actions } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { fail, error, type Actions } from '@sveltejs/kit';
+import { and, eq, ne } from 'drizzle-orm';
+import { Argon2id } from 'oslo/password';
+import { decodeHex } from 'oslo/encoding';
+import { TOTPController } from 'oslo/otp';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
-import { Argon2id } from 'oslo/password';
+import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '$lib/drizzle';
 import { lucia } from '$lib/server/auth';
-import { signInSchema } from '$lib/validations/auth'
-import { collections, users, wishlists } from '../../../schema';
+import { signInSchema } from '$lib/validations/auth';
+import { users, recovery_codes } from '../../../schema';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -19,19 +22,28 @@ export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, zod(signInSchema));
 
 	return {
-		form
+		form,
 	};
 };
 
+const limiter = new RateLimiter({
+	// A rate is defined by [number, unit]
+	IPUA: [5, 'm'],
+});
+
 export const actions: Actions = {
 	default: async (event) => {
+		if (await limiter.isLimited(event)) {
+			throw error(429);
+		}
+
 		const { locals } = event;
 		const form = await superValidate(event, zod(signInSchema));
 
 		if (!form.valid) {
 			form.data.password = '';
 			return fail(400, {
-				form
+				form,
 			});
 		}
 
@@ -41,12 +53,12 @@ export const actions: Actions = {
 			const password = form.data.password;
 
 			const user = await db.query.users.findFirst({
-				where: eq(users.username, form.data.username)
+				where: eq(users.username, form.data.username),
 			});
 
 			console.log('user', JSON.stringify(user, null, 2));
 
-			if (!user || !user.hashed_password) {
+			if (!user?.hashed_password) {
 				form.data.password = '';
 				return setError(form, '', 'Your username or password is incorrect.');
 			}
@@ -58,26 +70,54 @@ export const actions: Actions = {
 				return setError(form, '', 'Your username or password is incorrect.');
 			}
 
-			await db
-				.insert(collections)
-				.values({
-					user_id: user.id
-				})
-				.onConflictDoNothing();
-			await db
-				.insert(wishlists)
-				.values({
-					user_id: user.id
-				})
-				.onConflictDoNothing();
+			// await db
+			// 	.insert(collections)
+			// 	.values({
+			// 		user_id: user.id,
+			// 	})
+			// 	.onConflictDoNothing();
+			// await db
+			// 	.insert(wishlists)
+			// 	.values({
+			// 		user_id: user.id,
+			// 	})
+			// 	.onConflictDoNothing();
 
+			if (user?.two_factor_enabled && user?.two_factor_secret && !form?.data?.totpToken) {
+				return fail(400, {
+					form,
+					twoFactorRequired: true,
+				});
+			} else if (user?.two_factor_enabled && user?.two_factor_secret && form?.data?.totpToken) {
+				console.log('totpToken', form.data.totpToken);
+				const validOTP = await new TOTPController().verify(
+					form.data.totpToken,
+					decodeHex(user.two_factor_secret),
+				);
+				console.log('validOTP', validOTP);
+
+				if (!validOTP) {
+					console.log('invalid TOTP code check for recovery codes');
+					const usedRecoveryCode = await checkRecoveryCode(form?.data?.totpToken, user.id);
+					if (!usedRecoveryCode) {
+						console.log('invalid TOTP code');
+						form.errors.totpToken = ['Invalid code'];
+						return fail(400, {
+							form,
+							twoFactorRequired: true,
+						});
+					}
+				}
+			}
 			console.log('ip', locals.ip);
 			console.log('country', locals.country);
 			session = await lucia.createSession(user.id, {
 				ip_country: locals.country,
-				ip_address: locals.ip
+				ip_address: locals.ip,
 			});
+			console.log('logging in session', session);
 			sessionCookie = lucia.createSessionCookie(session.id);
+			console.log('logging in session cookie', sessionCookie);
 		} catch (e) {
 			// TODO: need to return error message to the client
 			console.error(e);
@@ -85,14 +125,34 @@ export const actions: Actions = {
 			return setError(form, '', 'Your username or password is incorrect.');
 		}
 
+		console.log('setting session cookie', sessionCookie);
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: ".",
-			...sessionCookie.attributes
+			path: '.',
+			...sessionCookie.attributes,
 		});
 
 		form.data.username = '';
 		form.data.password = '';
 		const message = { type: 'success', message: 'Signed In!' } as const;
-		redirect('/', message, event);
-	}
+		redirect(302, '/', message, event);
+	},
 };
+
+async function checkRecoveryCode(recoveryCode: string, userId: string) {
+	const userRecoveryCodes = await db.query.recovery_codes.findMany({
+		where: and(eq(recovery_codes.used, false), eq(recovery_codes.userId, userId)),
+	});
+	for (const code of userRecoveryCodes) {
+		const validRecoveryCode = await new Argon2id().verify(code.code, recoveryCode);
+		if (validRecoveryCode) {
+			await db
+				.update(recovery_codes)
+				.set({
+					used: true,
+				})
+				.where(eq(recovery_codes.id, code.id));
+			return true;
+		}
+	}
+	return false;
+}

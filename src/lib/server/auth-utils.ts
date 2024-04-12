@@ -1,8 +1,8 @@
 import db from "$lib/drizzle";
 import { eq } from "drizzle-orm";
-import { password_reset_tokens } from "../../schema";
 import { generateId } from "lucia";
 import { TimeSpan, createDate } from "oslo";
+import { password_reset_tokens } from "../../schema";
 
 export async function createPasswordResetToken(userId: string): Promise<string> {
 	// optionally invalidate all existing tokens

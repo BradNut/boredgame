@@ -1,38 +1,33 @@
-import type { User } from '@prisma/client';
-import { prisma_client } from '../hooks.server';
+import db from '$lib/drizzle';
+import { eq } from 'drizzle-orm';
+import { users, type Users } from '../schema';
 import { add_user_to_role } from './roles';
 
-export function create_user(user: User) {
-	return prisma_client.user.create({
-		data: {
-			username: user.username
-		}
+export function create_user(user: Users) {
+	return db.insert(users).values({
+		username: user.username
 	});
 }
 
-export async function find_or_create_user(user: User) {
-	const existing_user = await prisma_client.user.findUnique({
-		where: {
-			username: user.username
-		}
+export async function find_or_create_user(user: Users) {
+	const existing_user = await db.query.users.findFirst({
+		where: eq(users.username, user.username)
 	});
 	if (existing_user) {
 		return existing_user;
 	} else {
 		const new_user = await create_user(user);
-		add_user_to_role(new_user.id, 'user');
+		add_user_to_role(new_user.id, 'user', true);
 		return new_user;
 	}
 }
 
 export async function find_user_with_roles(user_id: string) {
-	const user_with_roles = await prisma_client.user.findUnique({
-		where: {
-			id: user_id
-		},
-		include: {
-			roles: {
-				select: {
+	const user_with_roles = await db.query.users.findFirst({
+		where: eq(users.id, user_id),
+		with: {
+			user_roles: {
+				with: {
 					role: {
 						select: {
 							name: true
@@ -46,10 +41,8 @@ export async function find_user_with_roles(user_id: string) {
 		throw new Error('User not found');
 	}
 
-	const user = {
+	return {
 		...user_with_roles,
-		roles: user_with_roles.roles.map((user_role) => user_role.role.name)
+		roles: user_with_roles.role.map((user_role) => user_role.role.name)
 	};
-
-	return user;
 }

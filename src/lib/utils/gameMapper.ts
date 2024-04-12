@@ -1,5 +1,4 @@
 import type { GameType, SavedGameType } from '$lib/types';
-import type { Game } from '@prisma/client';
 import kebabCase from 'just-kebab-case';
 import type { Games } from '../../schema';
 

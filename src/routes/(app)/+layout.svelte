@@ -4,6 +4,8 @@
 	import Footer from '$components/Footer.svelte';
 
 	export let data;
+
+	console.log('layout data user', data.user);
 </script>
 
 <Header user={data.user} />

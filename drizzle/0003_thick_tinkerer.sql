@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS "text_searchable_idx" ON "games" ("text_searchable_index");

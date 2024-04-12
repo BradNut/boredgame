@@ -3,9 +3,6 @@ import { notSignedInMessage } from '$lib/flashMessages';
 
 export async function load(event) {
 	const { url, locals } = event;
-	if (locals.user) {
-		redirect(302, '/', notSignedInMessage, event);
-	}
 
 	return {
 		url: url.pathname,

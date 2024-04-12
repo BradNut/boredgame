@@ -5,20 +5,18 @@
 	const wishlists = data.wishlists || [];
 </script>
 
-
-	<aside class="wishlists">
-		<h2>Your Wishlists</h2>
-		<div class="separator"></div>
-		{#each wishlists as wishlist}
-			<h2 class="wishlist"><a href={`/wishlist/${wishlist.id}`}>{wishlist.name}</a></h2>
-		{/each}
-	</aside>
-	<div class="content">
-		<Transition url={data.url} transition={{ type: 'page' }}>
-			<slot />
-		</Transition>
-	</div>
-
+<aside class="wishlists">
+	<h2>Your Wishlists</h2>
+	<div class="separator"></div>
+	{#each wishlists as wishlist}
+		<h2 class="wishlist"><a href={`/wishlist/${wishlist.id}`}>{wishlist.name}</a></h2>
+	{/each}
+</aside>
+<div class="content">
+	<Transition url={data.url} transition={{ type: 'page' }}>
+		<slot />
+	</Transition>
+</div>
 
 <style lang="postcss">
 	.wishlists {

@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import { fly } from "svelte/transition";
-	import { createSelect, melt } from "@melt-ui/svelte";
-	import { Check, ChevronDown, MinusCircle, PlusCircle } from "lucide-svelte";
+	import { MinusCircle, PlusCircle } from "lucide-svelte";
 	import { Button } from '$components/ui/button';
-	import type { Collection, Wishlist } from "@prisma/client";
+	import type { CollectionItems, Wishlists } from "../../schema";
 
 	export let game_id: string;
-	export let collection: Collection;
-	export let wishlist: Wishlist;
+	export let collection: CollectionItems;
+	export let wishlist: Wishlists;
 	export let in_wishlist = false;
 	export let in_collection = false;
 	export let lists = [];

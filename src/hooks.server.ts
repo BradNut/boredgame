@@ -39,11 +39,12 @@ export const authentication: Handle = async function ({ event, resolve }) {
 			...sessionCookie.attributes
 		});
 	}
+	console.log('session from hooks', JSON.stringify(session, null, 2));
 	if (!session) {
 		const sessionCookie = lucia.createBlankSessionCookie();
 		console.log('blank sessionCookie', JSON.stringify(sessionCookie, null, 2));
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: ".",
+			path: '.',
 			...sessionCookie.attributes
 		});
 	}

@@ -1,5 +1,7 @@
-import { fail, redirect } from '@sveltejs/kit';
-import prisma from '$lib/prisma';
+import { fail } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import db from '$lib/drizzle.js';
+import { wishlists } from '../../../../schema.js';
 
 export async function load({ locals }) {
 	if (!locals.user) {
@@ -7,23 +9,12 @@ export async function load({ locals }) {
 	}
 
 	try {
-		let wishlists = await prisma.wishlist.findMany({
-			where: {
-				user_id: session.userId
-			}
+		const userWishlists = await db.query.wishlists.findMany({
+			where: eq(wishlists.user_id, locals.user.id)
 		});
 
-		if (wishlists.length === 0) {
-			const wishlist = await prisma.wishlist.create({
-				data: {
-					user_id: session.userId
-				}
-			});
-			wishlists.push(wishlist);
-		}
-
 		return {
-			wishlists
+			wishlsits: userWishlists
 		};
 	} catch (e) {
 		console.error(e);

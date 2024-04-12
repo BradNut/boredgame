@@ -6,10 +6,17 @@
 	import * as Avatar from "$components/ui/avatar";
 	import { invalidateAll } from '$app/navigation';
 	import Logo from '$components/logo.svelte';
+	import type { Users } from "../../schema";
 
-	export let user: User | null;
+	export let user: Users | null = null;
 
-	let avatar = user?.username.slice(0, 1).toUpperCase() || '?';
+	console.log('header user', user);
+
+	let avatar: string;
+
+	$: if (user) {
+		avatar = user.username?.slice(0, 1).toUpperCase() || ':)';
+	}
 </script>
 
 <header>
@@ -18,14 +25,12 @@
 			<div class="logo-image">
 				<Logo />
 			</div>
-			Bored Game
+			<span class="logo-text">Bored Game</span>
 		</a>
 	</div>
 	<!-- <TextSearch /> -->
 	<nav>
 		{#if user}
-			<a href="/collection" title="Go to your collection" data-sveltekit-preload-data>Collection</a>
-			<a href="/wishlist" title="Go to your wishlist" data-sveltekit-preload-data>Wishlist</a>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
 					<Avatar.Root asChild>
@@ -88,8 +93,7 @@
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
-		{/if}
-		{#if !user}
+		{:else}
 			<a href="/login">
 				<span class="flex-auto">Login</span></a
 			>
@@ -131,6 +135,17 @@
 	.logo-image {
 		width: 2rem;
 		height: 2rem;
+
+		@media (width < 640px) {
+			width: 3rem;
+			height: 3rem;
+		}
+	}
+
+	.logo-text {
+		@media (width < 640px) {
+			display: none;
+		}
 	}
 
 	nav {

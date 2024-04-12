@@ -8,7 +8,6 @@
   import { page } from '$app/stores';
 	import { onNavigate } from "$app/navigation";
 	import Analytics from '$components/Analytics.svelte';
-	import Loading from '$lib/components/Loading.svelte';
 	import { theme } from '$state/theme';
 	import PageLoadingIndicator from '$lib/page_loading_indicator.svelte';
 

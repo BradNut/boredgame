@@ -4,6 +4,7 @@
 	import * as flashModule from 'sveltekit-flash-message/client';
 	import { AlertCircle } from "lucide-svelte";
 	import { signInSchema } from '$lib/validations/auth';
+	import * as Form from '$lib/components/ui/form';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
@@ -11,7 +12,9 @@
 	import { boredState } from '$lib/stores/boredState.js';
 
 	export let data;
-	const { form, errors, enhance } = superForm(data.form, {
+	export let form;
+
+	const superLoginForm = superForm(data.form, {
 		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
   	onResult: () => boredState.update((n) => ({ ...n, loading: false })),
 		flashMessage: {
@@ -30,6 +33,8 @@
 		validationMethod: 'oninput',
 		delayMs: 0,
 	});
+
+	const { form: loginForm, errors, enhance } = superLoginForm;
 </script>
 
 <svelte:head>
@@ -43,20 +48,30 @@
 		>
 			Log into your account
 		</h2>
-		<Label for="username">Username</Label>
-		<Input type="text" id="username" name="username" placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} required />
-		<Label for="password">Password</Label>
-		<Input type="password" id="password" name="password" placeholder="Password" autocomplete="password" data-invalid={$errors.password} bind:value={$form.password} required />
-		<Button type="submit">Login</Button>
-		{#if $errors._errors}
-			<Alert.Root variant="destructive">
-				<AlertCircle class="h-4 w-4" />
-				<Alert.Title>Error</Alert.Title>
-				<Alert.Description>
-					{$errors._errors}
-				</Alert.Description>
-			</Alert.Root>
+		<Form.Field form={superLoginForm} name="username">
+			<Form.Control let:attrs>
+				<Form.Label for="username">Username</Form.Label>
+				<Input {...attrs} autocomplete="username" bind:value={$loginForm.username} />
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		<Form.Field form={superLoginForm} name="password">
+			<Form.Control let:attrs>
+				<Form.Label for="password">Password</Form.Label>
+				<Input {...attrs} autocomplete="current-password" type="password" bind:value={$loginForm.password} />
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		{#if form?.twoFactorRequired}
+			<Form.Field form={superLoginForm} name="totpToken">
+				<Form.Control let:attrs>
+					<Form.Label for="totpToken">Two Factor Code or Recovery Code</Form.Label>
+					<Input {...attrs} autocomplete="one-time-code" bind:value={$loginForm.totpToken} />
+				</Form.Control>
+				<Form.FieldErrors />
+			</Form.Field>
 		{/if}
+		<Form.Button>Login</Form.Button>
 		<p class="px-8 text-center text-sm text-muted-foreground">
 			By clicking continue, you agree to our
 			<a href="/terms" class="underline underline-offset-4 hover:text-primary">
