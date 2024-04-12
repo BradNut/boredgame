@@ -257,7 +257,7 @@ devDependencies:
     specifier: ^5.4.4
     version: 5.4.5
   vite:
-    specifier: ^5.2.8
+    specifier: ^5.2.4
     version: 5.2.8(@types/node@20.12.7)(sass@1.75.0)
   vitest:
     specifier: ^1.4.0
