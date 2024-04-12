@@ -140,7 +140,7 @@ devDependencies:
     specifier: ^2.5.5
     version: 2.5.5(@sveltejs/vite-plugin-svelte@3.1.0)(svelte@4.2.13)(vite@5.2.8)
   '@sveltejs/vite-plugin-svelte':
-    specifier: ^3.0.2
+    specifier: ^3.1.0
     version: 3.1.0(svelte@4.2.13)(vite@5.2.8)
   '@types/cookie':
     specifier: ^0.6.0
