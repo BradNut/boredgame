@@ -4,7 +4,6 @@
 	import type { CollectionItems } from '../../schema';
 
 	export let game: GameType | CollectionItems;
-	export let detailed: boolean = false;
 	export let variant: 'default' | 'compact' = 'default';
 
 	// Naive and assumes description is only on our GameType at the moment

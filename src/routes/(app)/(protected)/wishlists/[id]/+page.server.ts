@@ -10,6 +10,7 @@ import { games, wishlist_items, wishlists } from '../../../../../schema.js';
 
 export async function load(event) {
 	const { params, locals } = event;
+	const { id } = params;
 	if (!locals.user) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
@@ -17,8 +18,8 @@ export async function load(event) {
 	console.log('Wishlist load User id', locals.user.id);
 
 	try {
-		const wishlist = await db.query.wishlists.findFirst({
-			where: eq(wishlists.user_id, locals.user.id),
+		const wishlist = await db.query.wishlists.findMany({
+			where: and(eq(wishlists.user_id, locals.user.id), eq(wishlists.cuid, id)),
 		});
 
 		if (!wishlist) {

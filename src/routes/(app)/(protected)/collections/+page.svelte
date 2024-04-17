@@ -1,76 +1,40 @@
 <script lang="ts">
-	// import { tick, onDestroy } from 'svelte';
-	import Game from '$components/Game.svelte';
-
 	export let data;
-	console.log(`Page data: ${JSON.stringify(data)}`);
-	let collectionItems = data?.collection || [];
-	console.log('collectionItems', collectionItems);
-
-	// async function handleNextPageEvent(event: CustomEvent) {
-	// 	if (+event?.detail?.page === page + 1) {
-	// 		page += 1;
-	// 	}
-	// 	await tick();
-	// }
-
-	// async function handlePreviousPageEvent(event: CustomEvent) {
-	// 	if (+event?.detail?.page === page - 1) {
-	// 		page -= 1;
-	// 	}
-	// 	await tick();
-	// }
-
-	// async function handlePerPageEvent(event: CustomEvent) {
-	// 	page = 1;
-	// 	pageSize = event.detail.pageSize;
-	// 	await tick();
-	// }
+	let collections = data?.collections || [];
 </script>
 
 <svelte:head>
-	<title>Your Collection | Bored Game</title>
+	<title>Your Collections | Bored Game</title>
 </svelte:head>
 
-<h1>Your Collection</h1>
-<!-- <input type="text" id="search" name="search" placeholder="Search Your Collection" bind:value={$searchStore.search} /> -->
+<h1>Your Collections</h1>
 
-<div class="games">
-	<div class="games-list">
-		{#if collectionItems.length === 0}
-			<h2>No games in your collection</h2>
+<div class="collections">
+	<div class="collection-list">
+		{#if collections.length === 0}
+			<h2>You have no collections</h2>
 		{:else}
-			{#each collectionItems as game (game.game_id)}
-				<Game {game} />
+			{#each collections as collection}
+				<div class="collection grid gap-0.5">
+					<h2><a href="/collections/{collection.cuid}">{collection.name}</a></h2>
+					<h3>Created at: {new Date(collection.created_at).toLocaleString()}</h3>
+				</div>
 			{/each}
 		{/if}
 	</div>
-	<!-- {#if $collectionStore.length !== 0}
-		<Pagination
-			{pageSize}
-			{page}
-			{totalItems}
-			forwardText="Next"
-			backwardText="Prev"
-			pageSizes={[10, 25, 50, 100]}
-			on:nextPageEvent={handleNextPageEvent}
-			on:previousPageEvent={handlePreviousPageEvent}
-			on:perPageEvent={handlePerPageEvent}
-		/>
-	{/if} -->
 </div>
 
 <style lang="postcss">
 	h1 {
-		margin: 1.5rem 0rem;
+		margin: 1.5rem 0;
 		width: 100%;
 	}
 
-	.games {
-		margin: 2rem 0rem;
+	.collections {
+		margin: 2rem 0;
 	}
 
-	.games-list {
+	.collection-list {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(200px, 1fr));
 		gap: 2rem;
