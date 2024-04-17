@@ -140,6 +140,7 @@ export const collections = pgTable('collections', {
 	user_id: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
+	name: text('name').notNull().default('My Collection'),
 	created_at: timestamp('created_at').notNull().defaultNow(),
 	updated_at: timestamp('updated_at').notNull().defaultNow(),
 });
@@ -188,6 +189,7 @@ export const wishlists = pgTable('wishlists', {
 	user_id: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
+	name: text('name').notNull().default('My Wishlist'),
 	created_at: timestamp('created_at').notNull().defaultNow(),
 	updated_at: timestamp('updated_at').notNull().defaultNow(),
 });
