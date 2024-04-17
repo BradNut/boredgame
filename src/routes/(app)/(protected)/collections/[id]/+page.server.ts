@@ -34,7 +34,12 @@ export async function load(event) {
 
 	try {
 		const collection = await db.query.collections.findFirst({
-			where: and(eq(collections.user_id, user.id), eq(collections.id, id)),
+			columns: {
+				id: true,
+				cuid: true,
+				name: true,
+			},
+			where: and(eq(collections.user_id, user.id), eq(collections.cuid, id)),
 		});
 		console.log('collection', collection);
 
@@ -49,6 +54,10 @@ export async function load(event) {
 		}
 
 		const collectionItems = await db.query.collection_items.findMany({
+			columns: {
+				collection_id: true,
+				times_played: true,
+			},
 			where: eq(collection_items.collection_id, collection.id),
 			with: {
 				game: {
@@ -70,22 +79,22 @@ export async function load(event) {
 			console.log('item', item);
 			const game = item.game;
 			if (game) {
-				let collectionItem: ListGame = {
+				items.push({
 					id: game.id,
 					collection_id: item.collection_id,
-					name: game.name,
+					game_name: game.name ?? "Game doesn't have a name",
 					thumb_url: game.thumb_url,
-					times_played: item.times_played,
+					times_played: item.times_played ?? 0,
 					in_collection: true,
-				};
-				items.push(collectionItem);
+				});
 			}
 		}
 
 		return {
 			searchForm,
 			listManageForm,
-			collection: items,
+			collection,
+			items,
 		};
 	} catch (e) {
 		console.error(e);
@@ -94,7 +103,10 @@ export async function load(event) {
 	return {
 		searchForm,
 		listManageForm,
-		collection: [],
+		collection: {
+			name: "Collection doesn't have a name",
+		},
+		items: [],
 	};
 }
 

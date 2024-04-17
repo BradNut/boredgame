@@ -4,8 +4,9 @@
 
 	export let data;
 	console.log(`Page data: ${JSON.stringify(data)}`);
-	let collectionItems = data?.collection || [];
-	console.log('collectionItems', collectionItems);
+	let collection = data?.collection ?? {};
+	let items = data?.items || [];
+	console.log('items', items);
 
 	// async function handleNextPageEvent(event: CustomEvent) {
 	// 	if (+event?.detail?.page === page + 1) {
@@ -29,18 +30,18 @@
 </script>
 
 <svelte:head>
-	<title>Your Collection | Bored Game</title>
+	<title>{collection.name ?? 'Your Collection'} | Bored Game</title>
 </svelte:head>
 
-<h1>Your Collection</h1>
+<h1>{collection.name ?? 'Your Collection'}</h1>
 <!-- <input type="text" id="search" name="search" placeholder="Search Your Collection" bind:value={$searchStore.search} /> -->
 
 <div class="games">
 	<div class="games-list">
-		{#if collectionItems.length === 0}
+		{#if items.length === 0}
 			<h2>No games in your collection</h2>
 		{:else}
-			{#each collectionItems as game (game.game_id)}
+			{#each items as game (game.game_id)}
 				<Game {game} />
 			{/each}
 		{/if}

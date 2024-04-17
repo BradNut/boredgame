@@ -26,23 +26,10 @@ export async function load(event) {
 			redirect(302, '/404');
 		}
 
-		const items = await db.query.wishlist_items.findMany({
-			where: eq(wishlist_items.wishlist_id, wishlist.id),
-			with: {
-				game: {
-					columns: {
-						id: true,
-						name: true,
-						thumb_url: true,
-					},
-				},
-			},
-		});
-
 		console.log('wishlist', wishlist);
 
 		return {
-			items,
+			wishlist,
 		};
 	} catch (e) {
 		console.error(e);
