@@ -1,10 +1,11 @@
 <script lang="ts">
 	// import { tick, onDestroy } from 'svelte';
 	import Game from '$components/Game.svelte';
+	import type { UICollection } from '$lib/types';
 
 	export let data;
 	console.log(`Page data: ${JSON.stringify(data)}`);
-	let collection = data?.collection ?? {};
+	let collection: UICollection = data?.collection ?? {};
 	let items = data?.items || [];
 	console.log('items', items);
 

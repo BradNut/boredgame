@@ -2,11 +2,11 @@
 	import { applyAction, enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
 	import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte';
-	import * as DropdownMenu from "$components/ui/dropdown-menu";
-	import * as Avatar from "$components/ui/avatar";
+	import * as DropdownMenu from '$components/ui/dropdown-menu';
+	import * as Avatar from '$components/ui/avatar';
 	import { invalidateAll } from '$app/navigation';
 	import Logo from '$components/logo.svelte';
-	import type { Users } from "../../schema";
+	import type { Users } from '../../schema';
 
 	export let user: Users | null = null;
 
@@ -49,16 +49,16 @@
 								<span>Profile</span>
 							</DropdownMenu.Item>
 						</a>
-						<a href="/collection">
+						<a href="/collections">
 							<DropdownMenu.Item>
 								<ListChecks class="mr-2 h-4 w-4" />
-								<span>Collection</span>
+								<span>Collections</span>
 							</DropdownMenu.Item>
 						</a>
-						<a href="/wishlist">
+						<a href="/wishlists">
 							<DropdownMenu.Item>
 								<ListTodo class="mr-2 h-4 w-4" />
-								<span>Wishlist</span>
+								<span>Wishlists</span>
 							</DropdownMenu.Item>
 						</a>
 						<form
@@ -83,10 +83,10 @@
 						>
 							<button type="submit" class="">
 								<DropdownMenu.Item>
-								<div class="flex items-center gap-1">
-									<LogOut class="mr-2 h-4 w-4"/>
-									<span>Sign out</span>
-								</div>
+									<div class="flex items-center gap-1">
+										<LogOut class="mr-2 h-4 w-4" />
+										<span>Sign out</span>
+									</div>
 								</DropdownMenu.Item>
 							</button>
 						</form>
@@ -94,12 +94,8 @@
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		{:else}
-			<a href="/login">
-				<span class="flex-auto">Login</span></a
-			>
-			<a href="/sign-up">
-				<span class="flex-auto">Sign Up</span></a
-			>
+			<a href="/login"> <span class="flex-auto">Login</span></a>
+			<a href="/sign-up"> <span class="flex-auto">Sign Up</span></a>
 		{/if}
 	</nav>
 </header>

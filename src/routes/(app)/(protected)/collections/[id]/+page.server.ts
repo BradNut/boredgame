@@ -1,4 +1,4 @@
-import { type Actions, error, fail } from '@sveltejs/kit';
+import { type Actions, error } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
@@ -8,6 +8,7 @@ import db from '$lib/drizzle.js';
 import { notSignedInMessage } from '$lib/flashMessages.js';
 import { collections, games, collection_items } from '../../../../../schema.js';
 import { search_schema } from '$lib/zodValidation';
+import type { UICollection } from '$lib/types';
 
 export async function load(event) {
 	const { locals, params, url } = event;
@@ -32,81 +33,66 @@ export async function load(event) {
 	const searchForm = await superValidate(searchData, zod(search_schema));
 	const listManageForm = await superValidate(zod(modifyListGameSchema));
 
-	try {
-		const collection = await db.query.collections.findFirst({
-			columns: {
-				id: true,
-				cuid: true,
-				name: true,
-			},
-			where: and(eq(collections.user_id, user.id), eq(collections.cuid, id)),
-		});
-		console.log('collection', collection);
+	const collection: UICollection | undefined = await db.query.collections.findFirst({
+		columns: {
+			id: true,
+			cuid: true,
+			name: true,
+		},
+		where: and(eq(collections.user_id, user.id), eq(collections.cuid, id)),
+	});
+	console.log('collection', collection);
 
-		if (!collection) {
-			console.log('Collection was not found');
-			return fail(404, {});
-			// 	collection = await prisma.collection.create({
-			// 		data: {
-			// 			user_id: session.userId
-			// 		}
-			// 	});
-		}
+	if (!collection) {
+		console.log('Collection was not found');
+		error(404, 'Collection was not found');
+	}
 
-		const collectionItems = await db.query.collection_items.findMany({
-			columns: {
-				collection_id: true,
-				times_played: true,
-			},
-			where: eq(collection_items.collection_id, collection.id),
-			with: {
-				game: {
-					columns: {
-						id: true,
-						name: true,
-						thumb_url: true,
-					},
+	const collectionItems = await db.query.collection_items.findMany({
+		columns: {
+			collection_id: true,
+			times_played: true,
+		},
+		where: eq(collection_items.collection_id, collection.id),
+		with: {
+			game: {
+				columns: {
+					id: true,
+					name: true,
+					thumb_url: true,
 				},
 			},
-			offset: skip,
-			limit,
-		});
+		},
+		offset: skip,
+		limit,
+	});
 
-		console.log('collection_items', collectionItems);
+	console.log('collection_items', collectionItems);
 
-		const items: ListGame[] = [];
-		for (const item of collectionItems) {
-			console.log('item', item);
-			const game = item.game;
-			if (game) {
-				items.push({
-					id: game.id,
-					collection_id: item.collection_id,
-					game_name: game.name ?? "Game doesn't have a name",
-					thumb_url: game.thumb_url,
-					times_played: item.times_played ?? 0,
-					in_collection: true,
-				});
-			}
+	const items: ListGame[] = [];
+	for (const item of collectionItems) {
+		console.log('item', item);
+		const game = item.game;
+		if (game) {
+			items.push({
+				game_id: '',
+				in_wishlist: false,
+				wishlist_id: '',
+				id: game.id,
+				collection_id: item.collection_id,
+				game_name: game.name ?? "Game doesn't have a name",
+				thumb_url: game.thumb_url,
+				times_played: item.times_played ?? 0,
+				in_collection: true,
+			});
 		}
-
-		return {
-			searchForm,
-			listManageForm,
-			collection,
-			items,
-		};
-	} catch (e) {
-		console.error(e);
 	}
 
 	return {
 		searchForm,
 		listManageForm,
-		collection: {
-			name: "Collection doesn't have a name",
-		},
-		items: [],
+		collection,
+		items,
 	};
 }
 

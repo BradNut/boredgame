@@ -1,4 +1,4 @@
-import { error, type Actions } from '@sveltejs/kit';
+import { fail, error, type Actions } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
@@ -6,7 +6,7 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { modifyListGameSchema } from '$lib/validations/zod-schemas';
 import db from '$lib/drizzle.js';
 import { notSignedInMessage } from '$lib/flashMessages.js';
-import { collections, games, wishlist_items, wishlists } from '../../../../schema.js';
+import { games, wishlist_items, wishlists } from '../../../../schema.js';
 
 export async function load(event) {
 	const user = event.locals.user;
@@ -14,31 +14,23 @@ export async function load(event) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	try {
-		const userWishlists = await db.query.wishlists.findMany({
-			columns: {
-				cuid: true,
-				name: true,
-				created_at: true,
-			},
-			where: eq(wishlists.user_id, user.id),
-		});
-		console.log('wishlists', userWishlists);
+	const userWishlists = await db.query.wishlists.findMany({
+		columns: {
+			cuid: true,
+			name: true,
+			created_at: true,
+		},
+		where: eq(wishlists.user_id, user.id),
+	});
+	console.log('wishlists', userWishlists);
 
-		if (userWishlists?.length === 0) {
-			console.log('Wishlists not found');
-			return fail(404, {});
-		}
-
-		return {
-			wishlists: userWishlists,
-		};
-	} catch (e) {
-		console.error(e);
+	if (userWishlists?.length === 0) {
+		console.log('Wishlists not found');
+		return fail(404, {});
 	}
 
 	return {
-		wishlists: [],
+		wishlists: userWishlists,
 	};
 }
 
