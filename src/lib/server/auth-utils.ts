@@ -1,19 +1,17 @@
-import db from "$lib/drizzle";
-import { eq } from "drizzle-orm";
-import { generateId } from "lucia";
-import { TimeSpan, createDate } from "oslo";
-import { password_reset_tokens } from "../../schema";
+import { generateIdFromEntropySize } from 'lucia';
+import { TimeSpan, createDate } from 'oslo';
+import { eq } from 'drizzle-orm';
+import db from '$lib/drizzle';
+import { password_reset_tokens } from '../../schema';
 
 export async function createPasswordResetToken(userId: string): Promise<string> {
 	// optionally invalidate all existing tokens
 	await db.delete(password_reset_tokens).where(eq(password_reset_tokens.user_id, userId));
-	const tokenId = generateId(40);
-	await db
-		.insert(password_reset_tokens)
-		.values({
-			id: tokenId,
-			user_id: userId,
-			expires_at: createDate(new TimeSpan(2, "h"))
-		});
+	const tokenId = generateIdFromEntropySize(40);
+	await db.insert(password_reset_tokens).values({
+		id: tokenId,
+		user_id: userId,
+		expires_at: createDate(new TimeSpan(2, 'h')),
+	});
 	return tokenId;
 }

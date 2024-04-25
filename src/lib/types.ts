@@ -176,4 +176,4 @@ export type SearchQuery = {
 	fields?: string;
 };
 
-export type UICollection = Pick<typeof collections, 'id' | 'cuid' | 'name'>;
+export type UICollection = Pick<typeof collections, 'cuid' | 'name'>;

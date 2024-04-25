@@ -1,4 +1,4 @@
-import { type Actions, error } from '@sveltejs/kit';
+import { type Actions, error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
@@ -33,7 +33,7 @@ export async function load(event) {
 	const searchForm = await superValidate(searchData, zod(search_schema));
 	const listManageForm = await superValidate(zod(modifyListGameSchema));
 
-	const collection: UICollection | undefined = await db.query.collections.findFirst({
+	const collection = await db.query.collections.findFirst({
 		columns: {
 			id: true,
 			cuid: true,
@@ -91,7 +91,10 @@ export async function load(event) {
 	return {
 		searchForm,
 		listManageForm,
-		collection,
+		collection: {
+			name: collection.name,
+			cuid: collection.cuid ?? '',
+		},
 		items,
 	};
 }
@@ -102,7 +105,7 @@ export const actions: Actions = {
 		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		if (!event.locals.user) {
-			throw fail(401);
+			return fail(401, {});
 		}
 
 		const user = event.locals.user;
@@ -147,14 +150,14 @@ export const actions: Actions = {
 	// Create new wishlist
 	create: async ({ locals }) => {
 		if (!locals.user) {
-			throw fail(401);
+			return fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
 	delete: async ({ locals }) => {
 		if (!locals.user) {
-			throw fail(401);
+			return fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
@@ -164,7 +167,7 @@ export const actions: Actions = {
 		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		if (!locals.user) {
-			throw fail(401);
+			return fail(401);
 		}
 
 		const game = await db.query.games.findFirst({
