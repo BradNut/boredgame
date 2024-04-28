@@ -118,7 +118,7 @@ export async function createOrUpdateGameMinimal(locals: App.Locals, game: Games,
 				.insert(games)
 				.values({
 					name: game.name,
-					slug: kebabCase(game.name || game.slug || ''),
+					slug: kebabCase(game.name ?? game.slug ?? ''),
 					description: game.description,
 					year_published: game.year_published,
 					url: externalUrl,

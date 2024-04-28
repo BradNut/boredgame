@@ -1,5 +1,5 @@
 import { fail, error, type Actions } from '@sveltejs/kit';
-import { and, eq, ne } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 import { decodeHex } from 'oslo/encoding';
 import { TOTPController } from 'oslo/otp';

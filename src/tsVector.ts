@@ -1,12 +1,13 @@
 import { customType } from 'drizzle-orm/pg-core';
+import {sql} from "drizzle-orm";
 
 function genExpWithWeights(input: string[]) {
 	const columnExpressions = input.map((column, index) => {
 		const weight = String.fromCharCode(index + 65);
-		return `setweight(to_tsvector('english', coalesce(${column}, '')), '${weight}')`;
+		return sql`setweight(to_tsvector('english', coalesce(${column}, '')), '${weight}')`;
 	});
 
-	return `tsvector GENERATED ALWAYS AS (${columnExpressions.join(' || ')}) STORED`;
+	return sql`tsvector GENERATED ALWAYS AS (${columnExpressions.join(' || ')}) STORED`;
 }
 
 export const tsvector = customType<{
@@ -18,9 +19,9 @@ export const tsvector = customType<{
 			const sources = config.sources.join(" || ' ' || ");
 			return config.weighted
 				? genExpWithWeights(config.sources)
-				: `tsvector generated always as (to_tsvector('english', ${sources})) stored`;
+				: sql`tsvector generated always as (to_tsvector('english', ${sources})) stored`;
 		} else {
-			return `tsvector`;
+			return sql`tsvector`;
 		}
 	}
 });

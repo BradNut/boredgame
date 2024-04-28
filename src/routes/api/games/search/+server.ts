@@ -1,7 +1,8 @@
 import { error, json } from '@sveltejs/kit';
 import db from '$lib/drizzle.js';
-import { eq, sql } from 'drizzle-orm';
+import {asc, desc, eq, ilike, or } from 'drizzle-orm';
 import { games } from '../../../../schema.js';
+import kebabCase from "just-kebab-case";
 
 // Search a user's collection
 export const GET = async ({ url, locals }) => {
@@ -9,14 +10,14 @@ export const GET = async ({ url, locals }) => {
 	const q = searchParams?.q?.trim() || '';
 	const limit = parseInt(searchParams?.limit) || 10;
 	const skip = parseInt(searchParams?.skip) || 0;
-	const order = searchParams?.order || 'desc';
+	const order: OrderDirection = searchParams?.order === 'desc' ? 'desc' : 'asc';
 	const exact = searchParams?.exact === 'true';
 	let orderBy = searchParams?.orderBy || 'slug';
 
 	if (orderBy === 'name') {
 		orderBy = 'slug';
 	}
-	console.log(`q: ${q}, limit: ${limit}, skip: ${skip}, order: ${order}, exact: ${exact}`);
+	console.log(`q: ${q}, limit: ${limit}, skip: ${skip}, order: ${order}, exact: ${exact}, orderBy: ${orderBy}`);
 	console.log(exact);
 	if (exact) {
 		console.log('Exact Search API');
@@ -44,9 +45,23 @@ export const GET = async ({ url, locals }) => {
 			slug: games.slug,
 			thumb_url: games.thumb_url
 		})
-			.from(games)
-			.where(sql`to_tsvector('simple', ${games.name}) || to_tsvector('simple', ${games.slug}) @@ to_tsquery('simple', ${q})`)
-			.orderBy(sql`${orderBy} ${order}`).offset(skip).limit(limit) || [];
+				.from(games)
+				.where(or(
+						ilike(games.name, `%${q}%`),
+						ilike(games.slug, `%${kebabCase(q)}%`)
+				))
+				.orderBy(getOrderDirection(order)(getOrderBy(orderBy)))
+				.offset(skip)
+				.limit(limit) || [];
+		// const foundGames = await db.select({
+		// 	id: games.id,
+		// 	name: games.name,
+		// 	slug: games.slug,
+		// 	thumb_url: games.thumb_url
+		// })
+		// 	.from(games)
+		// 	.where(sql`to_tsvector('simple', ${games.name}) || to_tsvector('simple', ${games.slug}) @@ to_tsquery('simple', ${q})`)
+		// 	.orderBy(sql`${orderBy} ${order}`).offset(skip).limit(limit) || [];
 		if (foundGames.length === 0) {
 			error(404, { message: 'No games found' });
 		}
@@ -54,3 +69,20 @@ export const GET = async ({ url, locals }) => {
 		return json(foundGames);
 	}
 };
+
+type OrderDirection = 'asc' | 'desc';
+
+const getOrderDirection = (direction: OrderDirection) => {
+	return direction === 'asc' ? asc: desc;
+};
+
+const getOrderBy = (orderBy: string) => {
+	switch (orderBy) {
+		case 'name':
+			return games.name;
+		case 'slug':
+			return games.slug;
+		default:
+			return games.slug;
+	}
+}

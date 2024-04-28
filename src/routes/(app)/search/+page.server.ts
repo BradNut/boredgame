@@ -23,7 +23,7 @@ async function searchForGames(
 			method: 'GET',
 			headers
 		};
-		const url = `/api/game/search${urlQueryParams ? `?${urlQueryParams}` : ''}`;
+		const url = `/api/games/search${urlQueryParams ? `?${urlQueryParams}` : ''}`;
 		console.log('Calling internal api', url);
 		const response = await eventFetch(url, requestInit);
 		console.log('response from internal api', response);
@@ -44,9 +44,9 @@ async function searchForGames(
 			!games.find((game: GameType) => game.slug === kebabCase(gameNameSearch))
 		) {
 			console.log('No games found in DB for', gameNameSearch);
-
+			const searchQueryParams = urlQueryParams ? `?${urlQueryParams}` : '';
 			const externalResponse = await eventFetch(
-				`/api/external/search${urlQueryParams ? `?${urlQueryParams}` : ''}`,
+				`/api/external/search${searchQueryParams}`,
 				requestInit
 			);
 
@@ -102,7 +102,7 @@ const defaults = {
 	exact: false,
 };
 
-export const load: PageServerLoad = async ({ locals, fetch, url }) => {
+export const load = async ({ locals, fetch, url }) => {
 	const searchParams = Object.fromEntries(url?.searchParams);
 	console.log('searchParams', searchParams);
 	searchParams.order = searchParams.order || defaults.order;
