@@ -1,8 +1,8 @@
 import type { MetaTagsProps } from 'svelte-meta-tags';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import db from '$lib/drizzle';
-import { collections, wishlists } from '../../schema';
+import db from '../../db';
+import { collections, wishlists } from '$db/schema';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 	const image = {

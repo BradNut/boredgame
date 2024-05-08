@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { GameType, SavedGameType } from '$lib/types';
 	import * as Card from "$lib/components/ui/card";
-	import type { CollectionItems } from '../../schema';
+	import type { CollectionItems } from '$db/schema';
 
 	export let game: GameType | CollectionItems;
 	export let variant: 'default' | 'compact' = 'default';

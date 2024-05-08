@@ -6,9 +6,9 @@ import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { changeEmailSchema, profileSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
-import db from '$lib/drizzle';
+import db from '../../../../db';
 import type { PageServerLoad } from './$types';
-import { users } from '../../../../schema';
+import { users } from '$db/schema';
 
 export const load: PageServerLoad = async (event) => {
 	if (!event.locals.user) {

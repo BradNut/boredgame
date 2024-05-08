@@ -1,5 +1,5 @@
 import type { SvelteComponent } from 'svelte';
-import { collections } from '../schema';
+import { collections } from '$db/schema';
 
 export type Message = { status: 'error' | 'success' | 'warning' | 'info'; text: string };
 

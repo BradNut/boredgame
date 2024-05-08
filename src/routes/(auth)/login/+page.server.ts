@@ -7,10 +7,10 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
-import db from '$lib/drizzle';
+import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { signInSchema } from '$lib/validations/auth';
-import { users, recovery_codes } from '../../../schema';
+import { users, recovery_codes } from '$db/schema';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {

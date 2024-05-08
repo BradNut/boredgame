@@ -2,8 +2,14 @@ import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import kebabCase from 'just-kebab-case';
 import { PUBLIC_SITE_URL } from '$env/static/public';
-import db from '$lib/drizzle';
-import { externalIds, type Mechanics, type Categories, categories, categoriesToExternalIds } from '../../../schema';
+import db from '../../../db';
+import {
+	externalIds,
+	type Mechanics,
+	type Categories,
+	categories,
+	categoriesToExternalIds,
+} from '$db/schema';
 
 export async function createCategory(locals: App.Locals, category: Categories, externalId: string) {
 	if (!category || !externalId || externalId === '') {
@@ -12,7 +18,7 @@ export async function createCategory(locals: App.Locals, category: Categories, e
 
 	try {
 		const dbExternalId = await db.query.externalIds.findFirst({
-			where: eq(externalIds.externalId, externalId)
+			where: eq(externalIds.externalId, externalId),
 		});
 
 		if (dbExternalId) {
@@ -20,7 +26,7 @@ export async function createCategory(locals: App.Locals, category: Categories, e
 				.select({
 					id: categories.id,
 					name: categories.name,
-					slug: categories.slug
+					slug: categories.slug,
 				})
 				.from(categories)
 				.leftJoin(categoriesToExternalIds, eq(categoriesToExternalIds.externalId, externalId));
@@ -30,9 +36,9 @@ export async function createCategory(locals: App.Locals, category: Categories, e
 				return new Response('Mechanic already exists', {
 					headers: {
 						'Content-Type': 'application/json',
-						Location: `${PUBLIC_SITE_URL}/api/mechanic/${foundCategory[0].id}`
+						Location: `${PUBLIC_SITE_URL}/api/mechanic/${foundCategory[0].id}`,
 					},
-					status: 409
+					status: 409,
 				});
 			}
 		}
@@ -44,25 +50,25 @@ export async function createCategory(locals: App.Locals, category: Categories, e
 				.insert(categories)
 				.values({
 					name: category.name,
-					slug: kebabCase(category.name ?? category.slug ?? '')
+					slug: kebabCase(category.name ?? category.slug ?? ''),
 				})
 				.returning();
 			const dbExternalIds = await transaction
 				.insert(externalIds)
 				.values({
 					externalId,
-					type: 'category'
+					type: 'category',
 				})
 				.returning({ id: externalIds.id });
 			await transaction.insert(categoriesToExternalIds).values({
 				categoryId: dbCategory[0].id,
-				externalId: dbExternalIds[0].id
+				externalId: dbExternalIds[0].id,
 			});
 		});
 
 		if (dbCategory.length === 0) {
 			return new Response('Could not create category', {
-				status: 500
+				status: 500,
 			});
 		}
 

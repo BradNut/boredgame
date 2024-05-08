@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import db from '$lib/drizzle.js';
-import { collection_items, users } from '../../../../../schema.js';
+import db from '../../../../../db';
+import { collection_items, users } from '$db/schema';
 
 // Search a user's collection
 export async function GET({ url, locals, params }) {
@@ -20,7 +20,7 @@ export async function GET({ url, locals, params }) {
 	}
 
 	const collection = await db.query.collections.findFirst({
-		where: eq(users.id, locals?.user?.id)
+		where: eq(users.id, locals?.user?.id),
 	});
 	console.log('collection', collection);
 
@@ -37,12 +37,13 @@ export async function GET({ url, locals, params }) {
 					columns: {
 						id: true,
 						name: true,
-						thumb_url: true
+						thumb_url: true,
 					},
-				}
+				},
 			},
 			orderBy: (collection_items, { asc, desc }) => {
-				const dbSort = sort === 'dateAdded' ? collection_items.created_at : collection_items.times_played;
+				const dbSort =
+					sort === 'dateAdded' ? collection_items.created_at : collection_items.times_played;
 				if (order === 'asc') {
 					return asc(dbSort);
 				} else {
@@ -50,7 +51,7 @@ export async function GET({ url, locals, params }) {
 				}
 			},
 			offset: skip,
-			limit
+			limit,
 		});
 
 		return json(userCollectionItems);

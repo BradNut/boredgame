@@ -5,10 +5,10 @@ import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { Argon2id } from 'oslo/password';
 import type { PageServerLoad } from '../../../$types';
-import db from '$lib/drizzle';
+import db from '../../../../../../../db';
 import { changeUserPasswordSchema } from '$lib/validations/account';
 import { lucia } from '$lib/server/auth.js';
-import { users } from '../../../../../../../schema';
+import { users } from '$db/schema';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { Cookie } from 'lucia';
 
@@ -23,10 +23,10 @@ export const load: PageServerLoad = async (event) => {
 	form.data = {
 		current_password: '',
 		password: '',
-		confirm_password: ''
+		confirm_password: '',
 	};
 	return {
-		form
+		form,
 	};
 };
 
@@ -36,7 +36,7 @@ export const actions: Actions = {
 
 		if (!form.valid) {
 			return fail(400, {
-				form
+				form,
 			});
 		}
 
@@ -52,7 +52,7 @@ export const actions: Actions = {
 		const user = event.locals.user;
 
 		const dbUser = await db.query.users.findFirst({
-			where: eq(users.id, user.id)
+			where: eq(users.id, user.id),
 		});
 
 		if (!dbUser?.hashed_password) {
@@ -61,13 +61,13 @@ export const actions: Actions = {
 			form.data.current_password = '';
 			return setError(
 				form,
-				'Error occurred. Please try again or contact support if you need further help.'
+				'Error occurred. Please try again or contact support if you need further help.',
 			);
 		}
 
 		const currentPasswordVerified = await new Argon2id().verify(
 			dbUser.hashed_password,
-			form.data.current_password
+			form.data.current_password,
 		);
 
 		if (!currentPasswordVerified) {
@@ -86,7 +86,7 @@ export const actions: Actions = {
 					.set({ hashed_password: hashedPassword })
 					.where(eq(users.id, user.id));
 				await lucia.createSession(user.id, {
-					country: event.locals.session?.ipCountry ?? 'unknown'
+					country: event.locals.session?.ipCountry ?? 'unknown',
 				});
 				sessionCookie = lucia.createBlankSessionCookie();
 			} catch (e) {
@@ -98,23 +98,23 @@ export const actions: Actions = {
 			}
 			event.cookies.set(sessionCookie.name, sessionCookie.value, {
 				path: '.',
-				...sessionCookie.attributes
+				...sessionCookie.attributes,
 			});
 
 			const message = {
 				type: 'success',
-				message: 'Password Updated. Please sign in.'
+				message: 'Password Updated. Please sign in.',
 			} as const;
 			redirect(302, '/login', message, event);
 		}
 		return setError(
 			form,
-			'Error occurred. Please try again or contact support if you need further help.'
+			'Error occurred. Please try again or contact support if you need further help.',
 		);
 		// TODO: Add toast instead?
 		// form.data.password = '';
 		// form.data.confirm_password = '';
 		// form.data.current_password = '';
 		// return message(form, 'Profile updated successfully.');
-	}
+	},
 };

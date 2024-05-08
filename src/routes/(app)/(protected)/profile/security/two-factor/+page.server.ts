@@ -11,8 +11,8 @@ import { redirect, setFlash } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from '../../$types';
 import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
-import db from '$lib/drizzle';
-import { recovery_codes, users } from '../../../../../../schema';
+import db from '../../../../../../db';
+import { recovery_codes, users } from '$db/schema';
 
 export const load: PageServerLoad = async (event) => {
 	const addTwoFactorForm = await superValidate(event, zod(addTwoFactorSchema));

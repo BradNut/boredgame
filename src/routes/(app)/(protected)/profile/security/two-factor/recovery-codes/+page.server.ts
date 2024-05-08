@@ -1,11 +1,11 @@
-import db from '$lib/drizzle';
+import db from '../../../../../../../db';
 import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 import { alphabet, generateRandomString } from 'oslo/crypto';
 import { redirect } from 'sveltekit-flash-message/server';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { PageServerLoad } from '../../../$types';
-import { recovery_codes, users } from '../../../../../../../schema';
+import { recovery_codes, users } from '$db/schema';
 
 export const load: PageServerLoad = async (event) => {
 	const user = event.locals.user;

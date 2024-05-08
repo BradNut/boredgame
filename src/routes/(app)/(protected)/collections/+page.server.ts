@@ -5,8 +5,8 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { redirect } from 'sveltekit-flash-message/server';
 import { modifyListGameSchema, type ListGame } from '$lib/validations/zod-schemas';
 import { search_schema } from '$lib/zodValidation.js';
-import db from '$lib/drizzle';
-import { collection_items, collections, games } from '../../../../schema';
+import db from '../../../../db';
+import { collection_items, collections, games } from '$db/schema';
 import { notSignedInMessage } from '$lib/flashMessages';
 
 export async function load(event) {

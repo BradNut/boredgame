@@ -1,8 +1,8 @@
 import { error, json } from '@sveltejs/kit';
-import db from '$lib/drizzle.js';
-import {asc, desc, eq, ilike, or } from 'drizzle-orm';
-import { games } from '../../../../schema.js';
-import kebabCase from "just-kebab-case";
+import db from '../../../../db';
+import { asc, desc, eq, ilike, or } from 'drizzle-orm';
+import { games } from '$db/schema';
+import kebabCase from 'just-kebab-case';
 
 // Search a user's collection
 export const GET = async ({ url, locals }) => {
@@ -17,20 +17,21 @@ export const GET = async ({ url, locals }) => {
 	if (orderBy === 'name') {
 		orderBy = 'slug';
 	}
-	console.log(`q: ${q}, limit: ${limit}, skip: ${skip}, order: ${order}, exact: ${exact}, orderBy: ${orderBy}`);
+	console.log(
+		`q: ${q}, limit: ${limit}, skip: ${skip}, order: ${order}, exact: ${exact}, orderBy: ${orderBy}`,
+	);
 	console.log(exact);
 	if (exact) {
 		console.log('Exact Search API');
-		const game =
-			await db.query.games.findFirst({
-				where: eq(games.name, q),
-				columns: {
-					id: true,
-					name: true,
-					slug: true,
-					thumb_url: true
-				}
-			});
+		const game = await db.query.games.findFirst({
+			where: eq(games.name, q),
+			columns: {
+				id: true,
+				name: true,
+				slug: true,
+				thumb_url: true,
+			},
+		});
 
 		if (!game) {
 			error(404, { message: 'No games found' });
@@ -39,20 +40,19 @@ export const GET = async ({ url, locals }) => {
 		console.log('Games found in Exact Search API', JSON.stringify(foundGames, null, 2));
 		return json(foundGames);
 	} else {
-		const foundGames = await db.select({
-			id: games.id,
-			name: games.name,
-			slug: games.slug,
-			thumb_url: games.thumb_url
-		})
+		const foundGames =
+			(await db
+				.select({
+					id: games.id,
+					name: games.name,
+					slug: games.slug,
+					thumb_url: games.thumb_url,
+				})
 				.from(games)
-				.where(or(
-						ilike(games.name, `%${q}%`),
-						ilike(games.slug, `%${kebabCase(q)}%`)
-				))
+				.where(or(ilike(games.name, `%${q}%`), ilike(games.slug, `%${kebabCase(q)}%`)))
 				.orderBy(getOrderDirection(order)(getOrderBy(orderBy)))
 				.offset(skip)
-				.limit(limit) || [];
+				.limit(limit)) || [];
 		// const foundGames = await db.select({
 		// 	id: games.id,
 		// 	name: games.name,
@@ -73,7 +73,7 @@ export const GET = async ({ url, locals }) => {
 type OrderDirection = 'asc' | 'desc';
 
 const getOrderDirection = (direction: OrderDirection) => {
-	return direction === 'asc' ? asc: desc;
+	return direction === 'asc' ? asc : desc;
 };
 
 const getOrderBy = (orderBy: string) => {
@@ -85,4 +85,4 @@ const getOrderBy = (orderBy: string) => {
 		default:
 			return games.slug;
 	}
-}
+};

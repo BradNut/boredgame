@@ -1,6 +1,6 @@
 import type { GameType, SavedGameType } from '$lib/types';
 import kebabCase from 'just-kebab-case';
-import type { Games } from '../../schema';
+import type { Games } from '$db/schema';
 
 export function convertToSavedGame(game: GameType | SavedGameType): SavedGameType {
 	return {
@@ -9,7 +9,7 @@ export function convertToSavedGame(game: GameType | SavedGameType): SavedGameTyp
 		thumb_url: game.thumb_url,
 		players: game.players,
 		playtime: game.playtime,
-		searchTerms: `${game.name.toLowerCase()}`
+		searchTerms: `${game.name.toLowerCase()}`,
 	};
 }
 
@@ -39,7 +39,7 @@ export function mapSavedGameToGame(game: SavedGameType): GameType {
 		description: '',
 		description_preview: '',
 		players,
-		playtime
+		playtime,
 	};
 }
 
@@ -56,6 +56,6 @@ export function mapAPIGameToBoredGame(game: GameType): Games {
 		min_playtime: game.min_playtime,
 		max_playtime: game.max_playtime,
 		min_age: game.min_age,
-		description: game.description
+		description: game.description,
 	};
 }

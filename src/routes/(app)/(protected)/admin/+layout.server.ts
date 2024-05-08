@@ -1,8 +1,8 @@
 import { redirect, loadFlash } from 'sveltekit-flash-message/server';
 import { forbiddenMessage, notSignedInMessage } from '$lib/flashMessages';
 import { eq } from 'drizzle-orm';
-import db from '$lib/drizzle';
-import { user_roles } from '../../../../schema';
+import db from '../../../../db';
+import { user_roles } from '$db/schema';
 
 export const load = loadFlash(async (event) => {
 	const { locals } = event;
@@ -16,10 +16,10 @@ export const load = loadFlash(async (event) => {
 		with: {
 			role: {
 				columns: {
-					name: true
-				}
-			}
-		}
+					name: true,
+				},
+			},
+		},
 	});
 
 	const containsAdminRole = userRoles.some((user_role) => user_role?.role?.name === 'admin');

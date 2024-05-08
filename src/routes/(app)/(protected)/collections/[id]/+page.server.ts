@@ -4,9 +4,9 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { type ListGame, modifyListGameSchema } from '$lib/validations/zod-schemas';
-import db from '$lib/drizzle.js';
+import db from '../../../../../db';
 import { notSignedInMessage } from '$lib/flashMessages.js';
-import { collections, games, collection_items } from '../../../../../schema.js';
+import { collections, games, collection_items } from '$db/schema';
 import { search_schema } from '$lib/zodValidation';
 import type { UICollection } from '$lib/types';
 

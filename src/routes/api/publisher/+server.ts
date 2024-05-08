@@ -1,10 +1,10 @@
 import { createPublisher } from '$lib/utils/db/publisherUtils.js';
-import type { Publishers } from '../../../schema.js';
+import type { Publishers } from '$db/schema';
 
 type PublisherCreate = {
 	publisher: Publishers;
 	externalId: string;
-}
+};
 
 export async function POST({ request, locals }) {
 	const data: PublisherCreate = await request.json();
@@ -15,7 +15,7 @@ export async function POST({ request, locals }) {
 	} catch (e) {
 		console.error(e);
 		return new Response('Could not create publisher', {
-			status: 500
+			status: 500,
 		});
 	}
 }

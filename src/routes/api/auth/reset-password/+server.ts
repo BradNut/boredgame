@@ -1,7 +1,7 @@
-import db from '$lib/drizzle.js';
+import db from '../../../../db';
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import { users } from '../../../../schema.js';
+import { users } from '$db/schema';
 import { createPasswordResetToken } from '$lib/server/auth-utils.js';
 import { PUBLIC_SITE_URL } from '$env/static/public';
 
@@ -13,11 +13,13 @@ export async function POST({ locals, request }) {
 	}
 
 	const user = await db.query.users.findFirst({
-		where: eq(users.email, email)
+		where: eq(users.email, email),
 	});
 
 	if (!user) {
-		error(200, { message: 'Email sent! Please check your email for a link to reset your password.' });
+		error(200, {
+			message: 'Email sent! Please check your email for a link to reset your password.',
+		});
 	}
 
 	const verificationToken = await createPasswordResetToken(user.id);
@@ -27,6 +29,6 @@ export async function POST({ locals, request }) {
 	console.log('Verification link: ' + verificationLink);
 
 	return new Response(null, {
-		status: 200
+		status: 200,
 	});
 }

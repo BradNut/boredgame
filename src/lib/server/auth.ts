@@ -1,8 +1,8 @@
 // lib/server/lucia.ts
 import { Lucia, TimeSpan } from 'lucia';
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
-import db from '$lib/drizzle';
-import { sessions, users } from '../../schema';
+import db from '../../db';
+import { sessions, users } from '$db/schema';
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users);
 
@@ -19,7 +19,7 @@ export const lucia = new Lucia(adapter, {
 	getSessionAttributes: (attributes) => {
 		return {
 			ipCountry: attributes.ip_country,
-			ipAddress: attributes.ip_address
+			ipAddress: attributes.ip_address,
 		};
 	},
 	getUserAttributes: (attributes) => {
@@ -28,7 +28,7 @@ export const lucia = new Lucia(adapter, {
 			email: attributes.email,
 			firstName: attributes.firstName,
 			lastName: attributes.lastName,
-			theme: attributes.theme
+			theme: attributes.theme,
 		};
 	},
 	sessionExpiresIn: new TimeSpan(30, 'd'), // 30 days
@@ -39,9 +39,9 @@ export const lucia = new Lucia(adapter, {
 			// set to `true` when using HTTPS
 			secure: process.env.NODE_ENV === 'production',
 			sameSite: 'strict',
-			domain
-		}
-	}
+			domain,
+		},
+	},
 });
 
 declare module 'lucia' {

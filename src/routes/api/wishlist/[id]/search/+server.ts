@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import db from '$lib/drizzle.js';
-import { wishlist_items, wishlists } from '../../../../../schema.js';
+import db from '../../../../../db';
+import { wishlist_items, wishlists } from '$db/schema';
 
 // Search a user's collection
 export async function GET({ url, locals, params }) {
@@ -16,12 +16,12 @@ export async function GET({ url, locals, params }) {
 
 	if (!locals.user) {
 		return new Response(null, {
-			status: 401
+			status: 401,
 		});
 	}
 
 	const wishlist = await db.query.wishlists.findFirst({
-		where: eq(wishlists.user_id, locals?.user?.id)
+		where: eq(wishlists.user_id, locals?.user?.id),
 	});
 	console.log('wishlist', wishlist);
 
@@ -38,9 +38,9 @@ export async function GET({ url, locals, params }) {
 					columns: {
 						id: true,
 						name: true,
-						thumb_url: true
-					}
-				}
+						thumb_url: true,
+					},
+				},
 			},
 			orderBy: (wishlist_items, { asc, desc }) => {
 				const dbSort = wishlist_items.created_at;
@@ -51,7 +51,7 @@ export async function GET({ url, locals, params }) {
 				}
 			},
 			offset: skip,
-			limit
+			limit,
 		});
 
 		return json(itemsInWishlist);

@@ -6,7 +6,7 @@
 	import * as Avatar from '$components/ui/avatar';
 	import { invalidateAll } from '$app/navigation';
 	import Logo from '$components/logo.svelte';
-	import type { Users } from '../../schema';
+	import type { Users } from '$db/schema';
 
 	export let user: Users | null = null;
 

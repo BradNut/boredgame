@@ -4,9 +4,9 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { modifyListGameSchema } from '$lib/validations/zod-schemas';
-import db from '$lib/drizzle.js';
+import db from '../../../../db';
 import { notSignedInMessage } from '$lib/flashMessages.js';
-import { games, wishlist_items, wishlists } from '../../../../schema.js';
+import { games, wishlist_items, wishlists } from '$db/schema';
 
 export async function load(event) {
 	const user = event.locals.user;

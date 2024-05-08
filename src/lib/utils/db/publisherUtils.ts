@@ -1,13 +1,8 @@
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import kebabCase from 'just-kebab-case';
-import db from '$lib/drizzle';
-import {
-	externalIds,
-	publishersToExternalIds,
-	type Publishers,
-	publishers,
-} from '../../../schema';
+import db from '../../../db';
+import { externalIds, publishersToExternalIds, type Publishers, publishers } from '$db/schema';
 import { PUBLIC_SITE_URL } from '$env/static/public';
 
 export async function getPublisher(locals: App.Locals, id: string) {
@@ -17,8 +12,8 @@ export async function getPublisher(locals: App.Locals, id: string) {
 	}
 	return new Response(JSON.stringify(publisher[0]), {
 		headers: {
-			'Content-Type': 'application/json'
-		}
+			'Content-Type': 'application/json',
+		},
 	});
 }
 
@@ -32,19 +27,19 @@ export async function updatePublisher(locals: App.Locals, publisher: Publishers,
 			.update(publishers)
 			.set({
 				name: publisher.name,
-				slug: kebabCase(publisher.name || '')
+				slug: kebabCase(publisher.name || ''),
 			})
 			.where(eq(publishers.id, id))
 			.returning();
 		return new Response(JSON.stringify(dbPublisher[0]), {
 			headers: {
-				'Content-Type': 'application/json'
-			}
+				'Content-Type': 'application/json',
+			},
 		});
 	} catch (e) {
 		console.error(e);
 		return new Response('Could not get publishers', {
-			status: 500
+			status: 500,
 		});
 	}
 }
@@ -52,7 +47,7 @@ export async function updatePublisher(locals: App.Locals, publisher: Publishers,
 export async function createPublisher(
 	locals: App.Locals,
 	publisher: Publishers,
-	externalId: string
+	externalId: string,
 ) {
 	if (!publisher || !externalId || externalId === '') {
 		error(400, 'Invalid Request');
@@ -60,7 +55,7 @@ export async function createPublisher(
 
 	try {
 		const dbExternalId = await db.query.externalIds.findFirst({
-			where: eq(externalIds.externalId, externalId)
+			where: eq(externalIds.externalId, externalId),
 		});
 
 		if (dbExternalId) {
@@ -68,7 +63,7 @@ export async function createPublisher(
 				.select({
 					id: publishers.id,
 					name: publishers.name,
-					slug: publishers.slug
+					slug: publishers.slug,
 				})
 				.from(publishers)
 				.leftJoin(publishersToExternalIds, eq(publishersToExternalIds.externalId, externalId));
@@ -78,9 +73,9 @@ export async function createPublisher(
 				return new Response('Publisher already exists', {
 					headers: {
 						'Content-Type': 'application/json',
-						Location: `${PUBLIC_SITE_URL}/api/publisher/${foundPublisher[0].id}`
+						Location: `${PUBLIC_SITE_URL}/api/publisher/${foundPublisher[0].id}`,
 					},
-					status: 409
+					status: 409,
 				});
 			}
 		}
@@ -92,25 +87,25 @@ export async function createPublisher(
 				.insert(publishers)
 				.values({
 					name: publisher.name,
-					slug: kebabCase(publisher.name || publisher.slug || '')
+					slug: kebabCase(publisher.name || publisher.slug || ''),
 				})
 				.returning();
 			const dbExternalIds = await transaction
 				.insert(externalIds)
 				.values({
 					externalId,
-					type: 'publisher'
+					type: 'publisher',
 				})
 				.returning({ id: externalIds.id });
 			await transaction.insert(publishersToExternalIds).values({
 				publisherId: dbPublishers[0].id,
-				externalId: dbExternalIds[0].id
+				externalId: dbExternalIds[0].id,
 			});
 		});
 
 		if (dbPublishers.length === 0) {
 			return new Response('Could not create publisher', {
-				status: 500
+				status: 500,
 			});
 		}
 

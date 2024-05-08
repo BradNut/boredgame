@@ -12,8 +12,8 @@ const config = {
 		inspector: {
 			toggleKeyCombo: 'control-alt-shift',
 			showToggleButton: 'always',
-			toggleButtonPos: 'bottom-right'
-		}
+			toggleButtonPos: 'bottom-right',
+		},
 	},
 	kit: {
 		adapter: adapter(),
@@ -21,19 +21,20 @@ const config = {
 			$assets: './src/assets',
 			$components: './src/components',
 			'$components/*': 'src/lib/components/*',
+			$db: './src/db',
 			$server: './src/server',
 			$lib: './src/lib',
 			$state: './src/state',
 			$styles: './src/styles',
-			$themes: './src/themes'
-		}
+			$themes: './src/themes',
+		},
 	},
 	shadcn: {
-		componentPath: './src/lib/components/ui'
+		componentPath: './src/lib/components/ui',
 	},
 	compilerOptions: {
-    enableSourcemap: true,
-  }
+		enableSourcemap: true,
+	},
 };
 
 export default config;
