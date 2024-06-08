@@ -9,17 +9,27 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
-import { signInSchema } from '$lib/validations/auth';
+import { totpSchema } from '$lib/validations/auth';
 import { users, recovery_codes } from '$db/schema';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) {
-		const message = { type: 'success', message: 'You are already signed in' } as const;
-		throw redirect('/', message, event);
+		const user = event.locals.user;
+		const dbUser = await db.query.users.findFirst({
+			where: eq(users.username, user.username),
+		});
+
+		const session = event.locals.session;
+		const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
+
+		if (isTwoFactorAuthenticated && dbUser?.two_factor_enabled && dbUser?.two_factor_secret) {
+			const message = { type: 'success', message: 'You are already signed in' } as const;
+			throw redirect('/', message, event);
+		}
 	}
 
-	const form = await superValidate(event, zod(signInSchema));
+	const form = await superValidate(event, zod(totpSchema));
 
 	return {
 		form,
@@ -38,95 +48,77 @@ export const actions: Actions = {
 		}
 
 		const { locals } = event;
-		const form = await superValidate(event, zod(signInSchema));
+		const session = locals.session;
+		const user = locals.user;
+
+		if (!user || !session) {
+			throw fail(401);
+		}
+
+		const dbUser = await db.query.users.findFirst({
+			where: eq(users.username, user.username),
+		});
+
+		if (!dbUser) {
+			throw fail(401);
+		}
+
+		const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
+
+		if (isTwoFactorAuthenticated && dbUser?.two_factor_enabled && dbUser?.two_factor_secret) {
+			const message = { type: 'success', message: 'You are already signed in' } as const;
+			throw redirect('/', message, event);
+		}
+
+		const form = await superValidate(event, zod(totpSchema));
 
 		if (!form.valid) {
-			form.data.password = '';
+			form.data.totpToken = '';
 			return fail(400, {
 				form,
 			});
 		}
 
-		let session;
 		let sessionCookie;
 		try {
-			const password = form.data.password;
+			const totpToken = form?.data?.totpToken;
 
-			const user = await db.query.users.findFirst({
-				where: eq(users.username, form.data.username),
-			});
-
-			console.log('user', JSON.stringify(user, null, 2));
-
-			if (!user?.hashed_password) {
-				console.log('invalid username/password');
-				form.data.password = '';
-				return setError(form, 'password', 'Your username or password is incorrect.');
-			}
-
-			const validPassword = await new Argon2id().verify(user.hashed_password, password);
-			if (!validPassword) {
-				console.log('invalid password');
-				form.data.password = '';
-				return setError(form, 'password', 'Your username or password is incorrect.');
-			}
-
-			// await db
-			// 	.insert(collections)
-			// 	.values({
-			// 		user_id: user.id,
-			// 	})
-			// 	.onConflictDoNothing();
-			// await db
-			// 	.insert(wishlists)
-			// 	.values({
-			// 		user_id: user.id,
-			// 	})
-			// 	.onConflictDoNothing();
-
-			if (user?.two_factor_enabled && user?.two_factor_secret && !form?.data?.totpToken) {
+			if (dbUser?.two_factor_enabled && dbUser?.two_factor_secret && !totpToken) {
 				return fail(400, {
 					form,
-					twoFactorRequired: true,
 				});
-			} else if (user?.two_factor_enabled && user?.two_factor_secret && form?.data?.totpToken) {
-				console.log('totpToken', form.data.totpToken);
+			} else if (dbUser?.two_factor_enabled && dbUser?.two_factor_secret && totpToken) {
+				console.log('totpToken',totpToken);
 				const validOTP = await new TOTPController().verify(
 					form.data.totpToken,
-					decodeHex(user.two_factor_secret),
+					decodeHex(dbUser.two_factor_secret),
 				);
 				console.log('validOTP', validOTP);
 
 				if (!validOTP) {
 					console.log('invalid TOTP code check for recovery codes');
-					const usedRecoveryCode = await checkRecoveryCode(form?.data?.totpToken, user.id);
+					const usedRecoveryCode = await checkRecoveryCode(totpToken, dbUser.id);
 					if (!usedRecoveryCode) {
 						console.log('invalid TOTP code');
-						form.data.password = '';
-						// form.errors.totpToken = ['Invalid code'];
 						return setError(form, 'totpToken', 'Invalid code.');
-						// return fail(400, {
-						// 	form,
-						// 	twoFactorRequired: true,
-						// });
 					}
 				}
 			}
 			console.log('ip', locals.ip);
 			console.log('country', locals.country);
-			session = await lucia.createSession(user.id, {
+			await lucia.invalidateSession(session.id);
+			const newSession = await lucia.createSession(dbUser.id, {
 				ip_country: locals.country,
 				ip_address: locals.ip,
-				isTwoFactorAuthenticated: false,
+				isTwoFactorAuthenticated: true,
 			});
-			console.log('logging in session', session);
-			sessionCookie = lucia.createSessionCookie(session.id);
+			console.log('logging in session', newSession);
+			sessionCookie = lucia.createSessionCookie(newSession.id);
 			console.log('logging in session cookie', sessionCookie);
 		} catch (e) {
 			// TODO: need to return error message to the client
 			console.error(e);
-			form.data.password = '';
-			return setError(form, '', 'Your username or password is incorrect.');
+			return setError(form, 'totpToken', 'Error verifying TOTP code.');
 		}
 
 		console.log('setting session cookie', sessionCookie);
@@ -135,8 +127,7 @@ export const actions: Actions = {
 			...sessionCookie.attributes,
 		});
 
-		form.data.username = '';
-		form.data.password = '';
+		form.data.totpToken = '';
 		const message = { type: 'success', message: 'Signed In!' } as const;
 		redirect(302, '/', message, event);
 	},

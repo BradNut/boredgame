@@ -1,6 +1,5 @@
 import { index, integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
-import { tsvector } from '../../tsVector';
 import { type InferSelectModel, relations, sql } from 'drizzle-orm';
 import categoriesToGames from './categoriesToGames';
 import gamesToExternalIds from './gamesToExternalIds';
@@ -27,22 +26,19 @@ const games = pgTable(
 		image_url: text('image_url'),
 		thumb_url: text('thumb_url'),
 		url: text('url'),
-		text_searchable_index: tsvector('text_searchable_index'),
-		last_sync_at: timestamp('last_sync_at', {
-			withTimezone: true,
-			mode: 'date',
-			precision: 6,
-		}),
-		created_at: timestamp('created_at').notNull().defaultNow(),
-		updated_at: timestamp('updated_at').notNull().defaultNow(),
+		last_sync_at: timestamp('last_sync_at'),
+		created_at: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+		updated_at: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 	},
-	(table) => {
-		return {
-			text_searchable_idx: index('text_searchable_idx')
-				.on(table.text_searchable_index)
-				.using(sql`'gin'`),
-		};
-	},
+	(table) => ({
+		searchIndex: index('search_index').using(
+			'gin',
+			sql`(
+						setweight(to_tsvector('english', ${table.name}), 'A') ||
+						setweight(to_tsvector('english', ${table.slug}), 'B')
+					)`,
+		),
+	}),
 );
 
 export const gameRelations = relations(games, ({ many }) => ({

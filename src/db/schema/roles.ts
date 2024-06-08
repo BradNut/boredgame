@@ -1,4 +1,4 @@
-import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import user_roles from './userRoles';
@@ -10,6 +10,8 @@ const roles = pgTable('roles', {
 		.$defaultFn(() => cuid2())
 		.notNull(),
 	name: text('name').unique().notNull(),
+	created_at: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+	updated_at: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 });
 
 export type Roles = InferSelectModel<typeof roles>;

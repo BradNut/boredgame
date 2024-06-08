@@ -1,1 +1,0 @@
-ALTER TABLE "user_roles" RENAME COLUMN "default" TO "primary";

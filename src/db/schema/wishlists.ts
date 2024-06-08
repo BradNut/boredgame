@@ -12,8 +12,8 @@ const wishlists = pgTable('wishlists', {
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	name: text('name').notNull().default('My Wishlist'),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	created_at: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+	updated_at: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 });
 
 export type Wishlists = InferSelectModel<typeof wishlists>;

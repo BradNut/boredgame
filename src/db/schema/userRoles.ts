@@ -16,8 +16,8 @@ const user_roles = pgTable('user_roles', {
 		.notNull()
 		.references(() => roles.id, { onDelete: 'cascade' }),
 	primary: boolean('primary').default(false),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	created_at: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+	updated_at: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 });
 
 export const user_role_relations = relations(user_roles, ({ one }) => ({

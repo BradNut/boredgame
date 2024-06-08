@@ -10,12 +10,8 @@ const password_reset_tokens = pgTable('password_reset_tokens', {
 	user_id: uuid('user_id')
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
-	expires_at: timestamp('expires_at', {
-		withTimezone: true,
-		mode: 'date',
-		precision: 6,
-	}),
-	created_at: timestamp('created_at').notNull().defaultNow(),
+	expires_at: timestamp('expires_at', { mode: 'string' }),
+	created_at: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
 });
 
 export type PasswordResetTokens = InferSelectModel<typeof password_reset_tokens>;

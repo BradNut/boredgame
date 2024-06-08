@@ -1,10 +1,10 @@
 {
-  "id": "176e5b1f-d146-4604-ab17-b16052da13c0",
+  "id": "9622fc3a-51a1-4f66-8535-fd1ceaf46fc2",
   "prevId": "00000000-0000-0000-0000-000000000000",
-  "version": "5",
-  "dialect": "pg",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "categories": {
+    "public.categories": {
       "name": "categories",
       "schema": "",
       "columns": {
@@ -12,7 +12,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -60,7 +61,7 @@
         }
       }
     },
-    "categories_to_external_ids": {
+    "public.categories_to_external_ids": {
       "name": "categories_to_external_ids",
       "schema": "",
       "columns": {
@@ -117,7 +118,7 @@
       },
       "uniqueConstraints": {}
     },
-    "categories_to_games": {
+    "public.categories_to_games": {
       "name": "categories_to_games",
       "schema": "",
       "columns": {
@@ -174,7 +175,7 @@
       },
       "uniqueConstraints": {}
     },
-    "collection_items": {
+    "public.collection_items": {
       "name": "collection_items",
       "schema": "",
       "columns": {
@@ -182,7 +183,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -192,13 +194,13 @@
         },
         "collection_id": {
           "name": "collection_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
         "game_id": {
           "name": "game_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -264,7 +266,7 @@
         }
       }
     },
-    "collections": {
+    "public.collections": {
       "name": "collections",
       "schema": "",
       "columns": {
@@ -272,7 +274,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -282,9 +285,16 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'My Collection'"
         },
         "created_at": {
           "name": "created_at",
@@ -328,90 +338,7 @@
         }
       }
     },
-    "expansions": {
-      "name": "expansions",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "cuid": {
-          "name": "cuid",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "base_game_id": {
-          "name": "base_game_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "game_id": {
-          "name": "game_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "expansions_base_game_id_games_id_fk": {
-          "name": "expansions_base_game_id_games_id_fk",
-          "tableFrom": "expansions",
-          "tableTo": "games",
-          "columnsFrom": [
-            "base_game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
-        },
-        "expansions_game_id_games_id_fk": {
-          "name": "expansions_game_id_games_id_fk",
-          "tableFrom": "expansions",
-          "tableTo": "games",
-          "columnsFrom": [
-            "game_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "cascade"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "expansions_cuid_unique": {
-          "name": "expansions_cuid_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "cuid"
-          ]
-        }
-      }
-    },
-    "external_ids": {
+    "public.external_ids": {
       "name": "external_ids",
       "schema": "",
       "columns": {
@@ -419,7 +346,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -430,6 +358,7 @@
         "type": {
           "name": "type",
           "type": "external_id_type",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -453,7 +382,7 @@
         }
       }
     },
-    "games": {
+    "public.games": {
       "name": "games",
       "schema": "",
       "columns": {
@@ -461,7 +390,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -547,15 +477,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "text_searchable_index": {
-          "name": "text_searchable_index",
-          "type": "tsvector",
-          "primaryKey": false,
-          "notNull": false
-        },
         "last_sync_at": {
           "name": "last_sync_at",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -575,12 +499,20 @@
         }
       },
       "indexes": {
-        "text_searchable_idx": {
-          "name": "text_searchable_idx",
+        "search_index": {
+          "name": "search_index",
           "columns": [
-            "text_searchable_index"
+            {
+              "expression": "(\n\t\t\t\t\t\tsetweight(to_tsvector('english', \"name\"), 'A') ||\n\t\t\t\t\t\tsetweight(to_tsvector('english', \"slug\"), 'B')\n\t\t\t\t\t)",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gin",
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -595,7 +527,7 @@
         }
       }
     },
-    "games_to_external_ids": {
+    "public.games_to_external_ids": {
       "name": "games_to_external_ids",
       "schema": "",
       "columns": {
@@ -652,7 +584,7 @@
       },
       "uniqueConstraints": {}
     },
-    "mechanics": {
+    "public.mechanics": {
       "name": "mechanics",
       "schema": "",
       "columns": {
@@ -660,7 +592,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -708,7 +641,7 @@
         }
       }
     },
-    "mechanics_to_external_ids": {
+    "public.mechanics_to_external_ids": {
       "name": "mechanics_to_external_ids",
       "schema": "",
       "columns": {
@@ -765,7 +698,7 @@
       },
       "uniqueConstraints": {}
     },
-    "mechanics_to_games": {
+    "public.mechanics_to_games": {
       "name": "mechanics_to_games",
       "schema": "",
       "columns": {
@@ -822,7 +755,7 @@
       },
       "uniqueConstraints": {}
     },
-    "password_reset_tokens": {
+    "public.password_reset_tokens": {
       "name": "password_reset_tokens",
       "schema": "",
       "columns": {
@@ -834,13 +767,13 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamp (6) with time zone",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         },
@@ -871,7 +804,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "publishers": {
+    "public.publishers": {
       "name": "publishers",
       "schema": "",
       "columns": {
@@ -879,7 +812,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -927,7 +861,7 @@
         }
       }
     },
-    "publishers_to_external_ids": {
+    "public.publishers_to_external_ids": {
       "name": "publishers_to_external_ids",
       "schema": "",
       "columns": {
@@ -984,7 +918,7 @@
       },
       "uniqueConstraints": {}
     },
-    "publishers_to_games": {
+    "public.publishers_to_games": {
       "name": "publishers_to_games",
       "schema": "",
       "columns": {
@@ -1041,7 +975,71 @@
       },
       "uniqueConstraints": {}
     },
-    "roles": {
+    "public.recovery_codes": {
+      "name": "recovery_codes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "used": {
+          "name": "used",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "recovery_codes_user_id_users_id_fk": {
+          "name": "recovery_codes_user_id_users_id_fk",
+          "tableFrom": "recovery_codes",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.roles": {
       "name": "roles",
       "schema": "",
       "columns": {
@@ -1049,19 +1047,34 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "name": {
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -1084,7 +1097,7 @@
         }
       }
     },
-    "sessions": {
+    "public.sessions": {
       "name": "sessions",
       "schema": "",
       "columns": {
@@ -1096,7 +1109,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -1138,7 +1151,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "user_roles": {
+    "public.user_roles": {
       "name": "user_roles",
       "schema": "",
       "columns": {
@@ -1146,7 +1159,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -1156,15 +1170,22 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
         "role_id": {
           "name": "role_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "primary": {
+          "name": "primary",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
@@ -1221,7 +1242,7 @@
         }
       }
     },
-    "users": {
+    "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
@@ -1229,7 +1250,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -1288,6 +1310,20 @@
           "notNull": false,
           "default": "'system'"
         },
+        "two_factor_secret": {
+          "name": "two_factor_secret",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "''"
+        },
+        "two_factor_enabled": {
+          "name": "two_factor_enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -1330,7 +1366,7 @@
         }
       }
     },
-    "wishlist_items": {
+    "public.wishlist_items": {
       "name": "wishlist_items",
       "schema": "",
       "columns": {
@@ -1338,7 +1374,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -1348,13 +1385,13 @@
         },
         "wishlist_id": {
           "name": "wishlist_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
         "game_id": {
           "name": "game_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -1413,7 +1450,7 @@
         }
       }
     },
-    "wishlists": {
+    "public.wishlists": {
       "name": "wishlists",
       "schema": "",
       "columns": {
@@ -1421,7 +1458,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "cuid": {
           "name": "cuid",
@@ -1431,9 +1469,16 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "text",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'My Wishlist'"
         },
         "created_at": {
           "name": "created_at",
@@ -1478,19 +1523,7 @@
       }
     }
   },
-  "enums": {
-    "external_id_type": {
-      "name": "external_id_type",
-      "values": {
-        "game": "game",
-        "category": "category",
-        "mechanic": "mechanic",
-        "publisher": "publisher",
-        "designer": "designer",
-        "artist": "artist"
-      }
-    }
-  },
+  "enums": {},
   "schemas": {},
   "_meta": {
     "columns": {},

@@ -18,8 +18,8 @@ const users = pgTable('users', {
 	theme: text('theme').default('system'),
 	two_factor_secret: text('two_factor_secret').default(''),
 	two_factor_enabled: boolean('two_factor_enabled').default(false),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	created_at: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+	updated_at: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 });
 
 export const user_relations = relations(users, ({ many }) => ({

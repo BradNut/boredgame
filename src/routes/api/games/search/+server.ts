@@ -3,10 +3,28 @@ import db from '../../../../db';
 import { asc, desc, eq, ilike, or } from 'drizzle-orm';
 import { games } from '$db/schema';
 import kebabCase from 'just-kebab-case';
+import {
+	FilterSchema,
+	PaginationSchema,
+	SearchSchema,
+	SortSchema,
+} from '$lib/validations/zod-schemas';
 
 // Search a user's collection
 export const GET = async ({ url, locals }) => {
 	const searchParams = Object.fromEntries(url.searchParams);
+
+	const searchGames = PaginationSchema.merge(FilterSchema)
+		.merge(SortSchema)
+		.merge(SearchSchema)
+		.parse(searchParams);
+
+	if (searchGames.status !== 'success') {
+		error(400, 'Invalid request');
+	}
+
+	const { q, limit, skip, order, exact } = searchGames;
+
 	const q = searchParams?.q?.trim() || '';
 	const limit = parseInt(searchParams?.limit) || 10;
 	const skip = parseInt(searchParams?.skip) || 0;

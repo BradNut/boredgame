@@ -23,5 +23,8 @@ export const signInSchema = z.object({
 		.min(3, { message: 'Username must be at least 3 characters' })
 		.max(50, { message: 'Username must be less than 50 characters' }),
 	password: z.string({ required_error: 'Password is required' }).trim(),
-	totpToken: z.string().trim().min(6).max(10).optional(),
+});
+
+export const totpSchema = z.object({
+	totpToken: z.string().trim().min(6).max(10),
 });

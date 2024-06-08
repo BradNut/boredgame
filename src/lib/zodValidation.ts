@@ -5,7 +5,7 @@ export const BoardGameSearch = z.object({
 	minAge: z.number(),
 	maxAge: z.number(),
 	minPlayers: z.number(),
-	maxPlayers: z.number()
+	maxPlayers: z.number(),
 });
 
 export const saved_game_schema = z.object({
@@ -13,26 +13,26 @@ export const saved_game_schema = z.object({
 	name: z.string(),
 	thumb_url: z.string(),
 	players: z.string(),
-	playtime: IntegerString(z.number())
+	playtime: IntegerString(z.number()),
 });
 
 export const list_game_request_schema = z.object({
 	id: z.string(),
-	externalId: z.string()
+	externalId: z.string(),
 });
 
 export type ListGameSchema = typeof list_game_request_schema;
 
 // https://github.com/colinhacks/zod/discussions/330
-function IntegerString<schema extends ZodNumber | ZodOptional<ZodNumber>>(schema: schema) {
+export function IntegerString<schema extends ZodNumber | ZodOptional<ZodNumber>>(schema: schema) {
 	return z.preprocess(
 		(value) =>
 			typeof value === 'string'
 				? parseInt(value, 10)
 				: typeof value === 'number'
-				? value
-				: undefined,
-		schema
+					? value
+					: undefined,
+		schema,
 	);
 }
 
@@ -47,7 +47,7 @@ const Search = z.object({
 	sort: z.enum(['asc', 'desc']).optional(),
 	sortBy: z.enum(['name', 'min_players', 'max_players', 'min_age', 'times_played']).optional(),
 	limit: z.number().min(10).max(100).default(10),
-	skip: z.number().min(0).default(0)
+	skip: z.number().min(0).default(0),
 });
 
 // minAge: z
@@ -71,7 +71,7 @@ export const search_schema = z
 		sort: z.enum(['asc', 'desc']).optional(),
 		order: z.enum(['name', 'min_players', 'max_players', 'min_age', 'times_played']).optional(),
 		limit: z.number().min(10).max(100).default(10),
-		skip: z.number().min(0).default(0)
+		skip: z.number().min(0).default(0),
 	})
 	.superRefine(
 		({ minPlayers, maxPlayers, minAge, exactMinAge, exactMinPlayers, exactMaxPlayers }, ctx) => {
@@ -80,12 +80,12 @@ export const search_schema = z
 				ctx.addIssue({
 					code: 'custom',
 					message: 'Min Players must be smaller than Max Players',
-					path: ['minPlayers']
+					path: ['minPlayers'],
 				});
 				ctx.addIssue({
 					code: 'custom',
 					message: 'Min Players must be smaller than Max Players',
-					path: ['maxPlayers']
+					path: ['maxPlayers'],
 				});
 			}
 
@@ -93,7 +93,7 @@ export const search_schema = z
 				ctx.addIssue({
 					code: 'custom',
 					message: 'Min Age required when searching for exact min age',
-					path: ['minAge']
+					path: ['minAge'],
 				});
 			}
 
@@ -101,7 +101,7 @@ export const search_schema = z
 				ctx.addIssue({
 					code: 'custom',
 					message: 'Min Players required when searching for exact min players',
-					path: ['minPlayers']
+					path: ['minPlayers'],
 				});
 			}
 
@@ -109,20 +109,20 @@ export const search_schema = z
 				ctx.addIssue({
 					code: 'custom',
 					message: 'Max Players required when searching for exact max players',
-					path: ['maxPlayers']
+					path: ['maxPlayers'],
 				});
 			}
-		}
+		},
 	);
 
 export type SearchSchema = typeof search_schema;
 
 export const BggForm = z.object({
-	link: z.string().trim().startsWith('https://boardgamegeek.com/boardgame/')
-})
+	link: z.string().trim().startsWith('https://boardgamegeek.com/boardgame/'),
+});
 
 export const collection_search_schema = Search.extend({
-	collection_id: z.string()
+	collection_id: z.string(),
 });
 
 export type CollectionSearchSchema = typeof collection_search_schema;
@@ -175,7 +175,7 @@ export const search_result_schema = z.object({
 	lt_reddit_count: z.number(),
 	lt_reddit_week_count: z.number(),
 	lt_reddit_day_count: z.number(),
-	fields: z.string()
+	fields: z.string(),
 });
 
 export type SearchResultSchema = typeof search_result_schema;
@@ -199,18 +199,18 @@ export const game_schema = z.object({
 	min_age: z.number(),
 	description: z.string(),
 	players: z.string(),
-	playtime: z.string()
+	playtime: z.string(),
 });
 
 export const category_schema = z.object({
 	id: z.string(),
-	name: z.string()
+	name: z.string(),
 });
 
 export const mechanics_schema = z.object({
 	id: z.string(),
 	name: z.string(),
-	description: z.string().optional()
+	description: z.string().optional(),
 });
 
 const gameSchema = z.object({
@@ -234,24 +234,24 @@ const gameSchema = z.object({
 		.array(
 			z.object({
 				id: z.string(),
-				name: z.string()
-			})
+				name: z.string(),
+			}),
 		)
 		.optional(),
 	publishers: z
 		.array(
 			z.object({
 				id: z.string(),
-				name: z.string()
-			})
+				name: z.string(),
+			}),
 		)
 		.optional(),
 	artists: z
 		.array(
 			z.object({
 				id: z.string(),
-				name: z.string()
-			})
+				name: z.string(),
+			}),
 		)
 		.optional(),
 	names: z.array(z.string()).optional(),
@@ -260,26 +260,26 @@ const gameSchema = z.object({
 			z.object({
 				id: z.string(),
 				name: z.string(),
-				year_published: z.number().optional()
-			})
+				year_published: z.number().optional(),
+			}),
 		)
 		.optional(),
 	primary_publisher: z
 		.object({
 			id: z.string(),
-			name: z.string()
+			name: z.string(),
 		})
-		.optional()
+		.optional(),
 });
 
 const searchResultSchema = z.object({
 	games: z.array(gameSchema),
-	count: z.number()
+	count: z.number(),
 });
 
 export const WishlistSchema = z.object({
 	name: z.string(),
-	id: z.string()
+	id: z.string(),
 });
 
 // export const game_raw_schema_json = zodToJsonSchema(game_schema, {
