@@ -3,7 +3,7 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import * as flashModule from 'sveltekit-flash-message/client';
 	import { AlertCircle } from "lucide-svelte";
-	import { signInSchema } from '$lib/validations/auth';
+	import { signInSchema, totpSchema } from '$lib/validations/auth';
 	import * as Form from '$lib/components/ui/form';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
@@ -14,7 +14,7 @@
 	export let data;
 	export let form;
 
-	const superLoginForm = superForm(data.form, {
+	const superTotpForm = superForm(data.form, {
 		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
 		onResult: () => boredState.update((n) => ({ ...n, loading: false })),
 		flashMessage: {
@@ -29,12 +29,12 @@
 		},
 		syncFlashMessage: false,
 		taintedMessage: null,
-		validators: zodClient(signInSchema),
+		validators: zodClient(totpSchema),
 		validationMethod: 'oninput',
 		delayMs: 0,
 	});
 
-	const { form: loginForm, errors, enhance } = superLoginForm;
+	const { form: totpForm, errors, enhance } = superTotpForm;
 </script>
 
 <svelte:head>
@@ -48,40 +48,14 @@
 		>
 			Please enter your two factor code
 		</h2>
-		<Form.Field form={superLoginForm} name="username">
+		<Form.Field form={superTotpForm} name="totpToken">
 			<Form.Control let:attrs>
-				<Form.Label for="username">Username</Form.Label>
-				<Input {...attrs} autocomplete="username" bind:value={$loginForm.username} />
+				<Form.Label for="totpToken">TOTP Code</Form.Label>
+				<Input {...attrs} autocomplete="totpToken" bind:value={$totpForm.totpToken} />
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
-		<Form.Field form={superLoginForm} name="password">
-			<Form.Control let:attrs>
-				<Form.Label for="password">Password</Form.Label>
-				<Input {...attrs} autocomplete="current-password" type="password" bind:value={$loginForm.password} />
-			</Form.Control>
-			<Form.FieldErrors />
-		</Form.Field>
-		{#if form?.twoFactorRequired}
-			<Form.Field form={superLoginForm} name="totpToken">
-				<Form.Control let:attrs>
-					<Form.Label for="totpToken">Two Factor Code or Recovery Code</Form.Label>
-					<Input {...attrs} autocomplete="one-time-code" bind:value={$loginForm.totpToken} />
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-		{/if}
-		<Form.Button>Login</Form.Button>
-		<p class="px-8 text-center text-sm text-muted-foreground">
-			By clicking continue, you agree to our
-			<a href="/terms" class="underline underline-offset-4 hover:text-primary">
-				Terms of Use
-			</a>
-			and
-			<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
-				Privacy Policy
-			</a>.
-		</p>
+		<Form.Button>Submit</Form.Button>
 	</form>
 </div>
 

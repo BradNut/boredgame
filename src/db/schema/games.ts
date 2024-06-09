@@ -13,8 +13,8 @@ const games = pgTable(
 		cuid: text('cuid')
 			.unique()
 			.$defaultFn(() => cuid2()),
-		name: text('name'),
-		slug: text('slug'),
+		name: text('name').notNull(),
+		slug: text('slug').notNull(),
 		description: text('description'),
 		year_published: integer('year_published'),
 		min_players: integer('min_players'),
@@ -31,14 +31,14 @@ const games = pgTable(
 		updated_at: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
 	},
 	(table) => ({
-		searchIndex: index('search_index').using(
-			'gin',
-			sql`(
-						setweight(to_tsvector('english', ${table.name}), 'A') ||
-						setweight(to_tsvector('english', ${table.slug}), 'B')
-					)`,
-		),
-	}),
+    searchIndex: index('search_index').using(
+      'gin',
+      sql`(
+        setweight(to_tsvector('english', ${table.name}), 'A') ||
+        setweight(to_tsvector('english', ${table.slug}), 'B')
+      )`
+    ),
+  })
 );
 
 export const gameRelations = relations(games, ({ many }) => ({

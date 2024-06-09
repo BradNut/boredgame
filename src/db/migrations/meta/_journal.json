@@ -8,6 +8,27 @@
       "when": 1717548517806,
       "tag": "0000_spotty_changeling",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1717891533784,
+      "tag": "0001_acoustic_thunderbolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1717891822622,
+      "tag": "0002_striped_darkhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1717891852881,
+      "tag": "0003_flippant_avengers",
+      "breakpoints": true
     }
   ]
 }

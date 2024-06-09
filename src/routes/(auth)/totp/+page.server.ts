@@ -23,6 +23,9 @@ export const load: PageServerLoad = async (event) => {
 		const session = event.locals.session;
 		const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
 
+		console.log('session', session);
+		console.log('isTwoFactorAuthenticated', isTwoFactorAuthenticated);
+
 		if (isTwoFactorAuthenticated && dbUser?.two_factor_enabled && dbUser?.two_factor_secret) {
 			const message = { type: 'success', message: 'You are already signed in' } as const;
 			throw redirect('/', message, event);
@@ -90,7 +93,7 @@ export const actions: Actions = {
 			} else if (dbUser?.two_factor_enabled && dbUser?.two_factor_secret && totpToken) {
 				console.log('totpToken',totpToken);
 				const validOTP = await new TOTPController().verify(
-					form.data.totpToken,
+					totpToken,
 					decodeHex(dbUser.two_factor_secret),
 				);
 				console.log('validOTP', validOTP);
@@ -134,7 +137,7 @@ export const actions: Actions = {
 };
 
 async function checkRecoveryCode(recoveryCode: string, userId: string) {
-	const userRecoveryCodes = await db.query.recovery_codes.findMany({
+	const userRecoveryCodes = await db.query.recoveryCodes.findMany({
 		where: and(eq(recovery_codes.used, false), eq(recovery_codes.userId, userId)),
 	});
 	for (const code of userRecoveryCodes) {

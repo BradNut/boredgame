@@ -49,13 +49,13 @@ export const actions: Actions = {
 
 		let session;
 		let sessionCookie;
+		const user = await db.query.users.findFirst({
+			where: eq(users.username, form.data.username),
+		});
+
+
 		try {
 			const password = form.data.password;
-
-			const user = await db.query.users.findFirst({
-				where: eq(users.username, form.data.username),
-			});
-
 			console.log('user', JSON.stringify(user, null, 2));
 
 			if (!user?.hashed_password) {
@@ -71,47 +71,6 @@ export const actions: Actions = {
 				return setError(form, 'password', 'Your username or password is incorrect.');
 			}
 
-			// await db
-			// 	.insert(collections)
-			// 	.values({
-			// 		user_id: user.id,
-			// 	})
-			// 	.onConflictDoNothing();
-			// await db
-			// 	.insert(wishlists)
-			// 	.values({
-			// 		user_id: user.id,
-			// 	})
-			// 	.onConflictDoNothing();
-
-			if (user?.two_factor_enabled && user?.two_factor_secret && !form?.data?.totpToken) {
-				return fail(400, {
-					form,
-					twoFactorRequired: true,
-				});
-			} else if (user?.two_factor_enabled && user?.two_factor_secret && form?.data?.totpToken) {
-				console.log('totpToken', form.data.totpToken);
-				const validOTP = await new TOTPController().verify(
-					form.data.totpToken,
-					decodeHex(user.two_factor_secret),
-				);
-				console.log('validOTP', validOTP);
-
-				if (!validOTP) {
-					console.log('invalid TOTP code check for recovery codes');
-					const usedRecoveryCode = await checkRecoveryCode(form?.data?.totpToken, user.id);
-					if (!usedRecoveryCode) {
-						console.log('invalid TOTP code');
-						form.data.password = '';
-						// form.errors.totpToken = ['Invalid code'];
-						return setError(form, 'totpToken', 'Invalid code.');
-						// return fail(400, {
-						// 	form,
-						// 	twoFactorRequired: true,
-						// });
-					}
-				}
-			}
 			console.log('ip', locals.ip);
 			console.log('country', locals.country);
 			session = await lucia.createSession(user.id, {
@@ -137,8 +96,15 @@ export const actions: Actions = {
 
 		form.data.username = '';
 		form.data.password = '';
-		const message = { type: 'success', message: 'Signed In!' } as const;
-		redirect(302, '/', message, event);
+
+		if (user?.two_factor_enabled && user?.two_factor_secret) {
+			console.log('redirecting to TOTP page');
+			const message = { type: 'success', message: 'Please enter your TOTP code.' } as const;
+			redirect(302, '/totp', message, event);
+		} else {
+			const message = { type: 'success', message: 'Signed In!' } as const;
+			redirect(302, '/', message, event);
+		}
 	},
 };
 
