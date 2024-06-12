@@ -27,18 +27,18 @@ const games = pgTable(
 		thumb_url: text('thumb_url'),
 		url: text('url'),
 		last_sync_at: timestamp('last_sync_at'),
-		created_at: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
-		updated_at: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+		created_at: timestamp('created_at').notNull().defaultNow(),
+		updated_at: timestamp('updated_at').notNull().defaultNow(),
 	},
 	(table) => ({
-    searchIndex: index('search_index').using(
-      'gin',
-      sql`(
-        setweight(to_tsvector('english', ${table.name}), 'A') ||
+		searchIndex: index('search_index').using(
+			'gin',
+			sql`(
+				setweight(to_tsvector('english', ${table.name}), 'A') ||
         setweight(to_tsvector('english', ${table.slug}), 'B')
-      )`
-    ),
-  })
+      )`,
+		),
+	}),
 );
 
 export const gameRelations = relations(games, ({ many }) => ({

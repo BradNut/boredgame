@@ -9,9 +9,12 @@ import { notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../db';
 import type { PageServerLoad } from './$types';
 import { users } from '$db/schema';
+import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
-	if (!event.locals.user) {
+	const { locals } = event;
+	const { user, session } = locals;
+	if (userFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 

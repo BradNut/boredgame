@@ -52,8 +52,8 @@ CREATE TABLE IF NOT EXISTS "external_ids" (
 CREATE TABLE IF NOT EXISTS "games" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"cuid" text,
-	"name" text,
-	"slug" text,
+	"name" text NOT NULL,
+	"slug" text NOT NULL,
 	"description" text,
 	"year_published" integer,
 	"min_players" integer,
@@ -152,7 +152,9 @@ CREATE TABLE IF NOT EXISTS "sessions" (
 	"user_id" uuid NOT NULL,
 	"expires_at" timestamp with time zone NOT NULL,
 	"ip_country" text,
-	"ip_address" text
+	"ip_address" text,
+	"two_factor_auth_enabled" boolean DEFAULT false,
+	"is_two_factor_authenticated" boolean DEFAULT false
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user_roles" (
@@ -357,6 +359,6 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "search_index" ON "games" USING gin ((
-						setweight(to_tsvector('english', "name"), 'A') ||
-						setweight(to_tsvector('english', "slug"), 'B')
-					));
+        setweight(to_tsvector('english', "name"), 'A') ||
+        setweight(to_tsvector('english', "slug"), 'B')
+      ));

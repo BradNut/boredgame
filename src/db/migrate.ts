@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import postgres from 'postgres';
+import config from '../../drizzle.config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 
@@ -10,12 +11,12 @@ const connection = postgres({
 	password: process.env.DATABASE_PASSWORD || '',
 	database: process.env.DATABASE_DB || 'boredgame',
 	ssl: process.env.NODE_ENV === 'development' ? false : 'require',
-	max: 1
+	max: 1,
 });
 const db = drizzle(connection);
 
 try {
-	await migrate(db, { migrationsFolder: 'drizzle' });
+	await migrate(db, { migrationsFolder: config.out! });
 	console.log('Migrations complete');
 } catch (e) {
 	console.error(e);

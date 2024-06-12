@@ -1,20 +1,50 @@
-import 'dotenv/config';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import pg from 'pg';
-import * as schema from './schema';
+import { Table, getTableName, sql } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
+import { ADMIN_USERNAME, DB_SEEDING } from '$env/static/private';
+import { db } from '../db';
+import * as schema from './schema';
+import * as seeds from './seeds';
 
-// create the connection
-const pool = new pg.Pool({
-	user: process.env.DATABASE_USER,
-	password: process.env.DATABASE_PASSWORD,
-	host: process.env.DATABASE_HOST,
-	port: Number(process.env.DATABASE_PORT).valueOf(),
-	database: process.env.DATABASE_DB,
-	ssl: process.env.DATABASE_HOST !== 'localhost',
-});
+if (!DB_SEEDING) {
+	throw new Error('You must set DB_SEEDING to "true" when running seeds');
+}
 
-const db = drizzle(pool, { schema: schema });
+async function resetTable(db: db, table: Table) {
+	return db.execute(sql.raw(`TRUNCATE TABLE ${getTableName(table)} RESTART IDENTITY CASCADE`));
+}
+
+for (const table of [
+	schema.categories,
+	schema.categoriesToExternalIds,
+	schema.categories_to_games,
+	schema.collection_items,
+	schema.collections,
+	schema.expansions,
+	schema.externalIds,
+	schema.games,
+	schema.gamesToExternalIds,
+	schema.mechanics,
+	schema.mechanicsToExternalIds,
+	schema.mechanics_to_games,
+	schema.password_reset_tokens,
+	schema.publishers,
+	schema.publishersToExternalIds,
+	schema.publishers_to_games,
+	schema.recoveryCodes,
+	schema.roles,
+	schema.sessions,
+	schema.userRoles,
+	schema.users,
+	schema.wishlists,
+	schema.wishlist_items,
+]) {
+	// await db.delete(table); // clear tables without truncating / resetting ids
+	await resetTable(db, table);
+}
+
+await seeds.roles(db);
+
+await connection.end();
 
 console.log('Creating roles ...');
 const adminRole = await db
@@ -42,7 +72,7 @@ console.log('Admin Role: ', adminRole);
 const adminUser = await db
 	.insert(schema.users)
 	.values({
-		username: `${process.env.ADMIN_USERNAME}`,
+		username: `${ADMIN_USERNAME}`,
 		email: '',
 		hashed_password: await new Argon2id().hash(`${process.env.ADMIN_PASSWORD}`),
 		first_name: 'Brad',

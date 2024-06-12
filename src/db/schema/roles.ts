@@ -10,8 +10,8 @@ const roles = pgTable('roles', {
 		.$defaultFn(() => cuid2())
 		.notNull(),
 	name: text('name').unique().notNull(),
-	created_at: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
-	updated_at: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow(),
 });
 
 export type Roles = InferSelectModel<typeof roles>;

@@ -10,7 +10,7 @@ export default defineConfig({
 		port: Number(process.env.DATABASE_PORT) || 5432,
 		user: process.env.DATABASE_USER,
 		password: process.env.DATABASE_PASSWORD,
-		database: process.env.DATABASE || 'boredgame',
+		database: process.env.DATABASE_DB || 'boredgame',
 		ssl: process.env.DATABASE_HOST !== 'localhost',
 	},
 	// Print all statements

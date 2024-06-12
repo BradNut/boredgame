@@ -8,10 +8,11 @@ import { search_schema } from '$lib/zodValidation.js';
 import db from '../../../../db';
 import { collection_items, collections, games } from '$db/schema';
 import { notSignedInMessage } from '$lib/flashMessages';
+import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
-	const user = event.locals.user;
-	if (!user) {
+	const { user, session } = event.locals;
+	if (userFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 

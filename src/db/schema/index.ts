@@ -5,7 +5,7 @@ export {
 	password_reset_token_relations,
 	type PasswordResetTokens,
 } from './passwordResetTokens';
-export { default as sessions } from './sessions';
+export { default as sessions, type Sessions } from './sessions';
 export { default as roles, role_relations, type Roles } from './roles';
 export { default as userRoles, user_role_relations, type UserRoles } from './userRoles';
 export { default as collections, collection_relations, type Collections } from './collections';
@@ -23,6 +23,7 @@ export {
 export { default as externalIds, type ExternalIds, type ExternalIdType } from './externalIds';
 export { default as games, gameRelations, type Games } from './games';
 export { default as gamesToExternalIds } from './gamesToExternalIds';
+export { default as expansions, expansions_relations, type Expansions } from './expansions';
 export { default as publishers, publishers_relations, type Publishers } from './publishers';
 export { default as publishers_to_games, publishers_to_games_relations } from './publishersToGames';
 export { default as publishersToExternalIds } from './publishersToExternalIds';

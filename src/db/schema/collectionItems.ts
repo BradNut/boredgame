@@ -16,8 +16,8 @@ const collection_items = pgTable('collection_items', {
 		.notNull()
 		.references(() => games.id, { onDelete: 'cascade' }),
 	times_played: integer('times_played').default(0),
-	created_at: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
-	updated_at: timestamp('updated_at', { mode: 'string' }).notNull().defaultNow(),
+	created_at: timestamp('created_at').notNull().defaultNow(),
+	updated_at: timestamp('updated_at').notNull().defaultNow(),
 });
 
 export type CollectionItems = InferSelectModel<typeof collection_items>;

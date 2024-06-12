@@ -1,4 +1,4 @@
-import { generateIdFromEntropySize } from 'lucia';
+import { generateIdFromEntropySize, type Session, type User } from 'lucia';
 import { TimeSpan, createDate } from 'oslo';
 import { eq } from 'drizzle-orm';
 import db from '../../db';
@@ -14,4 +14,15 @@ export async function createPasswordResetToken(userId: string): Promise<string> 
 		expires_at: createDate(new TimeSpan(2, 'h')),
 	});
 	return tokenId;
+}
+
+/**
+ * Checks if the user is fully authenticated.
+ *
+ * @param user - The user object.
+ * @param session - The session object.
+ * @returns True if the user is fully authenticated, otherwise false.
+ */
+export function userFullyAuthenticated(user: User | null, session: Session | null) {
+	return user && session && (!session.isTwoFactorAuthEnabled || session.isTwoFactorAuthenticated);
 }

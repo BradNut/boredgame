@@ -6,11 +6,12 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { PageServerLoad } from '../../../$types';
 import { recovery_codes, users } from '$db/schema';
+import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
-	const user = event.locals.user;
-
-	if (!user) {
+	const { locals } = event;
+	const { user, session } = locals;
+	if (userFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 

@@ -7,11 +7,13 @@ import { modifyListGameSchema } from '$lib/validations/zod-schemas';
 import db from '../../../../../db';
 import { notSignedInMessage } from '$lib/flashMessages.js';
 import { games, wishlist_items, wishlists } from '$db/schema';
+import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
 	const { params, locals } = event;
+	const { user, session } = locals;
 	const { id } = params;
-	if (!locals.user) {
+	if (userFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
@@ -41,13 +43,13 @@ export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
+		}
 		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		try {
-			if (!locals.user) {
-				redirect(302, '/login', notSignedInMessage, event);
-			}
-
 			const game = await db.query.games.findFirst({
 				where: eq(games.id, form.data.id),
 			});
@@ -89,28 +91,31 @@ export const actions: Actions = {
 	// Create new wishlist
 	create: async (event) => {
 		const { locals } = event;
-		if (!locals.user) {
-			redirect(302, '/login', notSignedInMessage, event);
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
 	delete: async ({ locals }) => {
-		if (!locals.user) {
-			redirect(302, '/login');
+		const { locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
+		}
 		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		try {
-			if (!locals.user) {
-				redirect(302, '/login', notSignedInMessage, event);
-			}
-
 			const game = await db.query.games.findFirst({
 				where: eq(games.id, form.data.id),
 			});

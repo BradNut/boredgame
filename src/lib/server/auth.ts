@@ -20,6 +20,7 @@ export const lucia = new Lucia(adapter, {
 		return {
 			ipCountry: attributes.ip_country,
 			ipAddress: attributes.ip_address,
+			isTwoFactorAuthEnabled: attributes.twoFactorAuthEnabled,
 			isTwoFactorAuthenticated: attributes.isTwoFactorAuthenticated,
 		};
 	},
@@ -54,6 +55,7 @@ declare module 'lucia' {
 	interface DatabaseSessionAttributes {
 		ip_country: string;
 		ip_address: string;
+		twoFactorAuthEnabled: boolean;
 		isTwoFactorAuthenticated: boolean;
 	}
 	interface DatabaseUserAttributes {

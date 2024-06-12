@@ -8,16 +8,16 @@ import db from '../../../../../db';
 import { notSignedInMessage } from '$lib/flashMessages.js';
 import { collections, games, collection_items } from '$db/schema';
 import { search_schema } from '$lib/zodValidation';
-import type { UICollection } from '$lib/types';
+import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
 	const { locals, params, url } = event;
-	const { user } = locals;
+	const { user, session } = locals;
 	const { id } = params;
-	if (!user) {
+
+	if (userFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
-
 	const searchParams = Object.fromEntries(url?.searchParams);
 	console.log('searchParams', searchParams);
 	const q = searchParams?.q;
@@ -102,11 +102,13 @@ export async function load(event) {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const form = await superValidate(event, zod(modifyListGameSchema));
-
-		if (!event.locals.user) {
-			return fail(401, {});
+		const { locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
 		}
+
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		const user = event.locals.user;
 		const game = await db.query.games.findFirst({
@@ -148,15 +150,19 @@ export const actions: Actions = {
 		}
 	},
 	// Create new wishlist
-	create: async ({ locals }) => {
-		if (!locals.user) {
+	create: async (event) => {
+		const { locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
 			return fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
-	delete: async ({ locals }) => {
-		if (!locals.user) {
+	delete: async (event) => {
+		const { locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
 			return fail(401);
 		}
 		return error(405, 'Method not allowed');
@@ -164,11 +170,11 @@ export const actions: Actions = {
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event;
-		const form = await superValidate(event, zod(modifyListGameSchema));
-
-		if (!locals.user) {
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
 			return fail(401);
 		}
+		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		const game = await db.query.games.findFirst({
 			where: eq(games.id, form.data.id),

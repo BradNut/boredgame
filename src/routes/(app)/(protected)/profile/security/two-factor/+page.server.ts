@@ -13,13 +13,15 @@ import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/acco
 import { notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../../../db';
 import { recovery_codes, users } from '$db/schema';
+import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
 	const addTwoFactorForm = await superValidate(event, zod(addTwoFactorSchema));
 	const removeTwoFactorForm = await superValidate(event, zod(removeTwoFactorSchema));
-	const user = event.locals.user;
 
-	if (!user) {
+	const { locals } = event;
+	const { user, session } = locals;
+	if (userFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
@@ -67,6 +69,12 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	enableTwoFactor: async (event) => {
+		const { params, locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
+		}
+
 		const addTwoFactorForm = await superValidate(event, zod(addTwoFactorSchema));
 
 		if (!addTwoFactorForm.valid) {

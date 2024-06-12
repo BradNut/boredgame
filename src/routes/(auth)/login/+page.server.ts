@@ -10,7 +10,7 @@ import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { signInSchema } from '$lib/validations/auth';
-import { users, recovery_codes } from '$db/schema';
+import { users, recoveryCodes, type Users } from '$db/schema';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -49,10 +49,14 @@ export const actions: Actions = {
 
 		let session;
 		let sessionCookie;
-		const user = await db.query.users.findFirst({
+		const user: Users | undefined = await db.query.users.findFirst({
 			where: eq(users.username, form.data.username),
 		});
 
+		if (!user) {
+			form.data.password = '';
+			return setError(form, 'username', 'Your username or password is incorrect.');
+		}
 
 		try {
 			const password = form.data.password;
@@ -76,6 +80,10 @@ export const actions: Actions = {
 			session = await lucia.createSession(user.id, {
 				ip_country: locals.country,
 				ip_address: locals.ip,
+				twoFactorAuthEnabled:
+					user?.two_factor_enabled &&
+					user?.two_factor_secret !== null &&
+					user?.two_factor_secret !== '',
 				isTwoFactorAuthenticated: false,
 			});
 			console.log('logging in session', session);
@@ -97,7 +105,11 @@ export const actions: Actions = {
 		form.data.username = '';
 		form.data.password = '';
 
-		if (user?.two_factor_enabled && user?.two_factor_secret) {
+		if (
+			user?.two_factor_enabled &&
+			user?.two_factor_secret !== null &&
+			user?.two_factor_secret !== ''
+		) {
 			console.log('redirecting to TOTP page');
 			const message = { type: 'success', message: 'Please enter your TOTP code.' } as const;
 			redirect(302, '/totp', message, event);

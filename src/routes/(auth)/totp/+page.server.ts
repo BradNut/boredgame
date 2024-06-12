@@ -12,21 +12,30 @@ import { lucia } from '$lib/server/auth';
 import { totpSchema } from '$lib/validations/auth';
 import { users, recovery_codes } from '$db/schema';
 import type { PageServerLoad } from './$types';
+import { notSignedInMessage } from '$lib/flashMessages';
 
 export const load: PageServerLoad = async (event) => {
-	if (event.locals.user) {
-		const user = event.locals.user;
+	const { user, session } = event.locals;
+
+	if (!user || !session) {
+		redirect(302, '/login', notSignedInMessage, event);
+	}
+
+	if (user && session) {
 		const dbUser = await db.query.users.findFirst({
 			where: eq(users.username, user.username),
 		});
 
-		const session = event.locals.session;
 		const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
 
 		console.log('session', session);
 		console.log('isTwoFactorAuthenticated', isTwoFactorAuthenticated);
 
-		if (isTwoFactorAuthenticated && dbUser?.two_factor_enabled && dbUser?.two_factor_secret) {
+		if (
+			isTwoFactorAuthenticated &&
+			dbUser?.two_factor_enabled &&
+			dbUser?.two_factor_secret !== ''
+		) {
 			const message = { type: 'success', message: 'You are already signed in' } as const;
 			throw redirect('/', message, event);
 		}
@@ -68,7 +77,11 @@ export const actions: Actions = {
 
 		const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
 
-		if (isTwoFactorAuthenticated && dbUser?.two_factor_enabled && dbUser?.two_factor_secret) {
+		if (
+			isTwoFactorAuthenticated &&
+			dbUser?.two_factor_enabled &&
+			dbUser?.two_factor_secret !== ''
+		) {
 			const message = { type: 'success', message: 'You are already signed in' } as const;
 			throw redirect('/', message, event);
 		}
@@ -86,12 +99,12 @@ export const actions: Actions = {
 		try {
 			const totpToken = form?.data?.totpToken;
 
-			if (dbUser?.two_factor_enabled && dbUser?.two_factor_secret && !totpToken) {
+			if (dbUser?.two_factor_enabled && dbUser?.two_factor_secret !== '' && !totpToken) {
 				return fail(400, {
 					form,
 				});
-			} else if (dbUser?.two_factor_enabled && dbUser?.two_factor_secret && totpToken) {
-				console.log('totpToken',totpToken);
+			} else if (dbUser?.two_factor_enabled && dbUser?.two_factor_secret !== '' && totpToken) {
+				console.log('totpToken', totpToken);
 				const validOTP = await new TOTPController().verify(
 					totpToken,
 					decodeHex(dbUser.two_factor_secret),
@@ -113,6 +126,7 @@ export const actions: Actions = {
 			const newSession = await lucia.createSession(dbUser.id, {
 				ip_country: locals.country,
 				ip_address: locals.ip,
+				twoFactorAuthEnabled: true,
 				isTwoFactorAuthenticated: true,
 			});
 			console.log('logging in session', newSession);

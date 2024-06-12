@@ -5,11 +5,14 @@ import { superValidate } from 'sveltekit-superforms/server';
 import db from '../../../../../db';
 import { modifyListGameSchema } from '$lib/validations/zod-schemas';
 import { games, wishlist_items, wishlists } from '$db/schema';
+import { userFullyAuthenticated } from '$lib/server/auth-utils';
+import { notSignedInMessage } from '$lib/flashMessages';
 
-export async function load({ params, locals }) {
-	const user = locals.user;
-	if (!user) {
-		redirect(302, '/login');
+export async function load(event) {
+	const { params, locals } = event;
+	const { user, session } = locals;
+	if (userFullyAuthenticated(user, session)) {
+		redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	try {
@@ -40,6 +43,10 @@ export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { params, locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
+		}
 		const form = await superValidate(event, zod(modifyListGameSchema));
 
 		if (!locals.user) {
@@ -92,21 +99,27 @@ export const actions: Actions = {
 		};
 	},
 	// Create new wishlist
-	create: async ({ locals }) => {
-		if (!locals.user) {
-			throw fail(401);
+	create: async (event) => {
+		const { locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
 		}
 	},
 	// Delete a wishlist
-	delete: async ({ locals }) => {
-		if (!locals.user) {
-			throw fail(401);
+	delete: async (event) => {
+		const { locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
 		}
 	},
 	// Remove game from a wishlist
-	remove: async ({ locals }) => {
-		if (!locals.user) {
-			throw fail(401);
+	remove: async (event) => {
+		const { locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			return fail(401);
 		}
 	},
 };

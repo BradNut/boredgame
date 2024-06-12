@@ -2,9 +2,12 @@ import { fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import db from '../../../../db';
 import { wishlists } from '$db/schema';
+import { userFullyAuthenticated } from '$lib/server/auth-utils';
+import { notSignedInMessage } from '$lib/flashMessages';
 
 export async function load({ locals }) {
-	if (!locals.user) {
+	const { user, session } = locals;
+	if (userFullyAuthenticated(user, session)) {
 		throw fail(401);
 	}
 

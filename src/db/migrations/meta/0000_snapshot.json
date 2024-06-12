@@ -1,5 +1,5 @@
 {
-  "id": "9622fc3a-51a1-4f66-8535-fd1ceaf46fc2",
+  "id": "d62b05e0-f6b5-4fad-b160-bb378e0ad3a0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -403,13 +403,13 @@
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "slug": {
           "name": "slug",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "description": {
           "name": "description",
@@ -503,7 +503,7 @@
           "name": "search_index",
           "columns": [
             {
-              "expression": "(\n\t\t\t\t\t\tsetweight(to_tsvector('english', \"name\"), 'A') ||\n\t\t\t\t\t\tsetweight(to_tsvector('english', \"slug\"), 'B')\n\t\t\t\t\t)",
+              "expression": "(\n        setweight(to_tsvector('english', \"name\"), 'A') ||\n        setweight(to_tsvector('english', \"slug\"), 'B')\n      )",
               "asc": true,
               "isExpression": true,
               "nulls": "last"
@@ -1130,6 +1130,20 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "two_factor_auth_enabled": {
+          "name": "two_factor_auth_enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "is_two_factor_authenticated": {
+          "name": "is_two_factor_authenticated",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         }
       },
       "indexes": {},
