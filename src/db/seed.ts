@@ -1,11 +1,10 @@
 import { Table, getTableName, sql } from 'drizzle-orm';
-import { Argon2id } from 'oslo/password';
-import { ADMIN_USERNAME, DB_SEEDING } from '$env/static/private';
-import { db } from '../db';
+import env from '../env';
+import { db, pool } from '$db';
 import * as schema from './schema';
 import * as seeds from './seeds';
 
-if (!DB_SEEDING) {
+if (!env.DB_SEEDING) {
 	throw new Error('You must set DB_SEEDING to "true" when running seeds');
 }
 
@@ -43,66 +42,7 @@ for (const table of [
 }
 
 await seeds.roles(db);
-
-await connection.end();
-
-console.log('Creating roles ...');
-const adminRole = await db
-	.insert(schema.roles)
-	.values([{ name: 'admin' }])
-	.onConflictDoNothing()
-	.returning();
-const userRole = await db
-	.insert(schema.roles)
-	.values([{ name: 'user' }])
-	.onConflictDoNothing()
-	.returning();
-await db
-	.insert(schema.roles)
-	.values([{ name: 'editor' }])
-	.onConflictDoNothing();
-await db
-	.insert(schema.roles)
-	.values([{ name: 'moderator' }])
-	.onConflictDoNothing();
-console.log('Roles created.');
-
-console.log('Admin Role: ', adminRole);
-
-const adminUser = await db
-	.insert(schema.users)
-	.values({
-		username: `${ADMIN_USERNAME}`,
-		email: '',
-		hashed_password: await new Argon2id().hash(`${process.env.ADMIN_PASSWORD}`),
-		first_name: 'Brad',
-		last_name: 'S',
-		verified: true,
-	})
-	.returning()
-	.onConflictDoNothing();
-
-console.log('Admin user created.', adminUser);
-
-await db
-	.insert(schema.user_roles)
-	.values({
-		user_id: adminUser[0].id,
-		role_id: adminRole[0].id,
-	})
-	.onConflictDoNothing();
-
-console.log('Admin user given admin role.');
-
-await db
-	.insert(schema.user_roles)
-	.values({
-		user_id: adminUser[0].id,
-		role_id: userRole[0].id,
-	})
-	.onConflictDoNothing();
-
-console.log('Admin user given user role.');
+await seeds.users(db);
 
 await pool.end();
 process.exit();

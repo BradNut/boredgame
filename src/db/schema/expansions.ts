@@ -30,3 +30,5 @@ export const expansion_relations = relations(expansions, ({ one }) => ({
 		references: [games.id],
 	}),
 }));
+
+export default expansions;

@@ -23,7 +23,7 @@ export {
 export { default as externalIds, type ExternalIds, type ExternalIdType } from './externalIds';
 export { default as games, gameRelations, type Games } from './games';
 export { default as gamesToExternalIds } from './gamesToExternalIds';
-export { default as expansions, expansions_relations, type Expansions } from './expansions';
+export { default as expansions, expansion_relations, type Expansions } from './expansions';
 export { default as publishers, publishers_relations, type Publishers } from './publishers';
 export { default as publishers_to_games, publishers_to_games_relations } from './publishersToGames';
 export { default as publishersToExternalIds } from './publishersToExternalIds';
