@@ -20,7 +20,7 @@ export {
 	wishlist_item_relations,
 	type WishlistItems,
 } from './wishlistItems';
-export { default as externalIds, type ExternalIds, type ExternalIdType } from './externalIds';
+export { default as externalIds, type ExternalIds, externalIdType } from './externalIds';
 export { default as games, gameRelations, type Games } from './games';
 export { default as gamesToExternalIds } from './gamesToExternalIds';
 export { default as expansions, expansion_relations, type Expansions } from './expansions';

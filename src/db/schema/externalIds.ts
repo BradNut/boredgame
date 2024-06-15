@@ -2,7 +2,7 @@ import { pgEnum, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import type { InferSelectModel } from 'drizzle-orm';
 
-export const ExternalIdType = pgEnum('external_id_type', [
+export const externalIdType = pgEnum('external_id_type', [
 	'game',
 	'category',
 	'mechanic',
@@ -16,7 +16,7 @@ const externalIds = pgTable('external_ids', {
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
-	type: ExternalIdType('type').notNull(),
+	type: externalIdType('type'),
 	externalId: text('external_id').notNull(),
 });
 

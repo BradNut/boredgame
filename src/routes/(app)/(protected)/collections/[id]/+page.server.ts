@@ -8,14 +8,14 @@ import db from '../../../../../db';
 import { notSignedInMessage } from '$lib/flashMessages.js';
 import { collections, games, collection_items } from '$db/schema';
 import { search_schema } from '$lib/zodValidation';
-import { userFullyAuthenticated } from '$lib/server/auth-utils';
+import { userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
 	const { locals, params, url } = event;
 	const { user, session } = locals;
 	const { id } = params;
 
-	if (userFullyAuthenticated(user, session)) {
+	if (userNotFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 	const searchParams = Object.fromEntries(url?.searchParams);
@@ -104,7 +104,7 @@ export const actions: Actions = {
 	add: async (event) => {
 		const { locals } = event;
 		const { user, session } = locals;
-		if (userFullyAuthenticated(user, session)) {
+		if (userNotFullyAuthenticated(user, session)) {
 			return fail(401);
 		}
 
@@ -153,7 +153,7 @@ export const actions: Actions = {
 	create: async (event) => {
 		const { locals } = event;
 		const { user, session } = locals;
-		if (userFullyAuthenticated(user, session)) {
+		if (userNotFullyAuthenticated(user, session)) {
 			return fail(401);
 		}
 		return error(405, 'Method not allowed');
@@ -162,7 +162,7 @@ export const actions: Actions = {
 	delete: async (event) => {
 		const { locals } = event;
 		const { user, session } = locals;
-		if (userFullyAuthenticated(user, session)) {
+		if (userNotFullyAuthenticated(user, session)) {
 			return fail(401);
 		}
 		return error(405, 'Method not allowed');
@@ -171,7 +171,7 @@ export const actions: Actions = {
 	remove: async (event) => {
 		const { locals } = event;
 		const { user, session } = locals;
-		if (userFullyAuthenticated(user, session)) {
+		if (userNotFullyAuthenticated(user, session)) {
 			return fail(401);
 		}
 		const form = await superValidate(event, zod(modifyListGameSchema));

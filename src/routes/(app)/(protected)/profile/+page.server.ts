@@ -9,16 +9,14 @@ import { notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../db';
 import type { PageServerLoad } from './$types';
 import { users } from '$db/schema';
-import { userFullyAuthenticated } from '$lib/server/auth-utils';
+import { userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event;
 	const { user, session } = locals;
-	if (userFullyAuthenticated(user, session)) {
+	if (userNotFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
-
-	const { user } = event.locals;
 
 	const dbUser = await db.query.users.findFirst({
 		where: eq(users.id, user.id),

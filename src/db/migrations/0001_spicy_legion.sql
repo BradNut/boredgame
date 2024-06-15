@@ -1,0 +1,1 @@
+ALTER TABLE "external_ids" ALTER COLUMN "type" DROP NOT NULL;

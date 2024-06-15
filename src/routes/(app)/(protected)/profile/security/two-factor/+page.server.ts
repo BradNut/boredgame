@@ -12,8 +12,8 @@ import type { PageServerLoad } from '../../$types';
 import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../../../db';
-import { recovery_codes, users } from '$db/schema';
-import { userFullyAuthenticated } from '$lib/server/auth-utils';
+import { recoveryCodes, users } from '$db/schema';
+import { userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
 	const addTwoFactorForm = await superValidate(event, zod(addTwoFactorSchema));
@@ -21,7 +21,7 @@ export const load: PageServerLoad = async (event) => {
 
 	const { locals } = event;
 	const { user, session } = locals;
-	if (userFullyAuthenticated(user, session)) {
+	if (userNotFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
@@ -69,9 +69,9 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	enableTwoFactor: async (event) => {
-		const { params, locals } = event;
+		const { locals } = event;
 		const { user, session } = locals;
-		if (userFullyAuthenticated(user, session)) {
+		if (userNotFullyAuthenticated(user, session)) {
 			return fail(401);
 		}
 
@@ -90,8 +90,6 @@ export const actions: Actions = {
 		if (!event.locals.session) {
 			return fail(401);
 		}
-
-		const user = event.locals.user;
 
 		const dbUser = await db.query.users.findFirst({
 			where: eq(users.id, user.id),
@@ -187,7 +185,7 @@ export const actions: Actions = {
 			.update(users)
 			.set({ two_factor_enabled: false, two_factor_secret: null })
 			.where(eq(users.id, user.id));
-		await db.delete(recovery_codes).where(eq(recovery_codes.userId, user.id));
+		await db.delete(recoveryCodes).where(eq(recoveryCodes.userId, user.id));
 
 		setFlash({ type: 'success', message: 'Two-Factor Authentication has been disabled.' }, cookies);
 		return {

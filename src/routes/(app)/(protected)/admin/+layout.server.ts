@@ -3,12 +3,12 @@ import { forbiddenMessage, notSignedInMessage } from '$lib/flashMessages';
 import { eq } from 'drizzle-orm';
 import db from '../../../../db';
 import { user_roles } from '$db/schema';
-import { userFullyAuthenticated } from '$lib/server/auth-utils';
+import { userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load = loadFlash(async (event) => {
 	const { locals } = event;
 	const { user, session } = locals;
-	if (userFullyAuthenticated(user, session)) {
+	if (userNotFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 

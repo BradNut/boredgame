@@ -1,6 +1,6 @@
 {
-  "id": "7871a9e4-6916-4122-b200-42a9f21d4c8d",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "43322acf-8c50-4c6d-9575-df44978be5a0",
+  "prevId": "c4b2e9ac-5e60-4de1-b860-eb11e4ca6bd6",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -444,7 +444,7 @@
           "type": "external_id_type",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "external_id": {
           "name": "external_id",
@@ -1621,7 +1621,20 @@
       }
     }
   },
-  "enums": {},
+  "enums": {
+    "public.external_id_type": {
+      "name": "external_id_type",
+      "schema": "public",
+      "values": [
+        "game",
+        "category",
+        "mechanic",
+        "publisher",
+        "designer",
+        "artist"
+      ]
+    }
+  },
   "schemas": {},
   "_meta": {
     "columns": {},

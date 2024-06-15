@@ -5,13 +5,13 @@ import { alphabet, generateRandomString } from 'oslo/crypto';
 import { redirect } from 'sveltekit-flash-message/server';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { PageServerLoad } from '../../../$types';
-import { recovery_codes, users } from '$db/schema';
-import { userFullyAuthenticated } from '$lib/server/auth-utils';
+import { recoveryCodes, users } from '$db/schema';
+import { userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event;
 	const { user, session } = locals;
-	if (userFullyAuthenticated(user, session)) {
+	if (userNotFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
@@ -20,19 +20,19 @@ export const load: PageServerLoad = async (event) => {
 	});
 
 	if (dbUser?.two_factor_enabled) {
-		const recoveryCodes = await db.query.recovery_codes.findMany({
-			where: eq(recovery_codes.userId, user.id),
+		const dbRecoveryCodes = await db.query.recoveryCodes.findMany({
+			where: eq(recoveryCodes.userId, user.id),
 		});
 
-		if (recoveryCodes.length === 0) {
-			const recoveryCodes = Array.from({ length: 5 }, () =>
+		if (dbRecoveryCodes.length === 0) {
+			const createdRecoveryCodes = Array.from({ length: 5 }, () =>
 				generateRandomString(10, alphabet('A-Z', '0-9')),
 			);
-			if (recoveryCodes) {
-				for (const code of recoveryCodes) {
+			if (createdRecoveryCodes) {
+				for (const code of createdRecoveryCodes) {
 					const hashedCode = await new Argon2id().hash(code);
 					console.log('Inserting recovery code', code, hashedCode);
-					await db.insert(recovery_codes).values({
+					await db.insert(recoveryCodes).values({
 						userId: user.id,
 						code: hashedCode,
 					});

@@ -11,13 +11,13 @@ import { lucia } from '$lib/server/auth.js';
 import { users } from '$db/schema';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { Cookie } from 'lucia';
-import { userFullyAuthenticated } from '$lib/server/auth-utils';
+import { userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
 	const form = await superValidate(event, zod(changeUserPasswordSchema));
 	const { locals } = event;
 	const { user, session } = locals;
-	if (userFullyAuthenticated(user, session)) {
+	if (userNotFullyAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
@@ -35,7 +35,7 @@ export const actions: Actions = {
 	default: async (event) => {
 		const { locals } = event;
 		const { user, session } = locals;
-		if (userFullyAuthenticated(user, session)) {
+		if (userNotFullyAuthenticated(user, session)) {
 			return fail(401);
 		}
 

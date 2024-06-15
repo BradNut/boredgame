@@ -41,6 +41,16 @@ CREATE TABLE IF NOT EXISTS "collections" (
 	CONSTRAINT "collections_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "expansions" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"cuid" text,
+	"base_game_id" uuid NOT NULL,
+	"game_id" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "expansions_cuid_unique" UNIQUE("cuid")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "external_ids" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"cuid" text,
@@ -251,6 +261,18 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ ALTER TABLE "expansions" ADD CONSTRAINT "expansions_base_game_id_games_id_fk" FOREIGN KEY ("base_game_id") REFERENCES "public"."games"("id") ON DELETE restrict ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "expansions" ADD CONSTRAINT "expansions_game_id_games_id_fk" FOREIGN KEY ("game_id") REFERENCES "public"."games"("id") ON DELETE restrict ON UPDATE cascade;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  ALTER TABLE "games_to_external_ids" ADD CONSTRAINT "games_to_external_ids_game_id_games_id_fk" FOREIGN KEY ("game_id") REFERENCES "public"."games"("id") ON DELETE restrict ON UPDATE cascade;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -359,6 +381,6 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "search_index" ON "games" USING gin ((
-        setweight(to_tsvector('english', "name"), 'A') ||
+				setweight(to_tsvector('english', "name"), 'A') ||
         setweight(to_tsvector('english', "slug"), 'B')
       ));
