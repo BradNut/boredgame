@@ -13,7 +13,7 @@ import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/acco
 import { notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../../../db';
 import { recoveryCodes, users } from '$db/schema';
-import { userNotFullyAuthenticated } from '$lib/server/auth-utils';
+import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
 	const addTwoFactorForm = await superValidate(event, zod(addTwoFactorSchema));
@@ -21,12 +21,12 @@ export const load: PageServerLoad = async (event) => {
 
 	const { locals } = event;
 	const { user, session } = locals;
-	if (userNotFullyAuthenticated(user, session)) {
+	if (userNotAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	const dbUser = await db.query.users.findFirst({
-		where: eq(users.id, user.id),
+		where: eq(users.id, user!.id!),
 	});
 
 	if (dbUser?.two_factor_enabled) {
@@ -46,10 +46,10 @@ export const load: PageServerLoad = async (event) => {
 			two_factor_secret: encodeHex(twoFactorSecret),
 			two_factor_enabled: false,
 		})
-		.where(eq(users.id, user.id));
+		.where(eq(users.id, user!.id!));
 
 	const issuer = 'bored-game';
-	const accountName = user.email || user.username;
+	const accountName = user!.email! || user!.username!;
 	// pass the website's name and the user identifier (e.g. email, username)
 	const totpUri = createTOTPKeyURI(issuer, accountName, twoFactorSecret);
 
@@ -71,7 +71,7 @@ export const actions: Actions = {
 	enableTwoFactor: async (event) => {
 		const { locals } = event;
 		const { user, session } = locals;
-		if (userNotFullyAuthenticated(user, session)) {
+		if (userNotAuthenticated(user, session)) {
 			return fail(401);
 		}
 

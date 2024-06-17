@@ -3,8 +3,12 @@ import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import db from '../../db';
 import { collections, wishlists } from '$db/schema';
+import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
-export const load: PageServerLoad = async ({ locals, url }) => {
+export const load: PageServerLoad = async (event) => {
+	const { locals, url } = event;
+	const { user, session } = locals;
+
 	const image = {
 		url: `${
 			new URL(url.pathname, url.origin).href
@@ -37,21 +41,21 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 		},
 	});
 
-	const user = locals.user;
-	if (user) {
+	if (userFullyAuthenticated(user, session)) {
+		console.log('Sending back user details');
 		const userWishlists = await db.query.wishlists.findMany({
 			columns: {
 				cuid: true,
 				name: true,
 			},
-			where: eq(wishlists.user_id, user.id),
+			where: eq(wishlists.user_id, user!.id!),
 		});
 		const userCollection = await db.query.collections.findMany({
 			columns: {
 				cuid: true,
 				name: true,
 			},
-			where: eq(collections.user_id, user.id),
+			where: eq(collections.user_id, user!.id!),
 		});
 
 		console.log('Wishlists', userWishlists);
@@ -59,5 +63,5 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 		return { metaTagsChild: metaTags, user, wishlists: userWishlists, collections: userCollection };
 	}
 
-	return { metaTagsChild: metaTags, user: locals.user, wishlists: [], collections: [] };
+	return { metaTagsChild: metaTags, user: null, wishlists: [], collections: [] };
 };

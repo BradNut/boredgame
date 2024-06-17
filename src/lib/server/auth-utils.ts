@@ -24,9 +24,13 @@ export async function createPasswordResetToken(userId: string): Promise<string> 
  * @returns True if the user is not fully authenticated, otherwise false.
  */
 export function userNotFullyAuthenticated(user: User | null, session: Session | null) {
-	console.log(
-		'userNotFullyAuthenticated?',
-		user && session && (!session.isTwoFactorAuthEnabled || session.isTwoFactorAuthenticated),
-	);
-	return !user || !session || (session.isTwoFactorAuthEnabled && !session.isTwoFactorAuthenticated);
+	return user && session && session.isTwoFactorAuthEnabled && !session.isTwoFactorAuthenticated;
+}
+
+export function userNotAuthenticated(user: User | null, session: Session | null) {
+	return !user || !session || userNotFullyAuthenticated(user, session);
+}
+
+export function userFullyAuthenticated(user: User | null, session: Session | null) {
+	return !userNotAuthenticated(user, session);
 }

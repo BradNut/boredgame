@@ -1,8 +1,6 @@
 import { fail, error, type Actions } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
-import { decodeHex } from 'oslo/encoding';
-import { TOTPController } from 'oslo/otp';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
@@ -10,15 +8,25 @@ import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { signInSchema } from '$lib/validations/auth';
-import { users, recoveryCodes, type Users } from '$db/schema';
+import { users, type Users } from '$db/schema';
 import type { PageServerLoad } from './$types';
+import { userFullyAuthenticated, userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
-	if (event.locals.user) {
+	const { locals, cookies } = event;
+	const { user, session } = event.locals;
+
+	if (userFullyAuthenticated(user, session)) {
 		const message = { type: 'success', message: 'You are already signed in' } as const;
 		throw redirect('/', message, event);
+	} else if (userNotFullyAuthenticated(user, session)) {
+		await lucia.invalidateSession(locals.session!.id!);
+		const sessionCookie = lucia.createBlankSessionCookie();
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes,
+		});
 	}
-
 	const form = await superValidate(event, zod(signInSchema));
 
 	return {

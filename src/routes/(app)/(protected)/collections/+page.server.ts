@@ -3,16 +3,15 @@ import { and, eq } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms/server';
 import { zod } from 'sveltekit-superforms/adapters';
 import { redirect } from 'sveltekit-flash-message/server';
-import { modifyListGameSchema, type ListGame } from '$lib/validations/zod-schemas';
-import { search_schema } from '$lib/zodValidation.js';
+import { modifyListGameSchema } from '$lib/validations/zod-schemas';
 import db from '../../../../db';
 import { collection_items, collections, games } from '$db/schema';
 import { notSignedInMessage } from '$lib/flashMessages';
-import { userNotFullyAuthenticated } from '$lib/server/auth-utils';
+import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
 	const { user, session } = event.locals;
-	if (userNotFullyAuthenticated(user, session)) {
+	if (userNotAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
@@ -23,7 +22,7 @@ export async function load(event) {
 				name: true,
 				created_at: true,
 			},
-			where: eq(collections.user_id, user.id),
+			where: eq(collections.user_id, user!.id!),
 		});
 		console.log('collections', userCollections);
 
