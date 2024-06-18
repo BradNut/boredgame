@@ -92,7 +92,7 @@ export const actions: Actions = {
 		}
 
 		const dbUser = await db.query.users.findFirst({
-			where: eq(users.id, user.id),
+			where: eq(users.id, user!.id!),
 		});
 
 		if (!dbUser?.hashed_password) {
@@ -136,7 +136,7 @@ export const actions: Actions = {
 			return setError(addTwoFactorForm, 'two_factor_code', 'Invalid code');
 		}
 
-		await db.update(users).set({ two_factor_enabled: true }).where(eq(users.id, user.id));
+		await db.update(users).set({ two_factor_enabled: true }).where(eq(users.id, user!.id!));
 
 		redirect(302, '/profile/security/two-factor/recovery-codes');
 	},

@@ -48,8 +48,8 @@ export function mapAPIGameToBoredGame(game: GameType): Games {
 	return {
 		name: game.name,
 		slug: kebabCase(game.name),
-		thumb_url: game.thumbnail,
-		image_url: game.image,
+		thumb_url: game.thumb_url,
+		image_url: game.image_url,
 		year_published: game.year_published,
 		min_players: game.min_players,
 		max_players: game.max_players,

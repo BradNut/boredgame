@@ -1,7 +1,8 @@
-import { type Actions, fail, redirect } from '@sveltejs/kit';
+import { type Actions, fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
+import { redirect } from 'sveltekit-flash-message/server';
 import db from '../../../../../db';
 import { modifyListGameSchema } from '$lib/validations/zod-schemas';
 import { games, wishlist_items, wishlists } from '$db/schema';

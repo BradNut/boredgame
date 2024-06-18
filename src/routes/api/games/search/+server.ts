@@ -23,8 +23,6 @@ export const GET = async ({ url, locals }) => {
 		error(400, 'Invalid request');
 	}
 
-	const { q, limit, skip, order, exact } = searchGames;
-
 	const q = searchParams?.q?.trim() || '';
 	const limit = parseInt(searchParams?.limit) || 10;
 	const skip = parseInt(searchParams?.skip) || 0;

@@ -12,8 +12,8 @@ export const load = loadFlash(async (event) => {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const userRoles = await db.query.userRoles.findMany({
-		where: eq(user_roles.user_id, user!.id!),
+	const dbUserRoles = await db.query.userRoles.findMany({
+		where: eq(userRoles.user_id, user!.id!),
 		with: {
 			role: {
 				columns: {
@@ -23,8 +23,8 @@ export const load = loadFlash(async (event) => {
 		},
 	});
 
-	const containsAdminRole = userRoles.some((userRoles) => user_role?.role?.name === 'admin');
-	if (!userRoles?.length || !containsAdminRole) {
+	const containsAdminRole = dbUserRoles.some((userRole) => userRole?.role?.name === 'admin');
+	if (!dbUserRoles?.length || !containsAdminRole) {
 		console.log('Not an admin');
 		redirect(302, '/', forbiddenMessage, event);
 	}

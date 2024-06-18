@@ -116,6 +116,8 @@ export const actions: Actions = {
 			session = await lucia.createSession(user[0].id, {
 				ip_country: event.locals.ip,
 				ip_address: event.locals.country,
+				twoFactorAuthEnabled: false,
+				isTwoFactorAuthenticated: false,
 			});
 			sessionCookie = lucia.createSessionCookie(session.id);
 		} catch (e: any) {

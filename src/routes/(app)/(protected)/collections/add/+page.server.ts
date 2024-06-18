@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect } from 'sveltekit-flash-message/server';
 import { notSignedInMessage } from '$lib/flashMessages';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 

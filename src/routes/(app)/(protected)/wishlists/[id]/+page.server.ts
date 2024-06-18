@@ -1,4 +1,4 @@
-import { error, type Actions } from '@sveltejs/kit';
+import { error, type Actions, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
@@ -17,11 +17,9 @@ export async function load(event) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	console.log('Wishlist load User id', locals.user.id);
-
 	try {
 		const wishlist = await db.query.wishlists.findMany({
-			where: and(eq(wishlists.user_id, locals.user.id), eq(wishlists.cuid, id)),
+			where: and(eq(wishlists.user_id, user!.id!), eq(wishlists.cuid, id)),
 		});
 
 		if (!wishlist) {
@@ -66,7 +64,7 @@ export const actions: Actions = {
 
 			if (game) {
 				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, locals.user.id),
+					where: eq(wishlists.user_id, user!.id!),
 				});
 
 				if (!wishlist) {
@@ -98,7 +96,7 @@ export const actions: Actions = {
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
-	delete: async ({ locals }) => {
+	delete: async (event) => {
 		const { locals } = event;
 		const { user, session } = locals;
 		if (userNotAuthenticated(user, session)) {
@@ -132,7 +130,7 @@ export const actions: Actions = {
 
 			if (game) {
 				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, locals.user.id),
+					where: eq(wishlists.user_id, user!.id!),
 				});
 
 				if (!wishlist) {

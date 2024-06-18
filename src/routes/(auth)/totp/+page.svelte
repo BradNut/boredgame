@@ -12,19 +12,18 @@
 	import { boredState } from '$lib/stores/boredState.js';
 
 	export let data;
-	export let form;
 
 	const superTotpForm = superForm(data.form, {
 		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
 		onResult: () => boredState.update((n) => ({ ...n, loading: false })),
 		flashMessage: {
 			module: flashModule,
-			onError: ({ result, message }) => {
+			onError: ({ result, flashMessage }) => {
 				// Error handling for the flash message:
 				// - result is the ActionResult
 				// - message is the flash store (not the status message store)
 				const errorMessage = result.error.message
-				message.set({ type: 'error', message: errorMessage });
+				flashMessage.set({ type: 'error', message: errorMessage });
 			}
 		},
 		syncFlashMessage: false,
@@ -34,7 +33,7 @@
 		delayMs: 0,
 	});
 
-	const { form: totpForm, errors, enhance } = superTotpForm;
+	const { form: totpForm, enhance } = superTotpForm;
 </script>
 
 <svelte:head>

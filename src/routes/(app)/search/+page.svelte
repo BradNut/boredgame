@@ -1,21 +1,28 @@
 <script lang="ts">
 	import { dev } from '$app/environment';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { createToolbar, melt } from '@melt-ui/svelte';
 	import { LayoutList, LayoutGrid } from 'lucide-svelte';
 	import Game from '$components/Game.svelte';
 	import * as Pagination from "$lib/components/ui/pagination";
 	import GameSearchForm from '$components/search/GameSearchForm.svelte';
+	import { search_schema } from '$lib/zodValidation';
 
 	export let data;
 
-	const { games, totalCount } = data?.searchData;
+	const { games, totalCount } = data.searchData;
 
 	console.log('data found', data);
 	console.log('found games', games);
 	console.log('found totalCount', totalCount);
 
-	let pageSize: number = data.form.limit || 10;
+	const form = superForm(data.form, {
+		validators: zodClient(search_schema),
+	});
+
+	let pageSize: number = form.limit || 10;
 
 	const {
     elements: { root: toolbarRoot },
@@ -72,8 +79,8 @@
 							<Pagination.Ellipsis />
 						</Pagination.Item>
 					{:else}
-						<Pagination.Item isVisible={currentPage == page.value}>
-							<Pagination.Link {page} isActive={currentPage == page.value}>
+						<Pagination.Item isVisible={currentPage === page.value}>
+							<Pagination.Link {page} isActive={currentPage === page.value}>
             		{page.value}
           		</Pagination.Link>
 						</Pagination.Item>

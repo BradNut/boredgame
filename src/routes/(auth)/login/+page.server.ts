@@ -127,22 +127,3 @@ export const actions: Actions = {
 		}
 	},
 };
-
-async function checkRecoveryCode(recoveryCode: string, userId: string) {
-	const userRecoveryCodes = await db.query.recovery_codes.findMany({
-		where: and(eq(recovery_codes.used, false), eq(recovery_codes.userId, userId)),
-	});
-	for (const code of userRecoveryCodes) {
-		const validRecoveryCode = await new Argon2id().verify(code.code, recoveryCode);
-		if (validRecoveryCode) {
-			await db
-				.update(recovery_codes)
-				.set({
-					used: true,
-				})
-				.where(eq(recovery_codes.id, code.id));
-			return true;
-		}
-	}
-	return false;
-}

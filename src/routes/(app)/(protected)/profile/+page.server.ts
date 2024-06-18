@@ -19,7 +19,7 @@ export const load: PageServerLoad = async (event) => {
 	}
 
 	const dbUser = await db.query.users.findFirst({
-		where: eq(users.id, user.id),
+		where: eq(users.id, user!.id!),
 	});
 
 	const profileForm = await superValidate(zod(profileSchema), {
@@ -85,6 +85,7 @@ export const actions: Actions = {
 				})
 				.where(eq(users.id, user.id));
 		} catch (e) {
+			// @ts-expect-error
 			if (e.message === `AUTH_INVALID_USER_ID`) {
 				// invalid user id
 				console.error(e);

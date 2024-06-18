@@ -10,7 +10,6 @@ export const signUpSchema = userSchema
 		username: true,
 		password: true,
 		confirm_password: true,
-		terms: true,
 	})
 	.superRefine(({ confirm_password, password }, ctx) => {
 		refinePasswords(confirm_password, password, ctx);

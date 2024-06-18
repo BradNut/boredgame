@@ -10,7 +10,7 @@ import { games, wishlist_items, wishlists } from '$db/schema';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
-	const { params, locals } = event;
+	const { locals } = event;
 	const { user, session } = locals;
 	if (userNotAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
@@ -22,7 +22,7 @@ export async function load(event) {
 			name: true,
 			created_at: true,
 		},
-		where: eq(wishlists.user_id, user.id),
+		where: eq(wishlists.user_id, user!.id!),
 	});
 	console.log('wishlists', userWishlists);
 
@@ -63,7 +63,7 @@ export const actions: Actions = {
 
 			if (game) {
 				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, locals.user.id),
+					where: eq(wishlists.user_id, user!.id!),
 				});
 
 				if (!wishlist) {
@@ -105,7 +105,7 @@ export const actions: Actions = {
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
-		const { params, locals } = event;
+		const { locals } = event;
 		const { user, session } = locals;
 		if (userNotAuthenticated(user, session)) {
 			return fail(401);
@@ -129,7 +129,7 @@ export const actions: Actions = {
 
 			if (game) {
 				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, locals.user.id),
+					where: eq(wishlists.user_id, user!.id!),
 				});
 
 				if (!wishlist) {

@@ -39,7 +39,7 @@ export async function load(event) {
 			cuid: true,
 			name: true,
 		},
-		where: and(eq(collections.user_id, user.id), eq(collections.cuid, id)),
+		where: and(eq(collections.user_id, user!.id!), eq(collections.cuid, id)),
 	});
 	console.log('collection', collection);
 
@@ -110,7 +110,6 @@ export const actions: Actions = {
 
 		const form = await superValidate(event, zod(modifyListGameSchema));
 
-		const user = event.locals.user;
 		const game = await db.query.games.findFirst({
 			where: eq(games.id, form.data.id),
 		});
@@ -127,7 +126,7 @@ export const actions: Actions = {
 
 		try {
 			const collection = await db.query.collections.findFirst({
-				where: eq(collections.user_id, user.id),
+				where: eq(collections.user_id, user!.id!),
 			});
 
 			if (!collection) {
@@ -187,7 +186,7 @@ export const actions: Actions = {
 
 		try {
 			const collection = await db.query.collections.findFirst({
-				where: eq(collections.user_id, locals.user.id),
+				where: eq(collections.user_id, user!.id!),
 			});
 
 			if (!collection) {

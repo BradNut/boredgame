@@ -10,7 +10,7 @@ import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { totpSchema } from '$lib/validations/auth';
-import { users, recovery_codes } from '$db/schema';
+import { users, recoveryCodes } from '$db/schema';
 import type { PageServerLoad } from './$types';
 import { notSignedInMessage } from '$lib/flashMessages';
 
@@ -99,15 +99,17 @@ export const actions: Actions = {
 		try {
 			const totpToken = form?.data?.totpToken;
 
-			if (dbUser?.two_factor_enabled && dbUser?.two_factor_secret !== '' && !totpToken) {
+			const twoFactorSecretPopulated =
+				dbUser?.two_factor_secret !== '' && dbUser?.two_factor_secret !== null;
+			if (dbUser?.two_factor_enabled && !twoFactorSecretPopulated && !totpToken) {
 				return fail(400, {
 					form,
 				});
-			} else if (dbUser?.two_factor_enabled && dbUser?.two_factor_secret !== '' && totpToken) {
+			} else if (twoFactorSecretPopulated && totpToken) {
 				console.log('totpToken', totpToken);
 				const validOTP = await new TOTPController().verify(
 					totpToken,
-					decodeHex(dbUser.two_factor_secret),
+					decodeHex(dbUser.two_factor_secret ?? ''),
 				);
 				console.log('validOTP', validOTP);
 
@@ -152,17 +154,17 @@ export const actions: Actions = {
 
 async function checkRecoveryCode(recoveryCode: string, userId: string) {
 	const userRecoveryCodes = await db.query.recoveryCodes.findMany({
-		where: and(eq(recovery_codes.used, false), eq(recovery_codes.userId, userId)),
+		where: and(eq(recoveryCodes.used, false), eq(recoveryCodes.userId, userId)),
 	});
 	for (const code of userRecoveryCodes) {
 		const validRecoveryCode = await new Argon2id().verify(code.code, recoveryCode);
 		if (validRecoveryCode) {
 			await db
-				.update(recovery_codes)
+				.update(recoveryCodes)
 				.set({
 					used: true,
 				})
-				.where(eq(recovery_codes.id, code.id));
+				.where(eq(recoveryCodes.id, code.id));
 			return true;
 		}
 	}

@@ -12,19 +12,18 @@
 	import { boredState } from '$lib/stores/boredState.js';
 
 	export let data;
-	export let form;
 
 	const superLoginForm = superForm(data.form, {
 		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
   	onResult: () => boredState.update((n) => ({ ...n, loading: false })),
 		flashMessage: {
 			module: flashModule,
-			onError: ({ result, message }) => {
+			onError: ({ result, flashMessage }) => {
 				// Error handling for the flash message:
 				// - result is the ActionResult
 				// - message is the flash store (not the status message store)
 				const errorMessage = result.error.message
-				message.set({ type: 'error', message: errorMessage });
+				flashMessage.set({ type: 'error', message: errorMessage });
 			}
 		},
 		syncFlashMessage: false,
@@ -34,7 +33,7 @@
 		delayMs: 0,
 	});
 
-	const { form: loginForm, errors, enhance } = superLoginForm;
+	const { form: loginForm, enhance } = superLoginForm;
 </script>
 
 <svelte:head>
@@ -62,15 +61,6 @@
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
-		{#if form?.twoFactorRequired}
-			<Form.Field form={superLoginForm} name="totpToken">
-				<Form.Control let:attrs>
-					<Form.Label for="totpToken">Two Factor Code or Recovery Code</Form.Label>
-					<Input {...attrs} autocomplete="one-time-code" bind:value={$loginForm.totpToken} />
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-		{/if}
 		<Form.Button>Login</Form.Button>
 		<p class="px-8 text-center text-sm text-muted-foreground">
 			By clicking continue, you agree to our
@@ -86,20 +76,6 @@
 </div>
 
 <style lang="postcss">
-	.loading {
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 101;
-		display: grid;
-		place-items: center;
-		gap: 1rem;
-
-		h3 {
-			color: white;
-		}
-	}
 	.login {
 		display: flex;
 		margin-top: 1.5rem;
