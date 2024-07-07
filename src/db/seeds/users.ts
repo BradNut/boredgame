@@ -42,6 +42,16 @@ export default async function seed(db: db) {
 	console.log('Admin user created.', adminUser);
 
 	await db
+		.insert(schema.collections)
+		.values({ user_id: adminUser[0].id })
+		.onConflictDoNothing();
+
+	await db
+		.insert(schema.wishlists)
+		.values({ user_id: adminUser[0].id })
+		.onConflictDoNothing();
+
+	await db
 		.insert(schema.userRoles)
 		.values({
 			user_id: adminUser[0].id,

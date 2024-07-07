@@ -1,25 +1,15 @@
 <script lang="ts">
 	import { Image } from 'svelte-lazy-loader';
 	import { Dices, ExternalLinkIcon, MinusIcon, PlusIcon } from 'lucide-svelte';
-	import type { SavedGameType } from '$lib/types';
-	import { collectionStore } from '$lib/stores/collectionStore';
-	import { wishlistStore } from '$lib/stores/wishlistStore';
 	import type { PageData } from './$types';
 	import { Button } from '$components/ui/button';
 	import AddToList from '$components/AddToList.svelte';
 	import Badge from '$components/ui/badge/badge.svelte';
 
-	$: existsInCollection = $collectionStore.find((item: SavedGameType) => item.id === game.id);
-	$: existsInWishlist = $wishlistStore.find((item: SavedGameType) => item.id === game.id);
-	// $: collectionText = existsInCollection ? 'Remove from collection' : 'Add to collection';
-	// $: wishlistText = existsInWishlist ? 'Remove from wishlist' : 'Add to wishlist';
+	const { data } = $props();
+	const { game, user, in_collection, in_wishlist } = data;
 
-	export let data: PageData;
-	console.log('data', data);
-
-	$: ({ game, user, wishlist, collection, in_collection, in_wishlist } = data);
-
-	let seeMore: boolean = false;
+	let seeMore: boolean = $state(false);
 </script>
 
 <svelte:head>
@@ -86,7 +76,7 @@
 <section class="description" class:show={seeMore} class:hide={!seeMore} style="margin-top: 2rem;">
 	{@html game?.description}
 </section>
-<button class="btn button-icon" type="button" on:click={() => (seeMore = !seeMore)}
+<button class="btn button-icon" type="button" onclick={() => (seeMore = !seeMore)}
 	>See
 	{#if !seeMore}
 		More

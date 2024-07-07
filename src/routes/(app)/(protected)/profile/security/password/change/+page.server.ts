@@ -56,10 +56,8 @@ export const actions: Actions = {
 			return fail(401);
 		}
 
-		const user = event.locals.user;
-
 		const dbUser = await db.query.users.findFirst({
-			where: eq(users.id, user.id),
+			where: eq(users.id, user!.id),
 		});
 
 		if (!dbUser?.hashed_password) {

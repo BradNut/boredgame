@@ -1,12 +1,15 @@
 <script lang="ts">
-	export let data;
-
+	const { data } = $props();
 	const { user, wishlists = [], collections = []} = data;
+
+	const welcome = $derived(`${data?.user?.firstName} ${data?.user?.lastName}` || user?.username)
+
+	$inspect(data);
 </script>
 
 <div class="container">
 	{#if user}
-		<h1>Welcome, {user.username}!</h1>
+		<h1>Welcome, {welcome}!</h1>
 		<div>
 			<h2>You wishlists:</h2>
 			{#each wishlists as wishlist}

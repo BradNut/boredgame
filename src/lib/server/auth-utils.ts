@@ -27,10 +27,24 @@ export function userNotFullyAuthenticated(user: User | null, session: Session | 
 	return user && session && session.isTwoFactorAuthEnabled && !session.isTwoFactorAuthenticated;
 }
 
+/**
+ * Checks if the user is not fully authenticated.
+ *
+ * @param {User | null} user - The user object.
+ * @param {Session | null} session - The session object.
+ * @returns {boolean} True if the user is not fully authenticated, otherwise false.
+ */
 export function userNotAuthenticated(user: User | null, session: Session | null) {
 	return !user || !session || userNotFullyAuthenticated(user, session);
 }
 
+/**
+ * Checks if the user is fully authenticated.
+ *
+ * @param {User | null} user - The user object.
+ * @param {Session | null} session - The session object.
+ * @returns {boolean} True if the user is fully authenticated, otherwise false.
+ */
 export function userFullyAuthenticated(user: User | null, session: Session | null) {
 	return !userNotAuthenticated(user, session);
 }

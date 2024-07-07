@@ -4,7 +4,7 @@
 	import Logo from "$lib/components/logo.svelte";
 	import Transition from '$lib/components/transition.svelte';
 
-	export let data;
+	let { data, children } = $props();
 </script>
 
 <div class="container">
@@ -31,7 +31,7 @@
 			style="
 				background-image:
 					url(https://images.unsplash.com/photo-1588591795084-1770cb3be374?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-		/>
+		></div>
 		<div class="quote-wrapper">
 			<blockquote class="quote">
 				<p>
@@ -43,7 +43,7 @@
 	</div>
 	<div class="auth-form">
 		<Transition url={data.url} transition={{ type: 'page' }}>
-			<slot />
+			{@render children()}
 		</Transition>
 	</div>
 </div>

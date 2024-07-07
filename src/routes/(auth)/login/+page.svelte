@@ -11,7 +11,7 @@
   import * as Alert from "$components/ui/alert";
 	import { boredState } from '$lib/stores/boredState.js';
 
-	export let data;
+	let { data } = $props();
 
 	const superLoginForm = superForm(data.form, {
 		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),

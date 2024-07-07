@@ -8,15 +8,13 @@
 	import Logo from '$components/logo.svelte';
 	import type { Users } from '$db/schema';
 
-	export let user: Users | null = null;
+	type HeaderProps = {
+		user: Users | null;
+	};
 
-	console.log('header user', user);
+	let { user = null }: HeaderProps = $props();
 
-	let avatar: string;
-
-	$: if (user) {
-		avatar = user.username?.slice(0, 1).toUpperCase() || ':)';
-	}
+	let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)');
 </script>
 
 <header>

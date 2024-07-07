@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DataTable from './user-table.svelte';
-	export let data;
+	const { data } = $props();
 </script>
 
 <h1>Users</h1>

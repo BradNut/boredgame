@@ -1,4 +1,6 @@
 <script lang="ts">
+  const { children } = $props();
+
   function portal(node: HTMLElement) {
     let target;
 
@@ -25,5 +27,5 @@
 </script>
 
 <div use:portal hidden>
-  <slot />
+  {@render children()}
 </div>

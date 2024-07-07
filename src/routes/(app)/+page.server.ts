@@ -2,7 +2,7 @@ import type { MetaTagsProps } from 'svelte-meta-tags';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import db from '../../db';
-import { collections, wishlists } from '$db/schema';
+import { collections, users, wishlists } from '$db/schema';
 import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
@@ -42,6 +42,10 @@ export const load: PageServerLoad = async (event) => {
 	});
 
 	if (userFullyAuthenticated(user, session)) {
+		const dbUser = await db.query.users.findFirst({
+			where: eq(users.id, user!.id!),
+		});
+
 		console.log('Sending back user details');
 		const userWishlists = await db.query.wishlists.findMany({
 			columns: {
@@ -60,7 +64,16 @@ export const load: PageServerLoad = async (event) => {
 
 		console.log('Wishlists', userWishlists);
 		console.log('Collections', userCollection);
-		return { metaTagsChild: metaTags, user, wishlists: userWishlists, collections: userCollection };
+		return {
+			metaTagsChild: metaTags,
+			user: {
+				firstName: dbUser?.first_name,
+				lastName: dbUser?.last_name,
+				username: dbUser?.username,
+			},
+			wishlists: userWishlists,
+			collections: userCollection,
+		};
 	}
 
 	return { metaTagsChild: metaTags, user: null, wishlists: [], collections: [] };

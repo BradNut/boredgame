@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let data;
+	const { data } = $props();
 	let collections = data?.collections || [];
 </script>
 

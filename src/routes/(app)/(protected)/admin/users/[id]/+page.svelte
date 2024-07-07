@@ -4,7 +4,7 @@
 	import { Button } from '$lib/components/ui/button';
 	// import AddRolesForm from './add-roles-form.svelte';
 
-	export let data;
+	const { data } = $props();
 
 	const { user, availableRoles } = data;
 	const { user_roles }: { user_roles: { role: { name: string, cuid: string } }[] } = user;

@@ -1,7 +1,5 @@
 <script lang="ts">
-	export let url: string;
-	export let ariaLabel = `Link to ${url}`;
-	export let external = false;
+	const { url, ariaLabel = `Link to ${url}`, external = false, children }: { url: string; ariaLabel?: string; external?: boolean; children: any } = $props();
 </script>
 
 <a
@@ -10,7 +8,7 @@
 	rel="noreferrer"
 	aria-label={`Board Game Atlas Link for ${ariaLabel}`}
 >
-	<slot />
+	{@render children()}
 </a>
 
 <style>
