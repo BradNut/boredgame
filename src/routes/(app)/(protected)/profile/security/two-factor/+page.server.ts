@@ -187,11 +187,10 @@ export const actions: Actions = {
 			.where(eq(users.id, user.id));
 		await db.delete(recoveryCodes).where(eq(recoveryCodes.userId, user.id));
 
-		setFlash({ type: 'success', message: 'Two-Factor Authentication has been disabled.' }, cookies);
-		return {
-			removeTwoFactorForm,
-			twoFactorEnabled: false,
-			recoveryCodes: [],
-		};
+		// setFlash({ type: 'success', message: 'Two-Factor Authentication has been disabled.' }, cookies);
+		redirect(302, '/profile/security/two-factor', {
+			type: 'success',
+			message: 'Two-Factor Authentication has been disabled.',
+		}, event);
 	},
 };

@@ -6,6 +6,7 @@
 	import * as Form from '$components/ui/form';
 	import { Input } from '$components/ui/input';
 	import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account';
+	import PinInput from '$components/pin-input.svelte';
 
 	export let data;
 
@@ -54,7 +55,7 @@
 		<Form.Field form={addTwoFactorForm} name="two_factor_code">
 			<Form.Control let:attrs>
 				<Form.Label for="code">Enter Code</Form.Label>
-				<Input {...attrs} bind:value={$addTwoFactorFormData.two_factor_code} />
+				<PinInput {...attrs} bind:value={$addTwoFactorFormData.two_factor_code} />
 			</Form.Control>
 			<Form.Description>This is the code from your authenticator app.</Form.Description>
 			<Form.FieldErrors />

@@ -7,6 +7,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
+import { TWO_FACTOR_TIMEOUT } from '../env';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { totpSchema } from '$lib/validations/auth';
@@ -25,6 +26,12 @@ export const load: PageServerLoad = async (event) => {
 		const dbUser = await db.query.users.findFirst({
 			where: eq(users.username, user.username),
 		});
+
+		// Check if two factor started less than TWO_FACTOR_TIMEOUT
+		if (Date.now() - dbUser?.initiated_time > TWO_FACTOR_TIMEOUT) {
+			const message = { type: 'error', message: 'Two factor authentication has expired' } as const;
+			redirect(302, '/login', message, event);
+		}
 
 		const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
 

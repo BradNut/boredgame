@@ -33,3 +33,4 @@ export { default as categories_to_games, categories_to_games_relations } from '.
 export { default as mechanics, mechanics_relations, type Mechanics } from './mechanics';
 export { default as mechanicsToExternalIds } from './mechanicsToExternalIds';
 export { default as mechanics_to_games, mechanics_to_games_relations } from './mechanicsToGames';
+export { default as twoFactor } from './two-factor.table';

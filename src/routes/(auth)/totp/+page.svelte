@@ -57,7 +57,7 @@
 					<Input {...attrs} autocomplete="one-time-code" bind:value={$totpForm.totpToken} />
 				{:else}
 					<Form.Label for="totpToken">TOTP Code</Form.Label>
-					<PinInput class="justify-evenly" {...attrs} bind:value={$totpForm.totpToken} />
+					<PinInput {...attrs} bind:value={$totpForm.totpToken} />
 				{/if}
 			</Form.Control>
 			<Form.FieldErrors />

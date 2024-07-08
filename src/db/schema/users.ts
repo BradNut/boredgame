@@ -1,6 +1,7 @@
-import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
+import { timestamps } from '../utils';
 import user_roles from './userRoles';
 
 const users = pgTable('users', {
@@ -16,10 +17,7 @@ const users = pgTable('users', {
 	verified: boolean('verified').default(false),
 	receive_email: boolean('receive_email').default(false),
 	theme: text('theme').default('system'),
-	two_factor_secret: text('two_factor_secret').default(''),
-	two_factor_enabled: boolean('two_factor_enabled').default(false),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	...timestamps,
 });
 
 export const user_relations = relations(users, ({ many }) => ({

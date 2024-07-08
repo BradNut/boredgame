@@ -85,6 +85,12 @@ export const actions: Actions = {
 
 			console.log('ip', locals.ip);
 			console.log('country', locals.country);
+			await db
+					.update(users)
+					.set({
+						initiated_time: new Date(),
+					});
+
 			session = await lucia.createSession(user.id, {
 				ip_country: locals.country,
 				ip_address: locals.ip,

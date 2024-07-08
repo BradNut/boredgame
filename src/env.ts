@@ -25,6 +25,7 @@ const EnvSchema = z.object({
 	DB_SEEDING: stringBoolean,
 	ADMIN_USERNAME: z.string(),
 	ADMIN_PASSWORD: z.string(),
+	TWO_FACTOR_TIMEOUT: z.coerce.number().default(300000),
 });
 
 export type EnvSchema = z.infer<typeof EnvSchema>;
