@@ -10,8 +10,9 @@
 	import { Button } from '$components/ui/button';
 	import * as Alert from "$components/ui/alert";
 	import { boredState } from '$lib/stores/boredState.js';
+	import PinInput from '$components/pin-input.svelte';
 
-	export let data;
+	const { data } = $props();
 
 	const superTotpForm = superForm(data.form, {
 		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
@@ -33,6 +34,8 @@
 		delayMs: 0,
 	});
 
+	let showRecoveryCode = $state(false);
+
 	const { form: totpForm, enhance } = superTotpForm;
 </script>
 
@@ -45,17 +48,27 @@
 		<h2
 				class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
 		>
-			Please enter your two factor code
+			Please enter your {showRecoveryCode ? 'recovery code' : 'TOTP code'}
 		</h2>
 		<Form.Field form={superTotpForm} name="totpToken">
 			<Form.Control let:attrs>
-				<Form.Label for="totpToken">TOTP Code</Form.Label>
-				<Input {...attrs} autocomplete="totpToken" bind:value={$totpForm.totpToken} />
+				{#if showRecoveryCode}
+					<Form.Label for="totpToken">Recovery Code</Form.Label>
+					<Input {...attrs} autocomplete="one-time-code" bind:value={$totpForm.totpToken} />
+				{:else}
+					<Form.Label for="totpToken">TOTP Code</Form.Label>
+					<PinInput class="justify-evenly" {...attrs} bind:value={$totpForm.totpToken} />
+				{/if}
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
 		<Form.Button>Submit</Form.Button>
 	</form>
+	{#if !showRecoveryCode}
+		<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = true}>Show Recovery Code</Button>
+	{:else}
+		<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = false}>Show TOTP Code</Button>
+	{/if}
 </div>
 
 <style lang="postcss">

@@ -2,14 +2,28 @@
 	const { data } = $props();
 	const { user, wishlists = [], collections = []} = data;
 
-	const welcome = $derived(`${data?.user?.firstName} ${data?.user?.lastName}` || user?.username)
+	const welcomeName = $derived.by(() => {
+		let welcomeName = '';
+		if (data?.user?.firstName) {
+			welcomeName += data?.user?.firstName;
+		}
+		if (data?.user?.lastName) {
+			welcomeName += ' ' + data?.user?.lastName;
+		}
+
+		if (welcomeName.length === 0) {
+			return user?.username;
+		}
+
+		return welcomeName;
+	});
 
 	$inspect(data);
 </script>
 
 <div class="container">
 	{#if user}
-		<h1>Welcome, {welcome}!</h1>
+		<h1>Welcome, {welcomeName}!</h1>
 		<div>
 			<h2>You wishlists:</h2>
 			{#each wishlists as wishlist}

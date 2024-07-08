@@ -16,12 +16,12 @@ export const load: PageServerLoad = async (event) => {
 	}
 
 	const dbUser = await db.query.users.findFirst({
-		where: eq(users.id, user.id),
+		where: eq(users.id, user!.id),
 	});
 
 	if (dbUser?.two_factor_enabled) {
 		const dbRecoveryCodes = await db.query.recoveryCodes.findMany({
-			where: eq(recoveryCodes.userId, user.id),
+			where: eq(recoveryCodes.userId, user!.id),
 		});
 
 		if (dbRecoveryCodes.length === 0) {
@@ -33,13 +33,13 @@ export const load: PageServerLoad = async (event) => {
 					const hashedCode = await new Argon2id().hash(code);
 					console.log('Inserting recovery code', code, hashedCode);
 					await db.insert(recoveryCodes).values({
-						userId: user.id,
+						userId: user!.id,
 						code: hashedCode,
 					});
 				}
 			}
 			return {
-				recoveryCodes,
+				recoveryCodes: createdRecoveryCodes,
 			};
 		}
 		return {

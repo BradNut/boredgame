@@ -26,7 +26,6 @@
 			<span class="logo-text">Bored Game</span>
 		</a>
 	</div>
-	<!-- <TextSearch /> -->
 	<nav>
 		{#if user}
 			<DropdownMenu.Root>
@@ -39,7 +38,7 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content>
 					<DropdownMenu.Group>
-						<DropdownMenu.Label>My Account</DropdownMenu.Label>
+						<DropdownMenu.Label>Account</DropdownMenu.Label>
 						<DropdownMenu.Separator />
 						<a href="/profile">
 							<DropdownMenu.Item>
@@ -59,35 +58,35 @@
 								<span>Wishlists</span>
 							</DropdownMenu.Item>
 						</a>
-						<form
-							use:enhance={() => {
-								return async ({ result }) => {
-									console.log(result);
-									if (result.type === 'success' || result.type === 'redirect') {
-										toast.success('Logged Out');
-									} else if (result.type === 'error') {
+						<DropdownMenu.Item>
+							<form
+								use:enhance={() => {
+									return async ({ result }) => {
 										console.log(result);
-										toast.error(`Error: ${result.error.message}`);
-									} else {
-										toast.error(`Something went wrong.`);
-										console.log(result);
-									}
-									await invalidateAll();
-									await applyAction(result);
-								};
-							}}
-							action="/logout"
-							method="POST"
-						>
-							<button type="submit" class="">
-								<DropdownMenu.Item>
+										if (result.type === 'success' || result.type === 'redirect') {
+											toast.success('Logged Out');
+										} else if (result.type === 'error') {
+											console.log(result);
+											toast.error(`Error: ${result.error.message}`);
+										} else {
+											toast.error(`Something went wrong.`);
+											console.log(result);
+										}
+										await invalidateAll();
+										await applyAction(result);
+									};
+								}}
+								action="/logout"
+								method="POST"
+							>
+								<button type="submit">
 									<div class="flex items-center gap-1">
 										<LogOut class="mr-2 h-4 w-4" />
 										<span>Sign out</span>
 									</div>
-								</DropdownMenu.Item>
-							</button>
-						</form>
+								</button>
+							</form>
+						</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
