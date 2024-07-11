@@ -5,36 +5,22 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1718402690897,
-      "tag": "0000_premium_pepper_potts",
+      "when": 1720625651245,
+      "tag": "0000_dazzling_stick",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "7",
-      "when": 1718404319259,
-      "tag": "0001_spicy_legion",
+      "when": 1720625948784,
+      "tag": "0001_noisy_sally_floyd",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "7",
-      "when": 1718405257084,
-      "tag": "0002_third_black_tom",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1720415770693,
-      "tag": "0003_premium_ravenous",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1720454952583,
-      "tag": "0004_glossy_gideon",
+      "when": 1720626020902,
+      "tag": "0002_fancy_valkyrie",
       "breakpoints": true
     }
   ]

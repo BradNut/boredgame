@@ -1,9 +1,10 @@
-import { type Actions, fail } from '@sveltejs/kit';
+import { type Actions, fail, error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import { encodeHex, decodeHex } from 'oslo/encoding';
 import { Argon2id } from 'oslo/password';
 import { createTOTPKeyURI, TOTPController } from 'oslo/otp';
 import { HMAC } from 'oslo/crypto';
+import kebabCase from 'just-kebab-case';
 import QRCode from 'qrcode';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
@@ -12,8 +13,9 @@ import type { PageServerLoad } from '../../$types';
 import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../../../db';
-import { recoveryCodes, users } from '$db/schema';
+import { recoveryCodes, twoFactor, users } from '$db/schema';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
+import env from '../../../../../../env';
 
 export const load: PageServerLoad = async (event) => {
 	const addTwoFactorForm = await superValidate(event, zod(addTwoFactorSchema));
@@ -29,7 +31,11 @@ export const load: PageServerLoad = async (event) => {
 		where: eq(users.id, user!.id!),
 	});
 
-	if (dbUser?.two_factor_enabled) {
+	const twoFactorDetails = await db.query.twoFactor.findFirst({
+		where: eq(twoFactor.userId, dbUser!.id!),
+	});
+
+	if (twoFactorDetails?.enabled) {
 		return {
 			addTwoFactorForm,
 			removeTwoFactorForm,
@@ -39,17 +45,31 @@ export const load: PageServerLoad = async (event) => {
 			qrCode: '',
 		};
 	}
-	const twoFactorSecret = await new HMAC('SHA-1').generateKey();
-	await db
-		.update(users)
-		.set({
-			two_factor_secret: encodeHex(twoFactorSecret),
-			two_factor_enabled: false,
-		})
-		.where(eq(users.id, user!.id!));
 
-	const issuer = 'bored-game';
-	const accountName = user!.email! || user!.username!;
+	const twoFactorSecret = await new HMAC('SHA-1').generateKey();
+
+	try {
+		await db
+			.insert(twoFactor)
+			.values({
+				secret: encodeHex(twoFactorSecret),
+				enabled: false,
+				userId: dbUser!.id!,
+			})
+			.onConflictDoUpdate({
+				target: twoFactor.userId,
+				set: {
+					secret: encodeHex(twoFactorSecret),
+					enabled: false,
+				},
+			});
+	} catch (e) {
+		console.error(e);
+		error(500);
+	}
+
+	const issuer = kebabCase(env.PUBLIC_SITE_NAME);
+	const accountName = dbUser!.email! || dbUser!.username!;
 	// pass the website's name and the user identifier (e.g. email, username)
 	const totpUri = createTOTPKeyURI(issuer, accountName, twoFactorSecret);
 
@@ -104,7 +124,20 @@ export const actions: Actions = {
 			);
 		}
 
-		if (dbUser?.two_factor_secret === '' || dbUser?.two_factor_secret === null) {
+		const twoFactorDetails = await db.query.twoFactor.findFirst({
+			where: eq(twoFactor.userId, dbUser?.id),
+		});
+
+		if (!twoFactorDetails) {
+			addTwoFactorForm.data.current_password = '';
+			addTwoFactorForm.data.two_factor_code = '';
+			return setError(
+				addTwoFactorForm,
+				'Error occurred. Please try again or contact support if you need further help.',
+			);
+		}
+
+		if (twoFactorDetails.secret === '' || twoFactorDetails.secret === null) {
 			addTwoFactorForm.data.current_password = '';
 			addTwoFactorForm.data.two_factor_code = '';
 			return setError(
@@ -129,19 +162,20 @@ export const actions: Actions = {
 		const twoFactorCode = addTwoFactorForm.data.two_factor_code;
 		const validOTP = await new TOTPController().verify(
 			twoFactorCode,
-			decodeHex(dbUser.two_factor_secret),
+			decodeHex(twoFactorDetails.secret),
 		);
 
 		if (!validOTP) {
 			return setError(addTwoFactorForm, 'two_factor_code', 'Invalid code');
 		}
 
-		await db.update(users).set({ two_factor_enabled: true }).where(eq(users.id, user!.id!));
+		await db.update(twoFactor).set({ enabled: true }).where(eq(twoFactor.userId, user!.id!));
 
 		redirect(302, '/profile/security/two-factor/recovery-codes');
 	},
 	disableTwoFactor: async (event) => {
-		const { cookies } = event;
+		const { locals } = event;
+		const { user, session } = locals;
 		const removeTwoFactorForm = await superValidate(event, zod(removeTwoFactorSchema));
 
 		if (!removeTwoFactorForm.valid) {
@@ -150,15 +184,11 @@ export const actions: Actions = {
 			});
 		}
 
-		if (!event.locals.user) {
-			redirect(302, '/login', notSignedInMessage, event);
+		if (!user || !session) {
+			return fail(401, {
+				removeTwoFactorForm,
+			});
 		}
-
-		if (!event.locals.session) {
-			return fail(401);
-		}
-
-		const user = event.locals.user;
 
 		const dbUser = await db.query.users.findFirst({
 			where: eq(users.id, user.id),
@@ -181,16 +211,28 @@ export const actions: Actions = {
 			return setError(removeTwoFactorForm, 'current_password', 'Your password is incorrect');
 		}
 
-		await db
-			.update(users)
-			.set({ two_factor_enabled: false, two_factor_secret: null })
-			.where(eq(users.id, user.id));
+		const twoFactorDetails = await db.query.twoFactor.findFirst({
+			where: eq(twoFactor.userId, dbUser.id),
+		});
+
+		if (!twoFactorDetails) {
+			return fail(500, {
+				removeTwoFactorForm,
+			});
+		}
+
+		await db.update(twoFactor).set({ enabled: false }).where(eq(twoFactor.userId, user.id));
 		await db.delete(recoveryCodes).where(eq(recoveryCodes.userId, user.id));
 
 		// setFlash({ type: 'success', message: 'Two-Factor Authentication has been disabled.' }, cookies);
-		redirect(302, '/profile/security/two-factor', {
-			type: 'success',
-			message: 'Two-Factor Authentication has been disabled.',
-		}, event);
+		redirect(
+			302,
+			'/profile/security/two-factor',
+			{
+				type: 'success',
+				message: 'Two-Factor Authentication has been disabled.',
+			},
+			event,
+		);
 	},
 };

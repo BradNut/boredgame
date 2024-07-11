@@ -8,7 +8,7 @@ import { changeEmailSchema, profileSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../db';
 import type { PageServerLoad } from './$types';
-import { users } from '$db/schema';
+import { users, twoFactor } from '$db/schema';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
@@ -35,10 +35,14 @@ export const load: PageServerLoad = async (event) => {
 		},
 	});
 
+	const twoFactorDetails = await db.query.twoFactor.findFirst({
+		where: eq(twoFactor.userId, dbUser!.id!),
+	});
+
 	return {
 		profileForm,
 		emailForm,
-		hasSetupTwoFactor: !!dbUser?.two_factor_enabled,
+		hasSetupTwoFactor: !!twoFactorDetails?.enabled,
 	};
 };
 

@@ -1,6 +1,7 @@
-import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import type { InferSelectModel } from 'drizzle-orm';
 import users from './users';
+import { timestamps } from '../utils';
 
 const recovery_codes = pgTable('recovery_codes', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -9,8 +10,7 @@ const recovery_codes = pgTable('recovery_codes', {
 		.references(() => users.id),
 	code: text('code').notNull(),
 	used: boolean('used').default(false),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	...timestamps,
 });
 
 export type RecoveryCodes = InferSelectModel<typeof recovery_codes>;

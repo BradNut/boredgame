@@ -28,8 +28,8 @@
 		},
 		syncFlashMessage: false,
 		taintedMessage: null,
-		validators: zodClient(signInSchema),
-		validationMethod: 'oninput',
+		// validators: zodClient(signInSchema),
+		// validationMethod: 'oninput',
 		delayMs: 0,
 	});
 

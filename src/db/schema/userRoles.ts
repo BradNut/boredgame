@@ -1,8 +1,9 @@
-import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import users from './users';
 import roles from './roles';
+import { timestamps } from '../utils';
 
 const user_roles = pgTable('user_roles', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -16,8 +17,7 @@ const user_roles = pgTable('user_roles', {
 		.notNull()
 		.references(() => roles.id, { onDelete: 'cascade' }),
 	primary: boolean('primary').default(false),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	...timestamps,
 });
 
 export const user_role_relations = relations(user_roles, ({ one }) => ({

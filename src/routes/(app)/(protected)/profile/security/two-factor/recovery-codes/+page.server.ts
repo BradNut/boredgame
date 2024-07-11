@@ -5,7 +5,7 @@ import { alphabet, generateRandomString } from 'oslo/crypto';
 import { redirect } from 'sveltekit-flash-message/server';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { PageServerLoad } from '../../../$types';
-import { recoveryCodes, users } from '$db/schema';
+import {recoveryCodes, twoFactor, users} from '$db/schema';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
@@ -19,7 +19,11 @@ export const load: PageServerLoad = async (event) => {
 		where: eq(users.id, user!.id),
 	});
 
-	if (dbUser?.two_factor_enabled) {
+	const twoFactorDetails = await db.query.twoFactor.findFirst({
+		where: eq(twoFactor.userId, dbUser!.id),
+	});
+
+	if (twoFactorDetails?.enabled) {
 		const dbRecoveryCodes = await db.query.recoveryCodes.findMany({
 			where: eq(recoveryCodes.userId, user!.id),
 		});
@@ -46,6 +50,7 @@ export const load: PageServerLoad = async (event) => {
 			recoveryCodes: [],
 		};
 	} else {
+		console.error('2FA not enabled');
 		redirect(
 			302,
 			'/profile',

@@ -1,7 +1,8 @@
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import users from './users';
+import { timestamps } from '../utils';
 
 const wishlists = pgTable('wishlists', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -12,8 +13,7 @@ const wishlists = pgTable('wishlists', {
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	name: text('name').notNull().default('My Wishlist'),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	...timestamps,
 });
 
 export type Wishlists = InferSelectModel<typeof wishlists>;

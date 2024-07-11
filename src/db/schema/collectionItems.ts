@@ -1,8 +1,9 @@
-import { integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import collections from './collections';
 import games from './games';
+import { timestamps } from '../utils';
 
 const collection_items = pgTable('collection_items', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -16,8 +17,7 @@ const collection_items = pgTable('collection_items', {
 		.notNull()
 		.references(() => games.id, { onDelete: 'cascade' }),
 	times_played: integer('times_played').default(0),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	...timestamps,
 });
 
 export type CollectionItems = InferSelectModel<typeof collection_items>;

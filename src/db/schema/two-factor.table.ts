@@ -1,22 +1,21 @@
 import { createId as cuid2 } from '@paralleldrive/cuid2';
-import { relations } from 'drizzle-orm';
+import { type InferSelectModel, relations } from 'drizzle-orm';
 import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { timestamps } from '../utils';
 import users from './users';
 
 const twoFactorTable = pgTable('two_factor', {
-	id: uuid('id')
-		.primaryKey().defaultRandom(),
+	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
 		.$defaultFn(() => cuid2()),
-	two_factor_secret: text('two_factor_secret').notNull(),
-	two_factor_enabled: boolean('two_factor_enabled').notNull().default(false),
-	initiated_time: timestamp('initiated_time', {
+	secret: text('secret').notNull(),
+	enabled: boolean('enabled').notNull().default(false),
+	initiatedTime: timestamp('initiated_time', {
 		mode: 'date',
 		withTimezone: true,
-	}).notNull(),
-	userId: text('user_id')
+	}),
+	userId: uuid('user_id')
 		.notNull()
 		.references(() => users.id)
 		.unique(),

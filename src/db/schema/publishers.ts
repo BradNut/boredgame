@@ -1,8 +1,9 @@
-import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import publishers_to_games from './publishersToGames';
 import publishersToExternalIds from './publishersToExternalIds';
+import { timestamps } from '../utils';
 
 const publishers = pgTable('publishers', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -11,8 +12,7 @@ const publishers = pgTable('publishers', {
 		.$defaultFn(() => cuid2()),
 	name: text('name'),
 	slug: text('slug'),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	...timestamps,
 });
 
 export type Publishers = InferSelectModel<typeof publishers>;

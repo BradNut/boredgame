@@ -1,10 +1,16 @@
+DO $$ BEGIN
+ CREATE TYPE "public"."external_id_type" AS ENUM('game', 'category', 'mechanic', 'publisher', 'designer', 'artist');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "categories" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"cuid" text,
 	"name" text,
 	"slug" text,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "categories_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
@@ -26,8 +32,8 @@ CREATE TABLE IF NOT EXISTS "collection_items" (
 	"collection_id" uuid NOT NULL,
 	"game_id" uuid NOT NULL,
 	"times_played" integer DEFAULT 0,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "collection_items_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
@@ -36,8 +42,8 @@ CREATE TABLE IF NOT EXISTS "collections" (
 	"cuid" text,
 	"user_id" uuid NOT NULL,
 	"name" text DEFAULT 'My Collection' NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "collections_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
@@ -46,15 +52,15 @@ CREATE TABLE IF NOT EXISTS "expansions" (
 	"cuid" text,
 	"base_game_id" uuid NOT NULL,
 	"game_id" uuid NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "expansions_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "external_ids" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"cuid" text,
-	"type" "external_id_type" NOT NULL,
+	"type" "external_id_type",
 	"external_id" text NOT NULL,
 	CONSTRAINT "external_ids_cuid_unique" UNIQUE("cuid")
 );
@@ -76,8 +82,8 @@ CREATE TABLE IF NOT EXISTS "games" (
 	"thumb_url" text,
 	"url" text,
 	"last_sync_at" timestamp,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "games_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
@@ -92,8 +98,8 @@ CREATE TABLE IF NOT EXISTS "mechanics" (
 	"cuid" text,
 	"name" text,
 	"slug" text,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "mechanics_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
@@ -113,7 +119,8 @@ CREATE TABLE IF NOT EXISTS "password_reset_tokens" (
 	"id" text PRIMARY KEY NOT NULL,
 	"user_id" uuid NOT NULL,
 	"expires_at" timestamp,
-	"created_at" timestamp DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "publishers" (
@@ -121,8 +128,8 @@ CREATE TABLE IF NOT EXISTS "publishers" (
 	"cuid" text,
 	"name" text,
 	"slug" text,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "publishers_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
@@ -143,16 +150,16 @@ CREATE TABLE IF NOT EXISTS "recovery_codes" (
 	"user_id" uuid NOT NULL,
 	"code" text NOT NULL,
 	"used" boolean DEFAULT false,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "roles" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"cuid" text NOT NULL,
 	"name" text NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "roles_cuid_unique" UNIQUE("cuid"),
 	CONSTRAINT "roles_name_unique" UNIQUE("name")
 );
@@ -167,14 +174,27 @@ CREATE TABLE IF NOT EXISTS "sessions" (
 	"is_two_factor_authenticated" boolean DEFAULT false
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "two_factor" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"cuid" text,
+	"two_factor_secret" text NOT NULL,
+	"two_factor_enabled" boolean DEFAULT false NOT NULL,
+	"initiated_time" timestamp with time zone NOT NULL,
+	"user_id" uuid NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "two_factor_cuid_unique" UNIQUE("cuid"),
+	CONSTRAINT "two_factor_user_id_unique" UNIQUE("user_id")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user_roles" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"cuid" text,
 	"user_id" uuid NOT NULL,
 	"role_id" uuid NOT NULL,
 	"primary" boolean DEFAULT false,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "user_roles_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
@@ -189,10 +209,8 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"verified" boolean DEFAULT false,
 	"receive_email" boolean DEFAULT false,
 	"theme" text DEFAULT 'system',
-	"two_factor_secret" text DEFAULT '',
-	"two_factor_enabled" boolean DEFAULT false,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "users_cuid_unique" UNIQUE("cuid"),
 	CONSTRAINT "users_username_unique" UNIQUE("username"),
 	CONSTRAINT "users_email_unique" UNIQUE("email")
@@ -203,8 +221,8 @@ CREATE TABLE IF NOT EXISTS "wishlist_items" (
 	"cuid" text,
 	"wishlist_id" uuid NOT NULL,
 	"game_id" uuid NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "wishlist_items_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
@@ -213,8 +231,8 @@ CREATE TABLE IF NOT EXISTS "wishlists" (
 	"cuid" text,
 	"user_id" uuid NOT NULL,
 	"name" text DEFAULT 'My Wishlist' NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "wishlists_cuid_unique" UNIQUE("cuid")
 );
 --> statement-breakpoint
@@ -346,6 +364,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "sessions" ADD CONSTRAINT "sessions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "two_factor" ADD CONSTRAINT "two_factor_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

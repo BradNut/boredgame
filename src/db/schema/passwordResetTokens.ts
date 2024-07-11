@@ -2,6 +2,7 @@ import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import users from './users';
+import { timestamps } from '../utils';
 
 const password_reset_tokens = pgTable('password_reset_tokens', {
 	id: text('id')
@@ -11,7 +12,7 @@ const password_reset_tokens = pgTable('password_reset_tokens', {
 		.notNull()
 		.references(() => users.id, { onDelete: 'cascade' }),
 	expires_at: timestamp('expires_at'),
-	created_at: timestamp('created_at').notNull().defaultNow(),
+	...timestamps,
 });
 
 export type PasswordResetTokens = InferSelectModel<typeof password_reset_tokens>;

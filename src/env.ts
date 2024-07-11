@@ -17,6 +17,7 @@ const EnvSchema = z.object({
 	DATABASE_PORT: z.coerce.number(),
 	DATABASE_DB: z.string(),
 	DATABASE_URL: z.string(),
+	PUBLIC_SITE_NAME: z.string(),
 	PUBLIC_SITE_URL: z.string(),
 	PUBLIC_UMAMI_DO_NOT_TRACK: z.string(),
 	PUBLIC_UMAMI_ID: z.string(),

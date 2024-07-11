@@ -5,6 +5,7 @@ import categoriesToGames from './categoriesToGames';
 import gamesToExternalIds from './gamesToExternalIds';
 import mechanicsToGames from './mechanicsToGames';
 import publishersToGames from './publishersToGames';
+import { timestamps } from '../utils';
 
 const games = pgTable(
 	'games',
@@ -27,8 +28,7 @@ const games = pgTable(
 		thumb_url: text('thumb_url'),
 		url: text('url'),
 		last_sync_at: timestamp('last_sync_at'),
-		created_at: timestamp('created_at').notNull().defaultNow(),
-		updated_at: timestamp('updated_at').notNull().defaultNow(),
+		...timestamps,
 	},
 	(table) => ({
 		searchIndex: index('search_index').using(

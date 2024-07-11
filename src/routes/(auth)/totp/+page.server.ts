@@ -7,13 +7,13 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
-import { TWO_FACTOR_TIMEOUT } from '../env';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { totpSchema } from '$lib/validations/auth';
-import { users, recoveryCodes } from '$db/schema';
+import { users, twoFactor, recoveryCodes } from '$db/schema';
 import type { PageServerLoad } from './$types';
 import { notSignedInMessage } from '$lib/flashMessages';
+import { TWO_FACTOR_TIMEOUT } from '../../../env';
 
 export const load: PageServerLoad = async (event) => {
 	const { user, session } = event.locals;
@@ -27,8 +27,12 @@ export const load: PageServerLoad = async (event) => {
 			where: eq(users.username, user.username),
 		});
 
+		const twoFactorDetails = await db.query.twoFactor.findFirst({
+			where: eq(twoFactor.userId, dbUser!.id!),
+		});
+
 		// Check if two factor started less than TWO_FACTOR_TIMEOUT
-		if (Date.now() - dbUser?.initiated_time > TWO_FACTOR_TIMEOUT) {
+		if (Date.now() - twoFactorDetails?.initiatedTime > TWO_FACTOR_TIMEOUT) {
 			const message = { type: 'error', message: 'Two factor authentication has expired' } as const;
 			redirect(302, '/login', message, event);
 		}
@@ -40,8 +44,8 @@ export const load: PageServerLoad = async (event) => {
 
 		if (
 			isTwoFactorAuthenticated &&
-			dbUser?.two_factor_enabled &&
-			dbUser?.two_factor_secret !== ''
+			twoFactorDetails?.enabled &&
+			twoFactorDetails?.secret !== ''
 		) {
 			const message = { type: 'success', message: 'You are already signed in' } as const;
 			throw redirect('/', message, event);
@@ -83,11 +87,14 @@ export const actions: Actions = {
 		}
 
 		const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
+		const twoFactorDetails = await db.query.twoFactor.findFirst({
+			where: eq(twoFactor.userId, dbUser!.id!),
+		})
 
 		if (
 			isTwoFactorAuthenticated &&
-			dbUser?.two_factor_enabled &&
-			dbUser?.two_factor_secret !== ''
+			twoFactorDetails?.enabled &&
+			twoFactorDetails?.secret !== ''
 		) {
 			const message = { type: 'success', message: 'You are already signed in' } as const;
 			throw redirect('/', message, event);
@@ -107,8 +114,8 @@ export const actions: Actions = {
 			const totpToken = form?.data?.totpToken;
 
 			const twoFactorSecretPopulated =
-				dbUser?.two_factor_secret !== '' && dbUser?.two_factor_secret !== null;
-			if (dbUser?.two_factor_enabled && !twoFactorSecretPopulated && !totpToken) {
+				twoFactorDetails?.secret !== '' && twoFactorDetails?.secret !== null;
+			if (twoFactorDetails.enabled && !twoFactorSecretPopulated && !totpToken) {
 				return fail(400, {
 					form,
 				});
@@ -116,7 +123,7 @@ export const actions: Actions = {
 				console.log('totpToken', totpToken);
 				const validOTP = await new TOTPController().verify(
 					totpToken,
-					decodeHex(dbUser.two_factor_secret ?? ''),
+					decodeHex(twoFactorDetails.secret ?? ''),
 				);
 				console.log('validOTP', validOTP);
 

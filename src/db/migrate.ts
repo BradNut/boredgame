@@ -23,5 +23,4 @@ try {
 	console.error(e);
 }
 
-// await connection.end();
 process.exit();

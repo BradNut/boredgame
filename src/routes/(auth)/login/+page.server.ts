@@ -1,5 +1,5 @@
 import { fail, error, type Actions } from '@sveltejs/kit';
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
@@ -8,7 +8,7 @@ import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { signInSchema } from '$lib/validations/auth';
-import { users, type Users } from '$db/schema';
+import { twoFactor, users, type Users } from '$db/schema';
 import type { PageServerLoad } from './$types';
 import { userFullyAuthenticated, userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
@@ -66,6 +66,8 @@ export const actions: Actions = {
 			return setError(form, 'username', 'Your username or password is incorrect.');
 		}
 
+		let twoFactorDetails;
+
 		try {
 			const password = form.data.password;
 			console.log('user', JSON.stringify(user, null, 2));
@@ -85,21 +87,33 @@ export const actions: Actions = {
 
 			console.log('ip', locals.ip);
 			console.log('country', locals.country);
-			await db
-					.update(users)
-					.set({
-						initiated_time: new Date(),
-					});
 
-			session = await lucia.createSession(user.id, {
-				ip_country: locals.country,
-				ip_address: locals.ip,
-				twoFactorAuthEnabled:
-					user?.two_factor_enabled &&
-					user?.two_factor_secret !== null &&
-					user?.two_factor_secret !== '',
-				isTwoFactorAuthenticated: false,
+			twoFactorDetails = await db.query.twoFactor.findFirst({
+				where: eq(twoFactor.userId, user?.id),
 			});
+
+			if (twoFactorDetails?.secret && twoFactorDetails?.enabled) {
+				await db.update(twoFactor).set({
+					initiated_time: new Date(),
+				});
+
+				session = await lucia.createSession(user.id, {
+					ip_country: locals.country,
+					ip_address: locals.ip,
+					twoFactorAuthEnabled:
+						twoFactorDetails?.enabled &&
+						twoFactorDetails?.secret !== null &&
+						twoFactorDetails?.secret !== '',
+					isTwoFactorAuthenticated: false,
+				});
+			} else {
+				session = await lucia.createSession(user.id, {
+					ip_country: locals.country,
+					ip_address: locals.ip,
+					twoFactorAuthEnabled: false,
+					isTwoFactorAuthenticated: false,
+				});
+			}
 			console.log('logging in session', session);
 			sessionCookie = lucia.createSessionCookie(session.id);
 			console.log('logging in session cookie', sessionCookie);
@@ -120,9 +134,9 @@ export const actions: Actions = {
 		form.data.password = '';
 
 		if (
-			user?.two_factor_enabled &&
-			user?.two_factor_secret !== null &&
-			user?.two_factor_secret !== ''
+			twoFactorDetails?.enabled &&
+			twoFactorDetails?.secret !== null &&
+			twoFactorDetails?.secret !== ''
 		) {
 			console.log('redirecting to TOTP page');
 			const message = { type: 'success', message: 'Please enter your TOTP code.' } as const;

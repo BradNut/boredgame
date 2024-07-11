@@ -2,6 +2,7 @@ import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import games from './games';
+import { timestamps } from '../utils';
 
 export const expansions = pgTable('expansions', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -14,8 +15,7 @@ export const expansions = pgTable('expansions', {
 	game_id: uuid('game_id')
 		.notNull()
 		.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
-	created_at: timestamp('created_at').notNull().defaultNow(),
-	updated_at: timestamp('updated_at').notNull().defaultNow(),
+	...timestamps,
 });
 
 export type Expansions = InferSelectModel<typeof expansions>;
