@@ -1,0 +1,1 @@
+ALTER TABLE "two_factor" ALTER COLUMN "initiated_time" DROP NOT NULL;

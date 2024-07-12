@@ -20,9 +20,9 @@
 		onResult: () => boredState.update((n) => ({ ...n, loading: false })),
 		flashMessage: {
 			module: flashModule,
-			onError: ({ result, message }) => {
+			onError: ({ result, flashMessage }) => {
 				const errorMessage = result.error.message;
-				message.set({ type: 'error', message: errorMessage });
+				flashMessage.set({ type: 'error', message: errorMessage });
 			}
 		},
 		taintedMessage: null,

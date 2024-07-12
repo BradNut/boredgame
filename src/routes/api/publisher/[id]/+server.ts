@@ -1,5 +1,5 @@
 import { getPublisher, updatePublisher } from '$lib/utils/db/publisherUtils.js';
-import type { Publishers } from '../../../../schema.js';
+import type { Publishers } from '$db/schema';
 
 export async function GET({ locals, params }) {
 	try {
@@ -7,7 +7,7 @@ export async function GET({ locals, params }) {
 	} catch (e) {
 		console.error(e);
 		return new Response('Could not get publishers', {
-			status: 500
+			status: 500,
 		});
 	}
 }

@@ -1,6 +1,6 @@
 import kebabCase from 'just-kebab-case';
-import db from '$lib/drizzle';
-import { externalIds, mechanics, mechanicsToExternalIds, type Mechanics } from '../../../schema';
+import db from '../../../db';
+import { externalIds, mechanics, mechanicsToExternalIds, type Mechanics } from '$db/schema';
 import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import { PUBLIC_SITE_URL } from '$env/static/public';
@@ -12,7 +12,7 @@ export async function createMechanic(locals: App.Locals, mechanic: Mechanics, ex
 
 	try {
 		const dbExternalId = await db.query.externalIds.findFirst({
-			where: eq(externalIds.externalId, externalId)
+			where: eq(externalIds.externalId, externalId),
 		});
 
 		if (dbExternalId) {
@@ -20,7 +20,7 @@ export async function createMechanic(locals: App.Locals, mechanic: Mechanics, ex
 				.select({
 					id: mechanics.id,
 					name: mechanics.name,
-					slug: mechanics.slug
+					slug: mechanics.slug,
 				})
 				.from(mechanics)
 				.leftJoin(mechanicsToExternalIds, eq(mechanicsToExternalIds.externalId, externalId));
@@ -30,9 +30,9 @@ export async function createMechanic(locals: App.Locals, mechanic: Mechanics, ex
 				return new Response('Mechanic already exists', {
 					headers: {
 						'Content-Type': 'application/json',
-						Location: `${PUBLIC_SITE_URL}/api/mechanic/${foundMechanic[0].id}`
+						Location: `${PUBLIC_SITE_URL}/api/mechanic/${foundMechanic[0].id}`,
 					},
-					status: 409
+					status: 409,
 				});
 			}
 		}
@@ -44,25 +44,25 @@ export async function createMechanic(locals: App.Locals, mechanic: Mechanics, ex
 				.insert(mechanics)
 				.values({
 					name: mechanic.name,
-					slug: kebabCase(mechanic.name || mechanic.slug || '')
+					slug: kebabCase(mechanic.name || mechanic.slug || ''),
 				})
 				.returning();
 			const dbExternalIds = await transaction
 				.insert(externalIds)
 				.values({
 					externalId,
-					type: 'mechanic'
+					type: 'mechanic',
 				})
 				.returning({ id: externalIds.id });
 			await transaction.insert(mechanicsToExternalIds).values({
 				mechanicId: dbMechanics[0].id,
-				externalId: dbExternalIds[0].id
+				externalId: dbExternalIds[0].id,
 			});
 		});
 
 		if (dbMechanics.length === 0) {
 			return new Response('Could not create mechanic', {
-				status: 500
+				status: 500,
 			});
 		}
 

@@ -6,9 +6,16 @@ import { createMechanic } from '$lib/utils/db/mechanicUtils';
 import { createPublisher } from '$lib/utils/db/publisherUtils';
 import { createExpansion } from '$lib/utils/db/expansionUtils';
 import { createOrUpdateGame } from '$lib/utils/db/gameUtils';
-import db from '$lib/drizzle';
+import db from '../../../../db';
 import { and, eq } from 'drizzle-orm';
-import { collection_items, collections, expansions, games, wishlist_items, wishlists } from '../../../../schema';
+import {
+	collection_items,
+	collections,
+	expansions,
+	games,
+	wishlist_items,
+	wishlists,
+} from '$db/schema';
 
 export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 	try {
@@ -22,32 +29,32 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 						publisher: {
 							columns: {
 								id: true,
-								name: true
-							}
-						}
-					}
+								name: true,
+							},
+						},
+					},
 				},
 				mechanics_to_games: {
 					with: {
 						mechanic: {
 							columns: {
 								id: true,
-								name: true
-							}
-						}
-					}
+								name: true,
+							},
+						},
+					},
 				},
 				categories_to_games: {
 					with: {
 						category: {
 							columns: {
 								id: true,
-								name: true
-							}
-						}
-					}
+								name: true,
+							},
+						},
+					},
 				},
-			}
+			},
 		});
 		console.log('found game', game);
 
@@ -71,10 +78,10 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 					columns: {
 						id: true,
 						name: true,
-						thumb_url: true
-					}
-				}
-			}
+						thumb_url: true,
+					},
+				},
+			},
 		});
 
 		let collectionItem;
@@ -87,8 +94,11 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 			// TODO: Select wishlist items based on wishlist
 			if (wishlist) {
 				wishlistItem = await db.query.wishlist_items.findFirst({
-					where: and(eq(wishlist_items.wishlist_id, wishlist.id), eq(wishlist_items.game_id, game.id)),
-				})
+					where: and(
+						eq(wishlist_items.wishlist_id, wishlist.id),
+						eq(wishlist_items.game_id, game.id),
+					),
+				});
 			}
 
 			const collection = await db.query.collections.findFirst({
@@ -99,8 +109,11 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 
 			if (collection) {
 				collectionItem = await db.query.collection_items.findFirst({
-					where: and(eq(collection_items.collection_id, collection.id), eq(collection_items.game_id, game.id)),
-				})
+					where: and(
+						eq(collection_items.collection_id, collection.id),
+						eq(collection_items.game_id, game.id),
+					),
+				});
 			}
 		}
 
@@ -122,7 +135,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 
 async function syncGameAndConnectedData(locals: App.Locals, game: Game, eventFetch: Function) {
 	console.log(
-		`Retrieving full external game details for external id: ${game.external_id} with name ${game.name}`
+		`Retrieving full external game details for external id: ${game.external_id} with name ${game.name}`,
 	);
 	const externalGameResponse = await eventFetch(`/api/external/game/${game.external_id}`);
 	if (externalGameResponse.ok) {
@@ -134,7 +147,7 @@ async function syncGameAndConnectedData(locals: App.Locals, game: Game, eventFet
 		for (const externalCategory of externalGame.categories) {
 			const category = await createCategory(locals, externalCategory, externalGame.external_id);
 			categories.push({
-				id: category.id
+				id: category.id,
 			});
 		}
 		for (const externalMechanic of externalGame.mechanics) {
@@ -151,7 +164,7 @@ async function syncGameAndConnectedData(locals: App.Locals, game: Game, eventFet
 			if (externalExpansion?.inbound === true) {
 				createExpansion(locals, externalExpansion);
 			} else {
-				createExpansion(locals,externalExpansion);
+				createExpansion(locals, externalExpansion);
 			}
 		}
 

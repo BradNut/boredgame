@@ -10,7 +10,7 @@
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
 
-	export let data;
+	const { data } = $props();
 
 	const hasSetupTwoFactor = data.hasSetupTwoFactor;
 

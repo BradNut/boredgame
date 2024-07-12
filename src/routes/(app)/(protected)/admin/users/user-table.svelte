@@ -21,7 +21,7 @@
   import { Input } from "$lib/components/ui/input";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import DataTableCheckbox from "./user-table-checkbox.svelte";
-	import type { Users } from '../../../../../schema';
+	import type { Users } from '$db/schema';
 
 	export let users: Users[] = [];
 

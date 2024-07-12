@@ -2,101 +2,46 @@ import { type Actions, error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { superValidate } from 'sveltekit-superforms/server';
 import { zod } from 'sveltekit-superforms/adapters';
-import { redirect } from 'sveltekit-flash-message/server'
-import { modifyListGameSchema, type ListGame } from '$lib/validations/zod-schemas';
-import { search_schema } from '$lib/zodValidation.js';
-import db from '$lib/drizzle';
-import { collection_items, collections, games } from '../../../../schema';
+import { redirect } from 'sveltekit-flash-message/server';
+import { modifyListGameSchema } from '$lib/validations/zod-schemas';
+import db from '../../../../db';
+import { collection_items, collections, games } from '$db/schema';
 import { notSignedInMessage } from '$lib/flashMessages';
+import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
-	const { url, locals } = event;
-	const user = locals.user;
-	if (!user) {
+	const { user, session } = event.locals;
+	if (userNotAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	// console.log('locals load', locals);
-	const searchParams = Object.fromEntries(url?.searchParams);
-	console.log('searchParams', searchParams);
-	const q = searchParams?.q;
-	const limit = parseInt(searchParams?.limit) || 10;
-	const skip = parseInt(searchParams?.skip) || 0;
-
-	const searchData = {
-		q,
-		limit,
-		skip
-	};
-
-	const searchForm = await superValidate(searchData, zod(search_schema));
-	const listManageForm = await superValidate(zod(modifyListGameSchema));
-
 	try {
-		const collection = await db.query.collections.findFirst({
-			where: eq(collections.user_id, user.id)
+		const userCollections = await db.query.collections.findMany({
+			columns: {
+				cuid: true,
+				name: true,
+				created_at: true,
+			},
+			where: eq(collections.user_id, user!.id!),
 		});
-		console.log('collection', collection);
+		console.log('collections', userCollections);
 
-		if (!collection) {
+		if (userCollections?.length === 0) {
 			console.log('Collection was not found');
 			return fail(404, {});
-			// 	collection = await prisma.collection.create({
-			// 		data: {
-			// 			user_id: session.userId
-			// 		}
-			// 	});
-		}
-
-		const collectionItems = await db.query.collection_items.findMany({
-			where: eq(collection_items.collection_id, collection.id),
-			with: {
-				game: {
-					columns: {
-						id: true,
-						name: true,
-						thumb_url: true
-					}
-				}
-			},
-			offset: skip,
-			limit
-		});
-
-		console.log('collection_items', collectionItems);
-
-		const items: ListGame[] = [];
-		for (const item of collectionItems) {
-			console.log('item', item);
-			const game = item.game;
-			if (game) {
-				let collectionItem: ListGame = {
-					id: game.id,
-					collection_id: item.collection_id,
-					name: game.name,
-					thumb_url: game.thumb_url,
-					times_played: item.times_played,
-					in_collection: true
-				};
-				items.push(collectionItem);
-			}
 		}
 
 		return {
-			searchForm,
-			listManageForm,
-			collection: items
+			collections: userCollections,
 		};
 	} catch (e) {
 		console.error(e);
 	}
 
 	return {
-		searchForm,
-		listManageForm,
-		collection: []
+		collections: [],
 	};
-};
+}
 
 export const actions: Actions = {
 	// Add game to a wishlist
@@ -109,7 +54,7 @@ export const actions: Actions = {
 
 		const user = event.locals.user;
 		const game = await db.query.games.findFirst({
-			where: eq(games.id, form.data.id)
+			where: eq(games.id, form.data.id),
 		});
 
 		if (!game) {
@@ -124,7 +69,7 @@ export const actions: Actions = {
 
 		try {
 			const collection = await db.query.collections.findFirst({
-				where: eq(collections.user_id, user.id)
+				where: eq(collections.user_id, user.id),
 			});
 
 			if (!collection) {
@@ -135,11 +80,11 @@ export const actions: Actions = {
 			await db.insert(collection_items).values({
 				game_id: game.id,
 				collection_id: collection.id,
-				times_played: 0
+				times_played: 0,
 			});
 
 			return {
-				form
+				form,
 			};
 		} catch (e) {
 			console.error(e);
@@ -170,7 +115,7 @@ export const actions: Actions = {
 		}
 
 		const game = await db.query.games.findFirst({
-			where: eq(games.id, form.data.id)
+			where: eq(games.id, form.data.id),
 		});
 
 		if (!game) {
@@ -180,7 +125,7 @@ export const actions: Actions = {
 
 		try {
 			const collection = await db.query.collections.findFirst({
-				where: eq(collections.user_id, locals.user.id)
+				where: eq(collections.user_id, locals.user.id),
 			});
 
 			if (!collection) {
@@ -188,17 +133,21 @@ export const actions: Actions = {
 				return error(404, 'Collection not found');
 			}
 
-			await db.delete(collection_items).where(and(
-					eq(collection_items.collection_id, collection.id),
-					eq(collection_items.game_id, game.id)
-			));
+			await db
+				.delete(collection_items)
+				.where(
+					and(
+						eq(collection_items.collection_id, collection.id),
+						eq(collection_items.game_id, game.id),
+					),
+				);
 
 			return {
-				form
+				form,
 			};
 		} catch (e) {
 			console.error(e);
 			return error(500, 'Something went wrong');
 		}
-	}
+	},
 };

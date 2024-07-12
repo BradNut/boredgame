@@ -1,24 +1,32 @@
 import { fail, error, type Actions } from '@sveltejs/kit';
-import { and, eq, ne } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
-import { decodeHex } from 'oslo/encoding';
-import { TOTPController } from 'oslo/otp';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
-import db from '$lib/drizzle';
+import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { signInSchema } from '$lib/validations/auth';
-import { users, recovery_codes } from '../../../schema';
+import { twoFactor, users, type Users } from '$db/schema';
 import type { PageServerLoad } from './$types';
+import { userFullyAuthenticated, userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
-	if (event.locals.user) {
+	const { locals, cookies } = event;
+	const { user, session } = event.locals;
+
+	if (userFullyAuthenticated(user, session)) {
 		const message = { type: 'success', message: 'You are already signed in' } as const;
 		throw redirect('/', message, event);
+	} else if (userNotFullyAuthenticated(user, session)) {
+		await lucia.invalidateSession(locals.session!.id!);
+		const sessionCookie = lucia.createBlankSessionCookie();
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes,
+		});
 	}
-
 	const form = await superValidate(event, zod(signInSchema));
 
 	return {
@@ -49,72 +57,63 @@ export const actions: Actions = {
 
 		let session;
 		let sessionCookie;
+		const user: Users | undefined = await db.query.users.findFirst({
+			where: eq(users.username, form.data.username),
+		});
+
+		if (!user) {
+			form.data.password = '';
+			return setError(form, 'username', 'Your username or password is incorrect.');
+		}
+
+		let twoFactorDetails;
+
 		try {
 			const password = form.data.password;
-
-			const user = await db.query.users.findFirst({
-				where: eq(users.username, form.data.username),
-			});
-
 			console.log('user', JSON.stringify(user, null, 2));
 
 			if (!user?.hashed_password) {
+				console.log('invalid username/password');
 				form.data.password = '';
-				return setError(form, '', 'Your username or password is incorrect.');
+				return setError(form, 'password', 'Your username or password is incorrect.');
 			}
 
 			const validPassword = await new Argon2id().verify(user.hashed_password, password);
 			if (!validPassword) {
 				console.log('invalid password');
 				form.data.password = '';
-				return setError(form, '', 'Your username or password is incorrect.');
+				return setError(form, 'password', 'Your username or password is incorrect.');
 			}
 
-			// await db
-			// 	.insert(collections)
-			// 	.values({
-			// 		user_id: user.id,
-			// 	})
-			// 	.onConflictDoNothing();
-			// await db
-			// 	.insert(wishlists)
-			// 	.values({
-			// 		user_id: user.id,
-			// 	})
-			// 	.onConflictDoNothing();
-
-			if (user?.two_factor_enabled && user?.two_factor_secret && !form?.data?.totpToken) {
-				return fail(400, {
-					form,
-					twoFactorRequired: true,
-				});
-			} else if (user?.two_factor_enabled && user?.two_factor_secret && form?.data?.totpToken) {
-				console.log('totpToken', form.data.totpToken);
-				const validOTP = await new TOTPController().verify(
-					form.data.totpToken,
-					decodeHex(user.two_factor_secret),
-				);
-				console.log('validOTP', validOTP);
-
-				if (!validOTP) {
-					console.log('invalid TOTP code check for recovery codes');
-					const usedRecoveryCode = await checkRecoveryCode(form?.data?.totpToken, user.id);
-					if (!usedRecoveryCode) {
-						console.log('invalid TOTP code');
-						form.errors.totpToken = ['Invalid code'];
-						return fail(400, {
-							form,
-							twoFactorRequired: true,
-						});
-					}
-				}
-			}
 			console.log('ip', locals.ip);
 			console.log('country', locals.country);
-			session = await lucia.createSession(user.id, {
-				ip_country: locals.country,
-				ip_address: locals.ip,
+
+			twoFactorDetails = await db.query.twoFactor.findFirst({
+				where: eq(twoFactor.userId, user?.id),
 			});
+
+			if (twoFactorDetails?.secret && twoFactorDetails?.enabled) {
+				await db.update(twoFactor).set({
+					initiated_time: new Date(),
+				});
+
+				session = await lucia.createSession(user.id, {
+					ip_country: locals.country,
+					ip_address: locals.ip,
+					twoFactorAuthEnabled:
+						twoFactorDetails?.enabled &&
+						twoFactorDetails?.secret !== null &&
+						twoFactorDetails?.secret !== '',
+					isTwoFactorAuthenticated: false,
+				});
+			} else {
+				session = await lucia.createSession(user.id, {
+					ip_country: locals.country,
+					ip_address: locals.ip,
+					twoFactorAuthEnabled: false,
+					isTwoFactorAuthenticated: false,
+				});
+			}
 			console.log('logging in session', session);
 			sessionCookie = lucia.createSessionCookie(session.id);
 			console.log('logging in session cookie', sessionCookie);
@@ -133,26 +132,18 @@ export const actions: Actions = {
 
 		form.data.username = '';
 		form.data.password = '';
-		const message = { type: 'success', message: 'Signed In!' } as const;
-		redirect(302, '/', message, event);
+
+		if (
+			twoFactorDetails?.enabled &&
+			twoFactorDetails?.secret !== null &&
+			twoFactorDetails?.secret !== ''
+		) {
+			console.log('redirecting to TOTP page');
+			const message = { type: 'success', message: 'Please enter your TOTP code.' } as const;
+			redirect(302, '/totp', message, event);
+		} else {
+			const message = { type: 'success', message: 'Signed In!' } as const;
+			redirect(302, '/', message, event);
+		}
 	},
 };
-
-async function checkRecoveryCode(recoveryCode: string, userId: string) {
-	const userRecoveryCodes = await db.query.recovery_codes.findMany({
-		where: and(eq(recovery_codes.used, false), eq(recovery_codes.userId, userId)),
-	});
-	for (const code of userRecoveryCodes) {
-		const validRecoveryCode = await new Argon2id().verify(code.code, recoveryCode);
-		if (validRecoveryCode) {
-			await db
-				.update(recovery_codes)
-				.set({
-					used: true,
-				})
-				.where(eq(recovery_codes.id, code.id));
-			return true;
-		}
-	}
-	return false;
-}

@@ -32,11 +32,10 @@ export const authentication: Handle = async function ({ event, resolve }) {
 	if (session && session.fresh) {
 		const sessionCookie = lucia.createSessionCookie(session.id);
 		console.log('sessionCookie', JSON.stringify(sessionCookie, null, 2));
-		// sveltekit types deviates from the de-facto standard
-		// you can use 'as any' too
+		// sveltekit types deviates from the de-facto standard, you can use 'as any' too
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
 			path: '.',
-			...sessionCookie.attributes
+			...sessionCookie.attributes,
 		});
 	}
 	console.log('session from hooks', JSON.stringify(session, null, 2));
@@ -45,7 +44,7 @@ export const authentication: Handle = async function ({ event, resolve }) {
 		console.log('blank sessionCookie', JSON.stringify(sessionCookie, null, 2));
 		event.cookies.set(sessionCookie.name, sessionCookie.value, {
 			path: '.',
-			...sessionCookie.attributes
+			...sessionCookie.attributes,
 		});
 	}
 	event.locals.user = user;
@@ -56,6 +55,6 @@ export const authentication: Handle = async function ({ event, resolve }) {
 
 export const handle: Handle = sequence(
 	// Sentry.sentryHandle(),
-	authentication
+	authentication,
 );
 // export const handleError = Sentry.handleErrorWithSentry();

@@ -1,38 +1,40 @@
 <script lang="ts">
-	import Game from '$components/Game.svelte';
-
 	export let data;
-	console.log('data', data);
-	const items = data.items || [];
+	let wishlists = data?.wishlists || [];
 </script>
 
 <svelte:head>
-	<title>{`Your Wishlist | Bored Game`}</title>
+	<title>Your Wishlists | Bored Game</title>
 </svelte:head>
 
-<h1>Your wishlist</h1>
+<h1>Your wishlists</h1>
 
-<div class="games-list">
-	{#if items.length > 0}
-		{#each items as item (item.id)}
-			<Game game={item.game} />
-		{/each}
-	{:else}
-		<h2>Sorry no games found!</h2>
-	{/if}
+<div class="wishlists">
+	<div class="wishlist-list">
+		{#if wishlists.length === 0}
+			<h2>You have no wishlists</h2>
+		{:else}
+			{#each wishlists as wishlist}
+				<div class="collection grid gap-0.5">
+					<h2><a href="/wishlists/{wishlist.cuid}">{wishlist.name}</a></h2>
+					<h3>Created at: {new Date(wishlist.created_at).toLocaleString()}</h3>
+				</div>
+			{/each}
+		{/if}
+	</div>
 </div>
 
 <style lang="postcss">
 	h1 {
-		margin: 1.5rem 0rem;
+		margin: 1.5rem 0;
 		width: 100%;
 	}
 
-	.games {
-		margin: 2rem 0rem;
+	.wishlists {
+		margin: 2rem 0;
 	}
 
-	.games-list {
+	.wishlist-list {
 		display: grid;
 		grid-template-columns: repeat(3, minmax(200px, 1fr));
 		gap: 2rem;

@@ -1,11 +1,11 @@
 import { eq } from 'drizzle-orm';
-import db from '$lib/drizzle';
-import { roles, user_roles } from '../schema';
+import db from '../db';
+import { roles, user_roles } from '$db/schema';
 
 export async function add_user_to_role(user_id: string, role_name: string, primary = false) {
 	// Find the role by its name
 	const role = await db.query.roles.findFirst({
-		where: eq(roles.name, role_name)
+		where: eq(roles.name, role_name),
 	});
 
 	if (!role || !role.id) {
@@ -16,6 +16,6 @@ export async function add_user_to_role(user_id: string, role_name: string, prima
 	return db.insert(user_roles).values({
 		user_id,
 		role_id: role.id,
-		primary
+		primary,
 	});
 }

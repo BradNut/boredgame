@@ -1,4 +1,5 @@
 import type { SvelteComponent } from 'svelte';
+import { collections } from '$db/schema';
 
 export type Message = { status: 'error' | 'success' | 'warning' | 'info'; text: string };
 
@@ -29,7 +30,7 @@ export type BoredStore = {
 export enum ToastType {
 	INFO = 'INFO',
 	ERROR = 'ERROR',
-	WARNING = 'WARNING'
+	WARNING = 'WARNING',
 }
 
 export type ToastData = {
@@ -86,11 +87,11 @@ export type DesignerType = {
 
 export type ArtistType = {
 	id: string;
-}
+};
 
 export type ExpansionType = {
 	id: string;
-}
+};
 
 export type BGGLinkType =
 	| 'boardgamecategory'
@@ -174,3 +175,5 @@ export type SearchQuery = {
 	lt_year_published?: number;
 	fields?: string;
 };
+
+export type UICollection = Pick<typeof collections, 'cuid' | 'name'>;

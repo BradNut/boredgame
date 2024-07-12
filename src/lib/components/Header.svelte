@@ -2,21 +2,19 @@
 	import { applyAction, enhance } from '$app/forms';
 	import toast from 'svelte-french-toast';
 	import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte';
-	import * as DropdownMenu from "$components/ui/dropdown-menu";
-	import * as Avatar from "$components/ui/avatar";
+	import * as DropdownMenu from '$components/ui/dropdown-menu';
+	import * as Avatar from '$components/ui/avatar';
 	import { invalidateAll } from '$app/navigation';
 	import Logo from '$components/logo.svelte';
-	import type { Users } from "../../schema";
+	import type { Users } from '$db/schema';
 
-	export let user: Users | null = null;
+	type HeaderProps = {
+		user: Users | null;
+	};
 
-	console.log('header user', user);
+	let { user = null }: HeaderProps = $props();
 
-	let avatar: string;
-
-	$: if (user) {
-		avatar = user.username?.slice(0, 1).toUpperCase() || ':)';
-	}
+	let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)');
 </script>
 
 <header>
@@ -28,7 +26,6 @@
 			<span class="logo-text">Bored Game</span>
 		</a>
 	</div>
-	<!-- <TextSearch /> -->
 	<nav>
 		{#if user}
 			<DropdownMenu.Root>
@@ -41,7 +38,7 @@
 				</DropdownMenu.Trigger>
 				<DropdownMenu.Content>
 					<DropdownMenu.Group>
-						<DropdownMenu.Label>My Account</DropdownMenu.Label>
+						<DropdownMenu.Label>Account</DropdownMenu.Label>
 						<DropdownMenu.Separator />
 						<a href="/profile">
 							<DropdownMenu.Item>
@@ -49,57 +46,53 @@
 								<span>Profile</span>
 							</DropdownMenu.Item>
 						</a>
-						<a href="/collection">
+						<a href="/collections">
 							<DropdownMenu.Item>
 								<ListChecks class="mr-2 h-4 w-4" />
-								<span>Collection</span>
+								<span>Collections</span>
 							</DropdownMenu.Item>
 						</a>
-						<a href="/wishlist">
+						<a href="/wishlists">
 							<DropdownMenu.Item>
 								<ListTodo class="mr-2 h-4 w-4" />
-								<span>Wishlist</span>
+								<span>Wishlists</span>
 							</DropdownMenu.Item>
 						</a>
-						<form
-							use:enhance={() => {
-								return async ({ result }) => {
-									console.log(result);
-									if (result.type === 'success' || result.type === 'redirect') {
-										toast.success('Logged Out');
-									} else if (result.type === 'error') {
+						<DropdownMenu.Item>
+							<form
+								use:enhance={() => {
+									return async ({ result }) => {
 										console.log(result);
-										toast.error(`Error: ${result.error.message}`);
-									} else {
-										toast.error(`Something went wrong.`);
-										console.log(result);
-									}
-									await invalidateAll();
-									await applyAction(result);
-								};
-							}}
-							action="/logout"
-							method="POST"
-						>
-							<button type="submit" class="">
-								<DropdownMenu.Item>
-								<div class="flex items-center gap-1">
-									<LogOut class="mr-2 h-4 w-4"/>
-									<span>Sign out</span>
-								</div>
-								</DropdownMenu.Item>
-							</button>
-						</form>
+										if (result.type === 'success' || result.type === 'redirect') {
+											toast.success('Logged Out');
+										} else if (result.type === 'error') {
+											console.log(result);
+											toast.error(`Error: ${result.error.message}`);
+										} else {
+											toast.error(`Something went wrong.`);
+											console.log(result);
+										}
+										await invalidateAll();
+										await applyAction(result);
+									};
+								}}
+								action="/logout"
+								method="POST"
+							>
+								<button type="submit">
+									<div class="flex items-center gap-1">
+										<LogOut class="mr-2 h-4 w-4" />
+										<span>Sign out</span>
+									</div>
+								</button>
+							</form>
+						</DropdownMenu.Item>
 					</DropdownMenu.Group>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		{:else}
-			<a href="/login">
-				<span class="flex-auto">Login</span></a
-			>
-			<a href="/sign-up">
-				<span class="flex-auto">Sign Up</span></a
-			>
+			<a href="/login"> <span class="flex-auto">Login</span></a>
+			<a href="/sign-up"> <span class="flex-auto">Sign Up</span></a>
 		{/if}
 	</nav>
 </header>

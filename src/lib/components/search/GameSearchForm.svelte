@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-  import { search_schema, type SearchSchema } from '$lib/zodValidation';
-	import * as Form from "$lib/components/ui/form";
 	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { search_schema, type SearchSchema } from '$lib/zodValidation';
+	import * as Form from "$lib/components/ui/form";
 	import Input from '$components/ui/input/input.svelte';
 	import Checkbox from '$components/ui/checkbox/checkbox.svelte';
 

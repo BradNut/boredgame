@@ -6,19 +6,20 @@ import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { changeEmailSchema, profileSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
-import db from '$lib/drizzle';
+import db from '../../../../db';
 import type { PageServerLoad } from './$types';
-import { users } from '../../../../schema';
+import { users, twoFactor } from '$db/schema';
+import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
-	if (!event.locals.user) {
+	const { locals } = event;
+	const { user, session } = locals;
+	if (userNotAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const { user } = event.locals;
-
 	const dbUser = await db.query.users.findFirst({
-		where: eq(users.id, user.id),
+		where: eq(users.id, user!.id!),
 	});
 
 	const profileForm = await superValidate(zod(profileSchema), {
@@ -34,10 +35,14 @@ export const load: PageServerLoad = async (event) => {
 		},
 	});
 
+	const twoFactorDetails = await db.query.twoFactor.findFirst({
+		where: eq(twoFactor.userId, dbUser!.id!),
+	});
+
 	return {
 		profileForm,
 		emailForm,
-		hasSetupTwoFactor: !!dbUser?.two_factor_enabled,
+		hasSetupTwoFactor: !!twoFactorDetails?.enabled,
 	};
 };
 
@@ -84,6 +89,7 @@ export const actions: Actions = {
 				})
 				.where(eq(users.id, user.id));
 		} catch (e) {
+			// @ts-expect-error
 			if (e.message === `AUTH_INVALID_USER_ID`) {
 				// invalid user id
 				console.error(e);

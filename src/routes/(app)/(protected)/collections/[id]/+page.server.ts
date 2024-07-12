@@ -1,94 +1,144 @@
-import { error, type Actions } from '@sveltejs/kit';
+import { type Actions, error, fail } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
-import { modifyListGameSchema } from '$lib/validations/zod-schemas';
-import db from '$lib/drizzle.js';
+import { type ListGame, modifyListGameSchema } from '$lib/validations/zod-schemas';
+import db from '../../../../../db';
 import { notSignedInMessage } from '$lib/flashMessages.js';
-import { games, wishlist_items, wishlists } from '../../../../../schema.js';
+import { collections, games, collection_items } from '$db/schema';
+import { search_schema } from '$lib/zodValidation';
+import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
-	const { params, locals } = event;
-	if (!locals.user) {
+	const { locals, params, url } = event;
+	const { user, session } = locals;
+	const { id } = params;
+
+	if (userNotAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
+	const searchParams = Object.fromEntries(url?.searchParams);
+	console.log('searchParams', searchParams);
+	const q = searchParams?.q;
+	const limit = parseInt(searchParams?.limit) || 10;
+	const skip = parseInt(searchParams?.skip) || 0;
 
-	console.log('Wishlist load User id', locals.user.id);
+	const searchData = {
+		q,
+		limit,
+		skip,
+	};
 
-	try {
-		const wishlist = await db.query.wishlists.findFirst({
-			where: eq(wishlists.user_id, locals.user.id),
-		});
+	const searchForm = await superValidate(searchData, zod(search_schema));
+	const listManageForm = await superValidate(zod(modifyListGameSchema));
 
-		if (!wishlist) {
-			redirect(302, '/404');
-		}
+	const collection = await db.query.collections.findFirst({
+		columns: {
+			id: true,
+			cuid: true,
+			name: true,
+		},
+		where: and(eq(collections.user_id, user!.id!), eq(collections.cuid, id)),
+	});
+	console.log('collection', collection);
 
-		const items = await db.query.wishlist_items.findMany({
-			where: eq(wishlist_items.wishlist_id, wishlist.id),
-			with: {
-				game: {
-					columns: {
-						id: true,
-						name: true,
-						thumb_url: true,
-					},
+	if (!collection) {
+		console.log('Collection was not found');
+		error(404, 'Collection was not found');
+	}
+
+	const collectionItems = await db.query.collection_items.findMany({
+		columns: {
+			collection_id: true,
+			times_played: true,
+		},
+		where: eq(collection_items.collection_id, collection.id),
+		with: {
+			game: {
+				columns: {
+					id: true,
+					name: true,
+					thumb_url: true,
 				},
 			},
-		});
+		},
+		offset: skip,
+		limit,
+	});
 
-		console.log('wishlist', wishlist);
+	console.log('collection_items', collectionItems);
 
-		return {
-			items,
-		};
-	} catch (e) {
-		console.error(e);
+	const items: ListGame[] = [];
+	for (const item of collectionItems) {
+		console.log('item', item);
+		const game = item.game;
+		if (game) {
+			items.push({
+				game_id: '',
+				in_wishlist: false,
+				wishlist_id: '',
+				id: game.id,
+				collection_id: item.collection_id,
+				game_name: game.name ?? "Game doesn't have a name",
+				thumb_url: game.thumb_url,
+				times_played: item.times_played ?? 0,
+				in_collection: true,
+			});
+		}
 	}
-	redirect(302, '/404');
+
+	return {
+		searchForm,
+		listManageForm,
+		collection: {
+			name: collection.name,
+			cuid: collection.cuid ?? '',
+		},
+		items,
+	};
 }
 
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { locals } = event;
+		const { user, session } = locals;
+		if (userNotAuthenticated(user, session)) {
+			return fail(401);
+		}
+
 		const form = await superValidate(event, zod(modifyListGameSchema));
 
-		try {
-			if (!locals.user) {
-				redirect(302, '/login', notSignedInMessage, event);
-			}
+		const game = await db.query.games.findFirst({
+			where: eq(games.id, form.data.id),
+		});
 
-			const game = await db.query.games.findFirst({
-				where: eq(games.id, form.data.id),
+		if (!game) {
+			// game = await prisma.game.create({
+			// 	data: {
+			// 		name: form.name
+			// 	}
+			// });
+			console.log('game not found');
+			redirect(302, '/404');
+		}
+
+		try {
+			const collection = await db.query.collections.findFirst({
+				where: eq(collections.user_id, user!.id!),
 			});
 
-			if (!game) {
-				// game = await prisma.game.create({
-				// 	data: {
-				// 		name: form.name
-				// 	}
-				// });
-				console.log('game not found');
-				redirect(302, '/404');
+			if (!collection) {
+				console.log('Wishlist not found');
+				return error(404, 'Wishlist not found');
 			}
 
-			if (game) {
-				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, locals.user.id),
-				});
-
-				if (!wishlist) {
-					console.log('Wishlist not found');
-					return error(404, 'Wishlist not found');
-				}
-
-				await db.insert(wishlist_items).values({
-					game_id: game.id,
-					wishlist_id: wishlist.id,
-				});
-			}
+			await db.insert(collection_items).values({
+				game_id: game.id,
+				collection_id: collection.id,
+				times_played: 0,
+			});
 
 			return {
 				form,
@@ -101,58 +151,57 @@ export const actions: Actions = {
 	// Create new wishlist
 	create: async (event) => {
 		const { locals } = event;
-		if (!locals.user) {
-			redirect(302, '/login', notSignedInMessage, event);
+		const { user, session } = locals;
+		if (userNotAuthenticated(user, session)) {
+			return fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Delete a wishlist
-	delete: async ({ locals }) => {
-		if (!locals.user) {
-			redirect(302, '/login');
+	delete: async (event) => {
+		const { locals } = event;
+		const { user, session } = locals;
+		if (userNotAuthenticated(user, session)) {
+			return fail(401);
 		}
 		return error(405, 'Method not allowed');
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event;
+		const { user, session } = locals;
+		if (userNotAuthenticated(user, session)) {
+			return fail(401);
+		}
 		const form = await superValidate(event, zod(modifyListGameSchema));
 
-		try {
-			if (!locals.user) {
-				redirect(302, '/login', notSignedInMessage, event);
-			}
+		const game = await db.query.games.findFirst({
+			where: eq(games.id, form.data.id),
+		});
 
-			const game = await db.query.games.findFirst({
-				where: eq(games.id, form.data.id),
+		if (!game) {
+			console.log('game not found');
+			redirect(302, '/404');
+		}
+
+		try {
+			const collection = await db.query.collections.findFirst({
+				where: eq(collections.user_id, user!.id!),
 			});
 
-			if (!game) {
-				// game = await prisma.game.create({
-				// 	data: {
-				// 		name: form.name
-				// 	}
-				// });
-				console.log('game not found');
-				redirect(302, '/404');
+			if (!collection) {
+				console.log('Collection not found');
+				return error(404, 'Collection not found');
 			}
 
-			if (game) {
-				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, locals.user.id),
-				});
-
-				if (!wishlist) {
-					console.log('Wishlist not found');
-					return error(404, 'Wishlist not found');
-				}
-
-				await db
-					.delete(wishlist_items)
-					.where(
-						and(eq(wishlist_items.wishlist_id, wishlist.id), eq(wishlist_items.game_id, game.id)),
-					);
-			}
+			await db
+				.delete(collection_items)
+				.where(
+					and(
+						eq(collection_items.collection_id, collection.id),
+						eq(collection_items.game_id, game.id),
+					),
+				);
 
 			return {
 				form,

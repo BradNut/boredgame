@@ -3,7 +3,7 @@
 	import Header from '$components/Header.svelte';
 	import Footer from '$components/Footer.svelte';
 
-	export let data;
+	const { data, children } = $props();
 
 	console.log('layout data user', data.user);
 </script>
@@ -11,7 +11,7 @@
 <Header user={data.user} />
 
 <main>
-	<slot />
+	{@render children()}
 </main>
 
 <Footer />

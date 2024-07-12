@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
-import db from '$lib/drizzle';
-import { type Expansions, expansions } from '../../../schema';
+import db from '../../../db';
+import { type Expansions, expansions } from '$db/schema';
 import { PUBLIC_SITE_URL } from '$env/static/public';
 
 export async function createExpansion(locals: App.Locals, expansion: Expansions) {
@@ -10,24 +10,26 @@ export async function createExpansion(locals: App.Locals, expansion: Expansions)
 	}
 
 	try {
-		const foundExpansion = await db.query.expansions
-			.findFirst({
-				where: and(eq(expansions.base_game_id, expansion.base_game_id), eq(expansions.game_id, expansion.game_id)),
-				columns: {
-					id: true,
-					game_id: true,
-					base_game_id: true
-				}
-			});
+		const foundExpansion = await db.query.expansions.findFirst({
+			where: and(
+				eq(expansions.base_game_id, expansion.base_game_id),
+				eq(expansions.game_id, expansion.game_id),
+			),
+			columns: {
+				id: true,
+				game_id: true,
+				base_game_id: true,
+			},
+		});
 		console.log('Expansion already exists', foundExpansion);
 		if (foundExpansion) {
 			console.log('Expansion Game ID', foundExpansion.game_id);
 			return new Response('Expansion already exists', {
 				headers: {
 					'Content-Type': 'application/json',
-					Location: `${PUBLIC_SITE_URL}/api/game/${foundExpansion.game_id}`
+					Location: `${PUBLIC_SITE_URL}/api/game/${foundExpansion.game_id}`,
 				},
-				status: 409
+				status: 409,
 			});
 		}
 
@@ -42,7 +44,7 @@ export async function createExpansion(locals: App.Locals, expansion: Expansions)
 
 		if (dbExpansion.length === 0) {
 			return new Response('Could not create expansion', {
-				status: 500
+				status: 500,
 			});
 		}
 

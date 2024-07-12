@@ -1,13 +1,13 @@
-import { redirect } from "@sveltejs/kit";
-import type { PageServerLoad } from "../$types";
-import { notSignedInMessage } from "$lib/flashMessages";
+import { redirect } from 'sveltekit-flash-message/server';
+import { notSignedInMessage } from '$lib/flashMessages';
+import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
 	const { locals } = event;
-	const user = locals.user;
-	if (!user) {
+	const { user, session } = locals;
+	if (userNotAuthenticated(user, session)) {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	return {}
+	return {};
 }

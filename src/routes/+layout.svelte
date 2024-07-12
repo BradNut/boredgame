@@ -13,10 +13,10 @@
 
 	const dev = process.env.NODE_ENV !== 'production';
 
-	export let data;
-	$: ({ user } = data);
+	const { data, children } = $props();
+	const { user } = data;
 
-	$: metaTags = {
+	const metaTags = $derived({
 		titleTemplate: '%s | Bored Game',
 		description: 'Bored Game, keep track of your games.',
 		openGraph: {
@@ -26,7 +26,7 @@
 			description: 'Bored Game, keep track of your games',
 		},
 		...$page.data.metaTagsChild
-	}
+	});
 
 	const flash = getFlash(page, {
     clearOnNavigate: true,
@@ -41,34 +41,21 @@
 	});
 
 
-	$: if ($flash) {
-		if ($flash.type === 'success') {
-			toast.success($flash.message);
-		} else {
-			toast.error($flash.message, {
-				duration: 5000
-			});
+	$effect(() => {
+		if ($flash) {
+			if ($flash.type === 'success') {
+				toast.success($flash.message);
+			} else {
+				toast.error($flash.message, {
+					duration: 5000
+				});
+			}
+
+			// Clearing the flash message could sometimes
+			// be required here to avoid double-toasting.
+			flash.set(undefined);
 		}
-
-		// Clearing the flash message could sometimes
-		// be required here to avoid double-toasting.
-		flash.set(undefined);
-	}
-	// flash.subscribe(($flash) => {
-	// 	if (!$flash) return;
-
-	// 	if ($flash.type === 'success') {
-	// 		toast.success($flash.message);
-	// 	} else {
-	// 		toast.error($flash.message, {
-	// 			duration: 5000
-	// 		});
-	// 	}
-
-	// 	// Clearing the flash message could sometimes
-	// 	// be required here to avoid double-toasting.
-	// 	flash.set(undefined);
-	// });
+	});
 
 	onNavigate(async (navigation) => {
 		if (!document.startViewTransition) return;
@@ -91,7 +78,7 @@
 <PageLoadingIndicator />
 
 <div class="layout">
-	<slot />
+	{@render children()}
 </div>
 
 <Toaster />

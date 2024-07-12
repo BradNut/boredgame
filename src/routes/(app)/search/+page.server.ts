@@ -5,14 +5,13 @@ import kebabCase from 'just-kebab-case';
 import type { GameType, SearchQuery } from '$lib/types';
 import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper.js';
 import { search_schema } from '$lib/zodValidation';
-import type { PageServerLoad } from '../$types.js';
 import type { BggThingDto } from 'boardgamegeekclient/dist/esm/dto/index.js';
 import { createOrUpdateGameMinimal } from '$lib/utils/db/gameUtils';
 
 async function searchForGames(
 	locals: App.Locals,
-	eventFetch,
-	urlQueryParams: SearchQuery
+	eventFetch: typeof fetch,
+	urlQueryParams: URLSearchParams,
 ) {
 	try {
 		console.log('urlQueryParams search games', urlQueryParams);
@@ -21,9 +20,9 @@ async function searchForGames(
 		headers.set('Content-Type', 'application/json');
 		const requestInit: RequestInit = {
 			method: 'GET',
-			headers
+			headers,
 		};
-		const url = `/api/game/search${urlQueryParams ? `?${urlQueryParams}` : ''}`;
+		const url = `/api/games/search${urlQueryParams ? `?${urlQueryParams}` : ''}`;
 		console.log('Calling internal api', url);
 		const response = await eventFetch(url, requestInit);
 		console.log('response from internal api', response);
@@ -36,7 +35,7 @@ async function searchForGames(
 		const games = await response.json();
 		console.log('games from DB', games);
 
-		const gameNameSearch = urlQueryParams.get('q');
+		const gameNameSearch = urlQueryParams.get('q') ?? '';
 		let totalCount = games?.length || 0;
 
 		if (
@@ -44,10 +43,10 @@ async function searchForGames(
 			!games.find((game: GameType) => game.slug === kebabCase(gameNameSearch))
 		) {
 			console.log('No games found in DB for', gameNameSearch);
-
+			const searchQueryParams = urlQueryParams ? `?${urlQueryParams}` : '';
 			const externalResponse = await eventFetch(
-				`/api/external/search${urlQueryParams ? `?${urlQueryParams}` : ''}`,
-				requestInit
+				`/api/external/search${searchQueryParams}`,
+				requestInit,
 			);
 
 			console.log('Back from external search', externalResponse);
@@ -65,10 +64,10 @@ async function searchForGames(
 				console.log('totalCount', totalCount);
 				for (const game of gameList) {
 					console.log(
-						`Retrieving simplified external game details for id: ${game.id} with name ${game.name}`
+						`Retrieving simplified external game details for id: ${game.id} with name ${game.name}`,
 					);
 					const externalGameResponse = await eventFetch(
-						`/api/external/game/${game.id}?simplified=true`
+						`/api/external/game/${game.id}?simplified=true`,
 					);
 					if (externalGameResponse.ok) {
 						const externalGame = await externalGameResponse.json();
@@ -82,14 +81,14 @@ async function searchForGames(
 
 		return {
 			totalCount,
-			games
+			games,
 		};
 	} catch (e) {
 		console.log(`Error searching board games ${e}`);
 	}
 	return {
 		totalCount: 0,
-		games: []
+		games: [],
 	};
 }
 
@@ -102,24 +101,27 @@ const defaults = {
 	exact: false,
 };
 
-export const load: PageServerLoad = async ({ locals, fetch, url }) => {
+export const load = async ({ locals, fetch, url }) => {
 	const searchParams = Object.fromEntries(url?.searchParams);
 	console.log('searchParams', searchParams);
 	searchParams.order = searchParams.order || defaults.order;
 	searchParams.sort = searchParams.sort || defaults.sort;
 	searchParams.q = searchParams.q || defaults.q;
-	const form = await superValidate({
-		...searchParams,
-		skip: Number(searchParams.skip || defaults.skip),
-		limit: Number(searchParams.limit || defaults.limit),
-		exact: searchParams.exact ? searchParams.exact === 'true' : defaults.exact
-	}, zod(search_schema));
+	const form = await superValidate(
+		{
+			...searchParams,
+			skip: Number(searchParams.skip || defaults.skip),
+			limit: Number(searchParams.limit || defaults.limit),
+			exact: searchParams.exact ? searchParams.exact === 'true' : defaults.exact,
+		},
+		zod(search_schema),
+	);
 
 	const queryParams: SearchQuery = {
 		limit: form.data?.limit,
 		skip: form.data?.skip,
 		q: form.data?.q,
-		exact: form.data?.exact
+		exact: form.data?.exact,
 	};
 
 	try {
@@ -129,8 +131,8 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 				searchData: {
 					totalCount: 0,
 					games: [],
-					wishlists: []
-				}
+					wishlists: [],
+				},
 			};
 		}
 
@@ -171,32 +173,32 @@ export const load: PageServerLoad = async ({ locals, fetch, url }) => {
 			form,
 			// modifyListForm,
 			searchData,
-			wishlists: []
+			wishlists: [],
 		};
 	} catch (e) {
 		console.log(`Error searching board games ${e}`);
 	}
 
-	console.log('returning default no data')
+	console.log('returning default no data');
 	return {
 		form,
 		searchData: {
 			totalCount: 0,
-			games: []
+			games: [],
 		},
-		wishlists: []
+		wishlists: [],
 	};
 };
 
 export const actions = {
-	random: async ({ request, locals, fetch }): Promise<any> => {
+	random: async ({ request, locals, fetch }) => {
 		const form = await superValidate(request, zod(search_schema));
 		const queryParams: SearchQuery = {
 			order_by: 'rank',
 			ascending: false,
 			random: true,
 			fields:
-				'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description'
+				'id,name,min_age,min_players,max_players,thumb_url,min_playtime,max_playtime,min_age,description',
 		};
 
 		const newQueryParams: Record<string, string> = {};
@@ -208,7 +210,7 @@ export const actions = {
 
 		return {
 			form,
-			searchData: await searchForGames(locals, fetch, urlQueryParams)
+			searchData: await searchForGames(locals, fetch, urlQueryParams),
 		};
-	}
+	},
 };

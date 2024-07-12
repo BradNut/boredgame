@@ -2,8 +2,8 @@ import { and, eq, inArray, not } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from './$types';
 import { forbiddenMessage, notSignedInMessage } from '$lib/flashMessages';
-import db from '$lib/drizzle';
-import { roles, user_roles, users } from '../../../../../../schema';
+import db from '../../../../../../db';
+import { roles, user_roles, users } from '$db/schema';
 
 export const load: PageServerLoad = async (event) => {
 	const { params } = event;
@@ -22,16 +22,16 @@ export const load: PageServerLoad = async (event) => {
 					role: {
 						columns: {
 							name: true,
-							cuid: true
-						}
-					}
-				}
-			}
-		}
+							cuid: true,
+						},
+					},
+				},
+			},
+		},
 	});
 
 	const containsAdminRole = foundUser?.user_roles?.some(
-		(user_role) => user_role?.role?.name === 'admin'
+		(user_role) => user_role?.role?.name === 'admin',
 	);
 	if (!containsAdminRole) {
 		console.log('Not an admin');
@@ -45,14 +45,14 @@ export const load: PageServerLoad = async (event) => {
 			where: not(inArray(roles.cuid, currentRoleIds)),
 			columns: {
 				name: true,
-				cuid: true
-			}
+				cuid: true,
+			},
 		});
 	}
 
 	return {
 		user: foundUser,
-		availableRoles
+		availableRoles,
 	};
 };
 
@@ -71,10 +71,10 @@ export const actions = {
 				role: {
 					columns: {
 						name: true,
-						cuid: true
-					}
-				}
-			}
+						cuid: true,
+					},
+				},
+			},
 		});
 
 		console.log('userRoles', userRoles);
@@ -88,13 +88,13 @@ export const actions = {
 		const data = await request.formData();
 		const role = data.get('role');
 		const dbRole = await db.query.roles.findFirst({
-			where: eq(roles.cuid, role?.toString() ?? '')
+			where: eq(roles.cuid, role?.toString() ?? ''),
 		});
 		console.log('dbRole', dbRole);
 		if (dbRole) {
 			await db.insert(user_roles).values({
 				user_id: user.id,
-				role_id: dbRole.id
+				role_id: dbRole.id,
 			});
 			redirect({ type: 'success', message: `Successfully added role ${dbRole.name}!` }, event);
 		} else {
@@ -114,10 +114,10 @@ export const actions = {
 				role: {
 					columns: {
 						name: true,
-						cuid: true
-					}
-				}
-			}
+						cuid: true,
+					},
+				},
+			},
 		});
 
 		const containsAdminRole = userRoles.some((user_role) => user_role?.role?.name === 'admin');
@@ -128,7 +128,7 @@ export const actions = {
 		const data = await request.formData();
 		const role = data.get('role');
 		const dbRole = await db.query.roles.findFirst({
-			where: eq(roles.cuid, role?.toString() ?? '')
+			where: eq(roles.cuid, role?.toString() ?? ''),
 		});
 		console.log('dbRole', dbRole);
 		if (dbRole) {
@@ -139,5 +139,5 @@ export const actions = {
 		} else {
 			redirect({ type: 'error', message: `Failed to remove role ${dbRole.name} !` }, event);
 		}
-	}
+	},
 };
