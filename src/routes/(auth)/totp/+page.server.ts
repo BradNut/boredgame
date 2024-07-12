@@ -13,7 +13,7 @@ import { totpSchema } from '$lib/validations/auth';
 import { users, twoFactor, recoveryCodes } from '$db/schema';
 import type { PageServerLoad } from './$types';
 import { notSignedInMessage } from '$lib/flashMessages';
-import { TWO_FACTOR_TIMEOUT } from '../../../env';
+import env from '../../../env';
 
 export const load: PageServerLoad = async (event) => {
 	const { user, session } = event.locals;
@@ -32,7 +32,8 @@ export const load: PageServerLoad = async (event) => {
 		});
 
 		// Check if two factor started less than TWO_FACTOR_TIMEOUT
-		if (Date.now() - twoFactorDetails?.initiatedTime > TWO_FACTOR_TIMEOUT) {
+		const 
+		if ((Date.now() - twoFactorDetails?.initiatedTime) > env.TWO_FACTOR_TIMEOUT) {s
 			const message = { type: 'error', message: 'Two factor authentication has expired' } as const;
 			redirect(302, '/login', message, event);
 		}

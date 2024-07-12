@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import db from '../db';
-import { roles, user_roles } from '$db/schema';
+import { roles, userRoles } from '$db/schema';
 
 export async function add_user_to_role(user_id: string, role_name: string, primary = false) {
 	// Find the role by its name
@@ -13,7 +13,7 @@ export async function add_user_to_role(user_id: string, role_name: string, prima
 	}
 
 	// Create a UserRole entry linking the user and the role
-	return db.insert(user_roles).values({
+	return db.insert(userRoles).values({
 		user_id,
 		role_id: role.id,
 		primary,
