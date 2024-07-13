@@ -1,4 +1,4 @@
-import { fail, error, type Actions } from '@sveltejs/kit';
+import { fail, error, type Actions, type Cookies, type RequestEvent } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 import { decodeHex } from 'oslo/encoding';
@@ -16,7 +16,8 @@ import { notSignedInMessage } from '$lib/flashMessages';
 import env from '../../../env';
 
 export const load: PageServerLoad = async (event) => {
-	const { user, session } = event.locals;
+	const { cookies, locals } = event;
+	const { user, session } = locals;
 
 	if (!user || !session) {
 		redirect(302, '/login', notSignedInMessage, event);
@@ -31,9 +32,33 @@ export const load: PageServerLoad = async (event) => {
 			where: eq(twoFactor.userId, dbUser!.id!),
 		});
 
+		if (!twoFactorDetails || !twoFactorDetails.enabled) {
+			const message = { type: 'error', message: 'Two factor authentication is not enabled' } as const;
+			redirect(302, '/login', message, event);
+		}
+
+		let twoFactorInitiatedTime = twoFactorDetails.initiatedTime;
+		if (twoFactorInitiatedTime === null) {
+			console.log('twoFactorInitiatedTime is null');
+			twoFactorInitiatedTime = new Date();
+			console.log('twoFactorInitiatedTime', twoFactorInitiatedTime);
+			await db
+				.update(twoFactor)
+				.set({ initiatedTime: twoFactorInitiatedTime })
+				.where(eq(twoFactor.userId, dbUser!.id!));
+		}
+
 		// Check if two factor started less than TWO_FACTOR_TIMEOUT
-		const 
-		if ((Date.now() - twoFactorDetails?.initiatedTime) > env.TWO_FACTOR_TIMEOUT) {s
+		const timeElapsed = Date.now() - twoFactorInitiatedTime.getTime();
+		console.log('Time elapsed', timeElapsed);
+		if (timeElapsed > env.TWO_FACTOR_TIMEOUT) {
+			console.log('Time elapsed was more than TWO_FACTOR_TIMEOUT', timeElapsed, env.TWO_FACTOR_TIMEOUT);
+			await lucia.invalidateSession(session!.id!);
+			const sessionCookie = lucia.createBlankSessionCookie();
+			cookies.set(sessionCookie.name, sessionCookie.value, {
+				path: '.',
+				...sessionCookie.attributes,
+			});
 			const message = { type: 'error', message: 'Two factor authentication has expired' } as const;
 			redirect(302, '/login', message, event);
 		}
@@ -71,7 +96,7 @@ export const actions: Actions = {
 			throw error(429);
 		}
 
-		const { locals } = event;
+		const { cookies, locals } = event;
 		const session = locals.session;
 		const user = locals.user;
 
@@ -116,15 +141,18 @@ export const actions: Actions = {
 
 			const twoFactorSecretPopulated =
 				twoFactorDetails?.secret !== '' && twoFactorDetails?.secret !== null;
-			if (twoFactorDetails.enabled && !twoFactorSecretPopulated && !totpToken) {
+			if (twoFactorDetails?.enabled && !twoFactorSecretPopulated && !totpToken) {
 				return fail(400, {
 					form,
 				});
 			} else if (twoFactorSecretPopulated && totpToken) {
+				// Check if two factor started less than TWO_FACTOR_TIMEOUT
+				await checkTOTPExpiry(twoFactorDetails, session, cookies, event);
+
 				console.log('totpToken', totpToken);
 				const validOTP = await new TOTPController().verify(
 					totpToken,
-					decodeHex(twoFactorDetails.secret ?? ''),
+					decodeHex(twoFactorDetails?.secret ?? ''),
 				);
 				console.log('validOTP', validOTP);
 
@@ -166,6 +194,26 @@ export const actions: Actions = {
 		redirect(302, '/', message, event);
 	},
 };
+
+async function checkTOTPExpiry(twoFactorDetails: { id: string; cuid: string | null; secret: string; enabled: boolean; initiatedTime: Date | null; createdAt: Date; updatedAt: Date; userId: string; } | undefined, session, cookies: Cookies, event: RequestEvent<Partial<Record<string, string>>, string | null>) {
+	const twoFactorInitiatedTime = twoFactorDetails?.initiatedTime;
+	if (twoFactorInitiatedTime === null || twoFactorInitiatedTime === undefined) {
+		redirect(302, '/login');
+	}
+	const timeElapsed = Date.now() - twoFactorInitiatedTime.getTime();
+	console.log('Time elapsed', timeElapsed);
+	if (timeElapsed > env.TWO_FACTOR_TIMEOUT) {
+		console.log('Time elapsed was more than TWO_FACTOR_TIMEOUT', timeElapsed, env.TWO_FACTOR_TIMEOUT);
+		await lucia.invalidateSession(session!.id!);
+		const sessionCookie = lucia.createBlankSessionCookie();
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes,
+		});
+		const message = { type: 'error', message: 'Two factor authentication has expired' } as const;
+		redirect(302, '/login', message, event);
+	}
+}
 
 async function checkRecoveryCode(recoveryCode: string, userId: string) {
 	const userRecoveryCodes = await db.query.recoveryCodes.findMany({

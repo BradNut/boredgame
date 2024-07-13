@@ -1,7 +1,7 @@
 import { fail } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 import { lucia } from '$lib/server/auth';
-import { notSignedInMessage } from '$lib/flashMessages';
+import { signedOutMessage } from '$lib/flashMessages';
 import type { Actions } from "./$types";
 
 export const actions: Actions = {
@@ -17,6 +17,6 @@ export const actions: Actions = {
 			path: '.',
 			...sessionCookie.attributes
 		});
-		return redirect(302, '/login', notSignedInMessage, event);
+		return redirect(302, '/login', signedOutMessage, event);
 	}
 };
