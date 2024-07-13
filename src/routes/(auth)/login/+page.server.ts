@@ -94,7 +94,7 @@ export const actions: Actions = {
 
 			if (twoFactorDetails?.secret && twoFactorDetails?.enabled) {
 				await db.update(twoFactor).set({
-					initiated_time: new Date(),
+					initiatedTime: new Date(),
 				});
 
 				session = await lucia.createSession(user.id, {

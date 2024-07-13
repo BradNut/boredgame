@@ -3,7 +3,7 @@ import { redirect } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from './$types';
 import { forbiddenMessage, notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../../../db';
-import { roles, user_roles, users } from '$db/schema';
+import { roles, userRoles, users } from '$db/schema';
 
 export const load: PageServerLoad = async (event) => {
 	const { params } = event;
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async (event) => {
 	const foundUser = await db.query.users.findFirst({
 		where: eq(users.cuid, id),
 		with: {
-			user_roles: {
+			userRoles: {
 				with: {
 					role: {
 						columns: {
@@ -30,7 +30,7 @@ export const load: PageServerLoad = async (event) => {
 		},
 	});
 
-	const containsAdminRole = foundUser?.user_roles?.some(
+	const containsAdminRole = foundUser?.userRoles?.some(
 		(user_role) => user_role?.role?.name === 'admin',
 	);
 	if (!containsAdminRole) {
@@ -38,7 +38,7 @@ export const load: PageServerLoad = async (event) => {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const currentRoleIds = foundUser?.user_roles?.map((user_role) => user_role?.role.cuid) || [];
+	const currentRoleIds = foundUser?.userRoles?.map((user_role) => user_role?.role.cuid) || [];
 	let availableRoles: { name: string; cuid: string }[] = [];
 	if (currentRoleIds?.length > 0) {
 		availableRoles = await db.query.roles.findMany({
@@ -65,8 +65,8 @@ export const actions = {
 			redirect(302, '/login', notSignedInMessage, event);
 		}
 
-		const userRoles = await db.query.user_roles.findMany({
-			where: eq(user_roles.user_id, user.id),
+		const userRoles = await db.query.userRoles.findMany({
+			where: eq(userRoles.user_id, user.id),
 			with: {
 				role: {
 					columns: {
@@ -92,7 +92,7 @@ export const actions = {
 		});
 		console.log('dbRole', dbRole);
 		if (dbRole) {
-			await db.insert(user_roles).values({
+			await db.insert(userRoles).values({
 				user_id: user.id,
 				role_id: dbRole.id,
 			});
@@ -108,8 +108,8 @@ export const actions = {
 			redirect(302, '/login', notSignedInMessage, event);
 		}
 
-		const userRoles = await db.query.user_roles.findMany({
-			where: eq(user_roles.user_id, user.id),
+		const userRoles = await db.query.userRoles.findMany({
+			where: eq(userRoles.user_id, user.id),
 			with: {
 				role: {
 					columns: {
@@ -133,11 +133,11 @@ export const actions = {
 		console.log('dbRole', dbRole);
 		if (dbRole) {
 			await db
-				.delete(user_roles)
-				.where(and(eq(user_roles.user_id, user.id), eq(user_roles.role_id, dbRole.id)));
+				.delete(userRoles)
+				.where(and(eq(userRoles.user_id, user.id), eq(userRoles.role_id, dbRole.id)));
 			redirect({ type: 'success', message: `Successfully removed role ${dbRole.name}!` }, event);
 		} else {
-			redirect({ type: 'error', message: `Failed to remove role ${dbRole.name} !` }, event);
+			redirect({ type: 'error', message: `Failed to remove role ${role?.toString()} !` }, event);
 		}
 	},
 };
