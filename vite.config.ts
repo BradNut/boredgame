@@ -18,9 +18,6 @@ export default defineConfig({
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
-	define: {
-		SUPERFORMS_LEGACY: true
-	},
 	css: {
 		devSourcemap: true,
 		preprocessorOptions: {
