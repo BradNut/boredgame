@@ -49,9 +49,8 @@ export const load: PageServerLoad = async (event) => {
 		}
 
 		// Check if two factor started less than TWO_FACTOR_TIMEOUT
-		const timeElapsed = Date.now() - twoFactorInitiatedTime.getTime();
-		console.log('Time elapsed', timeElapsed);
-		if (timeElapsed > env.TWO_FACTOR_TIMEOUT) {
+		const totpElapsed = totpTimeElapsed(twoFactorInitiatedTime);
+		if (totpElapsed) {
 			console.log('Time elapsed was more than TWO_FACTOR_TIMEOUT', timeElapsed, env.TWO_FACTOR_TIMEOUT);
 			await lucia.invalidateSession(session!.id!);
 			const sessionCookie = lucia.createBlankSessionCookie();
@@ -115,12 +114,17 @@ export const actions: Actions = {
 		const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
 		const twoFactorDetails = await db.query.twoFactor.findFirst({
 			where: eq(twoFactor.userId, dbUser!.id!),
-		})
+		});
+
+		if (!twoFactorDetails) {
+			const message = { type: 'error', message: 'Unable to process request' } as const;
+			throw redirect(302, '/login', message, event);
+		}
 
 		if (
 			isTwoFactorAuthenticated &&
-			twoFactorDetails?.enabled &&
-			twoFactorDetails?.secret !== ''
+			twoFactorDetails.enabled &&
+			twoFactorDetails.secret !== ''
 		) {
 			const message = { type: 'success', message: 'You are already signed in' } as const;
 			throw redirect('/', message, event);
@@ -140,19 +144,32 @@ export const actions: Actions = {
 			const totpToken = form?.data?.totpToken;
 
 			const twoFactorSecretPopulated =
-				twoFactorDetails?.secret !== '' && twoFactorDetails?.secret !== null;
-			if (twoFactorDetails?.enabled && !twoFactorSecretPopulated && !totpToken) {
+				twoFactorDetails.secret !== '' && twoFactorDetails.secret !== null;
+			if (twoFactorDetails.enabled && !twoFactorSecretPopulated && !totpToken) {
 				return fail(400, {
 					form,
 				});
 			} else if (twoFactorSecretPopulated && totpToken) {
 				// Check if two factor started less than TWO_FACTOR_TIMEOUT
-				await checkTOTPExpiry(twoFactorDetails, session, cookies, event);
+				const totpElapsed = totpTimeElapsed(twoFactorDetails.initiatedTime);
+				if (totpElapsed) {
+					await lucia.invalidateSession(session!.id!);
+					const sessionCookie = lucia.createBlankSessionCookie();
+					cookies.set(sessionCookie.name, sessionCookie.value, {
+						path: '.',
+						...sessionCookie.attributes,
+					});
+					const message = {
+						type: 'error',
+						message: 'Two factor authentication has expired',
+					} as const;
+					redirect(302, '/login', message, event);
+				}
 
 				console.log('totpToken', totpToken);
 				const validOTP = await new TOTPController().verify(
 					totpToken,
-					decodeHex(twoFactorDetails?.secret ?? ''),
+					decodeHex(twoFactorDetails.secret ?? ''),
 				);
 				console.log('validOTP', validOTP);
 
@@ -195,24 +212,22 @@ export const actions: Actions = {
 	},
 };
 
-async function checkTOTPExpiry(twoFactorDetails: { id: string; cuid: string | null; secret: string; enabled: boolean; initiatedTime: Date | null; createdAt: Date; updatedAt: Date; userId: string; } | undefined, session, cookies: Cookies, event: RequestEvent<Partial<Record<string, string>>, string | null>) {
-	const twoFactorInitiatedTime = twoFactorDetails?.initiatedTime;
-	if (twoFactorInitiatedTime === null || twoFactorInitiatedTime === undefined) {
-		redirect(302, '/login');
+function totpTimeElapsed(initiatedTime: Date) {
+	if (initiatedTime === null || initiatedTime === undefined) {
+		return true;
 	}
-	const timeElapsed = Date.now() - twoFactorInitiatedTime.getTime();
+
+	const timeElapsed = Date.now() - initiatedTime.getTime();
 	console.log('Time elapsed', timeElapsed);
 	if (timeElapsed > env.TWO_FACTOR_TIMEOUT) {
-		console.log('Time elapsed was more than TWO_FACTOR_TIMEOUT', timeElapsed, env.TWO_FACTOR_TIMEOUT);
-		await lucia.invalidateSession(session!.id!);
-		const sessionCookie = lucia.createBlankSessionCookie();
-		cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: '.',
-			...sessionCookie.attributes,
-		});
-		const message = { type: 'error', message: 'Two factor authentication has expired' } as const;
-		redirect(302, '/login', message, event);
+		console.log(
+			'Time elapsed was more than TWO_FACTOR_TIMEOUT',
+			timeElapsed,
+			env.TWO_FACTOR_TIMEOUT,
+		);
+		return true;
 	}
+	return false;
 }
 
 async function checkRecoveryCode(recoveryCode: string, userId: string) {
