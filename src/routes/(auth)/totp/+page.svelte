@@ -77,14 +77,14 @@
 
 {#snippet totpForm()}
 	<form method="POST" use:totpEnhance>
-		<Form.Field form={totpFormData} name="totpToken">
+		<Form.Field class="form-field-container" form={totpFormData} name="totpToken">
 			<Form.Control let:attrs>
 				<Form.Label for="totpToken">TOTP Code</Form.Label>
 				<PinInput {...attrs} bind:value={$totpFormData.totpToken} />
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
-		<Form.Button>Submit</Form.Button>
+		<Form.Button class="w-full">Submit</Form.Button>
 	</form>
 {/snippet}
 
@@ -93,11 +93,11 @@
 		<Form.Field form={recoveryCodeFormData} name="recoveryCode">
 			<Form.Control let:attrs>
 				<Form.Label for="totpToken">Recovery Code</Form.Label>
-				<PinInput {...attrs} bind:value={$recoveryCodeFormData.recoveryCode} inputCount={10} />
+				<Input {...attrs} bind:value={$recoveryCodeFormData.recoveryCode} />
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
-		<Form.Button>Submit</Form.Button>
+		<Form.Button class="w-full">Submit</Form.Button>
 	</form>
 {/snippet}
 
@@ -106,7 +106,6 @@
 		display: flex;
 		margin-top: 1.5rem;
 		flex-direction: column;
-		justify-content: center;
 		width: 100%;
 		margin-right: auto;
 		margin-left: auto;
