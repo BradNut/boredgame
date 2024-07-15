@@ -1,4 +1,4 @@
-import { fail, error, type Actions, type Cookies, type RequestEvent } from '@sveltejs/kit';
+import { fail, error, type Actions } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 import { decodeHex } from 'oslo/encoding';
@@ -9,7 +9,7 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
-import { totpSchema } from '$lib/validations/auth';
+import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth';
 import { users, twoFactor, recoveryCodes } from '$db/schema';
 import type { PageServerLoad } from './$types';
 import { notSignedInMessage } from '$lib/flashMessages';
@@ -33,7 +33,10 @@ export const load: PageServerLoad = async (event) => {
 		});
 
 		if (!twoFactorDetails || !twoFactorDetails.enabled) {
-			const message = { type: 'error', message: 'Two factor authentication is not enabled' } as const;
+			const message = {
+				type: 'error',
+				message: 'Two factor authentication is not enabled',
+			} as const;
 			redirect(302, '/login', message, event);
 		}
 
@@ -51,7 +54,11 @@ export const load: PageServerLoad = async (event) => {
 		// Check if two factor started less than TWO_FACTOR_TIMEOUT
 		const totpElapsed = totpTimeElapsed(twoFactorInitiatedTime);
 		if (totpElapsed) {
-			console.log('Time elapsed was more than TWO_FACTOR_TIMEOUT', timeElapsed, env.TWO_FACTOR_TIMEOUT);
+			console.log(
+				'Time elapsed was more than TWO_FACTOR_TIMEOUT',
+				totpElapsed,
+				env.TWO_FACTOR_TIMEOUT,
+			);
 			await lucia.invalidateSession(session!.id!);
 			const sessionCookie = lucia.createBlankSessionCookie();
 			cookies.set(sessionCookie.name, sessionCookie.value, {
@@ -67,20 +74,15 @@ export const load: PageServerLoad = async (event) => {
 		console.log('session', session);
 		console.log('isTwoFactorAuthenticated', isTwoFactorAuthenticated);
 
-		if (
-			isTwoFactorAuthenticated &&
-			twoFactorDetails?.enabled &&
-			twoFactorDetails?.secret !== ''
-		) {
+		if (isTwoFactorAuthenticated && twoFactorDetails?.enabled && twoFactorDetails?.secret !== '') {
 			const message = { type: 'success', message: 'You are already signed in' } as const;
 			throw redirect('/', message, event);
 		}
 	}
 
-	const form = await superValidate(event, zod(totpSchema));
-
 	return {
-		form,
+		totpForm: await superValidate(event, zod(totpSchema)),
+		recoveryCodeForm: await superValidate(event, zod(recoveryCodeSchema)),
 	};
 };
 
@@ -121,11 +123,7 @@ export const actions: Actions = {
 			throw redirect(302, '/login', message, event);
 		}
 
-		if (
-			isTwoFactorAuthenticated &&
-			twoFactorDetails.enabled &&
-			twoFactorDetails.secret !== ''
-		) {
+		if (isTwoFactorAuthenticated && twoFactorDetails.enabled && twoFactorDetails.secret !== '') {
 			const message = { type: 'success', message: 'You are already signed in' } as const;
 			throw redirect('/', message, event);
 		}
@@ -151,7 +149,7 @@ export const actions: Actions = {
 				});
 			} else if (twoFactorSecretPopulated && totpToken) {
 				// Check if two factor started less than TWO_FACTOR_TIMEOUT
-				const totpElapsed = totpTimeElapsed(twoFactorDetails.initiatedTime);
+				const totpElapsed = totpTimeElapsed(twoFactorDetails.initiatedTime ?? new Date());
 				if (totpElapsed) {
 					await lucia.invalidateSession(session!.id!);
 					const sessionCookie = lucia.createBlankSessionCookie();
@@ -178,6 +176,7 @@ export const actions: Actions = {
 					const usedRecoveryCode = await checkRecoveryCode(totpToken, dbUser.id);
 					if (!usedRecoveryCode) {
 						console.log('invalid TOTP code');
+						form.data.totpToken = '';
 						return setError(form, 'totpToken', 'Invalid code.');
 					}
 				}
