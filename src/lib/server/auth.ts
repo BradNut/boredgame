@@ -39,7 +39,7 @@ export const lucia = new Lucia(adapter, {
 		expires: false, // session cookies have very long lifespan (2 years)
 		attributes: {
 			// set to `true` when using HTTPS
-			secure: process.env.NODE_ENV === 'production',
+			secure: process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production',
 			sameSite: 'strict',
 			domain,
 		},

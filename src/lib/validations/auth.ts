@@ -25,5 +25,9 @@ export const signInSchema = z.object({
 });
 
 export const totpSchema = z.object({
-	totpToken: z.string().trim().min(6).max(10),
+	totpToken: z.string().trim().min(6).max(6),
+});
+
+export const recoveryCodeSchema = z.object({
+	recoveryCode: z.string().trim().min(10).max(10),
 });

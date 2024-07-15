@@ -41,15 +41,29 @@
 </svelte:head>
 
 <div class="login">
-	<form method="POST" use:enhance>
-		<h2
+	<h2
 			class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-		>
-			Log into your account
-		</h2>
+	>
+		Log into your account
+	</h2>
+	{@render usernamePasswordForm()}
+	<p class="px-8 text-center text-sm text-muted-foreground">
+		By clicking continue, you agree to our
+		<a href="/terms" class="underline underline-offset-4 hover:text-primary">
+			Terms of Use
+		</a>
+		and
+		<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
+			Privacy Policy
+		</a>.
+	</p>
+</div>
+
+{#snippet usernamePasswordForm()}
+	<form method="POST" use:enhance>
 		<Form.Field form={superLoginForm} name="username">
 			<Form.Control let:attrs>
-				<Form.Label for="username">Username</Form.Label>
+				<Form.Label for="username">Username/Email</Form.Label>
 				<Input {...attrs} autocomplete="username" bind:value={$loginForm.username} />
 			</Form.Control>
 			<Form.FieldErrors />
@@ -62,22 +76,13 @@
 			<Form.FieldErrors />
 		</Form.Field>
 		<Form.Button>Login</Form.Button>
-		<p class="px-8 text-center text-sm text-muted-foreground">
-			By clicking continue, you agree to our
-			<a href="/terms" class="underline underline-offset-4 hover:text-primary">
-				Terms of Use
-			</a>
-			and
-			<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
-				Privacy Policy
-			</a>.
-		</p>
 	</form>
-</div>
+{/snippet}
 
 <style lang="postcss">
 	.login {
 		display: flex;
+		gap: 1rem;
 		margin-top: 1.5rem;
 		flex-direction: column;
 		justify-content: center;

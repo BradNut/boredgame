@@ -34,6 +34,7 @@ for (const table of [
 	schema.sessions,
 	schema.userRoles,
 	schema.users,
+	schema.twoFactor,
 	schema.wishlists,
 	schema.wishlist_items,
 ]) {

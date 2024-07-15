@@ -12,6 +12,7 @@ import { add_user_to_role } from '$server/roles';
 import db from '../../../db';
 import { collections, users, wishlists } from '$db/schema';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
+import { userFullyAuthenticated, userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 const limiter = new RateLimiter({
 	// A rate is defined by [number, unit]
@@ -29,16 +30,23 @@ const signUpDefaults = {
 };
 
 export const load: PageServerLoad = async (event) => {
-	// redirect(
-	// 	302,
-	// 	'/waitlist',
-	// 	{ type: 'error', message: 'Sign-up not yet available. Please add your email to the waitlist!' },
-	// 	event
-	// );
+	const { locals, cookies } = event;
+	const { user, session } = event.locals;
 
-	if (event.locals.user) {
+	if (userFullyAuthenticated(user, session)) {
 		const message = { type: 'success', message: 'You are already signed in' } as const;
 		throw redirect('/', message, event);
+	} else if (userNotFullyAuthenticated(user, session)) {
+		try {
+			await lucia.invalidateSession(locals.session!.id!);
+		} catch (error) {
+			console.log('Session already invalidated');
+		}
+		const sessionCookie = lucia.createBlankSessionCookie();
+		cookies.set(sessionCookie.name, sessionCookie.value, {
+			path: '.',
+			...sessionCookie.attributes,
+		});
 	}
 
 	return {
@@ -91,8 +99,6 @@ export const actions: Actions = {
 				verified: false,
 				receive_email: false,
 				theme: 'system',
-				two_factor_secret: '',
-				two_factor_enabled: false,
 			})
 			.returning();
 		console.log('signup user', user);
@@ -104,7 +110,7 @@ export const actions: Actions = {
 			});
 		}
 
-		add_user_to_role(user[0].id, 'user', true);
+		await add_user_to_role(user[0].id, 'user', true);
 		await db.insert(collections).values({
 			user_id: user[0].id,
 		});

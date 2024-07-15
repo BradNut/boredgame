@@ -13,8 +13,7 @@ import { lucia } from '$lib/server/auth';
 // });
 
 export const authentication: Handle = async function ({ event, resolve }) {
-	const startTimer = Date.now();
-	event.locals.startTimer = startTimer;
+	event.locals.startTimer = Date.now();
 
 	const ip = event.request.headers.get('x-forwarded-for') as string;
 	const country = event.request.headers.get('x-vercel-ip-country') as string;
