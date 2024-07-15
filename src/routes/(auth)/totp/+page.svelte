@@ -3,20 +3,17 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import * as flashModule from 'sveltekit-flash-message/client';
 	import { AlertCircle } from "lucide-svelte";
-	import { signInSchema, totpSchema } from '$lib/validations/auth';
+	import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth';
 	import * as Form from '$lib/components/ui/form';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
 	import * as Alert from "$components/ui/alert";
-	import { boredState } from '$lib/stores/boredState.js';
 	import PinInput from '$components/pin-input.svelte';
 
 	const { data } = $props();
 
-	const superTotpForm = superForm(data.form, {
-		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
-		onResult: () => boredState.update((n) => ({ ...n, loading: false })),
+	const superTotpForm = superForm(data.totpForm, {
 		flashMessage: {
 			module: flashModule,
 			onError: ({ result, flashMessage }) => {
@@ -34,59 +31,78 @@
 		delayMs: 0,
 	});
 
+	const superRecoveryCodeForm = superForm(data.recoveryCodeForm, {
+		validators: zodClient(recoveryCodeSchema),
+		resetForm: false,
+		flashMessage: {
+			module: flashModule,
+			onError: ({ result, flashMessage }) => {
+				// Error handling for the flash message:
+				// - result is the ActionResult
+				// - message is the flash store (not the status message store)
+				const errorMessage = result.error.message
+				flashMessage.set({ type: 'error', message: errorMessage });
+			}
+		},
+		syncFlashMessage: false,
+		taintedMessage: null,
+		validationMethod: 'oninput',
+		delayMs: 0,
+	});
+
 	let showRecoveryCode = $state(false);
 
-	const { form: totpForm, enhance } = superTotpForm;
+	const { form: totpFormData, enhance: totpEnhance } = superTotpForm;
+	const { form: recoveryCodeFormData, enhance: recoveryCodeEnhance } = superRecoveryCodeForm;
 </script>
 
 <svelte:head>
 	<title>Bored Game | Login</title>
 </svelte:head>
 
-<div class="login">
-	<form method="POST" use:enhance>
-		<h2
-				class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-		>
-			Please enter your {showRecoveryCode ? 'recovery code' : 'TOTP code'}
-		</h2>
-		<Form.Field form={superTotpForm} name="totpToken">
+<div class="totp">
+	<h2
+			class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+	>
+		Please enter your {showRecoveryCode ? 'recovery code' : 'TOTP code'}
+	</h2>
+	{#if !showRecoveryCode}
+		{@render totpForm()}
+		<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = true}>Show Recovery Code</Button>
+	{:else}
+		{@render recoveryCodeForm()}
+		<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = false}>Show TOTP Code</Button>
+	{/if}
+</div>
+
+{#snippet totpForm()}
+	<form method="POST" use:totpEnhance>
+		<Form.Field form={totpFormData} name="totpToken">
 			<Form.Control let:attrs>
-				{#if showRecoveryCode}
-					<Form.Label for="totpToken">Recovery Code</Form.Label>
-					<Input {...attrs} autocomplete="one-time-code" bind:value={$totpForm.totpToken} />
-				{:else}
-					<Form.Label for="totpToken">TOTP Code</Form.Label>
-					<PinInput {...attrs} bind:value={$totpForm.totpToken} />
-				{/if}
+				<Form.Label for="totpToken">TOTP Code</Form.Label>
+				<PinInput {...attrs} bind:value={$totpFormData.totpToken} />
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
 		<Form.Button>Submit</Form.Button>
 	</form>
-	{#if !showRecoveryCode}
-		<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = true}>Show Recovery Code</Button>
-	{:else}
-		<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = false}>Show TOTP Code</Button>
-	{/if}
-</div>
+{/snippet}
+
+{#snippet recoveryCodeForm()}
+	<form method="POST" use:recoveryCodeEnhance>
+		<Form.Field form={recoveryCodeFormData} name="recoveryCode">
+			<Form.Control let:attrs>
+				<Form.Label for="totpToken">Recovery Code</Form.Label>
+				<PinInput {...attrs} bind:value={$recoveryCodeFormData.recoveryCode} inputCount={10} />
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
+		<Form.Button>Submit</Form.Button>
+	</form>
+{/snippet}
 
 <style lang="postcss">
-	.loading {
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 101;
-		display: grid;
-		place-items: center;
-		gap: 1rem;
-
-		h3 {
-			color: white;
-		}
-	}
-	.login {
+	.totp {
 		display: flex;
 		margin-top: 1.5rem;
 		flex-direction: column;

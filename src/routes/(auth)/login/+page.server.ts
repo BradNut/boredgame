@@ -1,5 +1,5 @@
 import { fail, error, type Actions } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import { eq, or } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
@@ -58,7 +58,7 @@ export const actions: Actions = {
 		let session;
 		let sessionCookie;
 		const user: Users | undefined = await db.query.users.findFirst({
-			where: eq(users.username, form.data.username),
+			where: or(eq(users.username, form.data.username), eq(users.email, form.data.username)),
 		});
 
 		if (!user) {
