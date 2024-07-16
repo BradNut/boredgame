@@ -4,6 +4,7 @@
 	import * as flashModule from 'sveltekit-flash-message/client';
 	import { AlertCircle } from "lucide-svelte";
 	import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth';
+	import * as Card from "$lib/components/ui/card/index.js";
 	import * as Form from '$lib/components/ui/form';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
@@ -60,20 +61,21 @@
 	<title>Bored Game | Login</title>
 </svelte:head>
 
-<div class="totp">
-	<h2
-			class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-	>
-		Please enter your {showRecoveryCode ? 'recovery code' : 'TOTP code'}
-	</h2>
-	{#if !showRecoveryCode}
-		{@render totpForm()}
-		<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = true}>Show Recovery Code</Button>
-	{:else}
-		{@render recoveryCodeForm()}
-		<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = false}>Show TOTP Code</Button>
-	{/if}
-</div>
+<Card.Root class="mx-auto mt-24 max-w-sm">
+	<Card.Header>
+		<Card.Title class="text-2xl">Two Factor Authentication</Card.Title>
+		<Card.Description>Please enter your {showRecoveryCode ? 'recovery code' : 'TOTP code'}</Card.Description>
+	</Card.Header>
+	<Card.Content>
+		{#if !showRecoveryCode}
+			{@render totpForm()}
+			<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = true}>Show Recovery Code</Button>
+		{:else}
+			{@render recoveryCodeForm()}
+			<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = false}>Show TOTP Code</Button>
+		{/if}
+	</Card.Content>
+</Card.Root>
 
 {#snippet totpForm()}
 	<form method="POST" use:totpEnhance>

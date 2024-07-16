@@ -14,17 +14,38 @@
 		</div>
 		Bored Game
 	</a>
-	<Button
-		href={$page.url.pathname === "/sign-up" ? "/login" : "/sign-up"}
-		variant="ghost"
-		class="auth-button"
-	>
-		{#if $page.url.pathname === "/sign-up"}
+	{#if $page.url.pathname === "/sign-up"}
+		<Button
+			href="/login"
+			variant="ghost"
+			class="auth-button"
+		>
 			Login
-		{:else}
+		</Button>
+		{:else if $page.url.pathname === "/login"}
+		<Button
+			href="/sign-up"
+			variant="ghost"
+			class="auth-button"
+		>
 			Sign up
-		{/if}
-	</Button>
+		</Button>
+	{:else}
+		<div class="auth-buttons">
+			<Button
+				href="/login"
+				variant="ghost"
+			>
+				Login
+			</Button>
+			<Button
+				href="/sign-up"
+				variant="ghost"
+			>
+				Sign up
+			</Button>
+		</div>
+	{/if}
 	<div class="auth-marketing">
 		<div
 			class="image"
@@ -117,6 +138,17 @@
 	}
 
 	:global(.auth-button) {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+
+		@media (min-width >= 768px) {
+			top: 2rem;
+			right: 2rem;
+		}
+	}
+
+	:global(.auth-buttons) {
 		position: absolute;
 		top: 1rem;
 		right: 1rem;

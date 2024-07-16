@@ -31,3 +31,11 @@ export const totpSchema = z.object({
 export const recoveryCodeSchema = z.object({
 	recoveryCode: z.string().trim().min(10).max(10),
 });
+
+export const resetPasswordEmailSchema = z.object({
+	email: z.string().trim().max(64),
+});
+
+export const resetPasswordTokenSchema = z.object({
+	resetToken: z.string().trim().min(6).max(6),
+});

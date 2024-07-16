@@ -9,8 +9,9 @@
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { signUpSchema } from '$lib/validations/auth';
-	import * as Collapsible from '$lib/components/ui/collapsible';
 	import * as Alert from '$lib/components/ui/alert';
+	import * as Card from '$lib/components/ui/card';
+	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { boredState } from '$lib/stores/boredState.js';
 
 	export let data;
@@ -37,9 +38,12 @@
 	<title>Bored Game | Sign Up</title>
 </svelte:head>
 
-<div class="sign-up">
+<Card.Root class="mx-auto mt-24 max-w-sm">
+	<Card.Header>
+		Signup for an account
+	</Card.Header>
+	<Card.Content>
 	<form method="POST" action="/sign-up" use:enhance>
-		<h2>Signup for an account</h2>
 		<Label for="username">Username</Label>
 		<Input type="text" id="username" class={$errors.username && "outline outline-destructive"} name="username"
 					 placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} />
@@ -117,7 +121,8 @@
 			</Alert.Root>
 		{/if}
 	</form>
-</div>
+	</Card.Content>
+</Card.Root>
 
 <style lang="postcss">
 	.sign-up {
