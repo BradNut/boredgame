@@ -10,6 +10,7 @@
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
   import * as Alert from "$components/ui/alert";
+	import { send, receive } from '$lib/utils/pageCrossfade';
 	import { boredState } from '$lib/stores/boredState.js';
 
 	let { data } = $props();
@@ -41,24 +42,26 @@
 	<title>Bored Game | Login</title>
 </svelte:head>
 
-<Card.Root class="mx-auto mt-24 max-w-sm">
-	<Card.Header>
-		Log into your account
-	</Card.Header>
-	<Card.Content>
-		{@render usernamePasswordForm()}
-		<p class="px-8 py-4 text-center text-sm text-muted-foreground">
-			By clicking continue, you agree to our
-			<a href="/terms" class="underline underline-offset-4 hover:text-primary">
-				Terms of Use
-			</a>
-			and
-			<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
-				Privacy Policy
-			</a>.
-		</p>
-	</Card.Content>
-</Card.Root>
+<div in:receive={{ key: 'auth-card' }} out:send={{ key: 'auth-card' }}>
+	<Card.Root class="mx-auto mt-24 max-w-sm">
+		<Card.Header>
+			<Card.Title class="text-2xl">Log into your account</Card.Title>
+		</Card.Header>
+		<Card.Content>
+			{@render usernamePasswordForm()}
+			<p class="px-8 py-4 text-center text-sm text-muted-foreground">
+				By clicking continue, you agree to our
+				<a href="/terms" class="underline underline-offset-4 hover:text-primary">
+					Terms of Use
+				</a>
+				and
+				<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
+					Privacy Policy
+				</a>.
+			</p>
+		</Card.Content>
+	</Card.Root>
+</div>
 
 {#snippet usernamePasswordForm()}
 	<form method="POST" use:enhance>
@@ -76,7 +79,7 @@
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
-		<div class="flex align-center justify-between">
+		<div class="grid grid-cols-2">
 			<Form.Button>Login</Form.Button>
 			<Button variant="link" class="text-secondary-foreground" href="/password/reset">Forgot Password?</Button>
 		</div>

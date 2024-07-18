@@ -19,8 +19,8 @@ export const signInSchema = z.object({
 	username: z
 		.string()
 		.trim()
-		.min(3, { message: 'Username must be at least 3 characters' })
-		.max(50, { message: 'Username must be less than 50 characters' }),
+		.min(3, { message: 'Must be at least 3 characters' })
+		.max(50, { message: 'Must be less than 50 characters' }),
 	password: z.string({ required_error: 'Password is required' }).trim(),
 });
 
@@ -33,7 +33,7 @@ export const recoveryCodeSchema = z.object({
 });
 
 export const resetPasswordEmailSchema = z.object({
-	email: z.string().trim().max(64),
+	email: z.string().trim().max(64, { message: 'Email must be less than 64 characters' }),
 });
 
 export const resetPasswordTokenSchema = z.object({

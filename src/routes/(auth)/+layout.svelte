@@ -14,38 +14,24 @@
 		</div>
 		Bored Game
 	</a>
-	{#if $page.url.pathname === "/sign-up"}
-		<Button
-			href="/login"
-			variant="ghost"
-			class="auth-button"
-		>
-			Login
-		</Button>
-		{:else if $page.url.pathname === "/login"}
-		<Button
-			href="/sign-up"
-			variant="ghost"
-			class="auth-button"
-		>
-			Sign up
-		</Button>
-	{:else}
-		<div class="auth-buttons">
+	<div class="auth-buttons">
+		{#if $page.url.pathname !== "/login"}
 			<Button
 				href="/login"
 				variant="ghost"
 			>
 				Login
 			</Button>
+		{/if}
+		{#if $page.url.pathname !== "/sign-up"}
 			<Button
 				href="/sign-up"
 				variant="ghost"
 			>
 				Sign up
 			</Button>
-		</div>
-	{/if}
+		{/if}
+	</div>
 	<div class="auth-marketing">
 		<div
 			class="image"
@@ -63,9 +49,7 @@
 		</div>
 	</div>
 	<div class="auth-form">
-		<Transition url={data.url} transition={{ type: 'page' }}>
-			{@render children()}
-		</Transition>
+		{@render children()}
 	</div>
 </div>
 
@@ -134,17 +118,6 @@
 			@media (width >= 1024px) {
 				padding: 2rem;
 			}
-		}
-	}
-
-	:global(.auth-button) {
-		position: absolute;
-		top: 1rem;
-		right: 1rem;
-
-		@media (min-width >= 768px) {
-			top: 2rem;
-			right: 2rem;
 		}
 	}
 

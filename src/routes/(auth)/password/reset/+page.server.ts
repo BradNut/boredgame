@@ -5,8 +5,9 @@ import { redirect } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from './$types';
 import {resetPasswordEmailSchema, resetPasswordTokenSchema} from "$lib/validations/auth";
 import {StatusCodes} from "$lib/constants/status-codes";
+import {userFullyAuthenticated} from "$lib/server/auth-utils";
 
-export const load: PageServerLoad = async (event) => {
+export const load: PageServerLoad = async () => {
 	return {
 		emailForm: await superValidate(zod(resetPasswordEmailSchema)),
 		tokenForm: await superValidate(zod(resetPasswordTokenSchema)),
@@ -14,8 +15,17 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions = {
-	passwordReset: async ({ locals, request }) => {
+	passwordReset: async (event) => {
+		const { request, locals } = event;
+		const { user, session } = locals;
+
+		if (userFullyAuthenticated(user, session)) {
+			const message = { type: 'success', message: 'You are already signed in' } as const;
+			throw redirect('/', message, event);
+		}
+
 		const emailForm = await superValidate(request, zod(resetPasswordEmailSchema));
+		console.log('emailForm', emailForm);
 		if (!emailForm.valid) {
 			return fail(StatusCodes.BAD_REQUEST, { emailForm });
 		}
@@ -26,7 +36,14 @@ export const actions = {
 		}
 		return { emailForm };
 	},
-	verifyToken: async ({ locals, request }) => {
+	verifyToken: async (event) => {
+		const { request, locals } = event;
+		const { user, session } = locals;
+		if (userFullyAuthenticated(user, session)) {
+			const message = { type: 'success', message: 'You are already signed in' } as const;
+			throw redirect('/', message, event);
+		}
+
 		const tokenForm = await superValidate(request, zod(resetPasswordTokenSchema));
 		if (!tokenForm.valid) {
 			return fail(StatusCodes.BAD_REQUEST, { tokenForm });
