@@ -25,15 +25,14 @@ export const actions = {
 		}
 
 		const emailForm = await superValidate(request, zod(resetPasswordEmailSchema));
-		console.log('emailForm', emailForm);
 		if (!emailForm.valid) {
 			return fail(StatusCodes.BAD_REQUEST, { emailForm });
 		}
-		const error = {};
-		// const { error } = await locals.api.iam.login.request.$post({ json: emailRegisterForm.data }).then(locals.parseApiResponse);
-		if (error) {
-			return setError(emailForm, 'email', error);
-		}
+		// const error = {};
+		// // const { error } = await locals.api.iam.login.request.$post({ json: emailRegisterForm.data }).then(locals.parseApiResponse);
+		// if (error) {
+		// 	return setError(emailForm, 'email', error);
+		// }
 		return { emailForm };
 	},
 	verifyToken: async (event) => {

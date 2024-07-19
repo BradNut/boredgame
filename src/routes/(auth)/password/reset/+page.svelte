@@ -18,7 +18,6 @@
 		validators: zodClient(resetPasswordEmailSchema),
 		resetForm: false,
 		onUpdated: ({ form }) => {
-			console.log('form', form);
 			if (form.valid) {
 				showTokenVerification = true;
 				$emailFormData.email = form.data.email;
