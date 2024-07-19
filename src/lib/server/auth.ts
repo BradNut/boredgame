@@ -64,6 +64,5 @@ declare module 'lucia' {
 		firstName: string;
 		lastName: string;
 		theme: string;
-		two_factor_secret: string | null;
 	}
 }

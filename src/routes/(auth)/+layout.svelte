@@ -48,7 +48,7 @@
 			</blockquote>
 		</div>
 	</div>
-	<div class="auth-form">
+	<div>
 		{@render children()}
 	</div>
 </div>
@@ -111,12 +111,6 @@
 					font-size: 0.875rem;
 					line-height: 1.25rem;
 				}
-			}
-		}
-
-		.auth-form {
-			@media (width >= 1024px) {
-				padding: 2rem;
 			}
 		}
 	}
