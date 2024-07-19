@@ -15,38 +15,13 @@
 	const { data } = $props();
 
 	const superTotpForm = superForm(data.totpForm, {
-		flashMessage: {
-			module: flashModule,
-			onError: ({ result, flashMessage }) => {
-				// Error handling for the flash message:
-				// - result is the ActionResult
-				// - message is the flash store (not the status message store)
-				const errorMessage = result.error.message
-				flashMessage.set({ type: 'error', message: errorMessage });
-			}
-		},
-		syncFlashMessage: false,
-		taintedMessage: null,
+		resetForm: false,
 		validators: zodClient(totpSchema),
-		validationMethod: 'oninput',
-		delayMs: 0,
 	});
 
 	const superRecoveryCodeForm = superForm(data.recoveryCodeForm, {
 		validators: zodClient(recoveryCodeSchema),
 		resetForm: false,
-		flashMessage: {
-			module: flashModule,
-			onError: ({ result, flashMessage }) => {
-				// Error handling for the flash message:
-				// - result is the ActionResult
-				// - message is the flash store (not the status message store)
-				const errorMessage = result.error.message
-				flashMessage.set({ type: 'error', message: errorMessage });
-			}
-		},
-		syncFlashMessage: false,
-		taintedMessage: null,
 		validationMethod: 'oninput',
 		delayMs: 0,
 	});
@@ -78,11 +53,11 @@
 </Card.Root>
 
 {#snippet totpForm()}
-	<form method="POST" use:totpEnhance>
-		<Form.Field class="form-field-container" form={totpFormData} name="totpToken">
+	<form method="POST" action="?/validateTotp" use:totpEnhance>
+		<Form.Field class="form-field-container" form={superTotpForm} name="totpToken">
 			<Form.Control let:attrs>
-				<Form.Label for="totpToken">TOTP Code</Form.Label>
-				<PinInput {...attrs} bind:value={$totpFormData.totpToken} />
+				<Form.Label>TOTP Code</Form.Label>
+				<PinInput {...attrs} bind:value={$totpFormData.totpToken} class="justify-evenly" />
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
@@ -91,10 +66,10 @@
 {/snippet}
 
 {#snippet recoveryCodeForm()}
-	<form method="POST" use:recoveryCodeEnhance>
-		<Form.Field form={recoveryCodeFormData} name="recoveryCode">
+	<form method="POST" action="?/validateRecoveryCode" use:recoveryCodeEnhance>
+		<Form.Field form={superRecoveryCodeForm} name="recoveryCode">
 			<Form.Control let:attrs>
-				<Form.Label for="totpToken">Recovery Code</Form.Label>
+				<Form.Label>Recovery Code</Form.Label>
 				<Input {...attrs} bind:value={$recoveryCodeFormData.recoveryCode} />
 			</Form.Control>
 			<Form.FieldErrors />

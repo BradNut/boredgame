@@ -57,7 +57,7 @@
 	<form method="POST" action="?/passwordReset" use:emailResetEnhance class="grid gap-4">
 		<Form.Field form={emailResetForm} name="email">
 			<Form.Control let:attrs>
-				<Form.Label>Email</Form.Label>
+				<Form.Label for="email">Email</Form.Label>
 				<Input
 						{...attrs}
 						type="email"
@@ -77,7 +77,7 @@
 		<input hidden value={$tokenFormData.resetToken} name="email" />
 		<Form.Field form={tokenVerificationForm} name="resetToken">
 			<Form.Control let:attrs>
-				<Form.Label>Enter the token that was sent to your email</Form.Label>
+				<Form.Label for="resetToken">Enter the token that was sent to your email</Form.Label>
 				<PinInput class="justify-evenly" {...attrs} bind:value={$tokenFormData.resetToken} />
 			</Form.Control>
 			<Form.Description />
