@@ -2,7 +2,7 @@ import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { timestamps } from '../utils';
-import users from './users';
+import usersTable from './users.table';
 
 const twoFactorTable = pgTable('two_factor', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -17,15 +17,15 @@ const twoFactorTable = pgTable('two_factor', {
 	}),
 	userId: uuid('user_id')
 		.notNull()
-		.references(() => users.id)
+		.references(() => usersTable.id)
 		.unique(),
 	...timestamps,
 });
 
 export const emailVerificationsRelations = relations(twoFactorTable, ({ one }) => ({
-	user: one(users, {
+	user: one(usersTable, {
 		fields: [twoFactorTable.userId],
-		references: [users.id],
+		references: [usersTable.id],
 	}),
 }));
 

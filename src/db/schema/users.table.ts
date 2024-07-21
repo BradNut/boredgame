@@ -4,7 +4,7 @@ import { type InferSelectModel, relations } from 'drizzle-orm';
 import { timestamps } from '../utils';
 import user_roles from './userRoles';
 
-const users = pgTable('users', {
+const usersTable = pgTable('users', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
@@ -20,10 +20,10 @@ const users = pgTable('users', {
 	...timestamps,
 });
 
-export const user_relations = relations(users, ({ many }) => ({
+export const userRelations = relations(usersTable, ({ many }) => ({
 	user_roles: many(user_roles),
 }));
 
-export type Users = InferSelectModel<typeof users>;
+export type Users = InferSelectModel<typeof usersTable>;
 
-export default users;
+export default usersTable;

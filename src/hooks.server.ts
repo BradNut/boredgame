@@ -1,8 +1,12 @@
 // import * as Sentry from '@sentry/sveltekit';
+import { hc } from 'hono/client';
 import { sequence } from '@sveltejs/kit/hooks';
-import type { Handle } from '@sveltejs/kit';
+import { redirect, type Handle } from '@sveltejs/kit';
 import { dev } from '$app/environment';
 import { lucia } from '$lib/server/auth';
+import type { ApiRoutes } from '$lib/server/api';
+import { parseApiResponse } from '$lib/utils/api';
+import { StatusCodes } from '$lib/constants/status-codes';
 
 // TODO: Fix Sentry as it is not working on SvelteKit v2
 // Sentry.init({
@@ -11,6 +15,39 @@ import { lucia } from '$lib/server/auth';
 // 	environment: dev ? 'development' : 'production',
 // 	enabled: !dev
 // });
+
+const apiClient: Handle = async ({ event, resolve }) => {
+	/* ------------------------------ Register api ------------------------------ */
+	const { api } = hc<ApiRoutes>('/', {
+		fetch: event.fetch,
+		headers: {
+			'x-forwarded-for': event.getClientAddress(),
+			host: event.request.headers.get('host') || ''
+		}
+	});
+
+	/* ----------------------------- Auth functions ----------------------------- */
+	async function getAuthedUser() {
+		const { data } = await api.iam.user.$get().then(parseApiResponse)
+		return data && data.user;
+	}
+
+	async function getAuthedUserOrThrow() {
+		const { data } = await api.iam.user.$get().then(parseApiResponse);
+		if (!data || !data.user) throw redirect(StatusCodes.TEMPORARY_REDIRECT, '/');
+		return data?.user;
+	}
+
+	/* ------------------------------ Set contexts ------------------------------ */
+	event.locals.api = api;
+	event.locals.parseApiResponse = parseApiResponse;
+	event.locals.getAuthedUser = getAuthedUser;
+	event.locals.getAuthedUserOrThrow = getAuthedUserOrThrow;
+
+	/* ----------------------------- Return response ---------------------------- */
+	const response = await resolve(event);
+	return response;
+};
 
 export const authentication: Handle = async function ({ event, resolve }) {
 	event.locals.startTimer = Date.now();
@@ -55,5 +92,6 @@ export const authentication: Handle = async function ({ event, resolve }) {
 export const handle: Handle = sequence(
 	// Sentry.sentryHandle(),
 	authentication,
+	apiClient
 );
 // export const handleError = Sentry.handleErrorWithSentry();

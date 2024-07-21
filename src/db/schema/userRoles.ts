@@ -1,7 +1,7 @@
 import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
-import users from './users';
+import usersTable from './users.table';
 import roles from './roles';
 import { timestamps } from '../utils';
 
@@ -12,7 +12,7 @@ const user_roles = pgTable('user_roles', {
 		.$defaultFn(() => cuid2()),
 	user_id: uuid('user_id')
 		.notNull()
-		.references(() => users.id, { onDelete: 'cascade' }),
+		.references(() => usersTable.id, { onDelete: 'cascade' }),
 	role_id: uuid('role_id')
 		.notNull()
 		.references(() => roles.id, { onDelete: 'cascade' }),
@@ -25,9 +25,9 @@ export const user_role_relations = relations(user_roles, ({ one }) => ({
 		fields: [user_roles.role_id],
 		references: [roles.id],
 	}),
-	user: one(users, {
+	user: one(usersTable, {
 		fields: [user_roles.user_id],
-		references: [users.id],
+		references: [usersTable.id],
 	}),
 }));
 

@@ -1,3 +1,7 @@
+import { ApiClient } from './lib/server/api';
+import type { User } from 'lucia';
+import { parseApiResponse } from '$lib/utils/api';
+
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 // and what to do when importing types
@@ -13,6 +17,10 @@ declare global {
 			};
 		}
 		interface Locals {
+			api: ApiClient['api'];
+			parseApiResponse: typeof parseApiResponse;
+			getAuthedUser: () => Promise<Returned<User> | null>;
+			getAuthedUserOrThrow: () => Promise<Returned<User>>;
 			auth: import('lucia').AuthRequest;
 			user: import('lucia').User | null;
 			session: import('lucia').Session | null;
@@ -36,19 +44,6 @@ declare global {
 		startViewTransition: (callback: any) => void; // Add your custom property/method here
 	}
 }
-
-// interface PageData {}
-// interface Error {}
-// interface Platform {}
-
-// /// <reference types="lucia" />
-// declare global {
-// 	namespace Lucia {
-// 		type Auth = import('$lib/server/lucia').Auth;
-// 		type DatabaseUserAttributes = User;
-// 		type DatabaseSessionAttributes = {};
-// 	}
-// }
 
 // THIS IS IMPORTANT!!!
 export {};

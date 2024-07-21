@@ -1,19 +1,11 @@
 // lib/server/lucia.ts
 import { Lucia, TimeSpan } from 'lucia';
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle';
-import db from '../../db';
+import db from '$db/index';
 import { sessionsTable, usersTable } from '$db/schema';
+import { config } from '../../common/config';
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessionsTable, usersTable);
-
-let domain;
-if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production') {
-	domain = 'boredgame.vercel.app';
-} else if (process.env.VERCEL_ENV === 'preview' || process.env.VERCEL_ENV === 'development') {
-	domain = process.env.VERCEL_BRANCH_URL;
-} else {
-	domain = 'localhost';
-}
 
 export const lucia = new Lucia(adapter, {
 	getSessionAttributes: (attributes) => {
@@ -26,11 +18,7 @@ export const lucia = new Lucia(adapter, {
 	},
 	getUserAttributes: (attributes) => {
 		return {
-			username: attributes.username,
-			email: attributes.email,
-			firstName: attributes.firstName,
-			lastName: attributes.lastName,
-			theme: attributes.theme,
+			...attributes,
 		};
 	},
 	sessionExpiresIn: new TimeSpan(30, 'd'), // 30 days
@@ -39,9 +27,9 @@ export const lucia = new Lucia(adapter, {
 		expires: false, // session cookies have very long lifespan (2 years)
 		attributes: {
 			// set to `true` when using HTTPS
-			secure: process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production',
+			secure: config.isProduction,
 			sameSite: 'strict',
-			domain,
+			domain: config.domain,
 		},
 	},
 });

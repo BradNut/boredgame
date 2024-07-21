@@ -1,11 +1,11 @@
-export { default as users, user_relations, type Users } from './users';
+export { default as usersTable, userRelations as user_relations, type Users } from './users.table';
 export { default as recoveryCodes, type RecoveryCodes } from './recoveryCodes';
 export {
 	default as password_reset_tokens,
 	password_reset_token_relations,
 	type PasswordResetTokens,
 } from './passwordResetTokens';
-export { default as sessions, type Sessions } from './sessions';
+export { default as sessionsTable, type Sessions } from './sessions.table';
 export { default as roles, role_relations, type Roles } from './roles';
 export { default as userRoles, user_role_relations, type UserRoles } from './userRoles';
 export { default as collections, collection_relations, type Collections } from './collections';

@@ -1,12 +1,12 @@
 import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { type InferSelectModel } from 'drizzle-orm';
-import users from './users';
+import { relations, type InferSelectModel } from 'drizzle-orm';
+import usersTable from './users.table';
 
-const sessions = pgTable('sessions', {
+const sessionsTable = pgTable('sessions', {
 	id: text('id').primaryKey(),
 	userId: uuid('user_id')
 		.notNull()
-		.references(() => users.id),
+		.references(() => usersTable.id),
 	expiresAt: timestamp('expires_at', {
 		withTimezone: true,
 		mode: 'date',
@@ -17,6 +17,13 @@ const sessions = pgTable('sessions', {
 	isTwoFactorAuthenticated: boolean('is_two_factor_authenticated').default(false),
 });
 
-export type Sessions = InferSelectModel<typeof sessions>;
+export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
+	user: one(usersTable, {
+		fields: [sessionsTable.userId],
+		references: [usersTable.id],
+	})
+}));
 
-export default sessions;
+export type Sessions = InferSelectModel<typeof sessionsTable>;
+
+export default sessionsTable;
