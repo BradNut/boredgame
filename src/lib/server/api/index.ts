@@ -13,11 +13,14 @@ app.use(verifyOrigin).use(validateAuthSession);
 /* --------------------------------- Routes --------------------------------- */
 const routes = app
 	.route('/iam', users)
+	.get('/', (c) => c.json({ message: 'Server is healthy' }));
 
 /* -------------------------------------------------------------------------- */
 /*                                   Exports                                  */
 /* -------------------------------------------------------------------------- */
-export const rpc = hc<typeof routes>(config.ORIGIN);
+export type AppType = typeof routes;
+
+export const rpc = hc<AppType>(config.ORIGIN);
 export type ApiClient = typeof rpc;
 export type ApiRoutes = typeof routes;
 export { app };

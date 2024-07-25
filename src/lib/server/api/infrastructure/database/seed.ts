@@ -1,7 +1,7 @@
 import { Table, getTableName, sql } from 'drizzle-orm';
 import env from '../env';
 import { db, pool } from '$db';
-import * as schema from './schema';
+import * as schema from './tables';
 import * as seeds from './seeds';
 
 if (!env.DB_SEEDING) {

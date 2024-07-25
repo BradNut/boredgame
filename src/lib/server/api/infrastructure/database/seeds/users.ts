@@ -3,7 +3,7 @@ import { Argon2id } from 'oslo/password';
 import { type db } from '$db';
 import * as schema from '$db/schema';
 import users from './data/users.json';
-import env from '../../env';
+import { config } from '../../../common/config';
 
 type JsonUser = {
 	id: string;
@@ -29,9 +29,9 @@ export default async function seed(db: db) {
 	const adminUser = await db
 		.insert(schema.usersTable)
 		.values({
-			username: `${env.ADMIN_USERNAME}`,
+			username: `${config.ADMIN_USERNAME}`,
 			email: '',
-			hashed_password: await new Argon2id().hash(`${env.ADMIN_PASSWORD}`),
+			hashed_password: await new Argon2id().hash(`${config.ADMIN_PASSWORD}`),
 			first_name: 'Brad',
 			last_name: 'S',
 			verified: true,
