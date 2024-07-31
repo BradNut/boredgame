@@ -1,3 +1,4 @@
+import { container } from 'tsyringe';
 import { db } from '../infrastructure/database';
 
 // Symbol

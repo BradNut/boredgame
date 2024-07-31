@@ -35,6 +35,12 @@ export class UsersRepository {
 		return user;
 	}
 
+	async findOneByUsername(username: string) {
+		return db.query.usersTable.findFirst({
+			where: eq(usersTable.username, username)
+		});
+	}
+
 	async findOneByEmail(email: string) {
 		return db.query.usersTable.findFirst({
 			where: eq(usersTable.email, email)

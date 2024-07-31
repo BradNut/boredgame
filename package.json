@@ -43,6 +43,10 @@
 		"eslint-plugin-svelte": "^2.43.0",
 		"just-clone": "^6.2.0",
 		"just-debounce-it": "^3.2.0",
+		"lucia": "3.2.0",
+		"lucide-svelte": "^0.408.0",
+		"nodemailer": "^6.9.14",
+		"oslo": "^1.2.1",
 		"postcss": "^8.4.40",
 		"postcss-import": "^16.1.0",
 		"postcss-load-config": "^5.1.0",
@@ -71,10 +75,6 @@
 		"zod": "^3.23.8"
 	},
 	"type": "module",
-	"engines": {
-		"node": ">=18.0.0 <19.0.0 || >=20.0.0 <21.0.0",
-		"pnpm": ">=8"
-	},
 	"dependencies": {
 		"@fontsource/fira-mono": "^5.0.13",
 		"@hono/zod-validator": "^0.2.2",
@@ -91,6 +91,7 @@
 		"arctic": "^1.9.2",
 		"bits-ui": "^0.21.12",
 		"boardgamegeekclient": "^1.9.1",
+		"bullmq": "^5.11.0",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"cookie": "^0.6.0",
@@ -99,6 +100,7 @@
 		"drizzle-orm": "^0.32.1",
 		"feather-icons": "^4.29.2",
 		"formsnap": "^1.0.1",
+		"handlebars": "^4.7.8",
 		"hono": "^4.5.2",
 		"hono-rate-limiter": "^0.4.0",
 		"html-entities": "^2.5.2",
@@ -107,10 +109,7 @@
 		"just-capitalize": "^3.2.0",
 		"just-kebab-case": "^4.2.0",
 		"loader": "^2.1.1",
-		"lucia": "3.2.0",
-		"lucide-svelte": "^0.408.0",
 		"open-props": "^1.7.5",
-		"oslo": "^1.2.1",
 		"pg": "^8.12.0",
 		"postgres": "^3.4.4",
 		"qrcode": "^1.5.3",
