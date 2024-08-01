@@ -19,7 +19,7 @@ export class LoginController implements Controller {
 		return this.controller
 			.post('/', zValidator('json', signInEmailDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const { username, password } = c.req.valid('json');
-				await this.loginRequestsService.verify({ username, password });
+				await this.loginRequestsService.verify({ username, password }, c.req);
 				return c.json({ message: 'Verification email sent' });
 			})
 	}

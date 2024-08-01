@@ -2,7 +2,7 @@ import { pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { timestamps } from '../utils';
 import { usersTable } from "./users.table";
 
-enum CredentialsType {
+export enum CredentialsType {
 	SECRET = 'secret',
 	PASSWORD = 'password',
 	TOTP = 'totp',

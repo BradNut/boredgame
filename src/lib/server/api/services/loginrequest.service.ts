@@ -7,7 +7,8 @@ import { LuciaProvider } from '../providers/lucia.provider';
 import { UsersRepository } from '../repositories/users.repository';
 import type { SignInEmailDto } from '../../../dtos/signin-email.dto';
 import type { RegisterEmailDto } from '../../../dtos/register-email.dto';
-import { LoginRequestsRepository } from '../repositories/login-requests.repository';
+import { CredentialsRepository } from '../repositories/credentials.repository';
+import type { HonoRequest } from 'hono';
 
 @injectable()
 export class LoginRequestsService {
@@ -17,12 +18,8 @@ export class LoginRequestsService {
     @inject(TokensService) private readonly tokensService: TokensService,
     @inject(MailerService) private readonly mailerService: MailerService,
     @inject(UsersRepository) private readonly usersRepository: UsersRepository,
-    @inject(LoginRequestsRepository) private readonly loginRequestsRepository: LoginRequestsRepository,
+    @inject(CredentialsRepository) private readonly credentialsRepository: CredentialsRepository,
   ) { }
-
-	async validate(data: SignInEmailDto) {
-
-	}
 
   async create(data: RegisterEmailDto) {
     // generate a token, expiry date, and hash
@@ -36,16 +33,36 @@ export class LoginRequestsService {
     });
   }
 
-  async verify(data: SignInEmailDto) {
-    let existingUser = await this.usersRepository.findOneByUsername(data.username);
+  async verify(data: SignInEmailDto, req: HonoRequest) {
+    const requestIpAddress = req.header('x-real-ip');
+    const requestIpCountry = req.header('x-vercel-ip-country');
+    const existingUser = await this.usersRepository.findOneByUsername(data.username);
 
     if (!existingUser) {
      throw BadRequest('User not found');
 		}
 
-		
+    const credential = await this.credentialsRepository.findPasswordCredentialsByUserId(existingUser.id);
 
-    return this.lucia.createSession(existingUser.id, {});
+    if (!credential) {
+      throw BadRequest('Invalid credentials');
+    }
+
+    if (!await this.tokensService.verifyHashedToken(credential.hashedPassword, data.password)) {
+      throw BadRequest('Invalid credentials');
+    }
+
+    const totpCredentials = await this.credentialsRepository.findTOTPCredentialsByUserId(existingUser.id);
+
+    return this.lucia.createSession(existingUser.id, {
+      ip_country: requestIpCountry || 'unknown',
+      ip_address: requestIpAddress || 'unknown',
+      twoFactorAuthEnabled:
+        !!totpCredentials &&
+        totpCredentials?.secret !== null &&
+        totpCredentials?.secret !== '',
+      isTwoFactorAuthenticated: false,
+    });
   }
 
   // Create a new user and send a welcome email - or other onboarding process
