@@ -1,7 +1,7 @@
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import db from '../../../../../db';
-import { collection_items, users } from '$db/schema';
+import { collection_items, usersTable } from '$db/schema';
 
 // Search a user's collection
 export async function GET({ url, locals, params }) {
@@ -20,7 +20,7 @@ export async function GET({ url, locals, params }) {
 	}
 
 	const collection = await db.query.collections.findFirst({
-		where: eq(users.id, locals?.user?.id),
+		where: eq(usersTable.id, locals?.user?.id),
 	});
 	console.log('collection', collection);
 

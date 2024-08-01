@@ -2,7 +2,7 @@ import type { MetaTagsProps } from 'svelte-meta-tags';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import db from '../../db';
-import { collections, users, wishlists } from '$db/schema';
+import { collections, usersTable, wishlists } from '$db/schema';
 import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
@@ -42,8 +42,8 @@ export const load: PageServerLoad = async (event) => {
 	});
 
 	if (userFullyAuthenticated(user, session)) {
-		const dbUser = await db.query.users.findFirst({
-			where: eq(users.id, user!.id!),
+		const dbUser = await db.query.usersTable.findFirst({
+			where: eq(usersTable.id, user!.id!),
 		});
 
 		console.log('Sending back user details');

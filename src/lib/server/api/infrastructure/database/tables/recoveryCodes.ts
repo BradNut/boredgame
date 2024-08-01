@@ -1,6 +1,6 @@
 import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import type { InferSelectModel } from 'drizzle-orm';
-import usersTable from './users.table';
+import { usersTable } from './users.table';
 import { timestamps } from '../utils';
 
 const recovery_codes = pgTable('recovery_codes', {

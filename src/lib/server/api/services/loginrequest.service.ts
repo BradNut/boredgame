@@ -6,7 +6,6 @@ import { TokensService } from './tokens.service';
 import { LuciaProvider } from '../providers/lucia.provider';
 import { UsersRepository } from '../repositories/users.repository';
 import type { SignInEmailDto } from '../../../dtos/signin-email.dto';
-import type { RegisterEmailDto } from '../../../dtos/register-email.dto';
 import { CredentialsRepository } from '../repositories/credentials.repository';
 import type { HonoRequest } from 'hono';
 
@@ -21,17 +20,17 @@ export class LoginRequestsService {
     @inject(CredentialsRepository) private readonly credentialsRepository: CredentialsRepository,
   ) { }
 
-  async create(data: RegisterEmailDto) {
-    // generate a token, expiry date, and hash
-    const { token, expiry, hashedToken } = await this.tokensService.generateTokenWithExpiryAndHash(15, 'm');
-    // save the login request to the database - ensuring we save the hashedToken
-    await this.loginRequestsRepository.create({ email: data.email, hashedToken, expiresAt: expiry });
-    // send the login request email
-    await this.mailerService.sendLoginRequest({
-      to: data.email,
-      props: { token: token }
-    });
-  }
+  // async create(data: RegisterEmailDto) {
+  //   // generate a token, expiry date, and hash
+  //   const { token, expiry, hashedToken } = await this.tokensService.generateTokenWithExpiryAndHash(15, 'm');
+  //   // save the login request to the database - ensuring we save the hashedToken
+  //   await this.loginRequestsRepository.create({ email: data.email, hashedToken, expiresAt: expiry });
+  //   // send the login request email
+  //   await this.mailerService.sendLoginRequest({
+  //     to: data.email,
+  //     props: { token: token }
+  //   });
+  // }
 
   async verify(data: SignInEmailDto, req: HonoRequest) {
     const requestIpAddress = req.header('x-real-ip');
@@ -74,19 +73,19 @@ export class LoginRequestsService {
   }
 
   // Fetch a valid request from the database, verify the token and burn the request if it is valid
-  private async fetchValidRequest(email: string, token: string) {
-    return await this.db.transaction(async (trx) => {
-      // fetch the login request
-      const loginRequest = await this.loginRequestsRepository.trxHost(trx).findOneByEmail(email)
-      if (!loginRequest) return null;
+  // private async fetchValidRequest(email: string, token: string) {
+  //   return await this.db.transaction(async (trx) => {
+  //     // fetch the login request
+  //     const loginRequest = await this.loginRequestsRepository.trxHost(trx).findOneByEmail(email)
+  //     if (!loginRequest) return null;
 
-      // check if the token is valid
-      const isValidRequest = await this.tokensService.verifyHashedToken(loginRequest.hashedToken, token);
-      if (!isValidRequest) return null
+  //     // check if the token is valid
+  //     const isValidRequest = await this.tokensService.verifyHashedToken(loginRequest.hashedToken, token);
+  //     if (!isValidRequest) return null
 
-      // if the token is valid, burn the request
-      await this.loginRequestsRepository.trxHost(trx).deleteById(loginRequest.id);
-      return loginRequest
-    })
-  }
+  //     // if the token is valid, burn the request
+  //     await this.loginRequestsRepository.trxHost(trx).deleteById(loginRequest.id);
+  //     return loginRequest
+  //   })
+  // }
 }

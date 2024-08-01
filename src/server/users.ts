@@ -1,17 +1,17 @@
 import db from '../db';
 import { eq } from 'drizzle-orm';
-import { users, type Users } from '$db/schema';
+import { usersTable, type Users } from '$db/schema';
 import { add_user_to_role } from './roles';
 
 export function create_user(user: Users) {
-	return db.insert(users).values({
+	return db.insert(usersTable).values({
 		username: user.username,
 	});
 }
 
 export async function find_or_create_user(user: Users) {
-	const existing_user = await db.query.users.findFirst({
-		where: eq(users.username, user.username),
+	const existing_user = await db.query.usersTable.findFirst({
+		where: eq(usersTable.username, user.username),
 	});
 	if (existing_user) {
 		return existing_user;
@@ -23,8 +23,8 @@ export async function find_or_create_user(user: Users) {
 }
 
 export async function find_user_with_roles(user_id: string) {
-	const user_with_roles = await db.query.users.findFirst({
-		where: eq(users.id, user_id),
+	const user_with_roles = await db.query.usersTable.findFirst({
+		where: eq(usersTable.id, user_id),
 		with: {
 			user_roles: {
 				with: {

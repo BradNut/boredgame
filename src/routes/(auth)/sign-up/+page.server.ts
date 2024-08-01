@@ -10,7 +10,7 @@ import { lucia } from '$lib/server/auth';
 import { signUpSchema } from '$lib/validations/auth';
 import { add_user_to_role } from '$server/roles';
 import db from '../../../db';
-import { collections, users, wishlists } from '$db/schema';
+import { collections, usersTable, wishlists } from '$db/schema';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { userFullyAuthenticated, userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
@@ -76,8 +76,8 @@ export const actions: Actions = {
 		// Adding user to the db
 		console.log('Check if user already exists');
 
-		const existing_user = await db.query.users.findFirst({
-			where: eq(users.username, form.data.username),
+		const existing_user = await db.query.usersTable.findFirst({
+			where: eq(usersTable.username, form.data.username),
 		});
 
 		if (existing_user) {
@@ -89,7 +89,7 @@ export const actions: Actions = {
 		const hashedPassword = await new Argon2id().hash(form.data.password);
 
 		const user = await db
-			.insert(users)
+			.insert(usersTable)
 			.values({
 				username: form.data.username,
 				hashed_password: hashedPassword,

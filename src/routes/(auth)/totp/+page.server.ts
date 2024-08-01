@@ -10,7 +10,7 @@ import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth';
-import { users, twoFactor, recoveryCodes } from '$db/schema';
+import { usersTable, twoFactor, recoveryCodes } from '$db/schema';
 import type {PageServerLoad, RequestEvent} from './$types';
 import { notSignedInMessage } from '$lib/flashMessages';
 import env from '../../../env';
@@ -24,8 +24,8 @@ export const load: PageServerLoad = async (event) => {
 	}
 
 	if (user && session) {
-		const dbUser = await db.query.users.findFirst({
-			where: eq(users.username, user.username),
+		const dbUser = await db.query.usersTable.findFirst({
+			where: eq(usersTable.username, user.username),
 		});
 
 		const twoFactorDetails = await db.query.twoFactor.findFirst({
@@ -262,8 +262,8 @@ async function validateUserData(event: RequestEvent, locals: App.Locals) {
 		throw fail(401);
 	}
 
-	const dbUser = await db.query.users.findFirst({
-		where: eq(users.username, user.username),
+	const dbUser = await db.query.usersTable.findFirst({
+		where: eq(usersTable.username, user.username),
 	});
 
 	if (!dbUser) {

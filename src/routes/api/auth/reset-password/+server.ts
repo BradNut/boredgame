@@ -1,7 +1,7 @@
 import db from '../../../../db';
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import { users } from '$db/schema';
+import { usersTable } from '$db/schema';
 import { createPasswordResetToken } from '$lib/server/auth-utils.js';
 import { PUBLIC_SITE_URL } from '$env/static/public';
 
@@ -12,8 +12,8 @@ export async function POST({ locals, request }) {
 		error(401, { message: 'Unauthorized' });
 	}
 
-	const user = await db.query.users.findFirst({
-		where: eq(users.email, email),
+	const user = await db.query.usersTable.findFirst({
+		where: eq(usersTable.email, email),
 	});
 
 	if (!user) {

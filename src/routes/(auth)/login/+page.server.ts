@@ -8,7 +8,7 @@ import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import db from '../../../db';
 import { lucia } from '$lib/server/auth';
 import { signInSchema } from '$lib/validations/auth';
-import { twoFactor, users, type Users } from '$db/schema';
+import { twoFactor, usersTable, type Users } from '$db/schema';
 import type { PageServerLoad } from './$types';
 import { userFullyAuthenticated, userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
@@ -57,8 +57,8 @@ export const actions: Actions = {
 
 		let session;
 		let sessionCookie;
-		const user: Users | undefined = await db.query.users.findFirst({
-			where: or(eq(users.username, form.data.username), eq(users.email, form.data.username)),
+		const user: Users | undefined = await db.query.usersTable.findFirst({
+			where: or(eq(usersTable.username, form.data.username), eq(usersTable.email, form.data.username)),
 		});
 
 		if (!user) {

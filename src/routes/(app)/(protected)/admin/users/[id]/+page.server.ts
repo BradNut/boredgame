@@ -3,7 +3,7 @@ import { redirect } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from './$types';
 import { forbiddenMessage, notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../../../db';
-import { roles, userRoles, users } from '$db/schema';
+import { roles, userRoles, usersTable } from '$db/schema';
 
 export const load: PageServerLoad = async (event) => {
 	const { params } = event;
@@ -14,10 +14,10 @@ export const load: PageServerLoad = async (event) => {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const foundUser = await db.query.users.findFirst({
-		where: eq(users.cuid, id),
+	const foundUser = await db.query.usersTable.findFirst({
+		where: eq(usersTable.cuid, id),
 		with: {
-			userRoles: {
+			user_roles: {
 				with: {
 					role: {
 						columns: {
@@ -30,7 +30,7 @@ export const load: PageServerLoad = async (event) => {
 		},
 	});
 
-	const containsAdminRole = foundUser?.userRoles?.some(
+	const containsAdminRole = foundUser?.user_roles?.some(
 		(user_role) => user_role?.role?.name === 'admin',
 	);
 	if (!containsAdminRole) {
@@ -38,7 +38,7 @@ export const load: PageServerLoad = async (event) => {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const currentRoleIds = foundUser?.userRoles?.map((user_role) => user_role?.role.cuid) || [];
+	const currentRoleIds = foundUser?.user_roles?.map((user_role) => user_role?.role.cuid) || [];
 	let availableRoles: { name: string; cuid: string }[] = [];
 	if (currentRoleIds?.length > 0) {
 		availableRoles = await db.query.roles.findMany({
@@ -65,7 +65,7 @@ export const actions = {
 			redirect(302, '/login', notSignedInMessage, event);
 		}
 
-		const userRoles = await db.query.userRoles.findMany({
+		const userRolesList = await db.query.userRoles.findMany({
 			where: eq(userRoles.user_id, user.id),
 			with: {
 				role: {
@@ -77,9 +77,9 @@ export const actions = {
 			},
 		});
 
-		console.log('userRoles', userRoles);
+		console.log('userRoles', userRolesList);
 
-		const containsAdminRole = userRoles.some((user_role) => user_role?.role?.name === 'admin');
+		const containsAdminRole = userRolesList.some((user_role) => user_role?.role?.name === 'admin');
 		console.log('containsAdminRole', containsAdminRole);
 		if (!containsAdminRole) {
 			redirect(302, '/', forbiddenMessage, event);
@@ -108,7 +108,7 @@ export const actions = {
 			redirect(302, '/login', notSignedInMessage, event);
 		}
 
-		const userRoles = await db.query.userRoles.findMany({
+		const userRolesList = await db.query.userRoles.findMany({
 			where: eq(userRoles.user_id, user.id),
 			with: {
 				role: {
@@ -120,7 +120,7 @@ export const actions = {
 			},
 		});
 
-		const containsAdminRole = userRoles.some((user_role) => user_role?.role?.name === 'admin');
+		const containsAdminRole = userRolesList.some((user_role) => user_role?.role?.name === 'admin');
 		if (!containsAdminRole) {
 			redirect(302, '/', forbiddenMessage, event);
 		}

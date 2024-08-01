@@ -5,7 +5,7 @@ import { alphabet, generateRandomString } from 'oslo/crypto';
 import { redirect } from 'sveltekit-flash-message/server';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { PageServerLoad } from '../../../$types';
-import {recoveryCodes, twoFactor, users} from '$db/schema';
+import {recoveryCodes, twoFactor, usersTable} from '$db/schema';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
@@ -15,8 +15,8 @@ export const load: PageServerLoad = async (event) => {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const dbUser = await db.query.users.findFirst({
-		where: eq(users.id, user!.id),
+	const dbUser = await db.query.usersTable.findFirst({
+		where: eq(usersTable.id, user!.id),
 	});
 
 	const twoFactorDetails = await db.query.twoFactor.findFirst({

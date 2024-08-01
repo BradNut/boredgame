@@ -13,7 +13,7 @@ import type { PageServerLoad } from '../../$types';
 import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../../../db';
-import { recoveryCodes, twoFactor, users } from '$db/schema';
+import { recoveryCodes, twoFactor, usersTable } from '$db/schema';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 import env from '../../../../../../env';
 
@@ -27,8 +27,8 @@ export const load: PageServerLoad = async (event) => {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const dbUser = await db.query.users.findFirst({
-		where: eq(users.id, user!.id!),
+	const dbUser = await db.query.usersTable.findFirst({
+		where: eq(usersTable.id, user!.id!),
 	});
 
 	const twoFactorDetails = await db.query.twoFactor.findFirst({
@@ -111,8 +111,8 @@ export const actions: Actions = {
 			return fail(401);
 		}
 
-		const dbUser = await db.query.users.findFirst({
-			where: eq(users.id, user!.id!),
+		const dbUser = await db.query.usersTable.findFirst({
+			where: eq(usersTable.id, user!.id!),
 		});
 
 		if (!dbUser?.hashed_password) {
@@ -190,8 +190,8 @@ export const actions: Actions = {
 			});
 		}
 
-		const dbUser = await db.query.users.findFirst({
-			where: eq(users.id, user.id),
+		const dbUser = await db.query.usersTable.findFirst({
+			where: eq(usersTable.id, user.id),
 		});
 
 		if (!dbUser?.hashed_password) {

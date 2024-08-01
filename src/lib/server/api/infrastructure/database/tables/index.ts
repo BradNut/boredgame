@@ -1,4 +1,4 @@
-export { default as usersTable, userRelations as user_relations, type Users } from './users.table';
+export { usersTable, userRelations as user_relations, type Users } from './users.table';
 export { default as recoveryCodes, type RecoveryCodes } from './recoveryCodes';
 export {
 	default as password_reset_tokens,

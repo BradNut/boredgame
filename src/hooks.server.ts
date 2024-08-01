@@ -1,4 +1,5 @@
 // import * as Sentry from '@sentry/sveltekit';
+import 'reflect-metadata'
 import { hc } from 'hono/client';
 import { sequence } from '@sveltejs/kit/hooks';
 import { redirect, type Handle } from '@sveltejs/kit';

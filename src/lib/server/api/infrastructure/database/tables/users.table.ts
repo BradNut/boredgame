@@ -10,7 +10,6 @@ export const usersTable = pgTable('users', {
 		.unique()
 		.$defaultFn(() => cuid2()),
 	username: text('username').unique(),
-	hashed_password: text('hashed_password'),
 	email: text('email').unique(),
 	first_name: text('first_name'),
 	last_name: text('last_name'),

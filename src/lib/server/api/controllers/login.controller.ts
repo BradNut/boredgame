@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { inject, injectable } from 'tsyringe';
@@ -5,14 +6,14 @@ import type { HonoTypes } from '../types';
 import { limiter } from '../middleware/rate-limiter.middleware';
 import type { Controller } from '../interfaces/controller.interface';
 import { signInEmailDto } from '$lib/dtos/signin-email.dto';
-import type { LoginRequestsService } from '../services/loginrequest.service';
+import { LoginRequestsService } from '../services/loginrequest.service';
 
 @injectable()
 export class LoginController implements Controller {
 	controller = new Hono<HonoTypes>();
 
 	constructor(
-		@inject('LoginRequestsService') private readonly loginRequestsService: LoginRequestsService
+		@inject(LoginRequestsService) private readonly loginRequestsService: LoginRequestsService
 	) { }
 
 	routes() {

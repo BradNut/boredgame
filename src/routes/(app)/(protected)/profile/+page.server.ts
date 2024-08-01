@@ -8,7 +8,7 @@ import { changeEmailSchema, profileSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
 import db from '../../../../db';
 import type { PageServerLoad } from './$types';
-import { users, twoFactor } from '$db/schema';
+import { usersTable, twoFactor } from '$db/schema';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
@@ -18,8 +18,8 @@ export const load: PageServerLoad = async (event) => {
 		redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const dbUser = await db.query.users.findFirst({
-		where: eq(users.id, user!.id!),
+	const dbUser = await db.query.usersTable.findFirst({
+		where: eq(usersTable.id, user!.id!),
 	});
 
 	const profileForm = await superValidate(zod(profileSchema), {
@@ -72,8 +72,8 @@ export const actions: Actions = {
 
 			const user = event.locals.user;
 			const newUsername = form.data.username;
-			const existingUser = await db.query.users.findFirst({
-				where: eq(users.username, newUsername),
+			const existingUser = await db.query.usersTable.findFirst({
+				where: eq(usersTable.username, newUsername),
 			});
 
 			if (existingUser && existingUser.id !== user.id) {
@@ -81,13 +81,13 @@ export const actions: Actions = {
 			}
 
 			await db
-				.update(users)
+				.update(usersTable)
 				.set({
 					first_name: form.data.firstName,
 					last_name: form.data.lastName,
 					username: form.data.username,
 				})
-				.where(eq(users.id, user.id));
+				.where(eq(usersTable.id, user.id));
 		} catch (e) {
 			// @ts-expect-error
 			if (e.message === `AUTH_INVALID_USER_ID`) {
@@ -119,17 +119,17 @@ export const actions: Actions = {
 		}
 
 		const user = event.locals.user;
-		const existingUser = await db.query.users.findFirst({
-			where: eq(users.email, newEmail),
+		const existingUser = await db.query.usersTable.findFirst({
+			where: eq(usersTable.email, newEmail),
 		});
 
 		if (existingUser && existingUser.id !== user.id) {
 			return setError(form, 'email', 'That email is already taken');
 		}
 
-		await db.update(users).set({ email: form.data.email }).where(eq(users.id, user.id));
+		await db.update(usersTable).set({ email: form.data.email }).where(eq(usersTable.id, user.id));
 
-		if (user.email !== form.data.email) {
+		// if (user.email !== form.data.email) {
 			// Send email to confirm new email?
 			// auth.update
 			// await locals.prisma.key.update({
@@ -143,7 +143,7 @@ export const actions: Actions = {
 			// auth.updateUserAttributes(user.user_id, {
 			// 	receiveEmail: false
 			// });
-		}
+		// }
 
 		return message(form, { type: 'success', message: 'Email updated successfully!' });
 	},

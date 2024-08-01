@@ -8,7 +8,7 @@ import type { PageServerLoad } from '../../../$types';
 import db from '../../../../../../../db';
 import { changeUserPasswordSchema } from '$lib/validations/account';
 import { lucia } from '$lib/server/auth.js';
-import { users } from '$db/schema';
+import { usersTable } from '$db/schema';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { Cookie } from 'lucia';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
@@ -56,8 +56,8 @@ export const actions: Actions = {
 			return fail(401);
 		}
 
-		const dbUser = await db.query.users.findFirst({
-			where: eq(users.id, user!.id),
+		const dbUser = await db.query.usersTable.findFirst({
+			where: eq(usersTable.id, user!.id),
 		});
 
 		if (!dbUser?.hashed_password) {
@@ -87,9 +87,9 @@ export const actions: Actions = {
 				const hashedPassword = await new Argon2id().hash(form.data.password);
 				await lucia.invalidateUserSessions(user.id);
 				await db
-					.update(users)
+					.update(usersTable)
 					.set({ hashed_password: hashedPassword })
-					.where(eq(users.id, user.id));
+					.where(eq(usersTable.id, user.id));
 				await lucia.createSession(user.id, {
 					country: event.locals.session?.ipCountry ?? 'unknown',
 				});

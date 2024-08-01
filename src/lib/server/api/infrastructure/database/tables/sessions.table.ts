@@ -1,6 +1,6 @@
 import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { relations, type InferSelectModel } from 'drizzle-orm';
-import usersTable from './users.table';
+import { usersTable } from './users.table';
 
 const sessionsTable = pgTable('sessions', {
 	id: text('id').primaryKey(),
