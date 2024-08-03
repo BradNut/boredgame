@@ -1,4 +1,5 @@
-import { inject, injectable } from 'tsyringe';
+// import { inject, injectable } from 'tsyringe';
+import { lucia } from '../infrastructure/auth/lucia';
 import { LuciaProvider } from '../providers/lucia.provider';
 
 /* -------------------------------------------------------------------------- */
@@ -18,13 +19,13 @@ Create private functions to handle complex logic and keep the public methods as
 simple as possible. This makes the service easier to read, test and understand.
 */
 /* -------------------------------------------------------------------------- */
-@injectable()
+// @injectable()
 export class IamService {
-	constructor(
-		@inject(LuciaProvider) private readonly lucia: LuciaProvider,
-	) { }
+	// constructor(
+	// 	@inject(LuciaProvider) private readonly lucia: LuciaProvider,
+	// ) { }
 
 	async logout(sessionId: string) {
-		return this.lucia.invalidateSession(sessionId);
+		return lucia.invalidateSession(sessionId);
 	}
 }

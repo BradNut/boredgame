@@ -1,4 +1,4 @@
-import { injectable } from "tsyringe";
+// import { injectable } from "tsyringe";
 import { Argon2id } from "oslo/password";
 
 /* ---------------------------------- Note ---------------------------------- */
@@ -20,8 +20,8 @@ node_modules/.pnpm/@node-rs+argon2@1.7.0/node_modules/@node-rs/argon2/index.js:1
 /* -------------------------------------------------------------------------- */
 // If you don't use a hasher from oslo, which are preconfigured with recommended parameters from OWASP,
 // ensure that you configure them properly.
-@injectable()
-export class HashingService {
+// @injectable()
+class HashingService {
   private readonly hasher = new Argon2id();
 
   async hash(data: string) {
@@ -32,3 +32,5 @@ export class HashingService {
     return this.hasher.verify(hash, data)
   }
 }
+
+export const hashingService = new HashingService()

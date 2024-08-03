@@ -22,7 +22,7 @@ storing data. They should not contain any business logic, only database queries.
 export type CreateUser = InferInsertModel<typeof usersTable>;
 export type UpdateUser = Partial<CreateUser>;
 
-export class UsersRepository {
+class UsersRepository {
 	async findOneById(id: string) {
 		return db.query.usersTable.findFirst({
 			where: eq(usersTable.id, id)
@@ -60,3 +60,5 @@ export class UsersRepository {
 			.then(takeFirstOrThrow);
 	}
 }
+
+export const usersRepository = new UsersRepository();

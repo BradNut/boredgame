@@ -1,11 +1,11 @@
 import { Hono } from 'hono';
-import { injectable } from 'tsyringe';
+// import { injectable } from 'tsyringe';
 import type { HonoTypes } from '../types';
 import { requireAuth } from "../middleware/auth.middleware";
 import type { Controller } from '../interfaces/controller.interface';
 
-@injectable()
-export class IamController implements Controller {
+// @injectable()
+class IamController implements Controller {
 	controller = new Hono<HonoTypes>();
 
 	constructor(
@@ -19,3 +19,6 @@ export class IamController implements Controller {
 			});
 	}
 }
+
+const iamControllerInstance = new IamController();
+export default iamControllerInstance;

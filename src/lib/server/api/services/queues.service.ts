@@ -1,13 +1,13 @@
-import { injectable } from "tsyringe";
+// import { injectable } from "tsyringe";
 import RedisClient from 'ioredis'
 import { config } from "../common/config";
 import { Queue, Worker, type Processor } from 'bullmq';
 
-@injectable()
+// @injectable()
 export class QueuesServices {
   connection = new RedisClient(config.REDIS_URL);
 
-  constructor() { }
+  // constructor() { }
 
   createQueue(name: string) {
     return new Queue(name, { connection: this.connection })

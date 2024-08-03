@@ -3,7 +3,7 @@ import path from 'path';
 import nodemailer from 'nodemailer';
 import handlebars from 'handlebars';
 import { fileURLToPath } from 'url';
-import { injectable } from 'tsyringe';
+// import { injectable } from 'tsyringe';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Service                                  */
@@ -34,8 +34,8 @@ type SendTemplate<T> = {
 	props: T;
 };
 
-@injectable()
-export class MailerService {
+// @injectable()
+class MailerService {
 	private nodemailer = nodemailer.createTransport({
 		host: 'smtp.ethereal.email',
 		port: 587,
@@ -102,3 +102,5 @@ export class MailerService {
 		);
 	}
 }
+
+export const mailerService = new MailerService();

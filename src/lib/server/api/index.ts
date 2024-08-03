@@ -1,13 +1,13 @@
-import 'reflect-metadata'
+// import 'reflect-metadata'
 import { Hono } from 'hono';
 import { hc } from 'hono/client';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { validateAuthSession, verifyOrigin } from './middleware/auth.middleware';
 import { config } from './common/config';
-import { container } from 'tsyringe';
-import { IamController } from './controllers/iam.controller';
-import { LoginController } from './controllers/login.controller';
+// import { container } from 'tsyringe';
+import iamControllerInstance from './controllers/iam.controller';
+import loginControllerInstance from './controllers/login.controller';
 
 /* ----------------------------------- Api ---------------------------------- */
 const app = new Hono().basePath('/api');
@@ -34,8 +34,10 @@ app.use(
 
 /* --------------------------------- Routes --------------------------------- */
 const routes = app
-	.route('/user', container.resolve(IamController).routes())
-	.route('/login', container.resolve(LoginController).routes())
+	// .route('/user', container.resolve(IamController).routes())
+	// .route('/login', container.resolve(LoginController).routes())
+	.route('/user', iamControllerInstance.routes())
+	.route('/login', loginControllerInstance.routes())
 	.get('/', (c) => c.json({ message: 'Server is healthy' }));
 
 /* -------------------------------------------------------------------------- */

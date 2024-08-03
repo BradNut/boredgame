@@ -1,12 +1,12 @@
-import 'reflect-metadata';
+// import 'reflect-metadata';
 import { Hono } from 'hono';
-import { injectable } from 'tsyringe';
+// import { injectable } from 'tsyringe';
 import { requireAuth } from "../middleware/auth.middleware";
 import type { HonoTypes } from '../types';
 import type { Controller } from '../interfaces/controller.interface';
 
-@injectable()
-export class UserController implements Controller {
+// @injectable()
+class UserController implements Controller {
 	controller = new Hono<HonoTypes>();
 
 	constructor(
@@ -24,3 +24,5 @@ export class UserController implements Controller {
 			});
 	}
 }
+
+export const userControllerInstance = new UserController();

@@ -6,7 +6,7 @@ import { takeFirstOrThrow } from "../infrastructure/database/utils";
 export type CreateCredentials = InferInsertModel<typeof credentialsTable>;
 export type UpdateCredentials = Partial<CreateCredentials>;
 
-export class CredentialsRepository {
+class CredentialsRepository {
 
 	async findOneByUserId(userId: string) {
 		return db.query.credentialsTable.findFirst({
@@ -57,3 +57,5 @@ export class CredentialsRepository {
 			.then(takeFirstOrThrow);
 	}
 }
+
+export const credentialsRepository = new CredentialsRepository();

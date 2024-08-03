@@ -1,4 +1,4 @@
-import 'reflect-metadata'
+// import 'reflect-metadata'
 import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { preprocessMeltUI } from '@melt-ui/pp';
