@@ -22,6 +22,7 @@ const apiClient: Handle = async ({ event, resolve }) => {
 	const { api } = hc<ApiRoutes>('/', {
 		fetch: event.fetch,
 		headers: {
+			'x-forwarded-for': event.url.host.includes('sveltekit-prerender') ? '127.0.0.1' : event.getClientAddress(),
 			host: event.request.headers.get('host') || ''
 		}
 	});
