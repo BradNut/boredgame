@@ -1,14 +1,14 @@
 import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
-import categories from './categories';
+import { categoriesTable } from './categories.table';
 import externalIds from './externalIds';
 import { relations } from 'drizzle-orm';
 
-const categoriesToExternalIds = pgTable(
+export const categoriesToExternalIdsTable = pgTable(
 	'categories_to_external_ids',
 	{
 		categoryId: uuid('category_id')
 			.notNull()
-			.references(() => categories.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+			.references(() => categoriesTable.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 		externalId: uuid('external_id')
 			.notNull()
 			.references(() => externalIds.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
@@ -23,17 +23,15 @@ const categoriesToExternalIds = pgTable(
 );
 
 export const categoriesToExternalIdsRelations = relations(
-	categoriesToExternalIds,
+	categoriesToExternalIdsTable,
 	({ one }) => ({
-		category: one(categories, {
-			fields: [categoriesToExternalIds.categoryId],
-			references: [categories.id],
+		category: one(categoriesTable, {
+			fields: [categoriesToExternalIdsTable.categoryId],
+			references: [categoriesTable.id],
 		}),
 		externalId: one(externalIds, {
-			fields: [categoriesToExternalIds.externalId],
+			fields: [categoriesToExternalIdsTable.externalId],
 			references: [externalIds.id],
 		}),
 	}),
 );
-
-export default categoriesToExternalIds;

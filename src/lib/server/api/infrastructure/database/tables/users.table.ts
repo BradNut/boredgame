@@ -2,7 +2,7 @@ import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import { timestamps } from '../utils';
-import user_roles from './userRoles';
+import {user_roles} from './userRoles';
 
 export const usersTable = pgTable('users', {
 	id: uuid('id').primaryKey().defaultRandom(),

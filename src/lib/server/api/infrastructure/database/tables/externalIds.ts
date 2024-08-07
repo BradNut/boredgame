@@ -11,7 +11,7 @@ export const externalIdType = pgEnum('external_id_type', [
 	'artist',
 ]);
 
-const externalIds = pgTable('external_ids', {
+export const externalIds = pgTable('external_ids', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
@@ -21,5 +21,3 @@ const externalIds = pgTable('external_ids', {
 });
 
 export type ExternalIds = InferSelectModel<typeof externalIds>;
-
-export default externalIds;

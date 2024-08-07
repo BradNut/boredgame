@@ -2,10 +2,10 @@ import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import { usersTable } from './users.table';
-import roles from './roles';
+import {roles} from './roles';
 import { timestamps } from '../utils';
 
-const user_roles = pgTable('user_roles', {
+export const user_roles = pgTable('user_roles', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
@@ -32,5 +32,3 @@ export const user_role_relations = relations(user_roles, ({ one }) => ({
 }));
 
 export type UserRoles = InferSelectModel<typeof user_roles>;
-
-export default user_roles;

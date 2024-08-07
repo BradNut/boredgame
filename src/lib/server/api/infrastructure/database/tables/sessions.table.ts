@@ -2,7 +2,7 @@ import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { relations, type InferSelectModel } from 'drizzle-orm';
 import { usersTable } from './users.table';
 
-const sessionsTable = pgTable('sessions', {
+export const sessionsTable = pgTable('sessions', {
 	id: text('id').primaryKey(),
 	userId: uuid('user_id')
 		.notNull()
@@ -25,5 +25,3 @@ export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
 }));
 
 export type Sessions = InferSelectModel<typeof sessionsTable>;
-
-export default sessionsTable;

@@ -5,7 +5,7 @@ import mechanicsToGames from './mechanicsToGames';
 import mechanicsToExternalIds from './mechanicsToExternalIds';
 import { timestamps } from '../utils';
 
-const mechanics = pgTable('mechanics', {
+export const mechanics = pgTable('mechanics', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
@@ -21,5 +21,3 @@ export const mechanics_relations = relations(mechanics, ({ many }) => ({
 	mechanics_to_games: many(mechanicsToGames),
 	mechanicsToExternalIds: many(mechanicsToExternalIds),
 }));
-
-export default mechanics;

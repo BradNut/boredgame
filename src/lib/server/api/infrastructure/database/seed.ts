@@ -14,7 +14,7 @@ async function resetTable(db: db, table: Table) {
 
 for (const table of [
 	schema.categories,
-	schema.categoriesToExternalIds,
+	schema.categoriesToExternalIdsTable,
 	schema.categories_to_games,
 	schema.collection_items,
 	schema.collections,

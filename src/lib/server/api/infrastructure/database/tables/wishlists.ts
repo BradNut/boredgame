@@ -4,7 +4,7 @@ import { type InferSelectModel, relations } from 'drizzle-orm';
 import { usersTable } from './users.table';
 import { timestamps } from '../utils';
 
-const wishlists = pgTable('wishlists', {
+export const wishlists = pgTable('wishlists', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
@@ -24,5 +24,3 @@ export const wishlists_relations = relations(wishlists, ({ one }) => ({
 		references: [usersTable.id],
 	}),
 }));
-
-export default wishlists;

@@ -1,14 +1,14 @@
 import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import categories from './categories';
+import { categoriesTable } from './categories.table';
 import games from './games';
 
-const categories_to_games = pgTable(
+export const categories_to_games_table = pgTable(
 	'categories_to_games',
 	{
 		category_id: uuid('category_id')
 			.notNull()
-			.references(() => categories.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+			.references(() => categoriesTable.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
 		game_id: uuid('game_id')
 			.notNull()
 			.references(() => games.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
@@ -22,15 +22,14 @@ const categories_to_games = pgTable(
 	},
 );
 
-export const categories_to_games_relations = relations(categories_to_games, ({ one }) => ({
-	category: one(categories, {
-		fields: [categories_to_games.category_id],
-		references: [categories.id],
+export const categories_to_games_relations = relations(categories_to_games_table, ({ one }) => ({
+	category: one(categoriesTable, {
+		fields: [categories_to_games_table.category_id],
+		references: [categoriesTable.id],
 	}),
 	game: one(games, {
-		fields: [categories_to_games.game_id],
+		fields: [categories_to_games_table.game_id],
 		references: [games.id],
 	}),
 }));
 
-export default categories_to_games;

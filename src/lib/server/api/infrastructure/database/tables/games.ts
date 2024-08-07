@@ -1,13 +1,13 @@
 import { index, integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations, sql } from 'drizzle-orm';
-import categoriesToGames from './categoriesToGames';
-import gamesToExternalIds from './gamesToExternalIds';
-import mechanicsToGames from './mechanicsToGames';
-import publishersToGames from './publishersToGames';
+import {categories_to_games_table} from './categoriesToGames';
+import {gamesToExternalIds} from './gamesToExternalIds';
+import {mechanics_to_games} from './mechanicsToGames';
+import {publishers_to_games} from './publishersToGames';
 import { timestamps } from '../utils';
 
-const games = pgTable(
+export const games = pgTable(
 	'games',
 	{
 		id: uuid('id').primaryKey().defaultRandom(),
@@ -42,12 +42,10 @@ const games = pgTable(
 );
 
 export const gameRelations = relations(games, ({ many }) => ({
-	categories_to_games: many(categoriesToGames),
-	mechanics_to_games: many(mechanicsToGames),
-	publishers_to_games: many(publishersToGames),
+	categories_to_games: many(categories_to_games_table),
+	mechanics_to_games: many(mechanics_to_games),
+	publishers_to_games: many(publishers_to_games),
 	gamesToExternalIds: many(gamesToExternalIds),
 }));
 
 export type Games = InferSelectModel<typeof games>;
-
-export default games;

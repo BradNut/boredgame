@@ -1,8 +1,8 @@
 import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
-import games from './games';
-import externalIds from './externalIds';
+import {games} from './games';
+import {externalIds} from './externalIds';
 
-const gamesToExternalIds = pgTable(
+export const gamesToExternalIds = pgTable(
 	'games_to_external_ids',
 	{
 		gameId: uuid('game_id')
@@ -20,5 +20,3 @@ const gamesToExternalIds = pgTable(
 		};
 	},
 );
-
-export default gamesToExternalIds;

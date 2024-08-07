@@ -1,9 +1,9 @@
 import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import mechanics from './mechanics';
-import games from './games';
+import {mechanics} from './mechanics';
+import {games} from './games';
 
-const mechanics_to_games = pgTable(
+export const mechanics_to_games = pgTable(
 	'mechanics_to_games',
 	{
 		mechanic_id: uuid('mechanic_id')

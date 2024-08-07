@@ -1,9 +1,9 @@
 import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import publishers from './publishers';
-import games from './games';
+import {publishers} from './publishers';
+import {games} from './games';
 
-const publishers_to_games = pgTable(
+export const publishers_to_games = pgTable(
 	'publishers_to_games',
 	{
 		publisher_id: uuid('publisher_id')
@@ -32,5 +32,3 @@ export const publishers_to_games_relations = relations(publishers_to_games, ({ o
 		references: [games.id],
 	}),
 }));
-
-export default publishers_to_games;

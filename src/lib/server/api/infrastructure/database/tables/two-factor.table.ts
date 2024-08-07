@@ -4,7 +4,7 @@ import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { timestamps } from '../utils';
 import { usersTable } from './users.table';
 
-const twoFactorTable = pgTable('two_factor', {
+export const twoFactorTable = pgTable('two_factor', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	cuid: text('cuid')
 		.unique()
@@ -30,5 +30,3 @@ export const emailVerificationsRelations = relations(twoFactorTable, ({ one }) =
 }));
 
 export type TwoFactor = InferSelectModel<typeof twoFactorTable>;
-
-export default twoFactorTable;

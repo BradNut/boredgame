@@ -1,8 +1,8 @@
 import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
-import publishers from './publishers';
-import externalIds from './externalIds';
+import {publishers} from './publishers';
+import {externalIds} from './externalIds';
 
-const publishersToExternalIds = pgTable(
+export const publishersToExternalIds = pgTable(
 	'publishers_to_external_ids',
 	{
 		publisherId: uuid('publisher_id')
@@ -20,5 +20,3 @@ const publishersToExternalIds = pgTable(
 		};
 	},
 );
-
-export default publishersToExternalIds;
