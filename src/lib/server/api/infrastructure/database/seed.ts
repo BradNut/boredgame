@@ -1,5 +1,5 @@
 import { Table, getTableName, sql } from 'drizzle-orm';
-import env from '../env';
+import env from '../../../../../env';
 import { db, pool } from '$db';
 import * as schema from './tables';
 import * as seeds from './seeds';
@@ -13,13 +13,15 @@ async function resetTable(db: db, table: Table) {
 }
 
 for (const table of [
-	schema.categories,
+	schema.categoriesTable,
 	schema.categoriesToExternalIdsTable,
-	schema.categories_to_games,
+	schema.categories_to_games_table,
 	schema.collection_items,
 	schema.collections,
+	schema.credentialsTable,
 	schema.expansions,
 	schema.externalIds,
+	schema.federatedIdentityTable,
 	schema.games,
 	schema.gamesToExternalIds,
 	schema.mechanics,
@@ -29,14 +31,14 @@ for (const table of [
 	schema.publishers,
 	schema.publishersToExternalIds,
 	schema.publishers_to_games,
-	schema.recoveryCodes,
+	schema.recovery_codes,
 	schema.roles,
 	schema.sessionsTable,
-	schema.userRoles,
+	schema.twoFactorTable,
+	schema.user_roles,
 	schema.usersTable,
-	schema.twoFactor,
-	schema.wishlists,
 	schema.wishlist_items,
+	schema.wishlists,
 ]) {
 	// await db.delete(table); // clear tables without truncating / resetting ids
 	await resetTable(db, table);

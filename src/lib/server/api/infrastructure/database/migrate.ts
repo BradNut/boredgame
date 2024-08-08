@@ -2,8 +2,8 @@ import 'dotenv/config';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import env from '../env';
-import config from '../../drizzle.config';
+import env from '../../../../../env';
+import config from '../../../../../../drizzle.config';
 
 const connection = postgres({
 	host: env.DATABASE_HOST || 'localhost',
