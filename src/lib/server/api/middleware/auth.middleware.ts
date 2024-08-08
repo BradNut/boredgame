@@ -45,6 +45,7 @@ export const requireAuth: MiddlewareHandler<{
 	};
 }> = createMiddleware(async (c, next) => {
 	const user = c.var.user;
+	const session = c.var.session;
 	if (!user) throw Unauthorized('You must be logged in to access this resource');
 	return next();
 });

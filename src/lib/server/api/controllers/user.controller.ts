@@ -14,11 +14,17 @@ export class UserController implements Controller {
 
 	routes() {
 		return this.controller
-			.get('/me', requireAuth, async (c) => {
+			.get('/', async (c) => {
 				const user = c.var.user;
 				return c.json({ user });
 			})
-			.get('/user', requireAuth, async (c) => {
+			.get('/:id', requireAuth, async (c) => {
+				const id = c.req.param('id');
+				const user = c.var.user;
+				return c.json({ user });
+			})
+			.get('/username/:userName', requireAuth, async (c) => {
+				const userName = c.req.param('userName');
 				const user = c.var.user;
 				return c.json({ user });
 			});

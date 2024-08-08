@@ -33,21 +33,28 @@ export const load: PageServerLoad = async (event) => {
 	const { locals, cookies } = event;
 	const { user, session } = event.locals;
 
-	if (userFullyAuthenticated(user, session)) {
+	const authedUser = await locals.getAuthedUser();
+
+	if (authedUser) {
 		const message = { type: 'success', message: 'You are already signed in' } as const;
 		throw redirect('/', message, event);
-	} else if (userNotFullyAuthenticated(user, session)) {
-		try {
-			await lucia.invalidateSession(locals.session!.id!);
-		} catch (error) {
-			console.log('Session already invalidated');
-		}
-		const sessionCookie = lucia.createBlankSessionCookie();
-		cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: '.',
-			...sessionCookie.attributes,
-		});
 	}
+
+	// if (userFullyAuthenticated(user, session)) {
+	// 	const message = { type: 'success', message: 'You are already signed in' } as const;
+	// 	throw redirect('/', message, event);
+	// } else if (userNotFullyAuthenticated(user, session)) {
+	// 	try {
+	// 		await lucia.invalidateSession(locals.session!.id!);
+	// 	} catch (error) {
+	// 		console.log('Session already invalidated');
+	// 	}
+	// 	const sessionCookie = lucia.createBlankSessionCookie();
+	// 	cookies.set(sessionCookie.name, sessionCookie.value, {
+	// 		path: '.',
+	// 		...sessionCookie.attributes,
+	// 	});
+	// }
 
 	return {
 		form: await superValidate(zod(signUpSchema), {

@@ -8,6 +8,8 @@ import { config } from './common/config';
 import { container } from 'tsyringe';
 import { IamController } from './controllers/iam.controller';
 import { LoginController } from './controllers/login.controller';
+import {UserController} from "$lib/server/api/controllers/user.controller";
+import {SignupController} from "$lib/server/api/controllers/signup.controller";
 
 /* ----------------------------------- Api ---------------------------------- */
 const app = new Hono().basePath('/api');
@@ -34,9 +36,11 @@ app.use(
 
 /* --------------------------------- Routes --------------------------------- */
 const routes = app
-	.route('/user', container.resolve(IamController).routes())
-	.route('/login', container.resolve(LoginController).routes())
-	.get('/', (c) => c.json({ message: 'Server is healthy' }));
+		.route('/me', container.resolve(IamController).routes())
+		.route('/user', container.resolve(UserController).routes())
+		.route('/login', container.resolve(LoginController).routes())
+		.route('/signup', container.resolve(SignupController).routes())
+		.get('/', (c) => c.json({ message: 'Server is healthy' }));
 
 /* -------------------------------------------------------------------------- */
 /*                                   Exports                                  */
