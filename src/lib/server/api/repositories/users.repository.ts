@@ -1,8 +1,8 @@
 import { eq, type InferInsertModel } from 'drizzle-orm';
 import { usersTable } from '../infrastructure/database/tables/users.table';
 import { takeFirstOrThrow } from '../infrastructure/database/utils';
-import { db } from '../infrastructure/database';
-import {injectable} from "tsyringe";
+import {inject, injectable} from "tsyringe";
+import {DatabaseProvider} from "$lib/server/api/providers";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Repository                                 */
@@ -25,6 +25,8 @@ export type UpdateUser = Partial<CreateUser>;
 
 @injectable()
 export class UsersRepository {
+	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) { }
+
 	async findOneById(id: string) {
 		return db.query.usersTable.findFirst({
 			where: eq(usersTable.id, id)

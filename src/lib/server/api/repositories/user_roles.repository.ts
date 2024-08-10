@@ -1,9 +1,8 @@
 import { eq, type InferInsertModel } from 'drizzle-orm';
-import { usersTable } from '../infrastructure/database/tables/users.table';
 import { takeFirstOrThrow } from '../infrastructure/database/utils';
-import { db } from '../infrastructure/database';
 import {user_roles} from "$lib/server/api/infrastructure/database/tables";
-import {injectable} from "tsyringe";
+import {inject, injectable} from "tsyringe";
+import {DatabaseProvider} from "$lib/server/api/providers";
 
 /* -------------------------------------------------------------------------- */
 /*                                 Repository                                 */
@@ -26,6 +25,8 @@ export type UpdateUserRole = Partial<CreateUserRole>;
 
 @injectable()
 export class UserRolesRepository {
+	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) { }
+
 	async findOneById(id: string) {
 		return db.query.user_roles.findFirst({
 			where: eq(user_roles.id, id)

@@ -1,14 +1,15 @@
 import { and, eq, type InferInsertModel } from "drizzle-orm";
 import { credentialsTable, CredentialsType } from "../infrastructure/database/tables/credentials.table";
-import { db } from "../infrastructure/database";
 import { takeFirstOrThrow } from "../infrastructure/database/utils";
-import {injectable} from "tsyringe";
+import {inject, injectable} from "tsyringe";
+import {DatabaseProvider} from "$lib/server/api/providers";
 
 export type CreateCredentials = InferInsertModel<typeof credentialsTable>;
 export type UpdateCredentials = Partial<CreateCredentials>;
 
 @injectable()
 export class CredentialsRepository {
+	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) { }
 
 	async findOneByUserId(userId: string) {
 		return db.query.credentialsTable.findFirst({
