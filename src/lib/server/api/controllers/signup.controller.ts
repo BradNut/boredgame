@@ -1,23 +1,32 @@
 import 'reflect-metadata';
 import { Hono } from 'hono';
-import { injectable } from 'tsyringe';
+import {inject, injectable} from 'tsyringe';
 import { zValidator } from '@hono/zod-validator';
 import type { HonoTypes } from '../types';
 import type { Controller } from '../interfaces/controller.interface';
 import { signupUsernameEmailDto } from "$lib/dtos/signup-username-email.dto";
 import {limiter} from "$lib/server/api/middleware/rate-limiter.middleware";
+import {UsersService} from "$lib/server/api/services/users.service";
 
 @injectable()
 export class SignupController implements Controller {
 	controller = new Hono<HonoTypes>();
 
 	constructor(
+			@inject(UsersService) private readonly usersService: UsersService
 	) { }
 
 	routes() {
 		return this.controller
 			.post('/', zValidator('json', signupUsernameEmailDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const { firstName, lastName, email, username, password } = await c.req.valid('json');
+				const existingUser = await this.usersService.findOneByUsername(username);
+
+				if (existingUser) {
+					return c.body("User already exists", 400);
+				}
+
+				const user = await this.usersService.create(signupUsernameEmailDto);
 
 // const existing_user = await db.query.usersTable.findFirst({
 // 			where: eq(usersTable.username, form.data.username),

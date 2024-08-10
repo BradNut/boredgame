@@ -29,6 +29,10 @@ export class TokensService {
 		}
 	}
 
+	async createHashedToken(token: string) {
+		return this.hashingService.hash(token)
+	}
+
 	async verifyHashedToken(hashedToken: string, token: string) {
 		return this.hashingService.verify(hashedToken, token)
 	}

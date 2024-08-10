@@ -2,6 +2,7 @@ import { eq, type InferInsertModel } from 'drizzle-orm';
 import { usersTable } from '../infrastructure/database/tables/users.table';
 import { takeFirstOrThrow } from '../infrastructure/database/utils';
 import { db } from '../infrastructure/database';
+import {user_roles} from "$lib/server/api/infrastructure/database/tables";
 import {injectable} from "tsyringe";
 
 /* -------------------------------------------------------------------------- */
@@ -20,52 +21,37 @@ storing data. They should not contain any business logic, only database queries.
  In our case the method 'trxHost' is used to set the transaction context.
 */
 
-export type CreateUser = InferInsertModel<typeof usersTable>;
-export type UpdateUser = Partial<CreateUser>;
+export type CreateUserRole = InferInsertModel<typeof user_roles>;
+export type UpdateUserRole = Partial<CreateUserRole>;
 
 @injectable()
-export class UsersRepository {
+export class UserRolesRepository {
 	async findOneById(id: string) {
-		return db.query.usersTable.findFirst({
-			where: eq(usersTable.id, id)
+		return db.query.user_roles.findFirst({
+			where: eq(user_roles.id, id)
 		});
 	}
 
 	async findOneByIdOrThrow(id: string) {
-		const user = await this.findOneById(id);
-		if (!user) throw Error('User not found');
-		return user;
+		const userRole = await this.findOneById(id);
+		if (!userRole) throw Error('User not found');
+		return userRole;
 	}
 
-	async findOneByUsername(username: string) {
-		return db.query.usersTable.findFirst({
-			where: eq(usersTable.username, username)
+	async findAllByUserId(userId: string) {
+		return db.query.user_roles.findMany({
+			where: eq(user_roles.user_id, userId)
 		});
 	}
 
-	async findOneByEmail(email: string) {
-		return db.query.usersTable.findFirst({
-			where: eq(usersTable.email, email)
-		});
-	}
-
-	async create(data: CreateUser) {
-		return db.insert(usersTable).values(data).returning().then(takeFirstOrThrow);
-	}
-
-	async update(id: string, data: UpdateUser) {
-		return db
-			.update(usersTable)
-			.set(data)
-			.where(eq(usersTable.id, id))
-			.returning()
-			.then(takeFirstOrThrow);
+	async create(data: CreateUserRole) {
+		return db.insert(user_roles).values(data).returning().then(takeFirstOrThrow);
 	}
 
 	async delete(id: string) {
 		return db
-			.delete(usersTable)
-			.where(eq(usersTable.id, id))
+			.delete(user_roles)
+			.where(eq(user_roles.id, id))
 			.returning()
 			.then(takeFirstOrThrow);
 	}

@@ -16,3 +16,5 @@ export const signupUsernameEmailDto = z.object({
 	.superRefine(({ confirm_password, password }, ctx) => {
 		refinePasswords(confirm_password, password, ctx);
 	});
+
+export type SignupUsernameEmailDto = z.infer<typeof signupUsernameEmailDto>

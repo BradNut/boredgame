@@ -1,7 +1,7 @@
 import { eq, type InferInsertModel } from 'drizzle-orm';
-import { usersTable } from '../infrastructure/database/tables/users.table';
 import { takeFirstOrThrow } from '../infrastructure/database/utils';
 import { db } from '../infrastructure/database';
+import {roles} from "$lib/server/api/infrastructure/database/tables";
 import {injectable} from "tsyringe";
 
 /* -------------------------------------------------------------------------- */
@@ -20,52 +20,56 @@ storing data. They should not contain any business logic, only database queries.
  In our case the method 'trxHost' is used to set the transaction context.
 */
 
-export type CreateUser = InferInsertModel<typeof usersTable>;
-export type UpdateUser = Partial<CreateUser>;
+export type CreateRole = InferInsertModel<typeof roles>;
+export type UpdateRole = Partial<CreateRole>;
 
 @injectable()
-export class UsersRepository {
+export class RolesRepository {
 	async findOneById(id: string) {
-		return db.query.usersTable.findFirst({
-			where: eq(usersTable.id, id)
+		return db.query.roles.findFirst({
+			where: eq(roles.id, id)
 		});
 	}
 
 	async findOneByIdOrThrow(id: string) {
-		const user = await this.findOneById(id);
-		if (!user) throw Error('User not found');
-		return user;
+		const role = await this.findOneById(id);
+		if (!role) throw Error('Role not found');
+		return role;
 	}
 
-	async findOneByUsername(username: string) {
-		return db.query.usersTable.findFirst({
-			where: eq(usersTable.username, username)
+	async findAll() {
+		return db.query.roles.findMany();
+	}
+
+	async findOneByName(name: string) {
+		return db.query.roles.findFirst({
+			where: eq(roles.name, name)
 		});
 	}
 
-	async findOneByEmail(email: string) {
-		return db.query.usersTable.findFirst({
-			where: eq(usersTable.email, email)
-		});
+	async findOneByNameOrThrow(name: string) {
+		const role = await this.findOneByName(name);
+		if (!role) throw Error('Role not found');
+		return role;
 	}
 
-	async create(data: CreateUser) {
-		return db.insert(usersTable).values(data).returning().then(takeFirstOrThrow);
+	async create(data: CreateRole) {
+		return db.insert(roles).values(data).returning().then(takeFirstOrThrow);
 	}
 
-	async update(id: string, data: UpdateUser) {
+	async update(id: string, data: UpdateRole) {
 		return db
-			.update(usersTable)
+			.update(roles)
 			.set(data)
-			.where(eq(usersTable.id, id))
+			.where(eq(roles.id, id))
 			.returning()
 			.then(takeFirstOrThrow);
 	}
 
 	async delete(id: string) {
 		return db
-			.delete(usersTable)
-			.where(eq(usersTable.id, id))
+			.delete(roles)
+			.where(eq(roles.id, id))
 			.returning()
 			.then(takeFirstOrThrow);
 	}
