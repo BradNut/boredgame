@@ -1,7 +1,7 @@
 import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
-import wishlists from './wishlists';
+import {wishlists} from './wishlists';
 import {games} from './games';
 import { timestamps } from '../utils';
 

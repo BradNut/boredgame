@@ -2,7 +2,7 @@ import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
 import {publishers_to_games} from './publishersToGames';
-import publishersToExternalIds from './publishersToExternalIds';
+import {publishersToExternalIds} from './publishersToExternalIds';
 import { timestamps } from '../utils';
 
 export const publishers = pgTable('publishers', {

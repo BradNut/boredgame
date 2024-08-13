@@ -28,7 +28,7 @@ export class RolesRepository {
 	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) { }
 
 	async findOneById(id: string) {
-		return db.query.roles.findFirst({
+		return this.db.query.roles.findFirst({
 			where: eq(roles.id, id)
 		});
 	}
@@ -40,11 +40,11 @@ export class RolesRepository {
 	}
 
 	async findAll() {
-		return db.query.roles.findMany();
+		return this.db.query.roles.findMany();
 	}
 
 	async findOneByName(name: string) {
-		return db.query.roles.findFirst({
+		return this.db.query.roles.findFirst({
 			where: eq(roles.name, name)
 		});
 	}
@@ -56,11 +56,11 @@ export class RolesRepository {
 	}
 
 	async create(data: CreateRole) {
-		return db.insert(roles).values(data).returning().then(takeFirstOrThrow);
+		return this.db.insert(roles).values(data).returning().then(takeFirstOrThrow);
 	}
 
 	async update(id: string, data: UpdateRole) {
-		return db
+		return this.db
 			.update(roles)
 			.set(data)
 			.where(eq(roles.id, id))
@@ -69,7 +69,7 @@ export class RolesRepository {
 	}
 
 	async delete(id: string) {
-		return db
+		return this.db
 			.delete(roles)
 			.where(eq(roles.id, id))
 			.returning()

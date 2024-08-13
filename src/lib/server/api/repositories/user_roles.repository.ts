@@ -28,7 +28,7 @@ export class UserRolesRepository {
 	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) { }
 
 	async findOneById(id: string) {
-		return db.query.user_roles.findFirst({
+		return this.db.query.user_roles.findFirst({
 			where: eq(user_roles.id, id)
 		});
 	}
@@ -40,17 +40,17 @@ export class UserRolesRepository {
 	}
 
 	async findAllByUserId(userId: string) {
-		return db.query.user_roles.findMany({
+		return this.db.query.user_roles.findMany({
 			where: eq(user_roles.user_id, userId)
 		});
 	}
 
 	async create(data: CreateUserRole) {
-		return db.insert(user_roles).values(data).returning().then(takeFirstOrThrow);
+		return this.db.insert(user_roles).values(data).returning().then(takeFirstOrThrow);
 	}
 
 	async delete(id: string) {
-		return db
+		return this.db
 			.delete(user_roles)
 			.where(eq(user_roles.id, id))
 			.returning()

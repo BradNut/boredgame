@@ -1,8 +1,8 @@
 import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
-import mechanicsToGames from './mechanicsToGames';
-import mechanicsToExternalIds from './mechanicsToExternalIds';
+import {mechanics_to_games} from './mechanicsToGames';
+import {mechanicsToExternalIds} from './mechanicsToExternalIds';
 import { timestamps } from '../utils';
 
 export const mechanics = pgTable('mechanics', {
@@ -18,6 +18,6 @@ export const mechanics = pgTable('mechanics', {
 export type Mechanics = InferSelectModel<typeof mechanics>;
 
 export const mechanics_relations = relations(mechanics, ({ many }) => ({
-	mechanics_to_games: many(mechanicsToGames),
+	mechanics_to_games: many(mechanics_to_games),
 	mechanicsToExternalIds: many(mechanicsToExternalIds),
 }));

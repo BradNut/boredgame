@@ -32,5 +32,3 @@ export const mechanics_to_games_relations = relations(mechanics_to_games, ({ one
 		references: [games.id],
 	}),
 }));
-
-export default mechanics_to_games;

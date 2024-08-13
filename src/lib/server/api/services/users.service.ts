@@ -5,14 +5,18 @@ import {TokensService} from "$lib/server/api/services/tokens.service";
 import {CredentialsRepository} from "$lib/server/api/repositories/credentials.repository";
 import {CredentialsType} from "$lib/server/api/infrastructure/database/tables";
 import {UserRolesService} from "$lib/server/api/services/user_roles.service";
+import { CollectionsService } from './collections.service';
+import { WishlistsService } from './wishlists.service';
 
 @injectable()
 export class UsersService {
 	constructor(
+		@inject(CollectionsService) private readonly collectionsService: CollectionsService,
 		@inject(CredentialsRepository) private readonly credentialsRepository: CredentialsRepository,
 		@inject(TokensService) private readonly tokenService: TokensService,
 		@inject(UsersRepository) private readonly usersRepository: UsersRepository,
 		@inject(UserRolesService) private readonly userRolesService: UserRolesService,
+		@inject(WishlistsService) private readonly wishlistsService: WishlistsService
 	) { }
 
 	async create(data: SignupUsernameEmailDto) {
@@ -41,16 +45,12 @@ export class UsersService {
 			return null;
 		}
 
-		this.userRolesService.addRoleToUser(user.id, 'user', true);
+		await this.userRolesService.addRoleToUser(user.id, 'user', true);
 
-// 		await db.insert(collections).values({
-// 			user_id: user[0].id,
-// 		});
-// 		await db.insert(wishlists).values({
-// 			user_id: user[0].id,
-// 		});
+		await this.wishlistsService.createEmptyNoName(user.id);
+		await this.collectionsService.createEmptyNoName(user.id);
 
-		return this.usersRepository.create(data);
+		return user;
 	}
 
 	async findOneByUsername(username: string) {

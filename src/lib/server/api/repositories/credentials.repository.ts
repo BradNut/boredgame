@@ -12,13 +12,13 @@ export class CredentialsRepository {
 	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) { }
 
 	async findOneByUserId(userId: string) {
-		return db.query.credentialsTable.findFirst({
+		return this.db.query.credentialsTable.findFirst({
 			where: eq(credentialsTable.user_id, userId)
 		});
 	}
 
 	async findPasswordCredentialsByUserId(userId: string) {
-		return db.query.credentialsTable.findFirst({
+		return this.db.query.credentialsTable.findFirst({
 			where: and(
 				eq(credentialsTable.user_id, userId),
 				eq(credentialsTable.type, CredentialsType.PASSWORD)
@@ -27,7 +27,7 @@ export class CredentialsRepository {
 	}
 
 	async findTOTPCredentialsByUserId(userId: string) {
-		return db.query.credentialsTable.findFirst({
+		return this.db.query.credentialsTable.findFirst({
 			where: and(
 				eq(credentialsTable.user_id, userId),
 				eq(credentialsTable.type, CredentialsType.TOTP)
@@ -36,7 +36,7 @@ export class CredentialsRepository {
 	}
 
 	async findOneById(id: string) {
-		return db.query.credentialsTable.findFirst({
+		return this.db.query.credentialsTable.findFirst({
 			where: eq(credentialsTable.id, id)
 		});
 	}
@@ -48,11 +48,11 @@ export class CredentialsRepository {
 	}
 
 	async create(data: CreateCredentials) {
-		return db.insert(credentialsTable).values(data).returning().then(takeFirstOrThrow);
+		return this.db.insert(credentialsTable).values(data).returning().then(takeFirstOrThrow);
 	}
 
 	async update(id: string, data: UpdateCredentials) {
-		return db
+		return this.db
 			.update(credentialsTable)
 			.set(data)
 			.where(eq(credentialsTable.id, id))

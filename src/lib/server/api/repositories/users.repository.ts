@@ -28,7 +28,7 @@ export class UsersRepository {
 	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) { }
 
 	async findOneById(id: string) {
-		return db.query.usersTable.findFirst({
+		return this.db.query.usersTable.findFirst({
 			where: eq(usersTable.id, id)
 		});
 	}
@@ -40,23 +40,23 @@ export class UsersRepository {
 	}
 
 	async findOneByUsername(username: string) {
-		return db.query.usersTable.findFirst({
+		return this.db.query.usersTable.findFirst({
 			where: eq(usersTable.username, username)
 		});
 	}
 
 	async findOneByEmail(email: string) {
-		return db.query.usersTable.findFirst({
+		return this.db.query.usersTable.findFirst({
 			where: eq(usersTable.email, email)
 		});
 	}
 
 	async create(data: CreateUser) {
-		return db.insert(usersTable).values(data).returning().then(takeFirstOrThrow);
+		return this.db.insert(usersTable).values(data).returning().then(takeFirstOrThrow);
 	}
 
 	async update(id: string, data: UpdateUser) {
-		return db
+		return this.db
 			.update(usersTable)
 			.set(data)
 			.where(eq(usersTable.id, id))
@@ -65,7 +65,7 @@ export class UsersRepository {
 	}
 
 	async delete(id: string) {
-		return db
+		return this.db
 			.delete(usersTable)
 			.where(eq(usersTable.id, id))
 			.returning()

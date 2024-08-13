@@ -1,19 +1,24 @@
 import { inject, injectable } from "tsyringe";
+import { WishlistsRepository } from "../repositories/wishlists.repository";
 import { generateRandomAnimalName } from "$lib/utils/randomDataUtil";
-import { CollectionsRepository } from "../repositories/collections.repository";
 
 @injectable()
-export class CollectionsService {
+export class WishlistsService {
+
 	constructor(
-		@inject(CollectionsRepository) private readonly collectionsRepository: CollectionsRepository
+		@inject(WishlistsRepository) private readonly wishlistsRepository: WishlistsRepository
 	) { }
+
+	async findAllByUserId(userId: string) {
+		return this.wishlistsRepository.findAllByUserId(userId);
+	}
 
 	async createEmptyNoName(userId: string) {
 		return this.createEmpty(userId, null);
 	}
 
 	async createEmpty(userId: string, name: string | null) {
-		return this.collectionsRepository.create({
+		return this.wishlistsRepository.create({
 			user_id: userId,
 			name: name ?? generateRandomAnimalName(),
 		});

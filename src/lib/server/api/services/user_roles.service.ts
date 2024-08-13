@@ -1,9 +1,8 @@
 import {inject, injectable} from "tsyringe";
 import {type CreateUserRole, UserRolesRepository} from "$lib/server/api/repositories/user_roles.repository";
 import db from "$db";
-import {eq} from "drizzle-orm";
-import {roles, userRoles} from "$db/schema";
 import {RolesService} from "$lib/server/api/services/roles.service";
+import { user_roles } from "../infrastructure/database/tables";
 
 @injectable()
 export class UserRolesService {
@@ -33,7 +32,7 @@ export class UserRolesService {
 		}
 
 		// Create a UserRole entry linking the user and the role
-		return db.insert(userRoles).values({
+		return db.insert(user_roles).values({
 			user_id: userId,
 			role_id: role.id,
 			primary,
