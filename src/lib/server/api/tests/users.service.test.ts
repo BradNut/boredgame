@@ -9,13 +9,6 @@ import { UsersRepository } from '../repositories/users.repository';
 import { Argon2id } from 'oslo/password';
 import { WishlistsService } from '../services/wishlists.service';
 import { CollectionsService } from '../services/collections.service';
-// import { LoginRequestsService } from '../services/login-requests.service';
-// import { TokensService } from '../services/tokens.service';
-// import { MailerService } from '../services/mailer.service';
-// import { UsersRepository } from '../repositories/users.repository';
-// import { DatabaseProvider, LuciaProvider } from '../providers';
-// import { LoginRequestsRepository } from '../repositories/login-requests.repository';
-// import { PgDatabase } from 'drizzle-orm/pg-core';
 
 describe('UsersService', () => {
 	let service: UsersService;

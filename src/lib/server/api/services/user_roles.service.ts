@@ -1,8 +1,6 @@
 import {inject, injectable} from "tsyringe";
 import {type CreateUserRole, UserRolesRepository} from "$lib/server/api/repositories/user_roles.repository";
-import db from "$db";
 import {RolesService} from "$lib/server/api/services/roles.service";
-import { user_roles } from "../infrastructure/database/tables";
 
 @injectable()
 export class UserRolesService {
@@ -32,7 +30,7 @@ export class UserRolesService {
 		}
 
 		// Create a UserRole entry linking the user and the role
-		return db.insert(user_roles).values({
+		return this.userRolesRepository.create({
 			user_id: userId,
 			role_id: role.id,
 			primary,
