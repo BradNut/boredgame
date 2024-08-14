@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
-import { type db } from '$db';
-import * as schema from '$db/schema';
+import { type db } from '$lib/server/api/infrastructure/database';
+import * as schema from '$lib/server/api/infrastructure/database/tables';
 import users from './data/users.json';
 import { config } from '../../../common/config';
 
@@ -31,7 +31,6 @@ export default async function seed(db: db) {
 		.values({
 			username: `${config.ADMIN_USERNAME}`,
 			email: '',
-			hashed_password: await new Argon2id().hash(`${config.ADMIN_PASSWORD}`),
 			first_name: 'Brad',
 			last_name: 'S',
 			verified: true,
@@ -40,6 +39,14 @@ export default async function seed(db: db) {
 		.onConflictDoNothing();
 
 	console.log('Admin user created.', adminUser);
+
+	await db
+		.insert(schema.credentialsTable)
+		.values({
+			user_id: adminUser[0].id,
+			type: schema.CredentialsType.PASSWORD,
+			secret_data: await new Argon2id().hash(`${config.ADMIN_PASSWORD}`),
+		});
 
 	await db
 		.insert(schema.collections)
@@ -52,20 +59,22 @@ export default async function seed(db: db) {
 		.onConflictDoNothing();
 
 	await db
-		.insert(schema.userRoles)
+		.insert(schema.user_roles)
 		.values({
 			user_id: adminUser[0].id,
 			role_id: adminRole[0].id,
+			primary: true,
 		})
 		.onConflictDoNothing();
 
 	console.log('Admin user given admin role.');
 
 	await db
-		.insert(schema.userRoles)
+		.insert(schema.user_roles)
 		.values({
 			user_id: adminUser[0].id,
 			role_id: userRole[0].id,
+			primary: false,
 		})
 		.onConflictDoNothing();
 
@@ -76,9 +85,13 @@ export default async function seed(db: db) {
 				.insert(schema.usersTable)
 				.values({
 					...user,
-					hashed_password: await new Argon2id().hash(user.password),
 				})
 				.returning();
+			await db.insert(schema.credentialsTable).values({
+				user_id: insertedUser?.id,
+				type: schema.CredentialsType.PASSWORD,
+				secret_data: await new Argon2id().hash(user.password),
+			})
 			await db.insert(schema.collections).values({ user_id: insertedUser?.id });
 			await db.insert(schema.wishlists).values({ user_id: insertedUser?.id });
 			await Promise.all(
@@ -86,7 +99,8 @@ export default async function seed(db: db) {
 					const foundRole = await db.query.roles.findFirst({
 						where: eq(schema.roles.name, role.name),
 					});
-					await db.insert(schema.userRoles).values({
+					if (!foundRole) { throw new Error('Role not found'); };
+					await db.insert(schema.user_roles).values({
 						user_id: insertedUser?.id,
 						role_id: foundRole?.id,
 						primary: role?.primary,

@@ -1,6 +1,6 @@
 import { Table, getTableName, sql } from 'drizzle-orm';
 import env from '../../../../../env';
-import { db, pool } from '$db';
+import { db, pool } from './index';
 import * as schema from './tables';
 import * as seeds from './seeds';
 

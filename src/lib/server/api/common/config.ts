@@ -1,4 +1,4 @@
-import * as envs from '$env/static/private';
+import env from '../../../../env';
 
 const isPreview = process.env.VERCEL_ENV === 'preview' || process.env.VERCEL_ENV === 'development';
 
@@ -11,4 +11,4 @@ if (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'product
 	domain = 'localhost';
 }
 
-export const config = { ...envs, isProduction: process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production', domain };
+export const config = { ...env, isProduction: process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production', domain };
