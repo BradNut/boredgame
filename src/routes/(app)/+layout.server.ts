@@ -5,7 +5,7 @@ import type { LayoutServerLoad } from '../$types';
 
 export const load: LayoutServerLoad = loadFlash(async (event) => {
 	const { url, locals, cookies } = event;
-	const authedUser = await locals.getAuthedUserOrThrow();
+	const authedUser = await locals.getAuthedUser();
 
 	// if (userNotFullyAuthenticated(user, session)) {
 	// 	await lucia.invalidateSession(locals.session!.id!);

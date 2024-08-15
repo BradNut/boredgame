@@ -42,7 +42,7 @@ export const load: PageServerLoad = async (event) => {
 		},
 	});
 
-	// if (userFullyAuthenticated(user, session)) {
+	if (authedUser) {
 		const dbUser = await db.query.usersTable.findFirst({
 			where: eq(usersTable.id, authedUser!.id!),
 		});
@@ -75,7 +75,7 @@ export const load: PageServerLoad = async (event) => {
 			wishlists: userWishlists,
 			collections: userCollection,
 		};
-	// }
+	}
 
 	return { metaTagsChild: metaTags, user: null, wishlists: [], collections: [] };
 };
