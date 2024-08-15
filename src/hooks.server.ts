@@ -4,7 +4,7 @@ import { hc } from 'hono/client';
 import { sequence } from '@sveltejs/kit/hooks';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { dev } from '$app/environment';
-import { lucia } from '$lib/server/auth';
+// import { lucia } from '$lib/server/auth';
 import type { ApiRoutes } from '$lib/server/api';
 import { parseApiResponse } from '$lib/utils/api';
 import { StatusCodes } from '$lib/constants/status-codes';
@@ -92,7 +92,7 @@ export const authentication: Handle = async function ({ event, resolve }) {
 
 export const handle: Handle = sequence(
 	// Sentry.sentryHandle(),
-	authentication,
+	// authentication,
 	apiClient
 );
 // export const handleError = Sentry.handleErrorWithSentry();

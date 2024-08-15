@@ -8,6 +8,7 @@ import { UsersRepository } from '../repositories/users.repository';
 import { CredentialsRepository } from '../repositories/credentials.repository';
 import type { HonoRequest } from 'hono';
 import type {SigninUsernameDto} from "$lib/dtos/signin-username.dto";
+import type {Credentials} from "$lib/server/api/infrastructure/database/tables";
 
 @injectable()
 export class LoginRequestsService {
@@ -53,16 +54,22 @@ export class LoginRequestsService {
 
     const totpCredentials = await this.credentialsRepository.findTOTPCredentialsByUserId(existingUser.id);
 
-    return this.lucia.createSession(existingUser.id, {
-      ip_country: requestIpCountry || 'unknown',
-      ip_address: requestIpAddress || 'unknown',
-      twoFactorAuthEnabled:
-        !!totpCredentials &&
-        totpCredentials?.secret_data !== null &&
-        totpCredentials?.secret_data !== '',
-      isTwoFactorAuthenticated: false,
-    });
+    return await this.createUserSession(existingUser.id, req, totpCredentials);
   }
+
+	async createUserSession(existingUserId: string, req: HonoRequest, totpCredentials: Credentials | undefined) {
+		const requestIpAddress = req.header('x-real-ip');
+		const requestIpCountry = req.header('x-vercel-ip-country');
+		return this.lucia.createSession(existingUserId, {
+			ip_country: requestIpCountry || 'unknown',
+			ip_address: requestIpAddress || 'unknown',
+			twoFactorAuthEnabled:
+					!!totpCredentials &&
+					totpCredentials?.secret_data !== null &&
+					totpCredentials?.secret_data !== '',
+			isTwoFactorAuthenticated: false,
+		});
+	}
 
   // Create a new user and send a welcome email - or other onboarding process
   private async handleNewUserRegistration(email: string) {

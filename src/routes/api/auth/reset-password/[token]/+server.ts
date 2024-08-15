@@ -34,7 +34,7 @@ export async function POST({ request, params }) {
 
 	await lucia.invalidateUserSessions(token.user_id);
 	const hashPassword = await new Argon2id().hash(password);
-	await db.update(usersTable).set({ hashed_password: hashPassword }).where(eq(usersTable.id, token.user_id));
+	// await db.update(usersTable).set({ hashed_password: hashPassword }).where(eq(usersTable.id, token.user_id));
 
 	const session = await lucia.createSession(token.user_id, {});
 	const sessionCookie = lucia.createSessionCookie(session.id);

@@ -1,4 +1,5 @@
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { type InferSelectModel } from 'drizzle-orm';
 import { timestamps } from '../utils';
 import { usersTable } from "./users.table";
 
@@ -18,3 +19,5 @@ export const credentialsTable = pgTable('credentials', {
 	secret_data: text('secret_data').notNull(),
 	...timestamps
 });
+
+export type Credentials = InferSelectModel<typeof credentialsTable>;

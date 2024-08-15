@@ -11,8 +11,8 @@ export const signUpSchema = userSchema
 		password: true,
 		confirm_password: true,
 	})
-	.superRefine(({ confirm_password, password }, ctx) => {
-		refinePasswords(confirm_password, password, ctx);
+	.superRefine(async ({ confirm_password, password }, ctx) => {
+		return await refinePasswords(confirm_password, password, ctx);
 	});
 
 export const signInSchema = z.object({

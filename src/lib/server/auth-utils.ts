@@ -1,8 +1,8 @@
 import { generateIdFromEntropySize, type Session, type User } from 'lucia';
 import { TimeSpan, createDate } from 'oslo';
 import { eq } from 'drizzle-orm';
-import db from '../../db';
-import { password_reset_tokens } from '$db/schema';
+import { db } from './api/infrastructure/database/index';
+import { password_reset_tokens } from './api/infrastructure/database/tables';
 
 export async function createPasswordResetToken(userId: string): Promise<string> {
 	// optionally invalidate all existing tokens

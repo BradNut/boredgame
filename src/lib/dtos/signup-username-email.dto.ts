@@ -13,8 +13,8 @@ export const signupUsernameEmailDto = z.object({
 	password: z.string({required_error: 'Password is required'}).trim(),
 	confirm_password: z.string({required_error: 'Confirm Password is required'}).trim()
 	})
-	.superRefine(({ confirm_password, password }, ctx) => {
-		refinePasswords(confirm_password, password, ctx);
+	.superRefine(async ({ confirm_password, password }, ctx) => {
+		return await refinePasswords(confirm_password, password, ctx);
 	});
 
 export type SignupUsernameEmailDto = z.infer<typeof signupUsernameEmailDto>

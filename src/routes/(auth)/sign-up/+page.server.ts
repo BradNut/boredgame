@@ -12,6 +12,7 @@ import { add_user_to_role } from '$server/roles';
 import db from '../../../db';
 import { collections, usersTable, wishlists } from '$db/schema';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
+import {signupUsernameEmailDto} from "$lib/dtos/signup-username-email.dto";
 
 const limiter = new RateLimiter({
 	// A rate is defined by [number, unit]
@@ -55,7 +56,7 @@ export const load: PageServerLoad = async (event) => {
 	// }
 
 	return {
-		form: await superValidate(zod(signUpSchema), {
+		form: await superValidate(zod(signupUsernameEmailDto), {
 			defaults: signUpDefaults,
 		}),
 	};
@@ -63,11 +64,20 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
-		if (await limiter.isLimited(event)) {
-			throw error(429);
+		const { locals } = event;
+
+		const authedUser = await locals.getAuthedUser();
+
+		if (authedUser) {
+			const message = { type: 'success', message: 'You are already signed in' } as const;
+			throw redirect('/', message, event);
 		}
-		// fail(401, { message: 'Sign-up not yet available. Please add your email to the waitlist!' });
-		const form = await superValidate(event, zod(signUpSchema));
+
+		const form = await superValidate(event, zod(signupUsernameEmailDto));
+
+		const { error } = await locals.api.signup.$post({ json: form.data }).then(locals.parseApiResponse);
+		if (error) return setError(form, 'username', error);
+
 		if (!form.valid) {
 			form.data.password = '';
 			form.data.confirm_password = '';
@@ -76,80 +86,80 @@ export const actions: Actions = {
 			});
 		}
 
-		let session;
-		let sessionCookie;
-		// Adding user to the db
-		console.log('Check if user already exists');
-
-		const existing_user = await db.query.usersTable.findFirst({
-			where: eq(usersTable.username, form.data.username),
-		});
-
-		if (existing_user) {
-			return setError(form, 'username', 'You cannot create an account with that username');
-		}
-
-		console.log('Creating user');
-
-		const hashedPassword = await new Argon2id().hash(form.data.password);
-
-		const user = await db
-			.insert(usersTable)
-			.values({
-				username: form.data.username,
-				hashed_password: hashedPassword,
-				email: form.data.email,
-				first_name: form.data.firstName ?? '',
-				last_name: form.data.lastName ?? '',
-				verified: false,
-				receive_email: false,
-				theme: 'system',
-			})
-			.returning();
-		console.log('signup user', user);
-
-		if (!user || user.length === 0) {
-			return fail(400, {
-				form,
-				message: `Could not create your account. Please try again. If the problem persists, please contact support. Error ID: ${cuid2()}`,
-			});
-		}
-
-		await add_user_to_role(user[0].id, 'user', true);
-		await db.insert(collections).values({
-			user_id: user[0].id,
-		});
-		await db.insert(wishlists).values({
-			user_id: user[0].id,
-		});
-
-		try {
-			session = await lucia.createSession(user[0].id, {
-				ip_country: event.locals.ip,
-				ip_address: event.locals.country,
-				twoFactorAuthEnabled: false,
-				isTwoFactorAuthenticated: false,
-			});
-			sessionCookie = lucia.createSessionCookie(session.id);
-		} catch (e: any) {
-			if (e.message.toUpperCase() === `DUPLICATE_KEY_ID`) {
-				// key already exists
-				console.error('Lucia Error: ', e);
-			}
-			console.log(e);
-			const message = {
-				type: 'error',
-				message: 'Unable to create your account. Please try again.',
-			};
-			form.data.password = '';
-			form.data.confirm_password = '';
-			error(500, message);
-		}
-
-		event.cookies.set(sessionCookie.name, sessionCookie.value, {
-			path: '.',
-			...sessionCookie.attributes,
-		});
+		// let session;
+		// let sessionCookie;
+		// // Adding user to the db
+		// console.log('Check if user already exists');
+		//
+		// const existing_user = await db.query.usersTable.findFirst({
+		// 	where: eq(usersTable.username, form.data.username),
+		// });
+		//
+		// if (existing_user) {
+		// 	return setError(form, 'username', 'You cannot create an account with that username');
+		// }
+		//
+		// console.log('Creating user');
+		//
+		// const hashedPassword = await new Argon2id().hash(form.data.password);
+		//
+		// const user = await db
+		// 	.insert(usersTable)
+		// 	.values({
+		// 		username: form.data.username,
+		// 		hashed_password: hashedPassword,
+		// 		email: form.data.email,
+		// 		first_name: form.data.firstName ?? '',
+		// 		last_name: form.data.lastName ?? '',
+		// 		verified: false,
+		// 		receive_email: false,
+		// 		theme: 'system',
+		// 	})
+		// 	.returning();
+		// console.log('signup user', user);
+		//
+		// if (!user || user.length === 0) {
+		// 	return fail(400, {
+		// 		form,
+		// 		message: `Could not create your account. Please try again. If the problem persists, please contact support. Error ID: ${cuid2()}`,
+		// 	});
+		// }
+		//
+		// await add_user_to_role(user[0].id, 'user', true);
+		// await db.insert(collections).values({
+		// 	user_id: user[0].id,
+		// });
+		// await db.insert(wishlists).values({
+		// 	user_id: user[0].id,
+		// });
+		//
+		// try {
+		// 	session = await lucia.createSession(user[0].id, {
+		// 		ip_country: event.locals.ip,
+		// 		ip_address: event.locals.country,
+		// 		twoFactorAuthEnabled: false,
+		// 		isTwoFactorAuthenticated: false,
+		// 	});
+		// 	sessionCookie = lucia.createSessionCookie(session.id);
+		// } catch (e: any) {
+		// 	if (e.message.toUpperCase() === `DUPLICATE_KEY_ID`) {
+		// 		// key already exists
+		// 		console.error('Lucia Error: ', e);
+		// 	}
+		// 	console.log(e);
+		// 	const message = {
+		// 		type: 'error',
+		// 		message: 'Unable to create your account. Please try again.',
+		// 	};
+		// 	form.data.password = '';
+		// 	form.data.confirm_password = '';
+		// 	error(500, message);
+		// }
+		//
+		// event.cookies.set(sessionCookie.name, sessionCookie.value, {
+		// 	path: '.',
+		// 	...sessionCookie.attributes,
+		// });
 
 		redirect(302, '/');
 		// const message = { type: 'success', message: 'Signed Up!' } as const;

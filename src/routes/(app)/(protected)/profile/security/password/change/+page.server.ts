@@ -60,18 +60,18 @@ export const actions: Actions = {
 			where: eq(usersTable.id, user!.id),
 		});
 
-		if (!dbUser?.hashed_password) {
-			form.data.password = '';
-			form.data.confirm_password = '';
-			form.data.current_password = '';
-			return setError(
-				form,
-				'Error occurred. Please try again or contact support if you need further help.',
-			);
-		}
+		// if (!dbUser?.hashed_password) {
+		// 	form.data.password = '';
+		// 	form.data.confirm_password = '';
+		// 	form.data.current_password = '';
+		// 	return setError(
+		// 		form,
+		// 		'Error occurred. Please try again or contact support if you need further help.',
+		// 	);
+		// }
 
 		const currentPasswordVerified = await new Argon2id().verify(
-			dbUser.hashed_password,
+			// dbUser.hashed_password,
 			form.data.current_password,
 		);
 
@@ -86,10 +86,10 @@ export const actions: Actions = {
 				}
 				const hashedPassword = await new Argon2id().hash(form.data.password);
 				await lucia.invalidateUserSessions(user.id);
-				await db
-					.update(usersTable)
-					.set({ hashed_password: hashedPassword })
-					.where(eq(usersTable.id, user.id));
+				// await db
+				// 	.update(usersTable)
+				// 	.set({ hashed_password: hashedPassword })
+				// 	.where(eq(usersTable.id, user.id));
 				await lucia.createSession(user.id, {
 					country: event.locals.session?.ipCountry ?? 'unknown',
 				});

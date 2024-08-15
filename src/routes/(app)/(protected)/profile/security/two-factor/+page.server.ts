@@ -115,14 +115,14 @@ export const actions: Actions = {
 			where: eq(usersTable.id, user!.id!),
 		});
 
-		if (!dbUser?.hashed_password) {
-			addTwoFactorForm.data.current_password = '';
-			addTwoFactorForm.data.two_factor_code = '';
-			return setError(
-				addTwoFactorForm,
-				'Error occurred. Please try again or contact support if you need further help.',
-			);
-		}
+		// if (!dbUser?.hashed_password) {
+		// 	addTwoFactorForm.data.current_password = '';
+		// 	addTwoFactorForm.data.two_factor_code = '';
+		// 	return setError(
+		// 		addTwoFactorForm,
+		// 		'Error occurred. Please try again or contact support if you need further help.',
+		// 	);
+		// }
 
 		const twoFactorDetails = await db.query.twoFactor.findFirst({
 			where: eq(twoFactor.userId, dbUser?.id),
@@ -147,7 +147,7 @@ export const actions: Actions = {
 		}
 
 		const currentPasswordVerified = await new Argon2id().verify(
-			dbUser.hashed_password,
+			// dbUser.hashed_password,
 			addTwoFactorForm.data.current_password,
 		);
 
@@ -194,16 +194,16 @@ export const actions: Actions = {
 			where: eq(usersTable.id, user.id),
 		});
 
-		if (!dbUser?.hashed_password) {
-			removeTwoFactorForm.data.current_password = '';
-			return setError(
-				removeTwoFactorForm,
-				'Error occurred. Please try again or contact support if you need further help.',
-			);
-		}
+		// if (!dbUser?.hashed_password) {
+		// 	removeTwoFactorForm.data.current_password = '';
+		// 	return setError(
+		// 		removeTwoFactorForm,
+		// 		'Error occurred. Please try again or contact support if you need further help.',
+		// 	);
+		// }
 
 		const currentPasswordVerified = await new Argon2id().verify(
-			dbUser.hashed_password,
+			// dbUser.hashed_password,
 			removeTwoFactorForm.data.current_password,
 		);
 

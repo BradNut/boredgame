@@ -1,13 +1,14 @@
 import type { MetaTagsProps } from 'svelte-meta-tags';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import db from '../../db';
-import { collections, usersTable, wishlists } from '$db/schema';
-import { userFullyAuthenticated } from '$lib/server/auth-utils';
+import {db} from '$lib/server/api/infrastructure/database/index';
+import { collections, usersTable, wishlists } from '$lib/server/api/infrastructure/database/tables';
+// import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
 	const { locals, url } = event;
-	const { user, session } = locals;
+
+	const authedUser = await locals.getAuthedUser();
 
 	const image = {
 		url: `${
@@ -41,9 +42,9 @@ export const load: PageServerLoad = async (event) => {
 		},
 	});
 
-	if (userFullyAuthenticated(user, session)) {
+	// if (userFullyAuthenticated(user, session)) {
 		const dbUser = await db.query.usersTable.findFirst({
-			where: eq(usersTable.id, user!.id!),
+			where: eq(usersTable.id, authedUser!.id!),
 		});
 
 		console.log('Sending back user details');
@@ -52,14 +53,14 @@ export const load: PageServerLoad = async (event) => {
 				cuid: true,
 				name: true,
 			},
-			where: eq(wishlists.user_id, user!.id!),
+			where: eq(wishlists.user_id, authedUser!.id!),
 		});
 		const userCollection = await db.query.collections.findMany({
 			columns: {
 				cuid: true,
 				name: true,
 			},
-			where: eq(collections.user_id, user!.id!),
+			where: eq(collections.user_id, authedUser!.id!),
 		});
 
 		console.log('Wishlists', userWishlists);
@@ -74,7 +75,7 @@ export const load: PageServerLoad = async (event) => {
 			wishlists: userWishlists,
 			collections: userCollection,
 		};
-	}
+	// }
 
 	return { metaTagsChild: metaTags, user: null, wishlists: [], collections: [] };
 };
