@@ -5,9 +5,9 @@ import { MailerService } from './mailer.service';
 import { TokensService } from './tokens.service';
 import { LuciaProvider } from '../providers/lucia.provider';
 import { UsersRepository } from '../repositories/users.repository';
-import type { SignInEmailDto } from '../../../dtos/signin-email.dto';
 import { CredentialsRepository } from '../repositories/credentials.repository';
 import type { HonoRequest } from 'hono';
+import type {SigninUsernameDto} from "$lib/dtos/signin-username.dto";
 
 @injectable()
 export class LoginRequestsService {
@@ -32,7 +32,7 @@ export class LoginRequestsService {
   //   });
   // }
 
-  async verify(data: SignInEmailDto, req: HonoRequest) {
+  async verify(data: SigninUsernameDto, req: HonoRequest) {
     const requestIpAddress = req.header('x-real-ip');
     const requestIpCountry = req.header('x-vercel-ip-country');
     const existingUser = await this.usersRepository.findOneByUsername(data.username);
@@ -47,7 +47,7 @@ export class LoginRequestsService {
       throw BadRequest('Invalid credentials');
     }
 
-    if (!await this.tokensService.verifyHashedToken(credential.hashedPassword, data.password)) {
+    if (!await this.tokensService.verifyHashedToken(credential.secret_data, data.password)) {
       throw BadRequest('Invalid credentials');
     }
 
@@ -58,15 +58,15 @@ export class LoginRequestsService {
       ip_address: requestIpAddress || 'unknown',
       twoFactorAuthEnabled:
         !!totpCredentials &&
-        totpCredentials?.secret !== null &&
-        totpCredentials?.secret !== '',
+        totpCredentials?.secret_data !== null &&
+        totpCredentials?.secret_data !== '',
       isTwoFactorAuthenticated: false,
     });
   }
 
   // Create a new user and send a welcome email - or other onboarding process
   private async handleNewUserRegistration(email: string) {
-    const newUser = await this.usersRepository.create({ email, verified: true, avatar: null })
+    const newUser = await this.usersRepository.create({ email, verified: true })
     this.mailerService.sendWelcome({ to: email, props: null });
     // TODO: add whatever onboarding process or extra data you need here
     return newUser

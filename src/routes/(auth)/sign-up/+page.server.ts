@@ -12,7 +12,6 @@ import { add_user_to_role } from '$server/roles';
 import db from '../../../db';
 import { collections, usersTable, wishlists } from '$db/schema';
 import { createId as cuid2 } from '@paralleldrive/cuid2';
-import { userFullyAuthenticated, userNotFullyAuthenticated } from '$lib/server/auth-utils';
 
 const limiter = new RateLimiter({
 	// A rate is defined by [number, unit]
@@ -30,8 +29,7 @@ const signUpDefaults = {
 };
 
 export const load: PageServerLoad = async (event) => {
-	const { locals, cookies } = event;
-	const { user, session } = event.locals;
+	const { locals } = event;
 
 	const authedUser = await locals.getAuthedUser();
 

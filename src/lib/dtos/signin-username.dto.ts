@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const signInEmailDto = z.object({
+export const signinUsernameDto = z.object({
 	username: z
 		.string()
 		.trim()
@@ -9,4 +9,4 @@ export const signInEmailDto = z.object({
 	password: z.string({ required_error: 'Password is required' }).trim(),
 });
 
-export type SignInEmailDto = z.infer<typeof signInEmailDto>;
+export type SigninUsernameDto = z.infer<typeof signinUsernameDto>;

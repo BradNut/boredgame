@@ -67,7 +67,7 @@
 	<form method="POST" use:enhance>
 		<Form.Field form={superLoginForm} name="username">
 			<Form.Control let:attrs>
-				<Form.Label for="username">Username/Email</Form.Label>
+				<Form.Label for="username">Username</Form.Label>
 				<Input {...attrs} autocomplete="username" bind:value={$loginForm.username} />
 			</Form.Control>
 			<Form.FieldErrors />

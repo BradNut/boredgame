@@ -21,7 +21,7 @@ export const lucia = new Lucia(adapter, {
 			...attributes,
 		};
 	},
-	sessionExpiresIn: new TimeSpan(30, 'd'), // 30 days
+	sessionExpiresIn: new TimeSpan(2, 'w'), // 2 weeks
 	sessionCookie: {
 		name: 'session',
 		expires: false, // session cookies have very long lifespan (2 years)
