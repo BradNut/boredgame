@@ -9,7 +9,7 @@ export type UpdateWishlist = Partial<CreateWishlist>;
 
 @injectable()
 export class WishlistsRepository {
-	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) { }
+	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider){ }
 
 	async findAll() {
 		return this.db.query.wishlists.findMany();

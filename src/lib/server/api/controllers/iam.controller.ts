@@ -28,14 +28,15 @@ export class IamController implements Controller {
 			})
 			.post('/update/profile', requireAuth, zValidator('json', updateProfileDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const user = c.var.user;
+				console.log('user id', user.id);
 				const { firstName, lastName, username } = c.req.valid('json');
-				await this.iamService.updateProfile(user.id, { first_name: firstName, last_name: lastName, username });
+				const updatedUser = await this.iamService.updateProfile(user.id, { firstName, lastName, username });
 				return c.json({ status: 'success' });
 			})
 			.post('/update/email', requireAuth, zValidator('json', updateEmailDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const user = c.var.user;
 				const { email } = c.req.valid('json');
-				await this.iamService.updateEmail(user.id, email);
+				await this.iamService.updateEmail(user.id, { email });
 				return c.json({ status: 'success' });
 			})
 			.post('/logout', requireAuth, async (c) => {

@@ -33,10 +33,24 @@ export class IamService {
 	}
 
 	async updateProfile(userId: string, data: UpdateProfileDto) {
+		const user = await this.usersService.findOneById(userId);
+		if (!user) {
+			return {
+				error: 'User not found'
+			};
+		}
+
+		const existingUserForNewUsername = await this.usersService.findOneByUsername(data.username);
+		if (existingUserForNewUsername && existingUserForNewUsername.id !== userId) {
+			return {
+				error: 'Username already in use'
+			};
+		}
+
 		return this.usersService.updateUser(userId, {
 			first_name: data.firstName,
 			last_name: data.lastName,
-			username: data.username
+			username: data.username !== user.username ? data.username : user.username
 		});
 	}
 
