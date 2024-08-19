@@ -9,6 +9,8 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
+	import { updateProfileDto } from '$lib/dtos/update-profile.dto';
+	import { updateEmailDto } from '$lib/dtos/update-email.dto';
 
 	const { data } = $props();
 
@@ -16,7 +18,7 @@
 
 	const { form: profileForm, errors: profileErrors, enhance: profileEnhance } = superForm(data.profileForm, {
 		taintedMessage: null,
-		validators: zodClient(profileSchema),
+		validators: zodClient(updateProfileDto),
 		delayMs: 500,
 		multipleSubmits: 'prevent',
 		syncFlashMessage: true,
@@ -27,7 +29,7 @@
 
 	const { form: emailForm, errors: emailErrors, enhance: emailEnhance } = superForm(data.emailForm, {
 		taintedMessage: null,
-		validators: zodClient(changeEmailSchema),
+		validators: zodClient(updateEmailDto),
 		delayMs: 500,
 		multipleSubmits: 'prevent',
 		syncFlashMessage: true,

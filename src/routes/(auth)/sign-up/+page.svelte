@@ -14,6 +14,7 @@
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { send, receive } from '$lib/utils/pageCrossfade';
 	import { boredState } from '$lib/stores/boredState.js';
+	import { signupUsernameEmailDto } from '$lib/dtos/signup-username-email.dto';
 
 	export let data;
 
@@ -28,7 +29,7 @@
 			}
 		},
 		taintedMessage: null,
-		validators: zodClient(signUpSchema),
+		validators: zodClient(signupUsernameEmailDto),
 		delayMs: 0
 	});
 

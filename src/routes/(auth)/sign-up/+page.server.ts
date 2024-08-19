@@ -1,23 +1,9 @@
 import { fail, error, type Actions } from '@sveltejs/kit';
-import { Argon2id } from 'oslo/password';
-import { eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
-import { RateLimiter } from 'sveltekit-rate-limiter/server';
 import type { PageServerLoad } from './$types';
-import { lucia } from '$lib/server/auth';
-import { signUpSchema } from '$lib/validations/auth';
-import { add_user_to_role } from '$server/roles';
-import db from '../../../db';
-import { collections, usersTable, wishlists } from '$db/schema';
-import { createId as cuid2 } from '@paralleldrive/cuid2';
 import {signupUsernameEmailDto} from "$lib/dtos/signup-username-email.dto";
-
-const limiter = new RateLimiter({
-	// A rate is defined by [number, unit]
-	IPUA: [5, 'm'],
-});
 
 const signUpDefaults = {
 	firstName: '',

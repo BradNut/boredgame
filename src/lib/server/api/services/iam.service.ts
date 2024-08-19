@@ -1,5 +1,8 @@
 import { inject, injectable } from 'tsyringe';
 import { LuciaProvider } from '../providers/lucia.provider';
+import {UsersService} from "$lib/server/api/services/users.service";
+import type {UpdateProfileDto} from "$lib/dtos/update-profile.dto";
+import type {UpdateEmailDto} from "$lib/dtos/update-email.dto";
 
 /* -------------------------------------------------------------------------- */
 /*                                   Service                                  */
@@ -8,7 +11,7 @@ import { LuciaProvider } from '../providers/lucia.provider';
 /* ---------------------------------- About --------------------------------- */
 /*
 Services are responsible for handling business logic and data manipulation.
-They genreally call on repositories or other services to complete a use-case.
+They generally call on repositories or other services to complete a use-case.
 */
 /* ---------------------------------- Notes --------------------------------- */
 /*
@@ -22,9 +25,24 @@ simple as possible. This makes the service easier to read, test and understand.
 export class IamService {
 	constructor(
 		@inject(LuciaProvider) private readonly lucia: LuciaProvider,
+		@inject(UsersService) private readonly usersService: UsersService
 	) { }
 
 	async logout(sessionId: string) {
 		return this.lucia.invalidateSession(sessionId);
+	}
+
+	async updateProfile(userId: string, data: UpdateProfileDto) {
+		return this.usersService.updateUser(userId, {
+			first_name: data.firstName,
+			last_name: data.lastName,
+			username: data.username
+		});
+	}
+
+	async updateEmail(userId: string, data: UpdateEmailDto) {
+		return this.usersService.updateUser(userId, {
+			email: data.email
+		});
 	}
 }

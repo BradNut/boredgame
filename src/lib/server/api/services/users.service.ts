@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { UsersRepository } from '../repositories/users.repository';
+import {type UpdateUser, UsersRepository} from '../repositories/users.repository';
 import type {SignupUsernameEmailDto} from "$lib/dtos/signup-username-email.dto";
 import {TokensService} from "$lib/server/api/services/tokens.service";
 import {CredentialsRepository} from "$lib/server/api/repositories/credentials.repository";
@@ -51,6 +51,10 @@ export class UsersService {
 		await this.collectionsService.createEmptyNoName(user.id);
 
 		return user;
+	}
+
+	async updateUser(userId: string, data: UpdateUser) {
+		return this.usersRepository.update(userId, data);
 	}
 
 	async findOneByUsername(username: string) {

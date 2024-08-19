@@ -6,43 +6,49 @@ import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { changeEmailSchema, profileSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
-import db from '../../../../db';
+import { db } from '$lib/server/api/infrastructure/database';
 import type { PageServerLoad } from './$types';
-import { usersTable, twoFactor } from '$db/schema';
+import { usersTable, credentialsTable } from '$lib/server/api/infrastructure/database/tables';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
+import {updateProfileDto} from "$lib/dtos/update-profile.dto";
+import {updateEmailDto} from "$lib/dtos/update-email.dto";
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event;
-	const { user, session } = locals;
-	if (userNotAuthenticated(user, session)) {
-		redirect(302, '/login', notSignedInMessage, event);
-	}
 
-	const dbUser = await db.query.usersTable.findFirst({
-		where: eq(usersTable.id, user!.id!),
-	});
+	const authedUser = await locals.getAuthedUser();
+	if (!authedUser) {
+		throw redirect(302, '/login', notSignedInMessage, event);
+	}
+	// if (userNotAuthenticated(user, session)) {
+	// 	redirect(302, '/login', notSignedInMessage, event);
+	// }
+	//
+	// const dbUser = await db.query.usersTable.findFirst({
+	// 	where: eq(usersTable.id, user!.id!),
+	// });
 
 	const profileForm = await superValidate(zod(profileSchema), {
 		defaults: {
-			firstName: dbUser?.first_name ?? '',
-			lastName: dbUser?.last_name ?? '',
-			username: dbUser?.username ?? '',
+			firstName: authedUser?.first_name ?? '',
+			lastName: authedUser?.last_name ?? '',
+			username: authedUser?.username ?? '',
 		},
 	});
 	const emailForm = await superValidate(zod(changeEmailSchema), {
 		defaults: {
-			email: dbUser?.email ?? '',
+			email: authedUser?.email ?? '',
 		},
 	});
 
-	const twoFactorDetails = await db.query.twoFactor.findFirst({
-		where: eq(twoFactor.userId, dbUser!.id!),
-	});
+	// const twoFactorDetails = await db.query.twoFactor.findFirst({
+	// 	where: eq(twoFactor.userId, authedUser!.id!),
+	// });
 
 	return {
 		profileForm,
 		emailForm,
-		hasSetupTwoFactor: !!twoFactorDetails?.enabled,
+		hasSetupTwoFactor: false //!!twoFactorDetails?.enabled,
 	};
 };
 
@@ -56,15 +62,23 @@ const changeEmailIfNotEmpty = z.object({
 
 export const actions: Actions = {
 	profileUpdate: async (event) => {
-		const form = await superValidate(event, zod(profileSchema));
+		const { locals } = event;
+
+		const authedUser = await locals.getAuthedUser();
+
+		if (!authedUser) {
+			redirect(302, '/login', notSignedInMessage, event);
+		}
+
+		const form = await superValidate(event, zod(updateProfileDto));
+
+		const { error } = await locals.api.user.$post({ json: form.data }).then(locals.parseApiResponse);
+		if (error) return setError(form, 'username', error);
 
 		if (!form.valid) {
 			return fail(400, {
 				form,
 			});
-		}
-		if (!event.locals.user) {
-			redirect(302, '/login', notSignedInMessage, event);
 		}
 
 		try {
@@ -101,7 +115,7 @@ export const actions: Actions = {
 		return message(form, { type: 'success', message: 'Profile updated successfully!' });
 	},
 	changeEmail: async (event) => {
-		const form = await superValidate(event, zod(changeEmailSchema));
+		const form = await superValidate(event, zod(updateEmailDto));
 
 		const newEmail = form.data?.email;
 		if (

@@ -4,7 +4,11 @@ import { refinePasswords } from "$lib/validations/account";
 export const signupUsernameEmailDto = z.object({
 	firstName: z.string().trim().optional(),
 	lastName: z.string().trim().optional(),
-	email: z.string().trim().max(64, {message: 'Email must be less than 64 characters'}).optional(),
+	email: z.string()
+			.trim()
+			.max(64, {message: 'Email must be less than 64 characters'})
+			.email({message: 'Please enter a valid email'})
+			.optional(),
 	username: z
 			.string()
 			.trim()
@@ -13,8 +17,8 @@ export const signupUsernameEmailDto = z.object({
 	password: z.string({required_error: 'Password is required'}).trim(),
 	confirm_password: z.string({required_error: 'Confirm Password is required'}).trim()
 	})
-	.superRefine(async ({ confirm_password, password }, ctx) => {
-		return await refinePasswords(confirm_password, password, ctx);
+	.superRefine(({ confirm_password, password }, ctx) => {
+		return refinePasswords(confirm_password, password, ctx);
 	});
 
 export type SignupUsernameEmailDto = z.infer<typeof signupUsernameEmailDto>

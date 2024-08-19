@@ -1,0 +1,43 @@
+name: test ticket
+
+principals:
+  adminOne:
+    id: admin_1
+    roles:
+      - admin
+  customerOne:
+    id: cust_1
+    roles:
+      - customer
+
+resources:
+  ticketOne:
+    kind: ticket
+    id: ticket_1
+    attr:
+      cust_id: cust_1
+
+tests:
+  - name: test ticket
+    input:
+      principals:
+        - adminOne
+        - customerOne
+      resources:
+        - ticketOne
+      actions:
+        - create
+        - delete
+
+    expected:
+      - principal: adminOne
+        resource: ticketOne
+        actions:
+          create: EFFECT_ALLOW
+          delete: EFFECT_ALLOW
+
+      - principal: customerOne
+        resource: ticketOne
+        actions:
+          create: EFFECT_DENY
+          delete: EFFECT_DENY
