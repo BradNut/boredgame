@@ -28,7 +28,7 @@ export function IntegerString<schema extends ZodNumber | ZodOptional<ZodNumber>>
 	return z.preprocess(
 		(value) =>
 			typeof value === 'string'
-				? parseInt(value, 10)
+				? Number.parseInt(value, 10)
 				: typeof value === 'number'
 					? value
 					: undefined,

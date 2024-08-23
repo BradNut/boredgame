@@ -13,6 +13,14 @@ export class WishlistsService {
 		return this.wishlistsRepository.findAllByUserId(userId);
 	}
 
+	async findOneById(id: string) {
+		return this.wishlistsRepository.findOneById(id);
+	}
+
+	async findOneByCuid(cuid: string) {
+		return this.wishlistsRepository.findOneByCuid(cuid);
+	}
+
 	async createEmptyNoName(userId: string) {
 		return this.createEmpty(userId, null);
 	}

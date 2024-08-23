@@ -1,6 +1,6 @@
 import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
-import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { type InferSelectModel, relations } from 'drizzle-orm';
+import { createId as cuid2 } from '@paralleldrive/cuid2';
 import { timestamps } from '../utils';
 import {user_roles} from './userRoles';
 

@@ -87,25 +87,4 @@
 {/snippet}
 
 <style lang="postcss">
-	.login {
-		display: flex;
-		gap: 1rem;
-		margin-top: 1.5rem;
-		flex-direction: column;
-		justify-content: center;
-		width: 100%;
-		margin-right: auto;
-		margin-left: auto;
-
-		@media (min-width: 640px) {
-			width: 350px;
-		}
-
-		form {
-			display: grid;
-			gap: 0.5rem;
-			align-items: center;
-			max-width: 24rem;
-		}
-	}
 </style>

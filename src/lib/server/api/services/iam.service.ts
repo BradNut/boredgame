@@ -1,8 +1,8 @@
+import type { UpdateEmailDto } from "$lib/dtos/update-email.dto";
+import type { UpdateProfileDto } from "$lib/dtos/update-profile.dto";
+import { UsersService } from "$lib/server/api/services/users.service";
 import { inject, injectable } from 'tsyringe';
-import { LuciaProvider } from '../providers/lucia.provider';
-import {UsersService} from "$lib/server/api/services/users.service";
-import type {UpdateProfileDto} from "$lib/dtos/update-profile.dto";
-import type {UpdateEmailDto} from "$lib/dtos/update-email.dto";
+import { LuciaProvider } from '$lib/server/api/providers';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Service                                  */
@@ -55,8 +55,15 @@ export class IamService {
 	}
 
 	async updateEmail(userId: string, data: UpdateEmailDto) {
+		const { email } = data;
+
+		const existingUserEmail = await this.usersService.findOneByEmail(email);
+		if (existingUserEmail && existingUserEmail.id !== userId) {
+			return null;
+		}
+
 		return this.usersService.updateUser(userId, {
-			email: data.email
+			email,
 		});
 	}
 }

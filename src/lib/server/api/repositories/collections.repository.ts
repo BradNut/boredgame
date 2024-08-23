@@ -17,12 +17,36 @@ export class CollectionsRepository {
 
 	async findOneById(id: string) {
 		return this.db.query.collections.findFirst({
-			where: eq(collections.id, id)
+			where: eq(collections.id, id),
+			columns: {
+				cuid: true,
+				name: true
+			}
+		})
+	}
+
+	async findOneByCuid(cuid: string) {
+		return this.db.query.collections.findFirst({
+			where: eq(collections.cuid, cuid),
+			columns: {
+				cuid: true,
+				name: true
+			}
 		})
 	}
 
 	async findOneByUserId(userId: string) {
 		return this.db.query.collections.findFirst({
+			where: eq(collections.user_id, userId),
+			columns: {
+				cuid: true,
+				name: true
+			}
+		})
+	}
+
+	async findAllByUserId(userId: string) {
+		return this.db.query.collections.findMany({
 			where: eq(collections.user_id, userId)
 		})
 	}

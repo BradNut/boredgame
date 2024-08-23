@@ -4,23 +4,33 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { modifyListGameSchema } from '$lib/validations/zod-schemas';
-import db from '../../../../../db';
+import { db } from '$lib/server/api/infrastructure/database';
 import { notSignedInMessage } from '$lib/flashMessages.js';
-import { games, wishlist_items, wishlists } from '$db/schema';
+import { games, wishlist_items, wishlists } from '$lib/server/api/infrastructure/database/tables';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
 	const { params, locals } = event;
-	const { user, session } = locals;
-	const { id } = params;
-	if (userNotAuthenticated(user, session)) {
-		redirect(302, '/login', notSignedInMessage, event);
+	const { cuid } = params;
+
+	const authedUser = await locals.getAuthedUser();
+	if (!authedUser) {
+		throw redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	try {
-		const wishlist = await db.query.wishlists.findMany({
-			where: and(eq(wishlists.user_id, user!.id!), eq(wishlists.cuid, id)),
-		});
+		const { data, errors } = await locals.api.wishlists[':cuid'].$get({
+			param: { cuid }
+		}).then(locals.parseApiResponse);
+		// const wishlist = await db.query.wishlists.findMany({
+		// 	where: and(eq(wishlists.user_id, authedUser.id), eq(wishlists.cuid, cuid)),
+		// });
+		if (errors) {
+			return error(500, 'Failed to fetch wishlist');
+		}
+		console.log('data', data);
+		const { wishlist } = data;
+		console.log('wishlist', wishlist);
 
 		if (!wishlist) {
 			redirect(302, '/404');

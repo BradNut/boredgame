@@ -6,7 +6,7 @@
 		"indentStyle": "tab",
 		"indentWidth": 2,
 		"lineEnding": "lf",
-		"lineWidth": 100,
+		"lineWidth": 150,
 		"attributePosition": "auto",
 		"ignore": [
 			"**/.DS_Store",
@@ -34,6 +34,9 @@
 			"bracketSameLine": false,
 			"quoteStyle": "single",
 			"attributePosition": "auto"
+		},
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
 		}
 	},
 	"overrides": [

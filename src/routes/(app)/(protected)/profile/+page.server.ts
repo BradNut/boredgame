@@ -20,18 +20,19 @@ export const load: PageServerLoad = async (event) => {
 	if (!authedUser) {
 		throw redirect(302, '/login', notSignedInMessage, event);
 	}
+
+	console.log('authedUser', authedUser);
 	// if (userNotAuthenticated(user, session)) {
 	// 	redirect(302, '/login', notSignedInMessage, event);
 	// }
-	//
 	// const dbUser = await db.query.usersTable.findFirst({
 	// 	where: eq(usersTable.id, user!.id!),
 	// });
 
 	const profileForm = await superValidate(zod(profileSchema), {
 		defaults: {
-			firstName: authedUser?.first_name ?? '',
-			lastName: authedUser?.last_name ?? '',
+			firstName: authedUser?.firstName ?? '',
+			lastName: authedUser?.lastName ?? '',
 			username: authedUser?.username ?? '',
 		},
 	});
@@ -72,43 +73,16 @@ export const actions: Actions = {
 
 		const form = await superValidate(event, zod(updateProfileDto));
 
-		const { error } = await locals.api.user.$post({ json: form.data }).then(locals.parseApiResponse);
-		if (error) return setError(form, 'username', error);
+		const { error } = await locals.api.me.update.profile.$put({ json: form.data }).then(locals.parwseApiResponse);
+		console.log('data from profile update', error);
+		if (error) {
+			return setError(form, 'username', error);
+		}
 
 		if (!form.valid) {
 			return fail(400, {
 				form,
 			});
-		}
-
-		try {
-			console.log('updating profile');
-
-			const user = event.locals.user;
-			const newUsername = form.data.username;
-			const existingUser = await db.query.usersTable.findFirst({
-				where: eq(usersTable.username, newUsername),
-			});
-
-			if (existingUser && existingUser.id !== user.id) {
-				return setError(form, 'username', 'That username is already taken');
-			}
-
-			await db
-				.update(usersTable)
-				.set({
-					first_name: form.data.firstName,
-					last_name: form.data.lastName,
-					username: form.data.username,
-				})
-				.where(eq(usersTable.id, user.id));
-		} catch (e) {
-			// @ts-expect-error
-			if (e.message === `AUTH_INVALID_USER_ID`) {
-				// invalid user id
-				console.error(e);
-			}
-			return setError(form, 'There was a problem updating your profile.');
 		}
 
 		console.log('profile updated successfully');

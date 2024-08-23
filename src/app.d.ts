@@ -1,6 +1,6 @@
-import { ApiClient } from './lib/server/api';
 import type { User } from 'lucia';
-import { parseApiResponse } from '$lib/utils/api';
+import type { ApiClient } from '$lib/server/api';
+import type { parseApiResponse } from '$lib/utils/api';
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
@@ -41,9 +41,12 @@ declare global {
 
 	interface Document {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		startViewTransition: (callback: any) => void; // Add your custom property/method here
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+				startViewTransition: (callback: never) => void; // Add your custom property/method here
 	}
 }
 
 // THIS IS IMPORTANT!!!
+// biome-ignore lint/complexity/noUselessEmptyExport: <explanation>
+// biome-ignore lint/style/useExportType: <explanation>
 export {};

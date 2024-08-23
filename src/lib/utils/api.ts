@@ -4,7 +4,7 @@ export async function parseApiResponse<T>(response: ClientResponse<T>) {
 	if (response.status === 204 || response.headers.get('Content-Length') === '0') {
 		return response.ok
 			? { data: null, error: null, response }
-			: { data: null, error: 'An unknown error has occured', response };
+			: { data: null, error: 'An unknown error has occurred', response };
 	}
 
 	if (response.ok) {

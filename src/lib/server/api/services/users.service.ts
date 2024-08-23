@@ -61,6 +61,10 @@ export class UsersService {
 		return this.usersRepository.findOneByUsername(username);
 	}
 
+	async findOneByEmail(email: string) {
+		return this.usersRepository.findOneByEmail(email);
+	}
+
 	async findOneById(id: string) {
 		return this.usersRepository.findOneById(id);
 	}

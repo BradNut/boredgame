@@ -17,19 +17,41 @@ export class WishlistsRepository {
 
 	async findOneById(id: string) {
 		return this.db.query.wishlists.findFirst({
-			where: eq(wishlists.id, id)
+			where: eq(wishlists.id, id),
+			columns: {
+				cuid: true,
+				name: true
+			}
+		})
+	}
+
+	async findOneByCuid(cuid: string) {
+		return this.db.query.wishlists.findFirst({
+			where: eq(wishlists.cuid, cuid),
+			columns: {
+				cuid: true,
+				name: true
+			}
 		})
 	}
 
 	async findOneByUserId(userId: string) {
 		return this.db.query.wishlists.findFirst({
-			where: eq(wishlists.user_id, userId)
+			where: eq(wishlists.user_id, userId),
+			columns: {
+				cuid: true,
+				name: true
+			}
 		})
 	}
 
 	async findAllByUserId(userId: string) {
 		return this.db.query.wishlists.findMany({
-			where: eq(wishlists.user_id, userId)
+			where: eq(wishlists.user_id, userId),
+			columns: {
+				cuid: true,
+				name: true
+			}
 		})
 	}
 

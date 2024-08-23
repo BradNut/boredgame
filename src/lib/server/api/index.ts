@@ -10,6 +10,8 @@ import { IamController } from './controllers/iam.controller';
 import { LoginController } from './controllers/login.controller';
 import {UserController} from "$lib/server/api/controllers/user.controller";
 import {SignupController} from "$lib/server/api/controllers/signup.controller";
+import {WishlistController} from "$lib/server/api/controllers/wishlist.controller";
+import {CollectionController} from "$lib/server/api/controllers/collection.controller";
 
 /* ----------------------------------- Api ---------------------------------- */
 const app = new Hono().basePath('/api');
@@ -40,6 +42,8 @@ const routes = app
 		.route('/user', container.resolve(UserController).routes())
 		.route('/login', container.resolve(LoginController).routes())
 		.route('/signup', container.resolve(SignupController).routes())
+		.route('/wishlists', container.resolve(WishlistController).routes())
+		.route('/collections', container.resolve(CollectionController).routes())
 		.get('/', (c) => c.json({ message: 'Server is healthy' }));
 
 /* -------------------------------------------------------------------------- */

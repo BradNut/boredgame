@@ -1,3 +1,4 @@
+import { fail } from '@sveltejs/kit';
 import type { MetaTagsProps } from 'svelte-meta-tags';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
@@ -43,37 +44,24 @@ export const load: PageServerLoad = async (event) => {
 	});
 
 	if (authedUser) {
-		const dbUser = await db.query.usersTable.findFirst({
-			where: eq(usersTable.id, authedUser!.id!),
-		});
+		const { data: wishlistsData, error: wishlistsError } = await locals.api.wishlists.$get().then(locals.parseApiResponse);
+		const { data: collectionsData, error: collectionsError } = await locals.api.collections.$get().then(locals.parseApiResponse);
 
-		console.log('Sending back user details');
-		const userWishlists = await db.query.wishlists.findMany({
-			columns: {
-				cuid: true,
-				name: true,
-			},
-			where: eq(wishlists.user_id, authedUser!.id!),
-		});
-		const userCollection = await db.query.collections.findMany({
-			columns: {
-				cuid: true,
-				name: true,
-			},
-			where: eq(collections.user_id, authedUser!.id!),
-		});
+		if (wishlistsError || collectionsError) {
+			return fail(500, 'Failed to fetch wishlists or collections');
+		}
 
-		console.log('Wishlists', userWishlists);
-		console.log('Collections', userCollection);
+		console.log('Wishlists', wishlistsData.wishlists);
+		console.log('Collections', collectionsData.collections);
 		return {
 			metaTagsChild: metaTags,
 			user: {
-				firstName: dbUser?.first_name,
-				lastName: dbUser?.last_name,
-				username: dbUser?.username,
+				firstName: authedUser?.firstName,
+				lastName: authedUser?.lastName,
+				username: authedUser?.username,
 			},
-			wishlists: userWishlists,
-			collections: userCollection,
+			wishlists: wishlistsData.wishlists,
+			collections: collectionsData.collections,
 		};
 	}
 
