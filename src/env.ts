@@ -10,21 +10,22 @@ const stringBoolean = z.coerce
 	.default('false');
 
 const EnvSchema = z.object({
-	NODE_ENV: z.string().default('development'),
+	ADMIN_USERNAME: z.string(),
+	ADMIN_PASSWORD: z.string(),
 	DATABASE_USER: z.string(),
 	DATABASE_PASSWORD: z.string(),
 	DATABASE_HOST: z.string(),
 	DATABASE_PORT: z.coerce.number(),
 	DATABASE_DB: z.string(),
+	DB_MIGRATING: stringBoolean,
+	DB_SEEDING: stringBoolean,
+	NODE_ENV: z.string().default('development'),
 	PUBLIC_SITE_NAME: z.string(),
 	PUBLIC_SITE_URL: z.string(),
 	PUBLIC_UMAMI_DO_NOT_TRACK: z.string(),
 	PUBLIC_UMAMI_ID: z.string(),
 	PUBLIC_UMAMI_URL: z.string(),
-	DB_MIGRATING: stringBoolean,
-	DB_SEEDING: stringBoolean,
-	ADMIN_USERNAME: z.string(),
-	ADMIN_PASSWORD: z.string(),
+	REDIS_URL: z.string(),
 	TWO_FACTOR_TIMEOUT: z.coerce.number().default(300000),
 });
 
@@ -37,9 +38,9 @@ try {
 } catch (error) {
 	if (error instanceof ZodError) {
 		let message = 'Missing required values in .env:\n';
-		error.issues.forEach((issue) => {
-			message += issue.path[0] + '\n';
-		});
+		for (const issue of error.issues) {
+			message += `${issue.path[0]}\n`;
+		}
 		const e = new Error(message);
 		e.stack = '';
 		throw e;

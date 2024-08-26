@@ -3,100 +3,126 @@ import { and, eq } from 'drizzle-orm';
 import { zod } from 'sveltekit-superforms/adapters';
 import { superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
-import { type ListGame, modifyListGameSchema } from '$lib/validations/zod-schemas';
-import db from '../../../../../db';
+import { modifyListGameSchema } from '$lib/validations/zod-schemas';
+import { db } from '$lib/server/api/infrastructure/database';
 import { notSignedInMessage } from '$lib/flashMessages.js';
-import { collections, games, collection_items } from '$db/schema';
-import { search_schema } from '$lib/zodValidation';
+import { collections, games, collection_items } from '$lib/server/api/infrastructure/database/tables';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export async function load(event) {
-	const { locals, params, url } = event;
-	const { user, session } = locals;
-	const { id } = params;
+	const { params, locals } = event;
+	const { cuid } = params;
 
-	if (userNotAuthenticated(user, session)) {
-		redirect(302, '/login', notSignedInMessage, event);
-	}
-	const searchParams = Object.fromEntries(url?.searchParams);
-	console.log('searchParams', searchParams);
-	const q = searchParams?.q;
-	const limit = parseInt(searchParams?.limit) || 10;
-	const skip = parseInt(searchParams?.skip) || 0;
-
-	const searchData = {
-		q,
-		limit,
-		skip,
-	};
-
-	const searchForm = await superValidate(searchData, zod(search_schema));
-	const listManageForm = await superValidate(zod(modifyListGameSchema));
-
-	const collection = await db.query.collections.findFirst({
-		columns: {
-			id: true,
-			cuid: true,
-			name: true,
-		},
-		where: and(eq(collections.user_id, user!.id!), eq(collections.cuid, id)),
-	});
-	console.log('collection', collection);
-
-	if (!collection) {
-		console.log('Collection was not found');
-		error(404, 'Collection was not found');
+	const authedUser = await locals.getAuthedUser();
+	if (!authedUser) {
+		throw redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const collectionItems = await db.query.collection_items.findMany({
-		columns: {
-			collection_id: true,
-			times_played: true,
-		},
-		where: eq(collection_items.collection_id, collection.id),
-		with: {
-			game: {
-				columns: {
-					id: true,
-					name: true,
-					thumb_url: true,
-				},
-			},
-		},
-		offset: skip,
-		limit,
-	});
+	try {
+		const { data, errors } = await locals.api.collections[':cuid'].$get({
+			param: { cuid }
+		}).then(locals.parseApiResponse);
 
-	console.log('collection_items', collectionItems);
-
-	const items: ListGame[] = [];
-	for (const item of collectionItems) {
-		console.log('item', item);
-		const game = item.game;
-		if (game) {
-			items.push({
-				game_id: '',
-				in_wishlist: false,
-				wishlist_id: '',
-				id: game.id,
-				collection_id: item.collection_id,
-				game_name: game.name ?? "Game doesn't have a name",
-				thumb_url: game.thumb_url,
-				times_played: item.times_played ?? 0,
-				in_collection: true,
-			});
+		if (errors) {
+			return error(500, 'Failed to fetch collection');
 		}
+
+		const { collection } = data;
+
+		if (!collection) {
+			redirect(302, '/404');
+		}
+
+		console.log('collection', collection);
+
+		return {
+			collection,
+		};
+	} catch (e) {
+		console.error(e);
 	}
 
-	return {
-		searchForm,
-		listManageForm,
-		collection: {
-			name: collection.name,
-			cuid: collection.cuid ?? '',
-		},
-		items,
-	};
+	redirect(302, '/404');
+
+	// const searchParams = Object.fromEntries(url?.searchParams);
+	// console.log('searchParams', searchParams);
+	// const q = searchParams?.q;
+	// const limit = parseInt(searchParams?.limit) || 10;
+	// const skip = parseInt(searchParams?.skip) || 0;
+	//
+	// const searchData = {
+	// 	q,
+	// 	limit,
+	// 	skip,
+	// };
+	//
+	// const searchForm = await superValidate(searchData, zod(search_schema));
+	// const listManageForm = await superValidate(zod(modifyListGameSchema));
+	//
+	// const collection = await db.query.collections.findFirst({
+	// 	columns: {
+	// 		id: true,
+	// 		cuid: true,
+	// 		name: true,
+	// 	},
+	// 	where: and(eq(collections.user_id, user!.id!), eq(collections.cuid, id)),
+	// });
+	// console.log('collection', collection);
+
+	// if (!collection) {
+	// 	console.log('Collection was not found');
+	// 	error(404, 'Collection was not found');
+	// }
+	//
+	// const collectionItems = await db.query.collection_items.findMany({
+	// 	columns: {
+	// 		collection_id: true,
+	// 		times_played: true,
+	// 	},
+	// 	where: eq(collection_items.collection_id, collection.id),
+	// 	with: {
+	// 		game: {
+	// 			columns: {
+	// 				id: true,
+	// 				name: true,
+	// 				thumb_url: true,
+	// 			},
+	// 		},
+	// 	},
+	// 	offset: skip,
+	// 	limit,
+	// });
+	//
+	// console.log('collection_items', collectionItems);
+	//
+	// const items: ListGame[] = [];
+	// for (const item of collectionItems) {
+	// 	console.log('item', item);
+	// 	const game = item.game;
+	// 	if (game) {
+	// 		items.push({
+	// 			game_id: '',
+	// 			in_wishlist: false,
+	// 			wishlist_id: '',
+	// 			id: game.id,
+	// 			collection_id: item.collection_id,
+	// 			game_name: game.name ?? "Game doesn't have a name",
+	// 			thumb_url: game.thumb_url,
+	// 			times_played: item.times_played ?? 0,
+	// 			in_collection: true,
+	// 		});
+	// 	}
+	// }
+	//
+	// return {
+	// 	searchForm,
+	// 	listManageForm,
+	// 	collection: {
+	// 		name: collection.name,
+	// 		cuid: collection.cuid ?? '',
+	// 	},
+	// 	items,
+	// };
 }
 
 export const actions: Actions = {

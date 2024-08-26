@@ -24,8 +24,8 @@ export class CollectionController implements Controller {
 			})
 			.get('/:cuid', requireAuth, async (c) => {
 				const cuid = c.req.param('cuid');
-				const user = await this.collectionsService.findOneByCuid(cuid);
-				return c.json({ user });
+				const collection = await this.collectionsService.findOneByCuid(cuid);
+				return c.json({ collection });
 			});
 	}
 }

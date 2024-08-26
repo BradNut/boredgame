@@ -4,8 +4,8 @@ import { superValidate } from 'sveltekit-superforms/server';
 import { zod } from 'sveltekit-superforms/adapters';
 import { redirect } from 'sveltekit-flash-message/server';
 import { modifyListGameSchema } from '$lib/validations/zod-schemas';
-import db from '../../../../db';
-import { collection_items, collections, games } from '$db/schema';
+import { db } from '$lib/server/api/infrastructure/database';
+import { collection_items, collections, games } from '$lib/server/api/infrastructure/database/tables';
 import { notSignedInMessage } from '$lib/flashMessages';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 

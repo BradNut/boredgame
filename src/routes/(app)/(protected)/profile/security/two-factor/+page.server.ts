@@ -12,8 +12,8 @@ import { redirect, setFlash } from 'sveltekit-flash-message/server';
 import type { PageServerLoad } from '../../$types';
 import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account';
 import { notSignedInMessage } from '$lib/flashMessages';
-import db from '../../../../../../db';
-import { recoveryCodes, twoFactor, usersTable } from '$db/schema';
+import db from '$lib/server/api/infrastructure/database';
+import { recoveryCodes, twoFactor, usersTable } from '$lib/server/api/infrastructure/database/tables';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 import env from '../../../../../../env';
 

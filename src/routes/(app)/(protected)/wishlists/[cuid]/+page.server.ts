@@ -28,9 +28,7 @@ export async function load(event) {
 		if (errors) {
 			return error(500, 'Failed to fetch wishlist');
 		}
-		console.log('data', data);
 		const { wishlist } = data;
-		console.log('wishlist', wishlist);
 
 		if (!wishlist) {
 			redirect(302, '/404');

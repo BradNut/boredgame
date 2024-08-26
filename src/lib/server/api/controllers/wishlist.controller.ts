@@ -23,7 +23,6 @@ export class WishlistController implements Controller {
 			})
 			.get('/:cuid', requireAuth, async (c) => {
 				const cuid = c.req.param('cuid')
-				console.log(cuid)
 				const wishlist = await this.wishlistsService.findOneByCuid(cuid)
 				return c.json({ wishlist });
 			});
