@@ -8,6 +8,7 @@ import { config } from './common/config';
 import { container } from 'tsyringe';
 import { IamController } from './controllers/iam.controller';
 import { LoginController } from './controllers/login.controller';
+import { MfaController} from "$lib/server/api/controllers/mfa.controller";
 import {UserController} from "$lib/server/api/controllers/user.controller";
 import {SignupController} from "$lib/server/api/controllers/signup.controller";
 import {WishlistController} from "$lib/server/api/controllers/wishlist.controller";
@@ -44,6 +45,7 @@ const routes = app
 		.route('/signup', container.resolve(SignupController).routes())
 		.route('/wishlists', container.resolve(WishlistController).routes())
 		.route('/collections', container.resolve(CollectionController).routes())
+		.route('/mfa', container.resolve(MfaController).routes())
 		.get('/', (c) => c.json({ message: 'Server is healthy' }));
 
 /* -------------------------------------------------------------------------- */

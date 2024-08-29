@@ -68,4 +68,17 @@ export class UsersService {
 	async findOneById(id: string) {
 		return this.usersRepository.findOneById(id);
 	}
+
+	async verifyPassword(userId: string, data: { password: string }) {
+		const user = await this.usersRepository.findOneById(userId);
+		if (!user) {
+			throw new Error('User not found');
+		}
+		const credential = await this.credentialsRepository.findOneByUserIdAndType(userId, CredentialsType.PASSWORD);
+		if (!credential) {
+			throw new Error('Password credentials not found');
+		}
+		const { password } = data;
+		return this.tokenService.verifyHashedToken(credential.secret_data, password);
+	}
 }

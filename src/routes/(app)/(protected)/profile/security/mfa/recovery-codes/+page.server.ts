@@ -1,31 +1,36 @@
-import db from '../../../../../../../db';
 import { eq } from 'drizzle-orm';
 import { Argon2id } from 'oslo/password';
 import { alphabet, generateRandomString } from 'oslo/crypto';
 import { redirect } from 'sveltekit-flash-message/server';
+import { db } from '$lib/server/api/infrastructure/database';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { PageServerLoad } from '../../../$types';
-import {recoveryCodes, twoFactor, usersTable} from '$db/schema';
+import { recoveryCodesTable, twoFactorTable, usersTable} from '$lib/server/api/infrastructure/database/tables';
 import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event;
-	const { user, session } = locals;
-	if (userNotAuthenticated(user, session)) {
-		redirect(302, '/login', notSignedInMessage, event);
+
+	const authedUser = await locals.getAuthedUser();
+	if (!authedUser) {
+		throw redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	const dbUser = await db.query.usersTable.findFirst({
-		where: eq(usersTable.id, user!.id),
+		where: eq(usersTable.id, authedUser.id),
 	});
 
+	if (!dbUser) {
+		throw redirect(302, '/login', notSignedInMessage, event);
+	}
+
 	const twoFactorDetails = await db.query.twoFactor.findFirst({
-		where: eq(twoFactor.userId, dbUser!.id),
+		where: eq(twoFactor.userId, dbUser.id),
 	});
 
 	if (twoFactorDetails?.enabled) {
 		const dbRecoveryCodes = await db.query.recoveryCodes.findMany({
-			where: eq(recoveryCodes.userId, user!.id),
+			where: eq(recoveryCodes.userId, authedUser.id),
 		});
 
 		if (dbRecoveryCodes.length === 0) {
@@ -37,7 +42,7 @@ export const load: PageServerLoad = async (event) => {
 					const hashedCode = await new Argon2id().hash(code);
 					console.log('Inserting recovery code', code, hashedCode);
 					await db.insert(recoveryCodes).values({
-						userId: user!.id,
+						userId: authedUser.id,
 						code: hashedCode,
 					});
 				}

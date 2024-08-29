@@ -1,7 +1,7 @@
-import db from '../../../../db';
+import { db } from '$lib/server/api/infrastructure/database';
 import { error } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import { usersTable } from '$db/schema';
+import { usersTable } from '$lib/server/api/infrastructure/database/tables';
 import { createPasswordResetToken } from '$lib/server/auth-utils.js';
 import { PUBLIC_SITE_URL } from '$env/static/public';
 

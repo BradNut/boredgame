@@ -46,7 +46,7 @@
 			<Card.Title class="text-2xl">Signup for an account</Card.Title>
 		</Card.Header>
 		<Card.Content>
-			<form method="POST" action="/sign-up" use:enhance class="grid gap-2 mt-4">
+			<form method="POST" action="/signup" use:enhance class="grid gap-2 mt-4">
 				<Label for="username">Username <small>(required)</small></Label>
 				<Input type="text" id="username" class={$errors.username && "outline outline-destructive"} name="username"
 							 placeholder="Username" autocomplete="username" data-invalid={$errors.username} bind:value={$form.username} />

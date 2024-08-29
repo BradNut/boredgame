@@ -1,9 +1,8 @@
 import { eq } from 'drizzle-orm';
-import { password_reset_tokens, usersTable } from '$db/schema';
+import { password_reset_tokens } from '$lib/server/api/infrastructure/database/tables';
 import { isWithinExpirationDate } from 'oslo';
-import { lucia } from '$lib/server/auth.js';
-import { Argon2id } from 'oslo/password';
-import db from '$db';
+// import { lucia } from '$lib/server/lucia';
+import {db} from '$lib/server/api/infrastructure/database';
 
 export async function POST({ request, params }) {
 	const { password } = await request.json();
@@ -32,12 +31,12 @@ export async function POST({ request, params }) {
 		});
 	}
 
-	await lucia.invalidateUserSessions(token.user_id);
-	const hashPassword = await new Argon2id().hash(password);
-	// await db.update(usersTable).set({ hashed_password: hashPassword }).where(eq(usersTable.id, token.user_id));
-
-	const session = await lucia.createSession(token.user_id, {});
-	const sessionCookie = lucia.createSessionCookie(session.id);
+	// await lucia.invalidateUserSessions(token.user_id);
+	// const hashPassword = await new Argon2id().hash(password);
+	// // await db.update(usersTable).set({ hashed_password: hashPassword }).where(eq(usersTable.id, token.user_id));
+	//
+	// const session = await lucia.createSession(token.user_id, {});
+	// const sessionCookie = lucia.createSessionCookie(session.id);
 
 	return new Response(null, {
 		status: 302,

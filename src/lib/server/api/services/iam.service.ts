@@ -66,4 +66,13 @@ export class IamService {
 			email,
 		});
 	}
+
+	async verifyPassword(userId: string, data: VerifyPasswordDto) {
+		const user = await this.usersService.findOneById(userId);
+		if (!user) {
+			return null;
+		}
+		const { password } = data;
+		return this.usersService.verifyPassword(userId, { password });
+	}
 }

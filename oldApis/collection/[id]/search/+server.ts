@@ -1,14 +1,14 @@
 import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
-import db from '../../../../../db';
+import {db} from '$lib/server/api/infrastructure/database';
 import { collection_items, usersTable } from '$db/schema';
 
 // Search a user's collection
 export async function GET({ url, locals, params }) {
 	const searchParams = Object.fromEntries(url.searchParams);
 	const q = searchParams?.q || '';
-	const limit = parseInt(searchParams?.limit) || 10;
-	const skip = parseInt(searchParams?.skip) || 0;
+	const limit = Number.parseInt(searchParams?.limit) || 10;
+	const skip = Number.parseInt(searchParams?.skip) || 0;
 	const order = searchParams?.order || 'asc';
 	const sort = searchParams?.sort || 'name';
 	const collection_id = params.id;

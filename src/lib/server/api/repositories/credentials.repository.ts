@@ -17,6 +17,15 @@ export class CredentialsRepository {
 		});
 	}
 
+	async findOneByUserIdAndType(userId: string, type: CredentialsType) {
+		return this.db.query.credentialsTable.findFirst({
+			where: and(
+				eq(credentialsTable.user_id, userId),
+				eq(credentialsTable.type, type)
+			)
+		});
+	}
+
 	async findPasswordCredentialsByUserId(userId: string) {
 		return this.db.query.credentialsTable.findFirst({
 			where: and(
@@ -58,5 +67,17 @@ export class CredentialsRepository {
 			.where(eq(credentialsTable.id, id))
 			.returning()
 			.then(takeFirstOrThrow);
+	}
+
+	async delete(id: string) {
+		return this.db
+			.delete(credentialsTable)
+			.where(eq(credentialsTable.id, id));
+	}
+
+	async deleteByUserId(userId: string) {
+		return this.db
+			.delete(credentialsTable)
+			.where(eq(credentialsTable.user_id, userId));
 	}
 }

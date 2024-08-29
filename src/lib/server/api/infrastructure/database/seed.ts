@@ -31,7 +31,7 @@ for (const table of [
 	schema.publishers,
 	schema.publishersToExternalIds,
 	schema.publishers_to_games,
-	schema.recovery_codes,
+	schema.recoveryCodesTable,
 	schema.roles,
 	schema.sessionsTable,
 	schema.twoFactorTable,

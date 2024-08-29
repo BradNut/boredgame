@@ -5,21 +5,21 @@ import { setError, superValidate } from 'sveltekit-superforms/server';
 import { redirect } from 'sveltekit-flash-message/server';
 import { Argon2id } from 'oslo/password';
 import type { PageServerLoad } from '../../../$types';
-import db from '../../../../../../../db';
+import { db } from '$lib/server/api/infrastructure/database';
 import { changeUserPasswordSchema } from '$lib/validations/account';
-import { lucia } from '$lib/server/auth.js';
-import { usersTable } from '$db/schema';
+import { usersTable } from '$lib/server/api/infrastructure/database/tables';
 import { notSignedInMessage } from '$lib/flashMessages';
 import type { Cookie } from 'lucia';
-import { userNotAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
-	const form = await superValidate(event, zod(changeUserPasswordSchema));
 	const { locals } = event;
-	const { user, session } = locals;
-	if (userNotAuthenticated(user, session)) {
-		redirect(302, '/login', notSignedInMessage, event);
+
+	const authedUser = await locals.getAuthedUser();
+	if (!authedUser) {
+		throw redirect(302, '/login', notSignedInMessage, event);
 	}
+
+	const form = await superValidate(event, zod(changeUserPasswordSchema));
 
 	form.data = {
 		current_password: '',
@@ -34,9 +34,10 @@ export const load: PageServerLoad = async (event) => {
 export const actions: Actions = {
 	default: async (event) => {
 		const { locals } = event;
-		const { user, session } = locals;
-		if (userNotAuthenticated(user, session)) {
-			return fail(401);
+
+		const authedUser = await locals.getAuthedUser();
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event);
 		}
 
 		const form = await superValidate(event, zod(changeUserPasswordSchema));
@@ -57,7 +58,7 @@ export const actions: Actions = {
 		}
 
 		const dbUser = await db.query.usersTable.findFirst({
-			where: eq(usersTable.id, user!.id),
+			where: eq(usersTable.id, authedUser.id),
 		});
 
 		// if (!dbUser?.hashed_password) {
@@ -78,14 +79,14 @@ export const actions: Actions = {
 		if (!currentPasswordVerified) {
 			return setError(form, 'current_password', 'Your password is incorrect');
 		}
-		if (user?.username) {
+		if (authedUser?.username) {
 			let sessionCookie: Cookie;
 			try {
 				if (form.data.password !== form.data.confirm_password) {
 					return setError(form, 'Password and confirm password do not match');
 				}
 				const hashedPassword = await new Argon2id().hash(form.data.password);
-				await lucia.invalidateUserSessions(user.id);
+				await lucia.invalidateUserSessions(authedUser.id);
 				// await db
 				// 	.update(usersTable)
 				// 	.set({ hashed_password: hashedPassword })

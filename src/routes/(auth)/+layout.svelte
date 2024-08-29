@@ -18,8 +18,8 @@
 		{#if $page.url.pathname !== '/login'}
 			<Button href="/login" variant="ghost">Login</Button>
 		{/if}
-		{#if $page.url.pathname !== '/sign-up'}
-			<Button href="/sign-up" variant="ghost">Sign up</Button>
+		{#if $page.url.pathname !== '/signup'}
+			<Button href="/signup" variant="ghost">Sign up</Button>
 		{/if}
 	</div>
 	<div class="auth-marketing">

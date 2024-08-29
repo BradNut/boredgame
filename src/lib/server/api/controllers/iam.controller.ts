@@ -11,6 +11,7 @@ import { limiter } from '$lib/server/api/middleware/rate-limiter.middleware'
 import { updateProfileDto } from '$lib/dtos/update-profile.dto'
 import { updateEmailDto } from '$lib/dtos/update-email.dto'
 import { StatusCodes } from '$lib/constants/status-codes'
+import { verifyPasswordDto } from '$lib/dtos/verify-password.dto'
 
 @injectable()
 export class IamController implements Controller {
@@ -35,6 +36,15 @@ export class IamController implements Controller {
 					return c.json("Username already in use", StatusCodes.BAD_REQUEST);
 				}
 				return c.json({ user: updatedUser }, StatusCodes.OK)
+			})
+			.post('/verify/password', requireAuth, zValidator('json', verifyPasswordDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
+				const user = c.var.user
+				const { password } = c.req.valid('json')
+				const passwordVerified = await this.iamService.verifyPassword(user.id, { password })
+				if (!passwordVerified) {
+					return c.json('Incorrect password', StatusCodes.BAD_REQUEST)
+				}
+				return c.json({ }, StatusCodes.OK)
 			})
 			.post('/update/email', requireAuth, zValidator('json', updateEmailDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const user = c.var.user

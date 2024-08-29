@@ -96,16 +96,16 @@
 </form>
 <div class="mt-6">
 	{#if !hasSetupTwoFactor}
-		<p>Two Factor Authentication is: <strong>Disabled</strong></p>
-		<Button variant="link" class="text-secondary-foreground" href="/profile/security/two-factor">
+		<p>Multi Factor Authentication is: <strong>Disabled</strong></p>
+		<Button variant="link" class="text-secondary-foreground" href="/profile/security/mfa">
 			<KeyRound class="mr-2 h-4 w-4" />
-			Setup 2FA
+			Setup Multi-factor Authentication
 		</Button>
 	{:else}
-		<p>Two Factor Authentication is: <strong>Enabled</strong></p>
-		<Button variant="link" class="text-secondary-foreground" href="/profile/security/two-factor">
+		<p>Multi Factor Authentication is: <strong>Enabled</strong></p>
+		<Button variant="link" class="text-secondary-foreground" href="/profile/security/mfa">
 			<KeyRound class="mr-2 h-4 w-4" />
-			Disable 2FA
+			Disable Multi-factor Authentication
 		</Button>
 	{/if}
 </div>

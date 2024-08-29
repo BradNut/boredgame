@@ -13,7 +13,7 @@
 	// $: termsValue = $form.terms as Writable<boolean>;
 </script>
 
-<form method="POST" action="/sign-up" use:enhance>
+<form method="POST" action="/signup" use:enhance>
 	<h1>Signup user</h1>
 	<label class="label">
 		<span class="sr-only">First Name</span>

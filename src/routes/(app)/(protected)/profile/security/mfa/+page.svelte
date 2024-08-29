@@ -37,7 +37,7 @@
 {#if twoFactorEnabled}
 	<h2>Currently you have two factor authentication <span class="text-green-500">enabled</span></h2>
 	<p>To disable two factor authentication, please enter your current password.</p>
-	<form method="POST" action="?/disableTwoFactor" use:removeTwoFactorEnhance data-sveltekit-replacestate>
+	<form method="POST" action="?/disableTotp" use:removeTwoFactorEnhance data-sveltekit-replacestate>
 		<Form.Field form={removeTwoFactorForm} name="current_password">
 			<Form.Control let:attrs>
 				<Form.Label for="password">Current Password</Form.Label>
@@ -51,7 +51,7 @@
 {:else}
 	<h2>Please scan the following QR Code</h2>
 	<img src={qrCode} alt="QR Code" />
-	<form method="POST" action="?/enableTwoFactor" use:addTwoFactorEnhance data-sveltekit-replacestate>
+	<form method="POST" action="?/enableTotp" use:addTwoFactorEnhance data-sveltekit-replacestate>
 		<Form.Field form={addTwoFactorForm} name="two_factor_code">
 			<Form.Control let:attrs>
 				<Form.Label for="code">Enter Code</Form.Label>

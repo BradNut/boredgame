@@ -1,20 +1,20 @@
 import { redirect } from 'sveltekit-flash-message/server';
 import { eq } from 'drizzle-orm';
-import db from '../../../../db';
-import { wishlists } from '$db/schema';
-import { userNotAuthenticated } from '$lib/server/auth-utils';
+import { db } from '$lib/server/api/infrastructure/database';
+import { wishlists } from '$lib/server/api/infrastructure/database/tables';
 import { notSignedInMessage } from '$lib/flashMessages';
 
 export async function load(event) {
 	const { locals } = event;
-	const { user, session } = locals;
-	if (userNotAuthenticated(user, session)) {
-		redirect(302, '/login', notSignedInMessage, event);
+
+	const authedUser = await locals.getAuthedUser();
+	if (!authedUser) {
+		throw redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	try {
 		const dbWishlists = await db.query.wishlists.findMany({
-			where: eq(wishlists.user_id, user!.id!),
+			where: eq(wishlists.user_id, authedUser.id),
 		});
 
 		return {

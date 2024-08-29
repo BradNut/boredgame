@@ -16,7 +16,7 @@ export * from './passwordResetTokens';
 export * from './publishers';
 export * from './publishersToExternalIds';
 export * from './publishersToGames';
-export * from './recoveryCodes';
+export * from './recovery-codes.table';
 export * from './roles';
 export * from './sessions.table';
 export * from './two-factor.table';
