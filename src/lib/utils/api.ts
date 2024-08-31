@@ -10,7 +10,7 @@ export async function parseApiResponse<T>(response: ClientResponse<T>) {
 	if (response.ok) {
 		const data = await response.json() as T;
 
-		return { data, error: null, status: response.status };
+		return { data, error: null, response }
 	}
 
 	// handle errors

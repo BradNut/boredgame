@@ -1,50 +1,50 @@
-import type { MiddlewareHandler } from 'hono';
-import { createMiddleware } from 'hono/factory';
-import type { HonoTypes } from '../types';
-import { lucia } from '../infrastructure/auth/lucia';
-import { verifyRequestOrigin } from 'lucia';
-import type { Session, User } from 'lucia';
-import { Unauthorized } from '../common/errors';
+import type { MiddlewareHandler } from 'hono'
+import { createMiddleware } from 'hono/factory'
+import type { HonoTypes } from '../types'
+import { lucia } from '../infrastructure/auth/lucia'
+import { verifyRequestOrigin } from 'oslo/request'
+import type { Session, User } from 'lucia'
+import { Unauthorized } from '../common/errors'
 
 export const verifyOrigin: MiddlewareHandler<HonoTypes> = createMiddleware(async (c, next) => {
-	if (c.req.method === "GET") {
-		return next();
+	if (c.req.method === 'GET') {
+		return next()
 	}
-	const originHeader = c.req.header("Origin") ?? null;
-	const hostHeader = c.req.header("Host") ?? null;
+	const originHeader = c.req.header('Origin') ?? null
+	const hostHeader = c.req.header('Host') ?? null
 	if (!originHeader || !hostHeader || !verifyRequestOrigin(originHeader, [hostHeader])) {
-		return c.body(null, 403);
+		return c.body(null, 403)
 	}
-	return next();
+	return next()
 })
 
 export const validateAuthSession: MiddlewareHandler<HonoTypes> = createMiddleware(async (c, next) => {
-	const sessionId = lucia.readSessionCookie(c.req.header("Cookie") ?? "");
+	const sessionId = lucia.readSessionCookie(c.req.header('Cookie') ?? '')
 	if (!sessionId) {
-		c.set("user", null);
-		c.set("session", null);
-		return next();
+		c.set('user', null)
+		c.set('session', null)
+		return next()
 	}
 
-	const { session, user } = await lucia.validateSession(sessionId);
+	const { session, user } = await lucia.validateSession(sessionId)
 	if (session && session.fresh) {
-		c.header("Set-Cookie", lucia.createSessionCookie(session.id).serialize(), { append: true });
+		c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize(), { append: true })
 	}
 	if (!session) {
-		c.header("Set-Cookie", lucia.createBlankSessionCookie().serialize(), { append: true });
+		c.header('Set-Cookie', lucia.createBlankSessionCookie().serialize(), { append: true })
 	}
-	c.set("session", session);
-	c.set("user", user);
-	return next();
+	c.set('session', session)
+	c.set('user', user)
+	return next()
 })
 
 export const requireAuth: MiddlewareHandler<{
 	Variables: {
-		session: Session;
-		user: User;
-	};
+		session: Session
+		user: User
+	}
 }> = createMiddleware(async (c, next) => {
-	const user = c.var.user;
-	if (!user) throw Unauthorized('You must be logged in to access this resource');
-	return next();
-});
+	const user = c.var.user
+	if (!user) throw Unauthorized('You must be logged in to access this resource')
+	return next()
+})

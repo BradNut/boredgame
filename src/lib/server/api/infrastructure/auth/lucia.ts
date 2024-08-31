@@ -23,6 +23,7 @@ export const lucia = new Lucia(adapter, {
 			email: attributes.email,
 			firstName: attributes.first_name,
 			lastName: attributes.last_name,
+			mfa_enabled: attributes.mfa_enabled,
 			theme: attributes.theme,
 		};
 	},
@@ -56,6 +57,7 @@ declare module 'lucia' {
 		email: string;
 		first_name: string;
 		last_name: string;
+		mfa_enabled: boolean;
 		theme: string;
 	}
 }

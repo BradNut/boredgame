@@ -33,7 +33,7 @@ export class IamController implements Controller {
 				const { firstName, lastName, username } = c.req.valid('json')
 				const updatedUser = await this.iamService.updateProfile(user.id, { firstName, lastName, username })
 				if (!updatedUser) {
-					return c.json("Username already in use", StatusCodes.BAD_REQUEST);
+					return c.json('Username already in use', StatusCodes.BAD_REQUEST)
 				}
 				return c.json({ user: updatedUser }, StatusCodes.OK)
 			})
@@ -42,16 +42,17 @@ export class IamController implements Controller {
 				const { password } = c.req.valid('json')
 				const passwordVerified = await this.iamService.verifyPassword(user.id, { password })
 				if (!passwordVerified) {
+					console.log('Incorrect password')
 					return c.json('Incorrect password', StatusCodes.BAD_REQUEST)
 				}
-				return c.json({ }, StatusCodes.OK)
+				return c.json({}, StatusCodes.OK)
 			})
 			.post('/update/email', requireAuth, zValidator('json', updateEmailDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const user = c.var.user
 				const { email } = c.req.valid('json')
 				const updatedUser = await this.iamService.updateEmail(user.id, { email })
 				if (!updatedUser) {
-					return c.json("Email already in use", StatusCodes.BAD_REQUEST);
+					return c.json('Email already in use', StatusCodes.BAD_REQUEST)
 				}
 				return c.json({ user: updatedUser }, StatusCodes.OK)
 			})

@@ -1,7 +1,9 @@
 import { inject, injectable } from "tsyringe";
 import { HMAC } from 'oslo/crypto';
-import { encodeHex } from 'oslo/encoding';
+import { decodeHex, encodeHex } from 'oslo/encoding';
 import {CredentialsRepository} from "$lib/server/api/repositories/credentials.repository";
+import { TOTPController } from "oslo/otp";
+import type { CredentialsType } from "$db/tables";
 
 @injectable()
 export class TotpService {
@@ -13,6 +15,14 @@ export class TotpService {
 
 	async findOneByUserId(userId: string) {
 		return this.credentialsRepository.findTOTPCredentialsByUserId(userId);
+	}
+
+	async findOneByUserIdOrThrow(userId: string) {
+		const credential = await this.findOneByUserId(userId);
+		if (!credential) {
+			throw new Error('TOTP credential not found');
+		}
+		return credential;
 	}
 
 	async create(userId: string) {
@@ -32,5 +42,17 @@ export class TotpService {
 
 	async deleteOneByUserId(userId: string) {
 		return this.credentialsRepository.deleteByUserId(userId);
+	}
+
+	async deleteOneByUserIdAndType(userId: string, type: CredentialsType) {
+		return this.credentialsRepository.deleteByUserIdAndType(userId, type)
+	}
+
+	async verify(userId: string, code: string) {
+		const credential = await this.credentialsRepository.findTOTPCredentialsByUserId(userId);
+		if (!credential) {
+			throw new Error('TOTP credential not found');
+		}
+		return await new TOTPController().verify(code, decodeHex(credential.secret_data))
 	}
 }
