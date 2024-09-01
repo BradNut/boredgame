@@ -1,18 +1,18 @@
-import { eq } from 'drizzle-orm';
-import { Argon2id } from 'oslo/password';
-import { alphabet, generateRandomString } from 'oslo/crypto';
-import { redirect } from 'sveltekit-flash-message/server';
-import { db } from '$lib/server/api/infrastructure/database';
-import { notSignedInMessage } from '$lib/flashMessages';
-import type { PageServerLoad } from '../../../$types';
-import { recoveryCodesTable } from '$lib/server/api/infrastructure/database/tables';
+import { notSignedInMessage } from '$lib/flashMessages'
+import { db } from '$lib/server/api/packages/drizzle'
+import { eq } from 'drizzle-orm'
+import { alphabet, generateRandomString } from 'oslo/crypto'
+import { Argon2id } from 'oslo/password'
+import { redirect } from 'sveltekit-flash-message/server'
+import type { PageServerLoad } from '../../../$types'
+import { recoveryCodesTable } from '../../../../../../../lib/server/api/databases/tables'
 
 export const load: PageServerLoad = async (event) => {
-	const { locals } = event;
+	const { locals } = event
 
-	const authedUser = await locals.getAuthedUser();
+	const authedUser = await locals.getAuthedUser()
 	if (!authedUser) {
-		throw redirect(302, '/login', notSignedInMessage, event);
+		throw redirect(302, '/login', notSignedInMessage, event)
 	}
 
 	if (authedUser.mfa_enabled) {
@@ -42,4 +42,4 @@ export const load: PageServerLoad = async (event) => {
 	}
 	console.error('2FA not enabled')
 	redirect(302, '/profile', { message: 'Two-Factor Authentication is not enabled', type: 'error' }, event)
-};
+}

@@ -1,13 +1,13 @@
-import { config } from 'dotenv';
-import { expand } from 'dotenv-expand';
-import { ZodError, z } from 'zod';
+import { config } from 'dotenv'
+import { expand } from 'dotenv-expand'
+import { ZodError, z } from 'zod'
 
 const stringBoolean = z.coerce
 	.string()
 	.transform((val) => {
-		return val === 'true';
+		return val === 'true'
 	})
-	.default('false');
+	.default('false')
 
 const EnvSchema = z.object({
 	ADMIN_USERNAME: z.string(),
@@ -20,6 +20,7 @@ const EnvSchema = z.object({
 	DB_MIGRATING: stringBoolean,
 	DB_SEEDING: stringBoolean,
 	NODE_ENV: z.string().default('development'),
+	ORIGIN: z.string(),
 	PUBLIC_SITE_NAME: z.string(),
 	PUBLIC_SITE_URL: z.string(),
 	PUBLIC_UMAMI_DO_NOT_TRACK: z.string(),
@@ -27,26 +28,25 @@ const EnvSchema = z.object({
 	PUBLIC_UMAMI_URL: z.string(),
 	REDIS_URL: z.string(),
 	TWO_FACTOR_TIMEOUT: z.coerce.number().default(300000),
-});
+})
 
-export type EnvSchema = z.infer<typeof EnvSchema>;
+export type EnvSchema = z.infer<typeof EnvSchema>
 
-expand(config());
+expand(config())
 
 try {
-	EnvSchema.parse(process.env);
+	EnvSchema.parse(process.env)
 } catch (error) {
 	if (error instanceof ZodError) {
-		let message = 'Missing required values in .env:\n';
+		let message = 'Missing required values in .env:\n'
 		for (const issue of error.issues) {
-			message += `${issue.path[0]}\n`;
+			message += `${issue.path[0]}\n`
 		}
-		const e = new Error(message);
-		e.stack = '';
-		throw e;
-	} else {
-		console.error(error);
+		const e = new Error(message)
+		e.stack = ''
+		throw e
 	}
+	console.error(error)
 }
 
-export default EnvSchema.parse(process.env);
+export default EnvSchema.parse(process.env)

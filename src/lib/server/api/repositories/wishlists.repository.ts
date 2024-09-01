@@ -1,18 +1,19 @@
-import {inject, injectable} from "tsyringe";
-import {DatabaseProvider} from "$lib/server/api/providers";
-import { eq, type InferInsertModel } from "drizzle-orm";
-import { wishlists } from "../infrastructure/database/tables";
-import { takeFirstOrThrow } from "../infrastructure/database/utils";
+import type { Repository } from '$lib/server/api/common/interfaces/repository.interface'
+import { DatabaseProvider } from '$lib/server/api/providers/database.provider'
+import { type InferInsertModel, eq } from 'drizzle-orm'
+import { inject, injectable } from 'tsyringe'
+import { takeFirstOrThrow } from '../common/utils/repository.utils'
+import { wishlists } from '../databases/tables'
 
-export type CreateWishlist = InferInsertModel<typeof wishlists>;
-export type UpdateWishlist = Partial<CreateWishlist>;
+export type CreateWishlist = InferInsertModel<typeof wishlists>
+export type UpdateWishlist = Partial<CreateWishlist>
 
 @injectable()
-export class WishlistsRepository {
-	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider){ }
+export class WishlistsRepository implements Repository {
+	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) {}
 
 	async findAll() {
-		return this.db.query.wishlists.findMany();
+		return this.db.query.wishlists.findMany()
 	}
 
 	async findOneById(id: string) {
@@ -20,8 +21,8 @@ export class WishlistsRepository {
 			where: eq(wishlists.id, id),
 			columns: {
 				cuid: true,
-				name: true
-			}
+				name: true,
+			},
 		})
 	}
 
@@ -30,8 +31,8 @@ export class WishlistsRepository {
 			where: eq(wishlists.cuid, cuid),
 			columns: {
 				cuid: true,
-				name: true
-			}
+				name: true,
+			},
 		})
 	}
 
@@ -40,8 +41,8 @@ export class WishlistsRepository {
 			where: eq(wishlists.user_id, userId),
 			columns: {
 				cuid: true,
-				name: true
-			}
+				name: true,
+			},
 		})
 	}
 
@@ -50,21 +51,20 @@ export class WishlistsRepository {
 			where: eq(wishlists.user_id, userId),
 			columns: {
 				cuid: true,
-				name: true
-			}
+				name: true,
+			},
 		})
 	}
 
 	async create(data: CreateWishlist) {
-		return this.db.insert(wishlists).values(data).returning().then(takeFirstOrThrow);
+		return this.db.insert(wishlists).values(data).returning().then(takeFirstOrThrow)
 	}
 
 	async update(id: string, data: UpdateWishlist) {
-		return this.db
-			.update(wishlists)
-			.set(data)
-			.where(eq(wishlists.id, id))
-			.returning()
-			.then(takeFirstOrThrow);
+		return this.db.update(wishlists).set(data).where(eq(wishlists.id, id)).returning().then(takeFirstOrThrow)
+	}
+
+	trxHost(trx: DatabaseProvider) {
+		return new WishlistsRepository(trx)
 	}
 }

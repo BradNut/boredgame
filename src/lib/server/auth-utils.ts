@@ -1,19 +1,19 @@
-import { generateIdFromEntropySize, type Session, type User } from 'lucia';
-import { TimeSpan, createDate } from 'oslo';
-import { eq } from 'drizzle-orm';
-import { db } from './api/infrastructure/database/index';
-import { password_reset_tokens } from './api/infrastructure/database/tables';
+import { eq } from 'drizzle-orm'
+import { type Session, type User, generateIdFromEntropySize } from 'lucia'
+import { TimeSpan, createDate } from 'oslo'
+import { password_reset_tokens } from './api/databases/tables'
+import { db } from './api/packages/drizzle'
 
 export async function createPasswordResetToken(userId: string): Promise<string> {
 	// optionally invalidate all existing tokens
-	await db.delete(password_reset_tokens).where(eq(password_reset_tokens.user_id, userId));
-	const tokenId = generateIdFromEntropySize(40);
+	await db.delete(password_reset_tokens).where(eq(password_reset_tokens.user_id, userId))
+	const tokenId = generateIdFromEntropySize(40)
 	await db.insert(password_reset_tokens).values({
 		id: tokenId,
 		user_id: userId,
 		expires_at: createDate(new TimeSpan(2, 'h')),
-	});
-	return tokenId;
+	})
+	return tokenId
 }
 
 /**
@@ -24,7 +24,7 @@ export async function createPasswordResetToken(userId: string): Promise<string> 
  * @returns True if the user is not fully authenticated, otherwise false.
  */
 export function userNotFullyAuthenticated(user: User | null, session: Session | null) {
-	return user && session && session.isTwoFactorAuthEnabled && !session.isTwoFactorAuthenticated;
+	return user && session && session.isTwoFactorAuthEnabled && !session.isTwoFactorAuthenticated
 }
 
 /**
@@ -35,7 +35,7 @@ export function userNotFullyAuthenticated(user: User | null, session: Session | 
  * @returns {boolean} True if the user is not fully authenticated, otherwise false.
  */
 export function userNotAuthenticated(user: User | null, session: Session | null) {
-	return !user || !session || userNotFullyAuthenticated(user, session);
+	return !user || !session || userNotFullyAuthenticated(user, session)
 }
 
 /**
@@ -46,5 +46,5 @@ export function userNotAuthenticated(user: User | null, session: Session | null)
  * @returns {boolean} True if the user is fully authenticated, otherwise false.
  */
 export function userFullyAuthenticated(user: User | null, session: Session | null) {
-	return !userNotAuthenticated(user, session);
+	return !userNotAuthenticated(user, session)
 }

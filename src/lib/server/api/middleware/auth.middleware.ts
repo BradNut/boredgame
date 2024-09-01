@@ -1,10 +1,10 @@
 import type { MiddlewareHandler } from 'hono'
 import { createMiddleware } from 'hono/factory'
-import type { HonoTypes } from '../types'
-import { lucia } from '../infrastructure/auth/lucia'
-import { verifyRequestOrigin } from 'oslo/request'
 import type { Session, User } from 'lucia'
-import { Unauthorized } from '../common/errors'
+import { verifyRequestOrigin } from 'oslo/request'
+import { Unauthorized } from '../common/exceptions'
+import { lucia } from '../packages/lucia'
+import type { HonoTypes } from '../types'
 
 export const verifyOrigin: MiddlewareHandler<HonoTypes> = createMiddleware(async (c, next) => {
 	if (c.req.method === 'GET') {

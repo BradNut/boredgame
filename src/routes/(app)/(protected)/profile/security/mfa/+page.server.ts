@@ -1,22 +1,22 @@
-import { type Actions, fail, error } from '@sveltejs/kit'
+import { StatusCodes } from '$lib/constants/status-codes'
+import { notSignedInMessage } from '$lib/flashMessages'
+import { db } from '$lib/server/api/packages/drizzle'
+import { userNotAuthenticated } from '$lib/server/auth-utils'
+import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account'
+import env from '$src/env'
+import { type Actions, error, fail } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
-import { encodeHex, decodeHex } from 'oslo/encoding'
-import { Argon2id } from 'oslo/password'
-import { createTOTPKeyURI, TOTPController } from 'oslo/otp'
-import { HMAC } from 'oslo/crypto'
 import kebabCase from 'just-kebab-case'
+import { HMAC } from 'oslo/crypto'
+import { decodeHex, encodeHex } from 'oslo/encoding'
+import { TOTPController, createTOTPKeyURI } from 'oslo/otp'
+import { Argon2id } from 'oslo/password'
 import QRCode from 'qrcode'
+import { redirect, setFlash } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { setError, superValidate } from 'sveltekit-superforms/server'
-import { redirect, setFlash } from 'sveltekit-flash-message/server'
 import type { PageServerLoad } from '../../$types'
-import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account'
-import { notSignedInMessage } from '$lib/flashMessages'
-import { db } from '$lib/server/api/infrastructure/database'
-import { recoveryCodesTable, credentialsTable, usersTable, type Credentials } from '$lib/server/api/infrastructure/database/tables'
-import { userNotAuthenticated } from '$lib/server/auth-utils'
-import env from '$src/env'
-import { StatusCodes } from '$lib/constants/status-codes'
+import { type Credentials, credentialsTable, recoveryCodesTable, usersTable } from '../../../../../../lib/server/api/databases/tables'
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event
@@ -102,9 +102,11 @@ export const actions: Actions = {
 			})
 		}
 
-		const { error: verifyPasswordError } = await locals.api.me.verify.password.$post({
-			json: { password: addTwoFactorForm.data.current_password },
-		}).then(locals.parseApiResponse)
+		const { error: verifyPasswordError } = await locals.api.me.verify.password
+			.$post({
+				json: { password: addTwoFactorForm.data.current_password },
+			})
+			.then(locals.parseApiResponse)
 
 		if (verifyPasswordError) {
 			console.log(verifyPasswordError)

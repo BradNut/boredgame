@@ -5,8 +5,8 @@
 	"scripts": {
 		"db:push": "drizzle-kit push",
 		"db:generate": "drizzle-kit generate",
-		"db:migrate": "tsx src/lib/server/api/infrastructure/database/migrate.ts",
-		"db:seed": "tsx src/lib/server/api/infrastructure/database/seed.ts",
+		"db:migrate": "tsx src/lib/server/api/databases/migrate.ts",
+		"db:seed": "tsx src/lib/server/api/databases/seed.ts",
 		"db:studio": "drizzle-kit studio --verbose",
 		"dev": "NODE_OPTIONS=\"--inspect\" vite dev --host",
 		"build": "vite build",

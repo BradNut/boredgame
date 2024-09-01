@@ -1,8 +1,9 @@
-import type { UpdateEmailDto } from "$lib/dtos/update-email.dto";
-import type { UpdateProfileDto } from "$lib/dtos/update-profile.dto";
-import { UsersService } from "$lib/server/api/services/users.service";
-import { inject, injectable } from 'tsyringe';
-import { LuciaProvider } from '$lib/server/api/providers';
+import type { UpdateEmailDto } from '$lib/server/api/dtos/update-email.dto'
+import type { UpdateProfileDto } from '$lib/server/api/dtos/update-profile.dto'
+import type { VerifyPasswordDto } from '$lib/server/api/dtos/verify-password.dto'
+import { LuciaProvider } from '$lib/server/api/providers/lucia.provider'
+import { UsersService } from '$lib/server/api/services/users.service'
+import { inject, injectable } from 'tsyringe'
 
 /* -------------------------------------------------------------------------- */
 /*                                   Service                                  */
@@ -25,54 +26,54 @@ simple as possible. This makes the service easier to read, test and understand.
 export class IamService {
 	constructor(
 		@inject(LuciaProvider) private readonly lucia: LuciaProvider,
-		@inject(UsersService) private readonly usersService: UsersService
-	) { }
+		@inject(UsersService) private readonly usersService: UsersService,
+	) {}
 
 	async logout(sessionId: string) {
-		return this.lucia.invalidateSession(sessionId);
+		return this.lucia.invalidateSession(sessionId)
 	}
 
 	async updateProfile(userId: string, data: UpdateProfileDto) {
-		const user = await this.usersService.findOneById(userId);
+		const user = await this.usersService.findOneById(userId)
 		if (!user) {
 			return {
-				error: 'User not found'
-			};
+				error: 'User not found',
+			}
 		}
 
-		const existingUserForNewUsername = await this.usersService.findOneByUsername(data.username);
+		const existingUserForNewUsername = await this.usersService.findOneByUsername(data.username)
 		if (existingUserForNewUsername && existingUserForNewUsername.id !== userId) {
 			return {
-				error: 'Username already in use'
-			};
+				error: 'Username already in use',
+			}
 		}
 
 		return this.usersService.updateUser(userId, {
 			first_name: data.firstName,
 			last_name: data.lastName,
-			username: data.username !== user.username ? data.username : user.username
-		});
+			username: data.username !== user.username ? data.username : user.username,
+		})
 	}
 
 	async updateEmail(userId: string, data: UpdateEmailDto) {
-		const { email } = data;
+		const { email } = data
 
-		const existingUserEmail = await this.usersService.findOneByEmail(email);
+		const existingUserEmail = await this.usersService.findOneByEmail(email)
 		if (existingUserEmail && existingUserEmail.id !== userId) {
-			return null;
+			return null
 		}
 
 		return this.usersService.updateUser(userId, {
 			email,
-		});
+		})
 	}
 
 	async verifyPassword(userId: string, data: VerifyPasswordDto) {
-		const user = await this.usersService.findOneById(userId);
+		const user = await this.usersService.findOneById(userId)
 		if (!user) {
-			return null;
+			return null
 		}
-		const { password } = data;
-		return this.usersService.verifyPassword(userId, { password });
+		const { password } = data
+		return this.usersService.verifyPassword(userId, { password })
 	}
 }

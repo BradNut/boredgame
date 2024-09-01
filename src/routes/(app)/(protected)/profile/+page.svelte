@@ -1,42 +1,49 @@
 <script lang="ts">
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { superForm } from 'sveltekit-superforms/client';
-	import * as flashModule from 'sveltekit-flash-message/client';
-	import { AlertTriangle, KeyRound } from 'lucide-svelte';
-	import { changeEmailSchema, profileSchema } from '$lib/validations/account';
-	import * as Alert from "$lib/components/ui/alert";
-	// import * as Form from '$lib/components/ui/form';
-	import { Label } from '$lib/components/ui/label';
-	import { Input } from '$components/ui/input';
-	import { Button } from '$components/ui/button';
-	import { updateProfileDto } from '$lib/dtos/update-profile.dto';
-	import { updateEmailDto } from '$lib/dtos/update-email.dto';
+import { Button } from '$components/ui/button'
+import { Input } from '$components/ui/input'
+import * as Alert from '$lib/components/ui/alert'
+// import * as Form from '$lib/components/ui/form';
+import { Label } from '$lib/components/ui/label'
+import { updateEmailDto } from '$lib/dtos/update-email.dto'
+import { updateProfileDto } from '$lib/dtos/update-profile.dto'
+import { AlertTriangle, KeyRound } from 'lucide-svelte'
+import * as flashModule from 'sveltekit-flash-message/client'
+import { zodClient } from 'sveltekit-superforms/adapters'
+import { superForm } from 'sveltekit-superforms/client'
 
-	const { data } = $props();
+const { data } = $props()
 
-	const hasSetupTwoFactor = data.hasSetupTwoFactor;
+const hasSetupTwoFactor = data.hasSetupTwoFactor
 
-	const { form: profileForm, errors: profileErrors, enhance: profileEnhance } = superForm(data.profileForm, {
-		taintedMessage: null,
-		validators: zodClient(updateProfileDto),
-		delayMs: 500,
-		multipleSubmits: 'prevent',
-		syncFlashMessage: true,
-		flashMessage: {
-			module: flashModule,
-		}
-	});
+const {
+	form: profileForm,
+	errors: profileErrors,
+	enhance: profileEnhance,
+} = superForm(data.profileForm, {
+	taintedMessage: null,
+	validators: zodClient(updateProfileDto),
+	delayMs: 500,
+	multipleSubmits: 'prevent',
+	syncFlashMessage: true,
+	flashMessage: {
+		module: flashModule,
+	},
+})
 
-	const { form: emailForm, errors: emailErrors, enhance: emailEnhance } = superForm(data.emailForm, {
-		taintedMessage: null,
-		validators: zodClient(updateEmailDto),
-		delayMs: 500,
-		multipleSubmits: 'prevent',
-		syncFlashMessage: true,
-		flashMessage: {
-			module: flashModule,
-		}
-	});
+const {
+	form: emailForm,
+	errors: emailErrors,
+	enhance: emailEnhance,
+} = superForm(data.emailForm, {
+	taintedMessage: null,
+	validators: zodClient(updateEmailDto),
+	delayMs: 500,
+	multipleSubmits: 'prevent',
+	syncFlashMessage: true,
+	flashMessage: {
+		module: flashModule,
+	},
+})
 </script>
 
 <form method="POST" action="?/profileUpdate" use:profileEnhance>

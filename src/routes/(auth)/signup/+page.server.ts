@@ -1,9 +1,9 @@
-import { fail, error, type Actions } from '@sveltejs/kit';
-import { zod } from 'sveltekit-superforms/adapters';
-import { setError, superValidate } from 'sveltekit-superforms/server';
-import { redirect } from 'sveltekit-flash-message/server';
-import type { PageServerLoad } from './$types';
-import {signupUsernameEmailDto} from "$lib/dtos/signup-username-email.dto";
+import { signupUsernameEmailDto } from '$lib/dtos/signup-username-email.dto'
+import { type Actions, error, fail } from '@sveltejs/kit'
+import { redirect } from 'sveltekit-flash-message/server'
+import { zod } from 'sveltekit-superforms/adapters'
+import { setError, superValidate } from 'sveltekit-superforms/server'
+import type { PageServerLoad } from './$types'
 
 const signUpDefaults = {
 	firstName: '',
@@ -13,16 +13,16 @@ const signUpDefaults = {
 	password: '',
 	confirm_password: '',
 	terms: true,
-};
+}
 
 export const load: PageServerLoad = async (event) => {
-	const { locals } = event;
+	const { locals } = event
 
-	const authedUser = await locals.getAuthedUser();
+	const authedUser = await locals.getAuthedUser()
 
 	if (authedUser) {
-		const message = { type: 'success', message: 'You are already signed in' } as const;
-		throw redirect('/', message, event);
+		const message = { type: 'success', message: 'You are already signed in' } as const
+		throw redirect('/', message, event)
 	}
 
 	// if (userFullyAuthenticated(user, session)) {
@@ -45,31 +45,31 @@ export const load: PageServerLoad = async (event) => {
 		form: await superValidate(zod(signupUsernameEmailDto), {
 			defaults: signUpDefaults,
 		}),
-	};
-};
+	}
+}
 
 export const actions: Actions = {
 	default: async (event) => {
-		const { locals } = event;
+		const { locals } = event
 
-		const authedUser = await locals.getAuthedUser();
+		const authedUser = await locals.getAuthedUser()
 
 		if (authedUser) {
-			const message = { type: 'success', message: 'You are already signed in' } as const;
-			throw redirect('/', message, event);
+			const message = { type: 'success', message: 'You are already signed in' } as const
+			throw redirect('/', message, event)
 		}
 
-		const form = await superValidate(event, zod(signupUsernameEmailDto));
+		const form = await superValidate(event, zod(signupUsernameEmailDto))
 
-		const { error } = await locals.api.signup.$post({ json: form.data }).then(locals.parseApiResponse);
-		if (error) return setError(form, 'username', error);
+		const { error } = await locals.api.signup.$post({ json: form.data }).then(locals.parseApiResponse)
+		if (error) return setError(form, 'username', error)
 
 		if (!form.valid) {
-			form.data.password = '';
-			form.data.confirm_password = '';
+			form.data.password = ''
+			form.data.confirm_password = ''
 			return fail(400, {
 				form,
-			});
+			})
 		}
 
 		// let session;
@@ -147,8 +147,8 @@ export const actions: Actions = {
 		// 	...sessionCookie.attributes,
 		// });
 
-		redirect(302, '/');
+		redirect(302, '/')
 		// const message = { type: 'success', message: 'Signed Up!' } as const;
 		// throw flashRedirect(message, event);
 	},
-};
+}

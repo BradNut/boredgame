@@ -1,14 +1,15 @@
-import { and, eq, type InferInsertModel } from 'drizzle-orm'
-import { credentialsTable, CredentialsType } from '../infrastructure/database/tables/credentials.table'
-import { takeFirstOrThrow } from '../infrastructure/database/utils'
+import type { Repository } from '$lib/server/api/common/interfaces/repository.interface'
+import { CredentialsType, credentialsTable } from '$lib/server/api/databases/tables/credentials.table'
+import { DatabaseProvider } from '$lib/server/api/providers/database.provider'
+import { type InferInsertModel, and, eq } from 'drizzle-orm'
 import { inject, injectable } from 'tsyringe'
-import { DatabaseProvider } from '$lib/server/api/providers'
+import { takeFirstOrThrow } from '../common/utils/repository.utils'
 
 export type CreateCredentials = InferInsertModel<typeof credentialsTable>
 export type UpdateCredentials = Partial<CreateCredentials>
 
 @injectable()
-export class CredentialsRepository {
+export class CredentialsRepository implements Repository {
 	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) {}
 
 	async findOneByUserId(userId: string) {
@@ -65,5 +66,9 @@ export class CredentialsRepository {
 
 	async deleteByUserIdAndType(userId: string, type: CredentialsType) {
 		return this.db.delete(credentialsTable).where(and(eq(credentialsTable.user_id, userId), eq(credentialsTable.type, type)))
+	}
+
+	trxHost(trx: DatabaseProvider) {
+		return new CredentialsRepository(trx)
 	}
 }

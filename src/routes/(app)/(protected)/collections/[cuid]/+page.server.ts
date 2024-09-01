@@ -1,48 +1,50 @@
-import { type Actions, error, fail } from '@sveltejs/kit';
-import { and, eq } from 'drizzle-orm';
-import { zod } from 'sveltekit-superforms/adapters';
-import { superValidate } from 'sveltekit-superforms/server';
-import { redirect } from 'sveltekit-flash-message/server';
-import { modifyListGameSchema } from '$lib/validations/zod-schemas';
-import { db } from '$lib/server/api/infrastructure/database';
-import { notSignedInMessage } from '$lib/flashMessages.js';
-import { collections, games, collection_items } from '$lib/server/api/infrastructure/database/tables';
-import { userNotAuthenticated } from '$lib/server/auth-utils';
+import { notSignedInMessage } from '$lib/flashMessages.js'
+import { db } from '$lib/server/api/packages/drizzle'
+import { userNotAuthenticated } from '$lib/server/auth-utils'
+import { modifyListGameSchema } from '$lib/validations/zod-schemas'
+import { type Actions, error, fail } from '@sveltejs/kit'
+import { and, eq } from 'drizzle-orm'
+import { redirect } from 'sveltekit-flash-message/server'
+import { zod } from 'sveltekit-superforms/adapters'
+import { superValidate } from 'sveltekit-superforms/server'
+import { collection_items, collections, games } from '../../../../../lib/server/api/databases/tables'
 
 export async function load(event) {
-	const { params, locals } = event;
-	const { cuid } = params;
+	const { params, locals } = event
+	const { cuid } = params
 
-	const authedUser = await locals.getAuthedUser();
+	const authedUser = await locals.getAuthedUser()
 	if (!authedUser) {
-		throw redirect(302, '/login', notSignedInMessage, event);
+		throw redirect(302, '/login', notSignedInMessage, event)
 	}
 
 	try {
-		const { data, errors } = await locals.api.collections[':cuid'].$get({
-			param: { cuid }
-		}).then(locals.parseApiResponse);
+		const { data, errors } = await locals.api.collections[':cuid']
+			.$get({
+				param: { cuid },
+			})
+			.then(locals.parseApiResponse)
 
 		if (errors) {
-			return error(500, 'Failed to fetch collection');
+			return error(500, 'Failed to fetch collection')
 		}
 
-		const { collection } = data;
+		const { collection } = data
 
 		if (!collection) {
-			redirect(302, '/404');
+			redirect(302, '/404')
 		}
 
-		console.log('collection', collection);
+		console.log('collection', collection)
 
 		return {
 			collection,
-		};
+		}
 	} catch (e) {
-		console.error(e);
+		console.error(e)
 	}
 
-	redirect(302, '/404');
+	redirect(302, '/404')
 
 	// const searchParams = Object.fromEntries(url?.searchParams);
 	// console.log('searchParams', searchParams);
@@ -128,17 +130,17 @@ export async function load(event) {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const { locals } = event;
-		const { user, session } = locals;
+		const { locals } = event
+		const { user, session } = locals
 		if (userNotAuthenticated(user, session)) {
-			return fail(401);
+			return fail(401)
 		}
 
-		const form = await superValidate(event, zod(modifyListGameSchema));
+		const form = await superValidate(event, zod(modifyListGameSchema))
 
 		const game = await db.query.games.findFirst({
 			where: eq(games.id, form.data.id),
-		});
+		})
 
 		if (!game) {
 			// game = await prisma.game.create({
@@ -146,95 +148,88 @@ export const actions: Actions = {
 			// 		name: form.name
 			// 	}
 			// });
-			console.log('game not found');
-			redirect(302, '/404');
+			console.log('game not found')
+			redirect(302, '/404')
 		}
 
 		try {
 			const collection = await db.query.collections.findFirst({
 				where: eq(collections.user_id, user!.id!),
-			});
+			})
 
 			if (!collection) {
-				console.log('Wishlist not found');
-				return error(404, 'Wishlist not found');
+				console.log('Wishlist not found')
+				return error(404, 'Wishlist not found')
 			}
 
 			await db.insert(collection_items).values({
 				game_id: game.id,
 				collection_id: collection.id,
 				times_played: 0,
-			});
+			})
 
 			return {
 				form,
-			};
+			}
 		} catch (e) {
-			console.error(e);
-			return error(500, 'Something went wrong');
+			console.error(e)
+			return error(500, 'Something went wrong')
 		}
 	},
 	// Create new wishlist
 	create: async (event) => {
-		const { locals } = event;
-		const { user, session } = locals;
+		const { locals } = event
+		const { user, session } = locals
 		if (userNotAuthenticated(user, session)) {
-			return fail(401);
+			return fail(401)
 		}
-		return error(405, 'Method not allowed');
+		return error(405, 'Method not allowed')
 	},
 	// Delete a wishlist
 	delete: async (event) => {
-		const { locals } = event;
-		const { user, session } = locals;
+		const { locals } = event
+		const { user, session } = locals
 		if (userNotAuthenticated(user, session)) {
-			return fail(401);
+			return fail(401)
 		}
-		return error(405, 'Method not allowed');
+		return error(405, 'Method not allowed')
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
-		const { locals } = event;
-		const { user, session } = locals;
+		const { locals } = event
+		const { user, session } = locals
 		if (userNotAuthenticated(user, session)) {
-			return fail(401);
+			return fail(401)
 		}
-		const form = await superValidate(event, zod(modifyListGameSchema));
+		const form = await superValidate(event, zod(modifyListGameSchema))
 
 		const game = await db.query.games.findFirst({
 			where: eq(games.id, form.data.id),
-		});
+		})
 
 		if (!game) {
-			console.log('game not found');
-			redirect(302, '/404');
+			console.log('game not found')
+			redirect(302, '/404')
 		}
 
 		try {
 			const collection = await db.query.collections.findFirst({
 				where: eq(collections.user_id, user!.id!),
-			});
+			})
 
 			if (!collection) {
-				console.log('Collection not found');
-				return error(404, 'Collection not found');
+				console.log('Collection not found')
+				return error(404, 'Collection not found')
 			}
 
-			await db
-				.delete(collection_items)
-				.where(
-					and(
-						eq(collection_items.collection_id, collection.id),
-						eq(collection_items.game_id, game.id),
-					),
-				);
+			await db.delete(collection_items).where(and(eq(collection_items.collection_id, collection.id), eq(collection_items.game_id, game.id)))
 
 			return {
 				form,
-			};
+			}
 		} catch (e) {
-			console.error(e);
-			return error(500, 'Something went wrong');
+			console.error(e)
+			return error(500, 'Something went wrong')
 		}
 	},
-};
+}
