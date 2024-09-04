@@ -1,9 +1,8 @@
-import type { Repository } from '$lib/server/api/common/interfaces/repository.interface'
 import { usersTable } from '$lib/server/api/databases/tables/users.table'
-import { DatabaseProvider } from '$lib/server/api/providers/database.provider'
+import { DrizzleService } from '$lib/server/api/services/drizzle.service'
 import { type InferInsertModel, eq } from 'drizzle-orm'
 import { inject, injectable } from 'tsyringe'
-import { takeFirstOrThrow } from '../common/utils/repository.utils'
+import { takeFirstOrThrow } from '../common/utils/repository'
 
 /* -------------------------------------------------------------------------- */
 /*                                 Repository                                 */
@@ -25,46 +24,42 @@ export type CreateUser = InferInsertModel<typeof usersTable>
 export type UpdateUser = Partial<CreateUser>
 
 @injectable()
-export class UsersRepository implements Repository {
-	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) {}
+export class UsersRepository {
+	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
 
-	async findOneById(id: string) {
-		return this.db.query.usersTable.findFirst({
+	async findOneById(id: string, db = this.drizzle.db) {
+		return db.query.usersTable.findFirst({
 			where: eq(usersTable.id, id),
 		})
 	}
 
-	async findOneByIdOrThrow(id: string) {
+	async findOneByIdOrThrow(id: string, db = this.drizzle.db) {
 		const user = await this.findOneById(id)
 		if (!user) throw Error('User not found')
 		return user
 	}
 
-	async findOneByUsername(username: string) {
-		return this.db.query.usersTable.findFirst({
+	async findOneByUsername(username: string, db = this.drizzle.db) {
+		return db.query.usersTable.findFirst({
 			where: eq(usersTable.username, username),
 		})
 	}
 
-	async findOneByEmail(email: string) {
-		return this.db.query.usersTable.findFirst({
+	async findOneByEmail(email: string, db = this.drizzle.db) {
+		return db.query.usersTable.findFirst({
 			where: eq(usersTable.email, email),
 		})
 	}
 
-	async create(data: CreateUser) {
-		return this.db.insert(usersTable).values(data).returning().then(takeFirstOrThrow)
+	async create(data: CreateUser, db = this.drizzle.db) {
+		return db.insert(usersTable).values(data).returning().then(takeFirstOrThrow)
 	}
 
-	async update(id: string, data: UpdateUser) {
-		return this.db.update(usersTable).set(data).where(eq(usersTable.id, id)).returning().then(takeFirstOrThrow)
+	async update(id: string, data: UpdateUser, db = this.drizzle.db) {
+		return db.update(usersTable).set(data).where(eq(usersTable.id, id)).returning().then(takeFirstOrThrow)
 	}
 
-	async delete(id: string) {
-		return this.db.delete(usersTable).where(eq(usersTable.id, id)).returning().then(takeFirstOrThrow)
-	}
-
-	trxHost(trx: DatabaseProvider) {
-		return new UsersRepository(trx)
+	async delete(id: string, db = this.drizzle.db) {
+		return db.delete(usersTable).where(eq(usersTable.id, id)).returning().then(takeFirstOrThrow)
 	}
 }

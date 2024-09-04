@@ -17,7 +17,11 @@ const connection = postgres({
 const db = drizzle(connection)
 
 try {
-	await migrate(db, { migrationsFolder: config.out! })
+	if (!config.out) {
+		console.error('No migrations folder specified in drizzle.config.ts')
+		process.exit()
+	}
+	await migrate(db, { migrationsFolder: config.out })
 	console.log('Migrations complete')
 } catch (e) {
 	console.error(e)

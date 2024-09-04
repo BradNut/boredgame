@@ -45,7 +45,7 @@ const routes = app
 	.route('/user', container.resolve(UserController).routes())
 	.route('/login', container.resolve(LoginController).routes())
 	.route('/signup', container.resolve(SignupController).routes())
-	.route('/wishlists', container.resolve(WishlistController).routes())
+	.route('/wishlistsTable', container.resolve(WishlistController).routes())
 	.route('/collections', container.resolve(CollectionController).routes())
 	.route('/mfa', container.resolve(MfaController).routes())
 	.get('/', (c) => c.json({ message: 'Server is healthy' }))

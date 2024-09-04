@@ -1,18 +1,18 @@
 <script lang="ts">
-	export let data;
-	let wishlists = data?.wishlists || [];
+export let data
+let wishlistsTable = data?.wishlists || []
 </script>
 
 <svelte:head>
 	<title>Your Wishlists | Bored Game</title>
 </svelte:head>
 
-<h1>Your wishlists</h1>
+<h1>Your wishlistsTable</h1>
 
 <div class="wishlists">
 	<div class="wishlist-list">
 		{#if wishlists.length === 0}
-			<h2>You have no wishlists</h2>
+			<h2>You have no wishlistsTable</h2>
 		{:else}
 			{#each wishlists as wishlist}
 				<div class="collection grid gap-0.5">

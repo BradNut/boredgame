@@ -7,7 +7,7 @@ import { and, eq } from 'drizzle-orm'
 import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { superValidate } from 'sveltekit-superforms/server'
-import { collection_items, collections, games } from '../../../../lib/server/api/databases/tables'
+import { collection_items, collections, gamesTable } from '../../../../lib/server/api/databases/tables'
 
 export async function load(event) {
 	const { user, session } = event.locals
@@ -54,7 +54,7 @@ export const actions: Actions = {
 
 		const user = event.locals.user
 		const game = await db.query.games.findFirst({
-			where: eq(games.id, form.data.id),
+			where: eq(gamesTable.id, form.data.id),
 		})
 
 		if (!game) {
@@ -115,7 +115,7 @@ export const actions: Actions = {
 		}
 
 		const game = await db.query.games.findFirst({
-			where: eq(games.id, form.data.id),
+			where: eq(gamesTable.id, form.data.id),
 		})
 
 		if (!game) {

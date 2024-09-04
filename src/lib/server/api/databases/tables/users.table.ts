@@ -1,8 +1,8 @@
-import { timestamps } from '$lib/server/api/common/utils/table.utils'
 import { createId as cuid2 } from '@paralleldrive/cuid2'
 import { type InferSelectModel, relations } from 'drizzle-orm'
 import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core'
-import { user_roles } from './userRoles'
+import { timestamps } from '../../common/utils/table'
+import { user_roles } from './userRoles.table'
 
 export const usersTable = pgTable('users', {
 	id: uuid('id').primaryKey().defaultRandom(),

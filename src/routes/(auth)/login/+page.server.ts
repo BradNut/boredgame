@@ -1,13 +1,8 @@
 import { signinUsernameDto } from '$lib/dtos/signin-username.dto'
-import { db } from '$lib/server/api/packages/drizzle'
-import { lucia } from '$lib/server/api/packages/lucia'
 import { type Actions, fail } from '@sveltejs/kit'
-import { eq, or } from 'drizzle-orm'
-import { Argon2id } from 'oslo/password'
 import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { setError, superValidate } from 'sveltekit-superforms/server'
-import { credentialsTable, usersTable } from '../../../lib/server/api/databases/tables'
 import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async (event) => {

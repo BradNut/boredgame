@@ -1,5 +1,5 @@
 import { forbiddenMessage, notSignedInMessage } from '$lib/flashMessages'
-import { roles, user_roles, usersTable } from '$lib/server/api/databases/tables'
+import { rolesTable, user_roles, usersTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { and, eq, inArray, not } from 'drizzle-orm'
 import { redirect } from 'sveltekit-flash-message/server'
@@ -40,7 +40,7 @@ export const load: PageServerLoad = async (event) => {
 	let availableRoles: { name: string; cuid: string }[] = []
 	if (currentRoleIds?.length > 0) {
 		availableRoles = await db.query.roles.findMany({
-			where: not(inArray(roles.cuid, currentRoleIds)),
+			where: not(inArray(rolesTable.cuid, currentRoleIds)),
 			columns: {
 				name: true,
 				cuid: true,
@@ -86,7 +86,7 @@ export const actions = {
 		const data = await request.formData()
 		const role = data.get('role')
 		const dbRole = await db.query.roles.findFirst({
-			where: eq(roles.cuid, role?.toString() ?? ''),
+			where: eq(rolesTable.cuid, role?.toString() ?? ''),
 		})
 		console.log('dbRole', dbRole)
 		if (dbRole) {
@@ -126,7 +126,7 @@ export const actions = {
 		const data = await request.formData()
 		const role = data.get('role')
 		const dbRole = await db.query.roles.findFirst({
-			where: eq(roles.cuid, role?.toString() ?? ''),
+			where: eq(rolesTable.cuid, role?.toString() ?? ''),
 		})
 		console.log('dbRole', dbRole)
 		if (dbRole) {

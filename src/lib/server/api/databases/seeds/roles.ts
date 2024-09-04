@@ -3,9 +3,9 @@ import { type db } from '$lib/server/api/packages/drizzle'
 import roles from './data/roles.json'
 
 export default async function seed(db: db) {
-	console.log('Creating roles ...')
+	console.log('Creating rolesTable ...')
 	for (const role of roles) {
-		await db.insert(schema.roles).values(role).onConflictDoNothing()
+		await db.insert(schema.rolesTable).values(role).onConflictDoNothing()
 	}
 	console.log('Roles created.')
 }

@@ -1,4 +1,4 @@
-import { collection_items, collections, expansions, games, wishlist_items, wishlists } from '$lib/server/api/databases/tables'
+import { collection_items, collections, expansionsTable, gamesTable, wishlist_items, wishlistsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { createCategory } from '$lib/utils/db/categoryUtils'
 import { createExpansion } from '$lib/utils/db/expansionUtils'
@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 		const { user } = locals
 		const { id } = params
 		const game = await db.query.games.findFirst({
-			where: eq(games.id, id),
+			where: eq(gamesTable.id, id),
 			with: {
 				publishers_to_games: {
 					with: {
@@ -62,7 +62,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 		}
 
 		const gameExpansions = await db.query.expansions.findMany({
-			where: eq(expansions.base_game_id, game.id),
+			where: eq(expansionsTable.base_game_id, game.id),
 			with: {
 				game: {
 					columns: {
@@ -78,7 +78,7 @@ export const load: PageServerLoad = async ({ params, locals, fetch }) => {
 		let wishlistItem
 		if (user) {
 			const wishlist = await db.query.wishlists.findFirst({
-				where: eq(wishlists.user_id, user.id),
+				where: eq(wishlistsTable.user_id, user.id),
 			})
 
 			// TODO: Select wishlist items based on wishlist
@@ -155,7 +155,7 @@ async function syncGameAndConnectedData(locals: App.Locals, game: Game, eventFet
 		boredGame.categories = categories
 		boredGame.mechanics = mechanics
 		boredGame.publishers = publishers
-		// boredGame.expansions = expansions;
+		// boredGame.expansionsTable = expansionsTable;
 		return createOrUpdateGame(locals, boredGame, externalGame.external_id)
 	}
 }

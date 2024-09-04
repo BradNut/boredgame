@@ -1,26 +1,24 @@
 import { StatusCodes } from '$lib/constants/status-codes'
-import type { Controller } from '$lib/server/api/common/interfaces/controller.interface'
+import { Controller } from '$lib/server/api/common/types/controller'
 import { updateEmailDto } from '$lib/server/api/dtos/update-email.dto'
 import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto'
 import { verifyPasswordDto } from '$lib/server/api/dtos/verify-password.dto'
 import { limiter } from '$lib/server/api/middleware/rate-limiter.middleware'
-import { LuciaProvider } from '$lib/server/api/providers/lucia.provider'
 import { IamService } from '$lib/server/api/services/iam.service'
+import { LuciaService } from '$lib/server/api/services/lucia.service'
 import { zValidator } from '@hono/zod-validator'
-import { Hono } from 'hono'
 import { setCookie } from 'hono/cookie'
 import { inject, injectable } from 'tsyringe'
 import { requireAuth } from '../middleware/auth.middleware'
-import type { HonoTypes } from '../types'
 
 @injectable()
-export class IamController implements Controller {
-	controller = new Hono<HonoTypes>()
-
+export class IamController extends Controller {
 	constructor(
 		@inject(IamService) private readonly iamService: IamService,
-		@inject(LuciaProvider) private lucia: LuciaProvider,
-	) {}
+		@inject(LuciaService) private luciaService: LuciaService,
+	) {
+		super()
+	}
 
 	routes() {
 		return this.controller
@@ -59,7 +57,7 @@ export class IamController implements Controller {
 			.post('/logout', requireAuth, async (c) => {
 				const sessionId = c.var.session.id
 				await this.iamService.logout(sessionId)
-				const sessionCookie = this.lucia.createBlankSessionCookie()
+				const sessionCookie = this.luciaService.lucia.createBlankSessionCookie()
 				setCookie(c, sessionCookie.name, sessionCookie.value, {
 					path: sessionCookie.attributes.path,
 					maxAge: sessionCookie.attributes.maxAge,

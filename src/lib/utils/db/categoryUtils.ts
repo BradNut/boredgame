@@ -1,5 +1,5 @@
 import { PUBLIC_SITE_URL } from '$env/static/public'
-import { type Categories, type Mechanics, categoriesTable, categoriesToExternalIdsTable, externalIds } from '$lib/server/api/databases/tables'
+import { type Categories, type Mechanics, categoriesTable, categoriesToExternalIdsTable, externalIdsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { error } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
@@ -12,7 +12,7 @@ export async function createCategory(locals: App.Locals, category: Categories, e
 
 	try {
 		const dbExternalId = await db.query.externalIds.findFirst({
-			where: eq(externalIds.externalId, externalId),
+			where: eq(externalIdsTable.externalId, externalId),
 		})
 
 		if (dbExternalId) {
@@ -48,12 +48,12 @@ export async function createCategory(locals: App.Locals, category: Categories, e
 				})
 				.returning()
 			const dbExternalIds = await transaction
-				.insert(externalIds)
+				.insert(externalIdsTable)
 				.values({
 					externalId,
 					type: 'category',
 				})
-				.returning({ id: externalIds.id })
+				.returning({ id: externalIdsTable.id })
 			await transaction.insert(categoriesToExternalIdsTable).values({
 				categoryId: dbCategory[0].id,
 				externalId: dbExternalIds[0].id,

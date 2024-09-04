@@ -1,5 +1,5 @@
 import { notSignedInMessage } from '$lib/flashMessages.js'
-import { games, wishlist_items, wishlists } from '$lib/server/api/databases/tables'
+import { gamesTable, wishlist_items, wishlistsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { userNotAuthenticated } from '$lib/server/auth-utils'
 import { modifyListGameSchema } from '$lib/validations/zod-schemas'
@@ -23,7 +23,7 @@ export async function load(event) {
 			name: true,
 			createdAt: true,
 		},
-		where: eq(wishlists.user_id, authedUser.id),
+		where: eq(wishlistsTable.user_id, authedUser.id),
 	})
 	console.log('wishlists', userWishlists)
 
@@ -50,7 +50,7 @@ export const actions: Actions = {
 
 		try {
 			const game = await db.query.games.findFirst({
-				where: eq(games.id, form.data.id),
+				where: eq(gamesTable.id, form.data.id),
 			})
 
 			if (!game) {
@@ -65,7 +65,7 @@ export const actions: Actions = {
 
 			if (game) {
 				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, authedUser.id),
+					where: eq(wishlistsTable.user_id, authedUser.id),
 				})
 
 				if (!wishlist) {
@@ -117,7 +117,7 @@ export const actions: Actions = {
 
 		try {
 			const game = await db.query.games.findFirst({
-				where: eq(games.id, form.data.id),
+				where: eq(gamesTable.id, form.data.id),
 			})
 
 			if (!game) {
@@ -132,7 +132,7 @@ export const actions: Actions = {
 
 			if (game) {
 				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, authedUser.id),
+					where: eq(wishlistsTable.user_id, authedUser.id),
 				})
 
 				if (!wishlist) {

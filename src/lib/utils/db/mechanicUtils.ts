@@ -1,5 +1,5 @@
 import { PUBLIC_SITE_URL } from '$env/static/public'
-import { type Mechanics, externalIds, mechanics, mechanicsToExternalIds } from '$lib/server/api/databases/tables'
+import { type Mechanics, externalIdsTable, mechanicsTable, mechanicsToExternalIdsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { error } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
@@ -12,18 +12,18 @@ export async function createMechanic(locals: App.Locals, mechanic: Mechanics, ex
 
 	try {
 		const dbExternalId = await db.query.externalIds.findFirst({
-			where: eq(externalIds.externalId, externalId),
+			where: eq(externalIdsTable.externalId, externalId),
 		})
 
 		if (dbExternalId) {
 			const foundMechanic = await db
 				.select({
-					id: mechanics.id,
-					name: mechanics.name,
-					slug: mechanics.slug,
+					id: mechanicsTable.id,
+					name: mechanicsTable.name,
+					slug: mechanicsTable.slug,
 				})
-				.from(mechanics)
-				.leftJoin(mechanicsToExternalIds, eq(mechanicsToExternalIds.externalId, externalId))
+				.from(mechanicsTable)
+				.leftJoin(mechanicsToExternalIdsTable, eq(mechanicsToExternalIdsTable.externalId, externalId))
 			console.log('Mechanic already exists', foundMechanic)
 			if (foundMechanic.length > 0) {
 				console.log('Mechanic name', foundMechanic[0].name)
@@ -41,20 +41,20 @@ export async function createMechanic(locals: App.Locals, mechanic: Mechanics, ex
 		console.log('Creating mechanic', JSON.stringify(mechanic, null, 2))
 		await db.transaction(async (transaction) => {
 			dbMechanics = await transaction
-				.insert(mechanics)
+				.insert(mechanicsTable)
 				.values({
 					name: mechanic.name,
 					slug: kebabCase(mechanic.name || mechanic.slug || ''),
 				})
 				.returning()
 			const dbExternalIds = await transaction
-				.insert(externalIds)
+				.insert(externalIdsTable)
 				.values({
 					externalId,
 					type: 'mechanic',
 				})
-				.returning({ id: externalIds.id })
-			await transaction.insert(mechanicsToExternalIds).values({
+				.returning({ id: externalIdsTable.id })
+			await transaction.insert(mechanicsToExternalIdsTable).values({
 				mechanicId: dbMechanics[0].id,
 				externalId: dbExternalIds[0].id,
 			})

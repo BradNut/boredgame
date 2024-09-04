@@ -7,7 +7,7 @@ import { and, eq } from 'drizzle-orm'
 import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { superValidate } from 'sveltekit-superforms/server'
-import { games, wishlist_items, wishlists } from '../../../../../lib/server/api/databases/tables'
+import { gamesTable, wishlist_items, wishlistsTable } from '../../../../../lib/server/api/databases/tables'
 
 export async function load(event) {
 	const { params, locals } = event
@@ -24,8 +24,8 @@ export async function load(event) {
 				param: { cuid },
 			})
 			.then(locals.parseApiResponse)
-		// const wishlist = await db.query.wishlists.findMany({
-		// 	where: and(eq(wishlists.user_id, authedUser.id), eq(wishlists.cuid, cuid)),
+		// const wishlist = await db.query.wishlistsTable.findMany({
+		// 	where: and(eq(wishlistsTable.user_id, authedUser.id), eq(wishlistsTable.cuid, cuid)),
 		// });
 		if (errors) {
 			return error(500, 'Failed to fetch wishlist')
@@ -59,7 +59,7 @@ export const actions: Actions = {
 
 		try {
 			const game = await db.query.games.findFirst({
-				where: eq(games.id, form.data.id),
+				where: eq(gamesTable.id, form.data.id),
 			})
 
 			if (!game) {
@@ -74,7 +74,7 @@ export const actions: Actions = {
 
 			if (game) {
 				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, user!.id!),
+					where: eq(wishlistsTable.user_id, user!.id!),
 				})
 
 				if (!wishlist) {
@@ -125,7 +125,7 @@ export const actions: Actions = {
 
 		try {
 			const game = await db.query.games.findFirst({
-				where: eq(games.id, form.data.id),
+				where: eq(gamesTable.id, form.data.id),
 			})
 
 			if (!game) {
@@ -140,7 +140,7 @@ export const actions: Actions = {
 
 			if (game) {
 				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, user!.id!),
+					where: eq(wishlistsTable.user_id, user!.id!),
 				})
 
 				if (!wishlist) {
