@@ -1,37 +1,38 @@
 <script lang="ts">
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { superForm } from 'sveltekit-superforms/client';
-	import { AlertTriangle } from 'lucide-svelte';
-	import * as Alert from '$components/ui/alert';
-	import * as Form from '$components/ui/form';
-	import { Input } from '$components/ui/input';
-	import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account';
-	import PinInput from '$components/pin-input.svelte';
+import PinInput from '$components/pin-input.svelte'
+import * as Alert from '$components/ui/alert'
+import * as Form from '$components/ui/form'
+import { Input } from '$components/ui/input'
+import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account'
+import { AlertTriangle } from 'lucide-svelte'
+import { zodClient } from 'sveltekit-superforms/adapters'
+import { superForm } from 'sveltekit-superforms/client'
 
-	export let data;
+export let data
 
-	const { qrCode, twoFactorEnabled, recoveryCodes } = data;
+const { qrCode, secret, twoFactorEnabled, recoveryCodes } = data
 
-	const addTwoFactorForm = superForm(data.addTwoFactorForm, {
-		taintedMessage: null,
-		validators: zodClient(addTwoFactorSchema),
-		delayMs: 500,
-		multipleSubmits: 'prevent',
-	});
+const addTwoFactorForm = superForm(data.addTwoFactorForm, {
+	taintedMessage: null,
+	validators: zodClient(addTwoFactorSchema),
+	delayMs: 500,
+	multipleSubmits: 'prevent',
+})
 
-	const removeTwoFactorForm = superForm(data.removeTwoFactorForm, {
-		taintedMessage: null,
-		validators: zodClient(removeTwoFactorSchema),
-		delayMs: 500,
-		multipleSubmits: 'prevent',
-	});
+const removeTwoFactorForm = superForm(data.removeTwoFactorForm, {
+	taintedMessage: null,
+	validators: zodClient(removeTwoFactorSchema),
+	delayMs: 500,
+	multipleSubmits: 'prevent',
+})
 
-	console.log('Two Factor: ', twoFactorEnabled, recoveryCodes);
+console.log('Two Factor: ', twoFactorEnabled, recoveryCodes)
 
-	const { form: addTwoFactorFormData, enhance: addTwoFactorEnhance } = addTwoFactorForm;
-	const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = removeTwoFactorForm;
+const { form: addTwoFactorFormData, enhance: addTwoFactorEnhance } = addTwoFactorForm
+const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = removeTwoFactorForm
 </script>
 
+<section class="two-factor">
 <h1>Two-Factor Authentication</h1>
 
 {#if twoFactorEnabled}
@@ -70,4 +71,13 @@
 		</Form.Field>
 		<Form.Button>Submit</Form.Button>
 	</form>
+	<span>Secret: {secret}</span>
 {/if}
+</section>
+
+<style lang="postcss">
+	section {
+		max-width: 20rem;
+		line-break: anywhere;
+	}
+</style>

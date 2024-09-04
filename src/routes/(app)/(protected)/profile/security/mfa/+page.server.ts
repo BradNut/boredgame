@@ -1,22 +1,15 @@
-import { StatusCodes } from '$lib/constants/status-codes'
 import { notSignedInMessage } from '$lib/flashMessages'
-import { db } from '$lib/server/api/packages/drizzle'
-import { userNotAuthenticated } from '$lib/server/auth-utils'
 import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account'
 import env from '$src/env'
-import { type Actions, error, fail } from '@sveltejs/kit'
-import { eq } from 'drizzle-orm'
+import { type Actions, fail } from '@sveltejs/kit'
 import kebabCase from 'just-kebab-case'
-import { HMAC } from 'oslo/crypto'
-import { decodeHex, encodeHex } from 'oslo/encoding'
-import { TOTPController, createTOTPKeyURI } from 'oslo/otp'
-import { Argon2id } from 'oslo/password'
+import { base32, decodeHex } from 'oslo/encoding'
+import { createTOTPKeyURI } from 'oslo/otp'
 import QRCode from 'qrcode'
-import { redirect, setFlash } from 'sveltekit-flash-message/server'
+import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { setError, superValidate } from 'sveltekit-superforms/server'
 import type { PageServerLoad } from '../../$types'
-import { type Credentials, credentialsTable, recoveryCodesTable, usersTable } from '../../../../../../lib/server/api/databases/tables'
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event
@@ -69,7 +62,11 @@ export const load: PageServerLoad = async (event) => {
 			addTwoFactorForm,
 		})
 	}
-	const totpUri = createTOTPKeyURI(issuer, accountName, decodeHex(createdTotpCredentials.secret_data))
+	const decodedHexSecret = decodeHex(createdTotpCredentials.secret_data)
+	const secret = base32.encode(new Uint8Array(decodedHexSecret), {
+		includePadding: false,
+	})
+	const totpUri = createTOTPKeyURI(issuer, accountName, decodedHexSecret)
 
 	addTwoFactorForm.data = {
 		current_password: '',
@@ -82,6 +79,7 @@ export const load: PageServerLoad = async (event) => {
 		recoveryCodes: [],
 		totpUri,
 		qrCode: await QRCode.toDataURL(totpUri),
+		secret,
 	}
 }
 
@@ -118,21 +116,25 @@ export const actions: Actions = {
 		}
 
 		const twoFactorCode = addTwoFactorForm.data.two_factor_code
-		const { error: verifyTotpError } = locals.api.mfa.totp.verify
+		const { error: verifyTotpError } = await locals.api.mfa.totp.verify
 			.$post({
 				json: { code: twoFactorCode },
 			})
 			.then(locals.parseApiResponse)
-
 		if (verifyTotpError) {
 			return setError(addTwoFactorForm, 'two_factor_code', 'Invalid code')
 		}
 
-		redirect(302, '/profile/security/two-factor/recovery-codes')
+		redirect(302, '/profile/security/mfa/recovery-codes')
 	},
 	disableTotp: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
+		}
+
 		const removeTwoFactorForm = await superValidate(event, zod(removeTwoFactorSchema))
 
 		if (!removeTwoFactorForm.valid) {
@@ -140,51 +142,27 @@ export const actions: Actions = {
 				removeTwoFactorForm,
 			})
 		}
-
-		if (!user || !session) {
-			return fail(401, {
-				removeTwoFactorForm,
+		const { error: verifyPasswordError } = await locals.api.me.verify.password
+			.$post({
+				json: { password: removeTwoFactorForm.data.current_password },
 			})
-		}
+			.then(locals.parseApiResponse)
 
-		const dbUser = await db.query.usersTable.findFirst({
-			where: eq(usersTable.id, user.id),
-		})
-
-		// if (!dbUser?.hashed_password) {
-		// 	removeTwoFactorForm.data.current_password = '';
-		// 	return setError(
-		// 		removeTwoFactorForm,
-		// 		'Error occurred. Please try again or contact support if you need further help.',
-		// 	);
-		// }
-
-		const currentPasswordVerified = await new Argon2id().verify(
-			// dbUser.hashed_password,
-			removeTwoFactorForm.data.current_password,
-		)
-
-		if (!currentPasswordVerified) {
+		if (verifyPasswordError) {
+			console.log(verifyPasswordError)
 			return setError(removeTwoFactorForm, 'current_password', 'Your password is incorrect')
 		}
 
-		const twoFactorDetails = await db.query.twoFactor.findFirst({
-			where: eq(twoFactor.userId, dbUser.id),
-		})
-
-		if (!twoFactorDetails) {
+		const { error: deleteTotpError } = await locals.api.mfa.totp.$delete().then(locals.parseApiResponse)
+		if (deleteTotpError) {
 			return fail(500, {
 				removeTwoFactorForm,
 			})
 		}
 
-		await db.update(twoFactor).set({ enabled: false }).where(eq(twoFactor.userId, user.id))
-		await db.delete(recoveryCodes).where(eq(recoveryCodes.userId, user.id))
-
-		// setFlash({ type: 'success', message: 'Two-Factor Authentication has been disabled.' }, cookies);
 		redirect(
 			302,
-			'/profile/security/two-factor',
+			'/profile/security/mfa',
 			{
 				type: 'success',
 				message: 'Two-Factor Authentication has been disabled.',

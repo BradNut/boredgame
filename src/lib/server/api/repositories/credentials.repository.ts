@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import type { Repository } from '$lib/server/api/common/interfaces/repository.interface'
 import { CredentialsType, credentialsTable } from '$lib/server/api/databases/tables/credentials.table'
 import { DatabaseProvider } from '$lib/server/api/providers/database.provider'
