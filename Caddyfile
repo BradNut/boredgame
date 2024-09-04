@@ -1,0 +1,3 @@
+boredgame.localhost {
+    reverse_proxy /  localhost:4173
+}

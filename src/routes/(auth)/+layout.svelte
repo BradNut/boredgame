@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { page } from "$app/stores";
-	import { Button } from "$lib/components/ui/button";
-	import Logo from "$lib/components/logo.svelte";
+	import { page } from '$app/stores';
+	import { Button } from '$lib/components/ui/button';
+	import Logo from '$lib/components/logo.svelte';
 	import Transition from '$lib/components/transition.svelte';
 
 	let { data, children } = $props();
@@ -14,17 +14,14 @@
 		</div>
 		Bored Game
 	</a>
-	<Button
-		href={$page.url.pathname === "/sign-up" ? "/login" : "/sign-up"}
-		variant="ghost"
-		class="auth-button"
-	>
-		{#if $page.url.pathname === "/sign-up"}
-			Login
-		{:else}
-			Sign up
+	<div class="auth-buttons">
+		{#if $page.url.pathname !== '/login'}
+			<Button href="/login" variant="ghost">Login</Button>
 		{/if}
-	</Button>
+		{#if $page.url.pathname !== '/signup'}
+			<Button href="/signup" variant="ghost">Sign up</Button>
+		{/if}
+	</div>
 	<div class="auth-marketing">
 		<div
 			class="image"
@@ -35,16 +32,15 @@
 		<div class="quote-wrapper">
 			<blockquote class="quote">
 				<p>
-					"How many games do I own? What was the last one I played? What haven't I played in a long time? If this sounds like you then Bored Game is your new best friend."
+					"How many games do I own? What was the last one I played? What haven't I played in a long
+					time? If this sounds like you then Bored Game is your new best friend."
 				</p>
 				<footer>Bradley</footer>
 			</blockquote>
 		</div>
 	</div>
-	<div class="auth-form">
-		<Transition url={data.url} transition={{ type: 'page' }}>
-			{@render children()}
-		</Transition>
+	<div>
+		{@render children()}
 	</div>
 </div>
 
@@ -58,7 +54,7 @@
 		min-height: 100vh;
 
 		@media (width >= 768px) {
-			display: grid
+			display: grid;
 		}
 		@media (width >= 1024px) {
 			padding-left: 0;
@@ -108,15 +104,9 @@
 				}
 			}
 		}
-
-		.auth-form {
-			@media (width >= 1024px) {
-				padding: 2rem;
-			}
-		}
 	}
 
-	:global(.auth-button) {
+	:global(.auth-buttons) {
 		position: absolute;
 		top: 1rem;
 		right: 1rem;
@@ -136,7 +126,7 @@
 		font-size: 1.125rem;
 		line-height: 1.75rem;
 		font-weight: 500;
-		transition-property: color, background-color, border-color,text-decoration-color, fill, stroke;
+		transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
 		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 		transition-duration: 300ms;
 		top: 1rem;
@@ -153,7 +143,6 @@
 
 		@media (width <= 768px) {
 			position: absolute;
-
 		}
 
 		@media (width > 768px) {

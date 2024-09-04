@@ -21,7 +21,7 @@
 	bind:value={pin}
 	class={cn('flex items-center gap-2', rest.class)}
 	type="text"
-	placeholder=""
+	placeholder="0"
 >
 	{#each inputs as _}
 		<PinInput.Input

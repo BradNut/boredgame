@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { preprocessMeltUI } from '@melt-ui/pp';
@@ -21,9 +22,10 @@ const config = {
 			$assets: './src/assets',
 			$components: './src/components',
 			'$components/*': 'src/lib/components/*',
-			$db: './src/db',
+			$db: './src/lib/server/api/infrastructure/database',
 			$server: './src/server',
 			$lib: './src/lib',
+			$src: './src',
 			$state: './src/state',
 			$styles: './src/styles',
 			$themes: './src/themes',

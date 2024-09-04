@@ -26,8 +26,8 @@ export const userSchema = z.object({
 	username: z
 		.string()
 		.trim()
-		.min(3, { message: 'Username must be at least 3 characters' })
-		.max(50, { message: 'Username must be less than 50 characters' }),
+		.min(3, { message: 'Must be at least 3 characters' })
+		.max(50, { message: 'Must be less than 50 characters' }),
 	password: z.string({ required_error: 'Password is required' }).trim(),
 	confirm_password: z.string({ required_error: 'Confirm Password is required' }).trim(),
 	verified: z.boolean().default(false),

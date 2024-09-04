@@ -4,11 +4,13 @@
 	import * as flashModule from 'sveltekit-flash-message/client';
 	import { AlertCircle } from "lucide-svelte";
 	import { signInSchema } from '$lib/validations/auth';
+	import * as Card from '$lib/components/ui/card';
 	import * as Form from '$lib/components/ui/form';
 	import { Label } from '$components/ui/label';
 	import { Input } from '$components/ui/input';
 	import { Button } from '$components/ui/button';
   import * as Alert from "$components/ui/alert";
+	import { send, receive } from '$lib/utils/pageCrossfade';
 	import { boredState } from '$lib/stores/boredState.js';
 
 	let { data } = $props();
@@ -40,30 +42,32 @@
 	<title>Bored Game | Login</title>
 </svelte:head>
 
-<div class="login">
-	<h2
-			class="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-	>
-		Log into your account
-	</h2>
-	{@render usernamePasswordForm()}
-	<p class="px-8 text-center text-sm text-muted-foreground">
-		By clicking continue, you agree to our
-		<a href="/terms" class="underline underline-offset-4 hover:text-primary">
-			Terms of Use
-		</a>
-		and
-		<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
-			Privacy Policy
-		</a>.
-	</p>
+<div in:receive={{ key: 'auth-card' }} out:send={{ key: 'auth-card' }}>
+	<Card.Root class="mx-auto mt-24 max-w-sm">
+		<Card.Header>
+			<Card.Title class="text-2xl">Log into your account</Card.Title>
+		</Card.Header>
+		<Card.Content>
+			{@render usernamePasswordForm()}
+			<p class="px-8 py-4 text-center text-sm text-muted-foreground">
+				By clicking continue, you agree to our
+				<a href="/terms" class="underline underline-offset-4 hover:text-primary">
+					Terms of Use
+				</a>
+				and
+				<a href="/privacy" class="underline underline-offset-4 hover:text-primary">
+					Privacy Policy
+				</a>.
+			</p>
+		</Card.Content>
+	</Card.Root>
 </div>
 
 {#snippet usernamePasswordForm()}
 	<form method="POST" use:enhance>
 		<Form.Field form={superLoginForm} name="username">
 			<Form.Control let:attrs>
-				<Form.Label for="username">Username/Email</Form.Label>
+				<Form.Label for="username">Username</Form.Label>
 				<Input {...attrs} autocomplete="username" bind:value={$loginForm.username} />
 			</Form.Control>
 			<Form.FieldErrors />
@@ -75,30 +79,12 @@
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
-		<Form.Button>Login</Form.Button>
+		<div class="grid grid-cols-2">
+			<Form.Button>Login</Form.Button>
+			<Button variant="link" class="text-secondary-foreground" href="/password/reset">Forgot Password?</Button>
+		</div>
 	</form>
 {/snippet}
 
 <style lang="postcss">
-	.login {
-		display: flex;
-		gap: 1rem;
-		margin-top: 1.5rem;
-		flex-direction: column;
-		justify-content: center;
-		width: 100%;
-		margin-right: auto;
-		margin-left: auto;
-
-		@media (min-width: 640px) {
-			width: 350px;
-		}
-
-		form {
-			display: grid;
-			gap: 0.5rem;
-			align-items: center;
-			max-width: 24rem;
-		}
-	}
 </style>

@@ -92,7 +92,7 @@
 			</DropdownMenu.Root>
 		{:else}
 			<a href="/login"> <span class="flex-auto">Login</span></a>
-			<a href="/sign-up"> <span class="flex-auto">Sign Up</span></a>
+			<a href="/signup"> <span class="flex-auto">Sign Up</span></a>
 		{/if}
 	</nav>
 </header>

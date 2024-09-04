@@ -34,7 +34,7 @@
 </script>
 
 <div class="progress" class:visible style:--progress={progress}>
-	<div class="track"></div>
+	<div class="track" />
 </div>
 
 <style lang="postcss">
