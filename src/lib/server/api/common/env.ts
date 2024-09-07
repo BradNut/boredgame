@@ -10,8 +10,6 @@ const stringBoolean = z.coerce
 	.default('false')
 
 const EnvSchema = z.object({
-	ADMIN_USERNAME: z.string(),
-	ADMIN_PASSWORD: z.string(),
 	DATABASE_USER: z.string(),
 	DATABASE_PASSWORD: z.string(),
 	DATABASE_HOST: z.string(),

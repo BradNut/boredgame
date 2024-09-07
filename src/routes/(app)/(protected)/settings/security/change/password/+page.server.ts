@@ -1,6 +1,6 @@
 import { notSignedInMessage } from '$lib/flashMessages'
+import { usersTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
-import { changeUserPasswordSchema } from '$lib/validations/account'
 import { type Actions, fail } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 import type { Cookie } from 'lucia'
@@ -8,8 +8,8 @@ import { Argon2id } from 'oslo/password'
 import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { setError, superValidate } from 'sveltekit-superforms/server'
-import type { PageServerLoad } from '../../../$types'
-import { usersTable } from '../../../../../../../lib/server/api/databases/tables'
+import type { PageServerLoad } from './$types'
+import { changeUserPasswordSchema } from './schemas'
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event

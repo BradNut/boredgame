@@ -90,18 +90,20 @@ export const actions: Actions = {
 	// Create new wishlist
 	create: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 		return error(405, 'Method not allowed')
 	},
 	// Delete a wishlist
 	delete: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 		return error(405, 'Method not allowed')
 	},
@@ -116,7 +118,7 @@ export const actions: Actions = {
 		const form = await superValidate(event, zod(modifyListGameSchema))
 
 		try {
-			const game = await db.query.games.findFirst({
+			const game = await db.query.gamesTable.findFirst({
 				where: eq(gamesTable.id, form.data.id),
 			})
 
@@ -131,7 +133,7 @@ export const actions: Actions = {
 			}
 
 			if (game) {
-				const wishlist = await db.query.wishlists.findFirst({
+				const wishlist = await db.query.wishlistsTable.findFirst({
 					where: eq(wishlistsTable.user_id, authedUser.id),
 				})
 

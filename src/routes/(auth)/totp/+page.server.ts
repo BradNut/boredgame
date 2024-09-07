@@ -1,4 +1,5 @@
 import { notSignedInMessage } from '$lib/flashMessages'
+import env from '$lib/server/api/common/env'
 import { twoFactorTable, usersTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth'
@@ -9,7 +10,6 @@ import { redirect } from 'sveltekit-flash-message/server'
 import { RateLimiter } from 'sveltekit-rate-limiter/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { superValidate } from 'sveltekit-superforms/server'
-import env from '../../../env'
 import type { PageServerLoad, RequestEvent } from './$types'
 
 export const load: PageServerLoad = async (event) => {

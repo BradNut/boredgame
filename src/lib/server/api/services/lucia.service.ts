@@ -1,4 +1,4 @@
-import { config } from '$lib/server/api/configs/config'
+import { config } from '$lib/server/api/common/config'
 import { DrizzleService } from '$lib/server/api/services/drizzle.service'
 import { DrizzlePostgreSQLAdapter } from '@lucia-auth/adapter-drizzle'
 import { Lucia, TimeSpan } from 'lucia'

@@ -49,8 +49,9 @@ export class MfaController extends Controller {
 				const user = c.var.user
 				// You can only view recovery codes once and that is on creation
 				const existingCodes = await this.recoveryCodesService.findAllRecoveryCodesByUserId(user.id)
-				if (existingCodes) {
-					return c.body('You have already generated recovery codes', StatusCodes.BAD_REQUEST)
+				if (existingCodes && existingCodes.length > 0) {
+					console.log('Recovery Codes found', existingCodes)
+					return c.json({ recoveryCodes: existingCodes })
 				}
 				const recoveryCodes = await this.recoveryCodesService.createRecoveryCodes(user.id)
 				return c.json({ recoveryCodes })

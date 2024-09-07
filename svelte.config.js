@@ -25,6 +25,7 @@ const config = {
 			$db: './src/lib/server/api/infrastructure/database',
 			$server: './src/server',
 			$lib: './src/lib',
+			$routes: './src/routes',
 			$src: './src',
 			$state: './src/state',
 			$styles: './src/styles',

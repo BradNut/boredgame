@@ -1,4 +1,4 @@
-import { config } from '$lib/server/api/configs/config'
+import { config } from '$lib/server/api/common/config'
 import * as schema from '$lib/server/api/databases/tables'
 import { type NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres'
 import pg from 'pg'
@@ -12,18 +12,18 @@ export class DrizzleService implements Disposable {
 
 	constructor() {
 		const pool = new pg.Pool({
-			user: config.DATABASE_USER,
-			password: config.DATABASE_PASSWORD,
-			host: config.DATABASE_HOST,
-			port: Number(config.DATABASE_PORT).valueOf(),
-			database: config.DATABASE_DB,
-			ssl: config.DATABASE_HOST !== 'localhost',
-			max: config.DB_MIGRATING || config.DB_SEEDING ? 1 : undefined,
+			user: config.postgres.user,
+			password: config.postgres.password,
+			host: config.postgres.host,
+			port: Number(config.postgres.port).valueOf(),
+			database: config.postgres.database,
+			ssl: config.postgres.ssl,
+			max: config.postgres.max,
 		})
 		this.pool = pool
 		this.db = drizzle(pool, {
 			schema,
-			logger: config.NODE_ENV === 'development',
+			logger: process.env.NODE_ENV === 'development',
 		})
 	}
 

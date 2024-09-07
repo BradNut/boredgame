@@ -47,7 +47,9 @@ export const actions: Actions = {
 		const form = await superValidate(event, zod(signinUsernameDto))
 
 		const { error } = await locals.api.login.$post({ json: form.data }).then(locals.parseApiResponse)
-		if (error) return setError(form, 'username', error)
+		if (error) {
+			return setError(form, 'username', error)
+		}
 
 		if (!form.valid) {
 			form.data.password = ''

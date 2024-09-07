@@ -1,9 +1,6 @@
-import { updateEmailDto } from '$lib/dtos/update-email.dto'
-import { updateProfileDto } from '$lib/dtos/update-profile.dto'
 import { notSignedInMessage } from '$lib/flashMessages'
 import { usersTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
-import { changeEmailSchema, profileSchema } from '$lib/validations/account'
 import { type Actions, fail } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 import { redirect } from 'sveltekit-flash-message/server'
@@ -11,6 +8,7 @@ import { zod } from 'sveltekit-superforms/adapters'
 import { message, setError, superValidate } from 'sveltekit-superforms/server'
 import { z } from 'zod'
 import type { PageServerLoad } from './$types'
+import { updateEmailSchema, updateProfileSchema } from './schemas'
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event
@@ -28,14 +26,14 @@ export const load: PageServerLoad = async (event) => {
 	// 	where: eq(usersTable.id, user!.id!),
 	// });
 
-	const profileForm = await superValidate(zod(profileSchema), {
+	const profileForm = await superValidate(zod(updateProfileSchema), {
 		defaults: {
 			firstName: authedUser?.firstName ?? '',
 			lastName: authedUser?.lastName ?? '',
 			username: authedUser?.username ?? '',
 		},
 	})
-	const emailForm = await superValidate(zod(changeEmailSchema), {
+	const emailForm = await superValidate(zod(updateEmailSchema), {
 		defaults: {
 			email: authedUser?.email ?? '',
 		},
@@ -66,7 +64,7 @@ export const actions: Actions = {
 			redirect(302, '/login', notSignedInMessage, event)
 		}
 
-		const form = await superValidate(event, zod(updateProfileDto))
+		const form = await superValidate(event, zod(updateProfileSchema))
 
 		const { error } = await locals.api.me.update.profile.$put({ json: form.data }).then(locals.parseApiResponse)
 		console.log('data from profile update', error)
@@ -84,7 +82,7 @@ export const actions: Actions = {
 		return message(form, { type: 'success', message: 'Profile updated successfully!' })
 	},
 	changeEmail: async (event) => {
-		const form = await superValidate(event, zod(updateEmailDto))
+		const form = await superValidate(event, zod(updateEmailSchema))
 
 		const newEmail = form.data?.email
 		if (!form.valid || !newEmail || (newEmail !== '' && !changeEmailIfNotEmpty.safeParse(form.data).success)) {

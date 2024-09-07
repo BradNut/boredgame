@@ -1,8 +1,8 @@
 import { notSignedInMessage } from '$lib/flashMessages'
-import { userNotAuthenticated } from '$lib/server/auth-utils'
 import { redirect } from 'sveltekit-flash-message/server'
+import type { PageServerLoad } from './$types'
 
-export async function load(event) {
+export const load: PageServerLoad = async (event) => {
 	const { locals } = event
 
 	const authedUser = await locals.getAuthedUser()
@@ -10,5 +10,9 @@ export async function load(event) {
 		throw redirect(302, '/login', notSignedInMessage, event)
 	}
 
-	return {}
+	return {
+		hasSetupTwoFactor: authedUser.mfa_enabled,
+	}
 }
+
+export const actions = {}

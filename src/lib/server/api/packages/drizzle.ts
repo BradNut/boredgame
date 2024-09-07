@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/node-postgres'
 import pg from 'pg'
-import { config } from '../configs/config'
+import { config } from '../common/config'
 import * as schema from '../databases/tables'
 
 // create the connection

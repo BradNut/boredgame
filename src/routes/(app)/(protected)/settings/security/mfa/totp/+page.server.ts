@@ -1,6 +1,5 @@
 import { notSignedInMessage } from '$lib/flashMessages'
-import { addTwoFactorSchema, removeTwoFactorSchema } from '$lib/validations/account'
-import env from '$src/env'
+import env from '$lib/server/api/common/env'
 import { type Actions, fail } from '@sveltejs/kit'
 import kebabCase from 'just-kebab-case'
 import { base32, decodeHex } from 'oslo/encoding'
@@ -10,6 +9,7 @@ import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { setError, superValidate } from 'sveltekit-superforms/server'
 import type { PageServerLoad } from '../../$types'
+import { addTwoFactorSchema, removeTwoFactorSchema } from './schemas'
 
 export const load: PageServerLoad = async (event) => {
 	const { locals } = event
@@ -125,7 +125,7 @@ export const actions: Actions = {
 			return setError(addTwoFactorForm, 'two_factor_code', 'Invalid code')
 		}
 
-		redirect(302, '/profile/security/mfa/recovery-codes')
+		redirect(302, '/settings/security/mfa/recovery-codes')
 	},
 	disableTotp: async (event) => {
 		const { locals } = event
@@ -162,7 +162,7 @@ export const actions: Actions = {
 
 		redirect(
 			302,
-			'/profile/security/mfa',
+			'/settings/security/mfa',
 			{
 				type: 'success',
 				message: 'Two-Factor Authentication has been disabled.',

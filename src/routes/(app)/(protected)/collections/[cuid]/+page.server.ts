@@ -131,14 +131,15 @@ export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 
 		const form = await superValidate(event, zod(modifyListGameSchema))
 
-		const game = await db.query.games.findFirst({
+		const game = await db.query.gamesTable.findFirst({
 			where: eq(gamesTable.id, form.data.id),
 		})
 
@@ -154,7 +155,7 @@ export const actions: Actions = {
 
 		try {
 			const collection = await db.query.collections.findFirst({
-				where: eq(collections.user_id, user!.id!),
+				where: eq(collections.user_id, authedUser.id),
 			})
 
 			if (!collection) {
@@ -179,31 +180,35 @@ export const actions: Actions = {
 	// Create new wishlist
 	create: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 		return error(405, 'Method not allowed')
 	},
 	// Delete a wishlist
 	delete: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 		return error(405, 'Method not allowed')
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
+
 		const form = await superValidate(event, zod(modifyListGameSchema))
 
-		const game = await db.query.games.findFirst({
+		const game = await db.query.gamesTable.findFirst({
 			where: eq(gamesTable.id, form.data.id),
 		})
 
@@ -214,7 +219,7 @@ export const actions: Actions = {
 
 		try {
 			const collection = await db.query.collections.findFirst({
-				where: eq(collections.user_id, user!.id!),
+				where: eq(collections.user_id, authedUser.id),
 			})
 
 			if (!collection) {

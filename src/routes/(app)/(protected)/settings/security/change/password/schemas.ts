@@ -1,18 +1,23 @@
 import { z } from 'zod'
-import { userSchema } from './zod-schemas'
 
-export const updateUserPasswordSchema = userSchema
-	.pick({ password: true, confirm_password: true })
+export const changeUserPasswordSchema = z
+	.object({
+		current_password: z.string({ required_error: 'Current Password is required' }),
+		password: z.string({ required_error: 'Password is required' }).trim(),
+		confirm_password: z.string({ required_error: 'Confirm Password is required' }).trim(),
+	})
 	.superRefine(({ confirm_password, password }, ctx) => {
 		refinePasswords(confirm_password, password, ctx)
 	})
 
-export const refinePasswords = async function (confirm_password: string, password: string, ctx: z.RefinementCtx) {
+export type ChangeUserPasswordSchema = typeof changeUserPasswordSchema
+
+const refinePasswords = async (confirm_password: string, password: string, ctx: z.RefinementCtx) => {
 	comparePasswords(confirm_password, password, ctx)
 	checkPasswordStrength(password, ctx)
 }
 
-const comparePasswords = async function (confirm_password: string, password: string, ctx: z.RefinementCtx) {
+const comparePasswords = async (confirm_password: string, password: string, ctx: z.RefinementCtx) => {
 	if (confirm_password !== password) {
 		ctx.addIssue({
 			code: 'custom',
@@ -22,19 +27,19 @@ const comparePasswords = async function (confirm_password: string, password: str
 	}
 }
 
-const checkPasswordStrength = async function (password: string, ctx: z.RefinementCtx) {
+const checkPasswordStrength = async (password: string, ctx: z.RefinementCtx) => {
 	const minimumLength = password.length < 8
 	const maximumLength = password.length > 128
 	const containsUppercase = (ch: string) => /[A-Z]/.test(ch)
 	const containsLowercase = (ch: string) => /[a-z]/.test(ch)
 	const containsSpecialChar = (ch: string) => /[`!@#$%^&*()_\-+=\[\]{};':"\\|,.<>\/?~ ]/.test(ch)
-	let countOfUpperCase = 0,
-		countOfLowerCase = 0,
-		countOfNumbers = 0,
-		countOfSpecialChar = 0
+	let countOfUpperCase = 0
+	let countOfLowerCase = 0
+	let countOfNumbers = 0
+	let countOfSpecialChar = 0
 	for (let i = 0; i < password.length; i++) {
 		const char = password.charAt(i)
-		if (!isNaN(+char)) {
+		if (!Number.isNaN(+char)) {
 			countOfNumbers++
 		} else if (containsUppercase(char)) {
 			countOfUpperCase++
@@ -74,11 +79,3 @@ const checkPasswordStrength = async function (password: string, ctx: z.Refinemen
 		})
 	}
 }
-
-export const addRoleSchema = z.object({
-	roles: z.array(z.string()).refine((value) => value.some((item) => item), {
-		message: 'You have to select at least one item.',
-	}),
-})
-
-export type AddRoleSchema = typeof addRoleSchema

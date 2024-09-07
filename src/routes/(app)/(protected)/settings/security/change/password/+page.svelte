@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { superForm } from 'sveltekit-superforms/client';
-	import { AlertTriangle } from 'lucide-svelte';
-	import * as Alert from "$components/ui/alert";
-	import * as Form from '$components/ui/form';
-	import { Input } from '$components/ui/input';
-	import { changeUserPasswordSchema } from '$lib/validations/account';
+import * as Alert from '$components/ui/alert'
+import * as Form from '$components/ui/form'
+import { Input } from '$components/ui/input'
+import { AlertTriangle } from 'lucide-svelte'
+import { zodClient } from 'sveltekit-superforms/adapters'
+import { superForm } from 'sveltekit-superforms/client'
+import { changeUserPasswordSchema } from './schemas'
 
-	export let data;
+const { data } = $props()
 
-	const form = superForm(data.form, {
-		taintedMessage: null,
-		validators: zodClient(changeUserPasswordSchema),
-		delayMs: 500,
-		multipleSubmits: 'prevent'
-	});
+const form = superForm(data.form, {
+	taintedMessage: null,
+	validators: zodClient(changeUserPasswordSchema),
+	delayMs: 500,
+	multipleSubmits: 'prevent',
+})
 
-	const { form: formData, enhance } = form;
+const { form: formData, enhance } = form
 </script>
 
 <form method="POST" use:enhance>

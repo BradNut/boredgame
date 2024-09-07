@@ -44,10 +44,11 @@ export async function load(event) {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const { params, locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+		const { locals, params } = event
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 		const form = await superValidate(event, zod(modifyListGameSchema))
 
@@ -61,7 +62,7 @@ export const actions: Actions = {
 			})
 		}
 
-		const game = await db.query.games.findFirst({
+		const game = await db.query.gamesTable.findFirst({
 			where: eq(gamesTable.id, form.id),
 		})
 
@@ -71,7 +72,7 @@ export const actions: Actions = {
 			})
 		}
 
-		const wishlist = await db.query.wishlists.findFirst({
+		const wishlist = await db.query.wishlistsTable.findFirst({
 			where: eq(wishlistsTable.id, params.id),
 		})
 
@@ -103,25 +104,28 @@ export const actions: Actions = {
 	// Create new wishlist
 	create: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 	},
 	// Delete a wishlist
 	delete: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 	},
 }

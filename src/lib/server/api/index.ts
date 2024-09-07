@@ -10,7 +10,7 @@ import { hc } from 'hono/client'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import { container } from 'tsyringe'
-import { config } from './configs/config'
+import { config } from './common/config'
 import { IamController } from './controllers/iam.controller'
 import { LoginController } from './controllers/login.controller'
 import { validateAuthSession, verifyOrigin } from './middleware/auth.middleware'
@@ -45,7 +45,7 @@ const routes = app
 	.route('/user', container.resolve(UserController).routes())
 	.route('/login', container.resolve(LoginController).routes())
 	.route('/signup', container.resolve(SignupController).routes())
-	.route('/wishlistsTable', container.resolve(WishlistController).routes())
+	.route('/wishlists', container.resolve(WishlistController).routes())
 	.route('/collections', container.resolve(CollectionController).routes())
 	.route('/mfa', container.resolve(MfaController).routes())
 	.get('/', (c) => c.json({ message: 'Server is healthy' }))

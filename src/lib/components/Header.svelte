@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
-	import toast from 'svelte-french-toast';
-	import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte';
-	import * as DropdownMenu from '$components/ui/dropdown-menu';
-	import * as Avatar from '$components/ui/avatar';
-	import { invalidateAll } from '$app/navigation';
-	import Logo from '$components/logo.svelte';
-	import type { Users } from '$db/schema';
+import { applyAction, enhance } from '$app/forms'
+import { invalidateAll } from '$app/navigation'
+import Logo from '$components/logo.svelte'
+import * as Avatar from '$components/ui/avatar'
+import * as DropdownMenu from '$components/ui/dropdown-menu'
+import type { Users } from '$db/schema'
+import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte'
+import toast from 'svelte-french-toast'
 
-	type HeaderProps = {
-		user: Users | null;
-	};
+type HeaderProps = {
+	user: Users | null
+}
 
-	let { user = null }: HeaderProps = $props();
+let { user = null }: HeaderProps = $props()
 
-	let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)');
+let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)')
 </script>
 
 <header>
@@ -40,10 +40,10 @@
 					<DropdownMenu.Group>
 						<DropdownMenu.Label>Account</DropdownMenu.Label>
 						<DropdownMenu.Separator />
-						<a href="/profile">
+						<a href="/settings">
 							<DropdownMenu.Item>
 								<User class="mr-2 h-4 w-4" />
-								<span>Profile</span>
+								<span>Settings</span>
 							</DropdownMenu.Item>
 						</a>
 						<a href="/collections">

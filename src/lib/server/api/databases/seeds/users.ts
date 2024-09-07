@@ -2,7 +2,7 @@ import * as schema from '$lib/server/api/databases/tables'
 import type { db } from '$lib/server/api/packages/drizzle'
 import { eq } from 'drizzle-orm'
 import { Argon2id } from 'oslo/password'
-import { config } from '../../configs/config'
+import { config } from '../../common/config'
 import users from './data/users.json'
 
 type JsonRole = {
@@ -18,7 +18,7 @@ export default async function seed(db: db) {
 	const adminUser = await db
 		.insert(schema.usersTable)
 		.values({
-			username: `${config.ADMIN_USERNAME}`,
+			username: `${process.env.ADMIN_USERNAME}`,
 			email: '',
 			first_name: 'Brad',
 			last_name: 'S',
@@ -32,7 +32,7 @@ export default async function seed(db: db) {
 	await db.insert(schema.credentialsTable).values({
 		user_id: adminUser[0].id,
 		type: schema.CredentialsType.PASSWORD,
-		secret_data: await new Argon2id().hash(`${config.ADMIN_PASSWORD}`),
+		secret_data: await new Argon2id().hash(`${process.env.ADMIN_PASSWORD}`),
 	})
 
 	await db.insert(schema.collections).values({ user_id: adminUser[0].id }).onConflictDoNothing()

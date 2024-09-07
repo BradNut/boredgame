@@ -12,11 +12,11 @@ export class WishlistsRepository {
 	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
 
 	async findAll(db = this.drizzle.db) {
-		return db.query.wishlists.findMany()
+		return db.query.wishlistsTable.findMany()
 	}
 
 	async findOneById(id: string, db = this.drizzle.db) {
-		return db.query.wishlists.findFirst({
+		return db.query.wishlistsTable.findFirst({
 			where: eq(wishlistsTable.id, id),
 			columns: {
 				cuid: true,
@@ -26,7 +26,7 @@ export class WishlistsRepository {
 	}
 
 	async findOneByCuid(cuid: string, db = this.drizzle.db) {
-		return db.query.wishlists.findFirst({
+		return db.query.wishlistsTable.findFirst({
 			where: eq(wishlistsTable.cuid, cuid),
 			columns: {
 				cuid: true,
@@ -36,7 +36,7 @@ export class WishlistsRepository {
 	}
 
 	async findOneByUserId(userId: string, db = this.drizzle.db) {
-		return db.query.wishlists.findFirst({
+		return db.query.wishlistsTable.findFirst({
 			where: eq(wishlistsTable.user_id, userId),
 			columns: {
 				cuid: true,
@@ -46,7 +46,7 @@ export class WishlistsRepository {
 	}
 
 	async findAllByUserId(userId: string, db = this.drizzle.db) {
-		return db.query.wishlists.findMany({
+		return db.query.wishlistsTable.findMany({
 			where: eq(wishlistsTable.user_id, userId),
 			columns: {
 				cuid: true,

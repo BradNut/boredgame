@@ -1,4 +1,4 @@
-import { config } from '$lib/server/api/configs/config'
+import { config } from '$lib/server/api/common/config'
 import { Redis } from 'ioredis'
 import { type Disposable, injectable } from 'tsyringe'
 
