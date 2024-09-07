@@ -1,20 +1,20 @@
 <script lang="ts">
 import { page } from '$app/stores'
-
-type Route = {
-	href: string
-	label: string
-}
+import type { Route } from '$lib/types'
 
 let { children, routes }: { children: unknown; routes: Route[] } = $props()
 </script>
+
+<div class="mx-auto grid w-full max-w-6xl gap-2">
+	<h1 class="text-3xl font-semibold">Settings</h1>
+</div>
 
 <div class="security-nav">
 	<nav>
 		<ul>
 			{#each routes as { href, label }}
 				<li>
-					<a href={href} class:active={$page.url.pathname === href}>
+					<a href={href} class:active={$page.url.pathname.includes(href)}>
 						{label}
 					</a>
 				</li>
@@ -62,8 +62,8 @@ let { children, routes }: { children: unknown; routes: Route[] } = $props()
 				}
 
 				&.active {
-					color: #23527c;
-					font-weight: bold;
+					color: var(--color-link-hover);
+					font-weight: 600;
 					background-color: #e9ecef;
 				}
 			}

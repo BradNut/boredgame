@@ -1,5 +1,5 @@
-<h1>There was an error searching for games! 🤦‍♂️</h1>
-<h2>Please try again later. 🙇🏼</h2>
+<h1>There was an error searching for gamesTable! 🤦</h1>
+<h2>Please try again later. 🙇</h2>
 
 <style>
 	h1,

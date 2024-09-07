@@ -7,12 +7,14 @@ import { and, eq } from 'drizzle-orm'
 import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { superValidate } from 'sveltekit-superforms/server'
-import { collection_items, collections, games } from '../../../../lib/server/api/databases/tables'
+import { collection_items, collections, gamesTable } from '../../../../lib/server/api/databases/tables'
 
 export async function load(event) {
-	const { user, session } = event.locals
-	if (userNotAuthenticated(user, session)) {
-		redirect(302, '/login', notSignedInMessage, event)
+	const { locals } = event
+
+	const authedUser = await locals.getAuthedUser()
+	if (!authedUser) {
+		throw redirect(302, '/login', notSignedInMessage, event)
 	}
 
 	try {
@@ -22,7 +24,7 @@ export async function load(event) {
 				name: true,
 				created_at: true,
 			},
-			where: eq(collections.user_id, user!.id!),
+			where: eq(collections.user_id, authedUser.id),
 		})
 		console.log('collections', userCollections)
 
@@ -46,15 +48,18 @@ export async function load(event) {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const form = await superValidate(event, zod(modifyListGameSchema))
+		const { locals } = event
 
-		if (!event.locals.user) {
-			throw fail(401)
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 
+		const form = await superValidate(event, zod(modifyListGameSchema))
+
 		const user = event.locals.user
-		const game = await db.query.games.findFirst({
-			where: eq(games.id, form.data.id),
+		const game = await db.query.gamesTable.findFirst({
+			where: eq(gamesTable.id, form.data.id),
 		})
 
 		if (!game) {
@@ -108,14 +113,16 @@ export const actions: Actions = {
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event
-		const form = await superValidate(event, zod(modifyListGameSchema))
 
-		if (!locals.user) {
-			throw fail(401)
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 
-		const game = await db.query.games.findFirst({
-			where: eq(games.id, form.data.id),
+		const form = await superValidate(event, zod(modifyListGameSchema))
+
+		const game = await db.query.gamesTable.findFirst({
+			where: eq(gamesTable.id, form.data.id),
 		})
 
 		if (!game) {
@@ -125,7 +132,7 @@ export const actions: Actions = {
 
 		try {
 			const collection = await db.query.collections.findFirst({
-				where: eq(collections.user_id, locals.user.id),
+				where: eq(collections.user_id, authedUser.id),
 			})
 
 			if (!collection) {

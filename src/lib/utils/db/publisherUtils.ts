@@ -1,12 +1,12 @@
 import { PUBLIC_SITE_URL } from '$env/static/public'
-import { type Publishers, externalIds, publishers, publishersToExternalIds } from '$lib/server/api/databases/tables'
+import { type Publishers, externalIdsTable, publishersTable, publishersToExternalIdsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { error } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 import kebabCase from 'just-kebab-case'
 
 export async function getPublisher(locals: App.Locals, id: string) {
-	const publisher = await db.select().from(publishers).where(eq(publishers.id, id))
+	const publisher = await db.select().from(publishersTable).where(eq(publishersTable.id, id))
 	if (publisher.length === 0) {
 		error(404, 'not found')
 	}
@@ -24,12 +24,12 @@ export async function updatePublisher(locals: App.Locals, publisher: Publishers,
 
 	try {
 		const dbPublisher = await db
-			.update(publishers)
+			.update(publishersTable)
 			.set({
 				name: publisher.name,
 				slug: kebabCase(publisher.name || ''),
 			})
-			.where(eq(publishers.id, id))
+			.where(eq(publishersTable.id, id))
 			.returning()
 		return new Response(JSON.stringify(dbPublisher[0]), {
 			headers: {
@@ -38,7 +38,7 @@ export async function updatePublisher(locals: App.Locals, publisher: Publishers,
 		})
 	} catch (e) {
 		console.error(e)
-		return new Response('Could not get publishers', {
+		return new Response('Could not get publishersTable', {
 			status: 500,
 		})
 	}
@@ -51,18 +51,18 @@ export async function createPublisher(locals: App.Locals, publisher: Publishers,
 
 	try {
 		const dbExternalId = await db.query.externalIds.findFirst({
-			where: eq(externalIds.externalId, externalId),
+			where: eq(externalIdsTable.externalId, externalId),
 		})
 
 		if (dbExternalId) {
 			const foundPublisher = await db
 				.select({
-					id: publishers.id,
-					name: publishers.name,
-					slug: publishers.slug,
+					id: publishersTable.id,
+					name: publishersTable.name,
+					slug: publishersTable.slug,
 				})
-				.from(publishers)
-				.leftJoin(publishersToExternalIds, eq(publishersToExternalIds.externalId, externalId))
+				.from(publishersTable)
+				.leftJoin(publishersToExternalIdsTable, eq(publishersToExternalIdsTable.externalId, externalId))
 			console.log('Publisher already exists', foundPublisher)
 			if (foundPublisher.length > 0) {
 				console.log('Publisher name', foundPublisher[0].name)
@@ -80,20 +80,20 @@ export async function createPublisher(locals: App.Locals, publisher: Publishers,
 		console.log('Creating publisher', JSON.stringify(publisher, null, 2))
 		await db.transaction(async (transaction) => {
 			dbPublishers = await transaction
-				.insert(publishers)
+				.insert(publishersTable)
 				.values({
 					name: publisher.name,
 					slug: kebabCase(publisher.name || publisher.slug || ''),
 				})
 				.returning()
 			const dbExternalIds = await transaction
-				.insert(externalIds)
+				.insert(externalIdsTable)
 				.values({
 					externalId,
 					type: 'publisher',
 				})
-				.returning({ id: externalIds.id })
-			await transaction.insert(publishersToExternalIds).values({
+				.returning({ id: externalIdsTable.id })
+			await transaction.insert(publishersToExternalIdsTable).values({
 				publisherId: dbPublishers[0].id,
 				externalId: dbExternalIds[0].id,
 			})

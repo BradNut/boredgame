@@ -1,6 +1,4 @@
 import 'reflect-metadata'
-import { recoveryCodesTable } from '$lib/server/api/databases/tables'
-import { db } from '$lib/server/api/packages/drizzle'
 import { RecoveryCodesRepository } from '$lib/server/api/repositories/recovery-codes.repository'
 import { alphabet, generateRandomString } from 'oslo/crypto'
 import { Argon2id } from 'oslo/password'
@@ -20,10 +18,7 @@ export class RecoveryCodesService {
 			for (const code of createdRecoveryCodes) {
 				const hashedCode = await new Argon2id().hash(code)
 				console.log('Inserting recovery code', code, hashedCode)
-				await db.insert(recoveryCodesTable).values({
-					userId,
-					code: hashedCode,
-				})
+				await this.recoveryCodesRepository.create({ userId, code: hashedCode })
 			}
 
 			return createdRecoveryCodes

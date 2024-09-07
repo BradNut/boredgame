@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Game from '$components/Game.svelte';
+import Game from '$components/Game.svelte'
 
-	export let data;
-	console.log('data', data);
-	const wishlist = data.wishlist;
-	const gamesItems = wishlist?.items;
+export let data
+console.log('data', data)
+const wishlist = data.wishlist
+const gamesItems = wishlist?.items
 </script>
 
 <svelte:head>
@@ -19,6 +19,6 @@
 			<Game {game} />
 		{/each}
 	{:else}
-		<h2>Sorry no games found!</h2>
+		<h2>Sorry no gamesTable found!</h2>
 	{/if}
 </div>

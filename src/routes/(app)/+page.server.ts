@@ -2,7 +2,7 @@ import { db } from '$lib/server/api/packages/drizzle'
 import { fail } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
 import type { MetaTagsProps } from 'svelte-meta-tags'
-import { collections, usersTable, wishlists } from '../../lib/server/api/databases/tables'
+import { collections, usersTable, wishlistsTable } from '../../lib/server/api/databases/tables'
 import type { PageServerLoad } from './$types'
 // import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
@@ -24,7 +24,7 @@ export const load: PageServerLoad = async (event) => {
 			url: new URL(url.pathname, url.origin).href,
 			locale: 'en_US',
 			title: 'Home',
-			description: 'Bored Game, keep track of your games',
+			description: 'Bored Game, keep track of your gamesTable',
 			images: [image],
 			siteName: 'Bored Game',
 		},
@@ -33,7 +33,7 @@ export const load: PageServerLoad = async (event) => {
 			site: '@boredgame',
 			cardType: 'summary_large_image',
 			title: 'Home | Bored Game',
-			description: 'Bored Game, keep track of your games',
+			description: 'Bored Game, keep track of your gamesTable',
 			image: `${new URL(url.pathname, url.origin).href}og?header=Bored Game&page=Home&content=Keep track of your games`,
 			imageAlt: 'Home | Bored Game',
 		},
@@ -44,7 +44,7 @@ export const load: PageServerLoad = async (event) => {
 		const { data: collectionsData, error: collectionsError } = await locals.api.collections.$get().then(locals.parseApiResponse)
 
 		if (wishlistsError || collectionsError) {
-			return fail(500, 'Failed to fetch wishlists or collections')
+			return fail(500, 'Failed to fetch wishlistsTable or collections')
 		}
 
 		console.log('Wishlists', wishlistsData.wishlists)

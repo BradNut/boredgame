@@ -1,8 +1,7 @@
-import type { Repository } from '$lib/server/api/common/interfaces/repository.interface'
-import { DatabaseProvider } from '$lib/server/api/providers/database.provider'
+import { DrizzleService } from '$lib/server/api/services/drizzle.service'
 import { type InferInsertModel, eq } from 'drizzle-orm'
 import { inject, injectable } from 'tsyringe'
-import { takeFirstOrThrow } from '../common/utils/repository.utils'
+import { takeFirstOrThrow } from '../common/utils/repository'
 import { user_roles } from '../databases/tables'
 
 /* -------------------------------------------------------------------------- */
@@ -25,11 +24,11 @@ export type CreateUserRole = InferInsertModel<typeof user_roles>
 export type UpdateUserRole = Partial<CreateUserRole>
 
 @injectable()
-export class UserRolesRepository implements Repository {
-	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) {}
+export class UserRolesRepository {
+	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
 
-	async findOneById(id: string) {
-		return this.db.query.user_roles.findFirst({
+	async findOneById(id: string, db = this.drizzle.db) {
+		return db.query.user_roles.findFirst({
 			where: eq(user_roles.id, id),
 		})
 	}
@@ -40,21 +39,17 @@ export class UserRolesRepository implements Repository {
 		return userRole
 	}
 
-	async findAllByUserId(userId: string) {
-		return this.db.query.user_roles.findMany({
+	async findAllByUserId(userId: string, db = this.drizzle.db) {
+		return db.query.user_roles.findMany({
 			where: eq(user_roles.user_id, userId),
 		})
 	}
 
-	async create(data: CreateUserRole) {
-		return this.db.insert(user_roles).values(data).returning().then(takeFirstOrThrow)
+	async create(data: CreateUserRole, db = this.drizzle.db) {
+		return db.insert(user_roles).values(data).returning().then(takeFirstOrThrow)
 	}
 
-	async delete(id: string) {
-		return this.db.delete(user_roles).where(eq(user_roles.id, id)).returning().then(takeFirstOrThrow)
-	}
-
-	trxHost(trx: DatabaseProvider) {
-		return new UserRolesRepository(trx)
+	async delete(id: string, db = this.drizzle.db) {
+		return db.delete(user_roles).where(eq(user_roles.id, id)).returning().then(takeFirstOrThrow)
 	}
 }

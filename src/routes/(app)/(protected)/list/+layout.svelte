@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Transition from '$components/transition.svelte';
+import Transition from '$components/transition.svelte'
 
-	export let data;
-	const wishlists = data.wishlists || [];
+export let data
+const wishlistsTable = data.wishlists || []
 </script>
 
 <aside class="wishlists">

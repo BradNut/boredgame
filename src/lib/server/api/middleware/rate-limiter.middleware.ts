@@ -1,10 +1,11 @@
 import { rateLimiter } from 'hono-rate-limiter'
-import RedisClient from 'ioredis'
 import { RedisStore } from 'rate-limit-redis'
-import { config } from '../configs/config'
-import type { HonoTypes } from '../types'
+import { container } from 'tsyringe'
+import type { HonoTypes } from '../common/types/hono'
+import { RedisService } from '../services/redis.service'
 
-const client = new RedisClient(config.REDIS_URL)
+// resolve dependencies from the container
+const { client } = container.resolve(RedisService)
 
 export function limiter({
 	limit,

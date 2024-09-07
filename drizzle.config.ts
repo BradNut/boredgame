@@ -1,11 +1,11 @@
 import 'dotenv/config'
+import env from '$lib/server/api/common/env'
 import { defineConfig } from 'drizzle-kit'
-import env from './src/env'
 
 export default defineConfig({
 	dialect: 'postgresql',
 	out: './src/lib/server/api/databases/migrations',
-	schema: './src/lib/server/api/databases/tables/drizzle.ts',
+	schema: './src/lib/server/api/databases/tables/*.table.ts',
 	dbCredentials: {
 		host: env.DATABASE_HOST || 'localhost',
 		port: Number(env.DATABASE_PORT) || 5432,

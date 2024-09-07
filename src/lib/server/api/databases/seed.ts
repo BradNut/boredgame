@@ -1,14 +1,18 @@
-import { Table, getTableName, sql } from 'drizzle-orm'
-import env from '../../../../env'
-import { db, pool } from '../packages/drizzle'
+import 'reflect-metadata'
+import { DrizzleService } from '$lib/server/api/services/drizzle.service'
+import { type Table, getTableName, sql } from 'drizzle-orm'
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres'
+import env from '../common/env'
 import * as seeds from './seeds'
 import * as schema from './tables'
+
+const drizzleService = new DrizzleService()
 
 if (!env.DB_SEEDING) {
 	throw new Error('You must set DB_SEEDING to "true" when running seeds')
 }
 
-async function resetTable(db: db, table: Table) {
+async function resetTable(db: NodePgDatabase<typeof schema>, table: Table) {
 	return db.execute(sql.raw(`TRUNCATE TABLE ${getTableName(table)} RESTART IDENTITY CASCADE`))
 }
 
@@ -19,33 +23,33 @@ for (const table of [
 	schema.collection_items,
 	schema.collections,
 	schema.credentialsTable,
-	schema.expansions,
-	schema.externalIds,
+	schema.expansionsTable,
+	schema.externalIdsTable,
 	schema.federatedIdentityTable,
-	schema.games,
-	schema.gamesToExternalIds,
-	schema.mechanics,
-	schema.mechanicsToExternalIds,
+	schema.gamesTable,
+	schema.gamesToExternalIdsTable,
+	schema.mechanicsTable,
+	schema.mechanicsToExternalIdsTable,
 	schema.mechanics_to_games,
 	schema.password_reset_tokens,
-	schema.publishers,
-	schema.publishersToExternalIds,
+	schema.publishersTable,
+	schema.publishersToExternalIdsTable,
 	schema.publishers_to_games,
 	schema.recoveryCodesTable,
-	schema.roles,
+	schema.rolesTable,
 	schema.sessionsTable,
 	schema.twoFactorTable,
 	schema.user_roles,
 	schema.usersTable,
 	schema.wishlist_items,
-	schema.wishlists,
+	schema.wishlistsTable,
 ]) {
 	// await db.delete(table); // clear tables without truncating / resetting ids
-	await resetTable(db, table)
+	await resetTable(drizzleService.db, table)
 }
 
-await seeds.roles(db)
-await seeds.users(db)
+await seeds.roles(drizzleService.db)
+await seeds.users(drizzleService.db)
 
-await pool.end()
+await drizzleService.dispose()
 process.exit()

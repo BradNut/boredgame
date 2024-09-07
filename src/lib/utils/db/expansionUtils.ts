@@ -1,5 +1,5 @@
 import { PUBLIC_SITE_URL } from '$env/static/public'
-import { type Expansions, expansions } from '$lib/server/api/databases/tables'
+import { type Expansions, expansionsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { error } from '@sveltejs/kit'
 import { and, eq } from 'drizzle-orm'
@@ -11,7 +11,7 @@ export async function createExpansion(locals: App.Locals, expansion: Expansions)
 
 	try {
 		const foundExpansion = await db.query.expansions.findFirst({
-			where: and(eq(expansions.base_game_id, expansion.base_game_id), eq(expansions.game_id, expansion.game_id)),
+			where: and(eq(expansionsTable.base_game_id, expansion.base_game_id), eq(expansionsTable.game_id, expansion.game_id)),
 			columns: {
 				id: true,
 				game_id: true,
@@ -32,7 +32,7 @@ export async function createExpansion(locals: App.Locals, expansion: Expansions)
 
 		console.log('Creating expansion', JSON.stringify(expansion, null, 2))
 		const dbExpansion = await db
-			.insert(expansions)
+			.insert(expansionsTable)
 			.values({
 				base_game_id: expansion.base_game_id,
 				game_id: expansion.game_id,
@@ -146,7 +146,7 @@ export async function createExpansion(locals: App.Locals, expansion: Expansions)
 // 					id: gameId
 // 				},
 // 				data: {
-// 					expansions: {
+// 					expansionsTable: {
 // 						connect: {
 // 							id: expansion.id
 // 						}
@@ -160,7 +160,7 @@ export async function createExpansion(locals: App.Locals, expansion: Expansions)
 // 					id: baseGameId
 // 				},
 // 				data: {
-// 					expansions: {
+// 					expansionsTable: {
 // 						connect: {
 // 							id: expansion.id
 // 						}

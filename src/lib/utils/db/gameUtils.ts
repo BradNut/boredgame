@@ -1,5 +1,5 @@
 import { PUBLIC_SITE_URL } from '$env/static/public'
-import { type Games, externalIds, games, gamesToExternalIds } from '$lib/server/api/databases/tables'
+import { type Games, externalIdsTable, gamesTable, gamesToExternalIdsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { error } from '@sveltejs/kit'
 import { eq } from 'drizzle-orm'
@@ -12,11 +12,11 @@ export async function getGame(locals: App.Locals, id: string) {
 
 	try {
 		return await db.query.games.findFirst({
-			where: eq(games.id, id),
+			where: eq(gamesTable.id, id),
 		})
 	} catch (e) {
 		console.error(e)
-		return new Response('Could not get games', {
+		return new Response('Could not get gamesTable', {
 			status: 500,
 		})
 	}
@@ -29,18 +29,18 @@ export async function createGame(locals: App.Locals, game: Games, externalId: st
 
 	try {
 		const dbExternalId = await db.query.externalIds.findFirst({
-			where: eq(externalIds.externalId, externalId),
+			where: eq(externalIdsTable.externalId, externalId),
 		})
 
 		if (dbExternalId) {
 			const foundGame = await db
 				.select({
-					id: games.id,
-					name: games.name,
-					slug: games.slug,
+					id: gamesTable.id,
+					name: gamesTable.name,
+					slug: gamesTable.slug,
 				})
-				.from(games)
-				.leftJoin(gamesToExternalIds, eq(gamesToExternalIds.externalId, externalId))
+				.from(gamesTable)
+				.leftJoin(gamesToExternalIdsTable, eq(gamesToExternalIdsTable.externalId, externalId))
 			console.log('Game already exists', foundGame)
 			if (foundGame.length > 0) {
 				console.log('Game name', foundGame[0].name)
@@ -58,7 +58,7 @@ export async function createGame(locals: App.Locals, game: Games, externalId: st
 		console.log('Creating game', JSON.stringify(game, null, 2))
 		await db.transaction(async (transaction) => {
 			dbGames = await transaction
-				.insert(games)
+				.insert(gamesTable)
 				.values({
 					name: game.name,
 					slug: kebabCase(game.name || game.slug || ''),
@@ -75,13 +75,13 @@ export async function createGame(locals: App.Locals, game: Games, externalId: st
 				})
 				.returning()
 			const dbExternalIds = await transaction
-				.insert(externalIds)
+				.insert(externalIdsTable)
 				.values({
 					externalId,
 					type: 'game',
 				})
-				.returning({ id: externalIds.id })
-			await transaction.insert(gamesToExternalIds).values({
+				.returning({ id: externalIdsTable.id })
+			await transaction.insert(gamesToExternalIdsTable).values({
 				gameId: dbGames[0].id,
 				externalId: dbExternalIds[0].id,
 			})
@@ -115,7 +115,7 @@ export async function createOrUpdateGameMinimal(locals: App.Locals, game: Games,
 		console.log('Creating game', JSON.stringify(game, null, 2))
 		await db.transaction(async (transaction) => {
 			dbGames = await transaction
-				.insert(games)
+				.insert(gamesTable)
 				.values({
 					name: game.name,
 					slug: kebabCase(game.name ?? game.slug ?? ''),
@@ -131,7 +131,7 @@ export async function createOrUpdateGameMinimal(locals: App.Locals, game: Games,
 					max_playtime: game.max_playtime,
 				})
 				.onConflictDoUpdate({
-					target: games.id,
+					target: gamesTable.id,
 					set: {
 						name: game.name,
 						slug: kebabCase(game.name || game.slug || ''),
@@ -149,15 +149,15 @@ export async function createOrUpdateGameMinimal(locals: App.Locals, game: Games,
 				})
 				.returning()
 			const dbExternalIds = await transaction
-				.insert(externalIds)
+				.insert(externalIdsTable)
 				.values({
 					externalId,
 					type: 'game',
 				})
 				.onConflictDoNothing()
-				.returning({ id: externalIds.id })
+				.returning({ id: externalIdsTable.id })
 			await transaction
-				.insert(gamesToExternalIds)
+				.insert(gamesToExternalIdsTable)
 				.values({
 					gameId: dbGames[0].id,
 					externalId: dbExternalIds[0].id,
@@ -189,18 +189,18 @@ export async function createOrUpdateGame(locals: App.Locals, game: Games, extern
 	try {
 		const externalUrl = `https://boardgamegeek.com/boardgame/${externalId}`
 		const dbExternalId = await db.query.externalIds.findFirst({
-			where: eq(externalIds.externalId, externalId),
+			where: eq(externalIdsTable.externalId, externalId),
 		})
 
 		if (dbExternalId) {
 			const foundGame = await db
 				.select({
-					id: games.id,
-					name: games.name,
-					slug: games.slug,
+					id: gamesTable.id,
+					name: gamesTable.name,
+					slug: gamesTable.slug,
 				})
-				.from(games)
-				.leftJoin(gamesToExternalIds, eq(gamesToExternalIds.externalId, externalId))
+				.from(gamesTable)
+				.leftJoin(gamesToExternalIdsTable, eq(gamesToExternalIdsTable.externalId, externalId))
 			console.log('Game already exists', foundGame)
 			if (foundGame.length > 0) {
 				console.log('Game name', foundGame[0].name)
@@ -218,7 +218,7 @@ export async function createOrUpdateGame(locals: App.Locals, game: Games, extern
 		console.log('Creating game', JSON.stringify(game, null, 2))
 		await db.transaction(async (transaction) => {
 			dbGames = await transaction
-				.insert(games)
+				.insert(gamesTable)
 				.values({
 					name: game.name,
 					slug: kebabCase(game.name || game.slug || ''),
@@ -234,7 +234,7 @@ export async function createOrUpdateGame(locals: App.Locals, game: Games, extern
 					max_playtime: game.max_playtime,
 				})
 				.onConflictDoUpdate({
-					target: games.id,
+					target: gamesTable.id,
 					set: {
 						name: game.name,
 						slug: kebabCase(game.name || game.slug || ''),
@@ -252,15 +252,15 @@ export async function createOrUpdateGame(locals: App.Locals, game: Games, extern
 				})
 				.returning()
 			const dbExternalIds = await transaction
-				.insert(externalIds)
+				.insert(externalIdsTable)
 				.values({
 					externalId,
 					type: 'game',
 				})
 				.onConflictDoNothing()
-				.returning({ id: externalIds.id })
+				.returning({ id: externalIdsTable.id })
 			await transaction
-				.insert(gamesToExternalIds)
+				.insert(gamesToExternalIdsTable)
 				.values({
 					gameId: dbGames[0].id,
 					externalId: dbExternalIds[0].id,
@@ -291,7 +291,7 @@ export async function updateGame(locals: App.Locals, game: Games, id: string) {
 
 	try {
 		const dbGame = await db
-			.update(games)
+			.update(gamesTable)
 			.set({
 				name: game.name,
 				slug: kebabCase(game.name || game.slug || ''),
@@ -306,7 +306,7 @@ export async function updateGame(locals: App.Locals, game: Games, id: string) {
 				min_playtime: game.min_playtime,
 				max_playtime: game.max_playtime,
 			})
-			.where(eq(games.id, id))
+			.where(eq(gamesTable.id, id))
 			.returning()
 		return new Response(JSON.stringify(dbGame[0]), {
 			headers: {
@@ -315,7 +315,7 @@ export async function updateGame(locals: App.Locals, game: Games, id: string) {
 		})
 	} catch (e) {
 		console.error(e)
-		return new Response('Could not get publishers', {
+		return new Response('Could not get publishersTable', {
 			status: 500,
 		})
 	}
@@ -323,17 +323,17 @@ export async function updateGame(locals: App.Locals, game: Games, id: string) {
 
 // console.log('Creating or updating game', JSON.stringify(game, null, 2));
 // const categoryIds = game.categories;
-// const mechanicIds = game.mechanics;
-// const publisherIds = game.publishers;
+// const mechanicIds = game.mechanicsTable;
+// const publisherIds = game.publishersTable;
 // const designerIds = game.designers;
 // const artistIds = game.artists;
-// // const expansionIds = game.expansions;
+// // const expansionIds = game.expansionsTable;
 // const externalUrl = `https://boardgamegeek.com/boardgame/${game.external_id}`;
 // console.log('categoryIds', categoryIds);
 // console.log('mechanicIds', mechanicIds);
 // await db.transaction(async (transaction) => {
 // 	const dbGame = await db.transaction(async (transaction) => {
-// 		transaction.insert(games).values({
+// 		transaction.insert(gamesTable).values({
 // 			name: game.name,
 // 			slug: kebabCase(game.name || ''),
 // 			description: game.description,
@@ -349,7 +349,7 @@ export async function updateGame(locals: App.Locals, game: Games, id: string) {
 // 			year_published: game.year_published || 0,
 // 			last_sync_at: new Date(),
 // 		}).onConflictDoUpdate({
-// 			target: games.id, set: {
+// 			target: gamesTable.id, set: {
 // 				name: game.name,
 // 				slug: kebabCase(game.name),
 // 				description: game.description,
@@ -369,13 +369,13 @@ export async function updateGame(locals: App.Locals, game: Games, id: string) {
 // 	});
 // 	// TODO: Connect to everything else
 // });
-// await db.insert(games).values({
+// await db.insert(gamesTable).values({
 // 	include: {
-// 		mechanics: true,
-// 		publishers: true,
+// 		mechanicsTable: true,
+// 		publishersTable: true,
 // 		designers: true,
 // 		artists: true,
-// 		expansions: true
+// 		expansionsTable: true
 // 	},
 // 	where: {
 // 		external_id: game.external_id
@@ -398,10 +398,10 @@ export async function updateGame(locals: App.Locals, game: Games, id: string) {
 // 		categories: {
 // 			connect: categoryIds
 // 		},
-// 		mechanics: {
+// 		mechanicsTable: {
 // 			connect: mechanicIds
 // 		},
-// 		publishers: {
+// 		publishersTable: {
 // 			connect: publisherIds
 // 		},
 // 		designers: {
@@ -429,10 +429,10 @@ export async function updateGame(locals: App.Locals, game: Games, id: string) {
 // 		categories: {
 // 			connect: categoryIds
 // 		},
-// 		mechanics: {
+// 		mechanicsTable: {
 // 			connect: mechanicIds
 // 		},
-// 		publishers: {
+// 		publishersTable: {
 // 			connect: publisherIds
 // 		},
 // 		designers: {
