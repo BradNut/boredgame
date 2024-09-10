@@ -48,33 +48,11 @@ export const actions: Actions = {
 			})
 		}
 
-		console.log('updating profile')
-		if (!event.locals.user) {
-			redirect(302, '/login', notSignedInMessage, event)
-		}
-
-		if (!event.locals.session) {
-			return fail(401)
-		}
-
-		const dbUser = await db.query.usersTable.findFirst({
-			where: eq(usersTable.id, authedUser.id),
-		})
-
-		// if (!dbUser?.hashed_password) {
-		// 	form.data.password = '';
-		// 	form.data.confirm_password = '';
-		// 	form.data.current_password = '';
-		// 	return setError(
-		// 		form,
-		// 		'Error occurred. Please try again or contact support if you need further help.',
-		// 	);
-		// }
-
-		const currentPasswordVerified = await new Argon2id().verify(
-			// dbUser.hashed_password,
-			form.data.current_password,
-		)
+		const currentPasswordVerified = await locals.api.me.verify.password
+			.$post({
+				json: { password: form.data.current_password },
+			})
+			.then(locals.parseApiResponse)
 
 		if (!currentPasswordVerified) {
 			return setError(form, 'current_password', 'Your password is incorrect')
@@ -85,16 +63,9 @@ export const actions: Actions = {
 				if (form.data.password !== form.data.confirm_password) {
 					return setError(form, 'Password and confirm password do not match')
 				}
-				const hashedPassword = await new Argon2id().hash(form.data.password)
-				await lucia.invalidateUserSessions(authedUser.id)
-				// await db
-				// 	.update(usersTable)
-				// 	.set({ hashed_password: hashedPassword })
-				// 	.where(eq(usersTable.id, user.id));
-				await lucia.createSession(user.id, {
-					country: event.locals.session?.ipCountry ?? 'unknown',
-				})
-				sessionCookie = lucia.createBlankSessionCookie()
+				await locals.api.me.change.password.$put({
+					json: { password: form.data.password, confirm_password: form.data.confirm_password },
+				}).then(locals.parseApiResponse)
 			} catch (e) {
 				console.error(e)
 				form.data.password = ''

@@ -34,5 +34,3 @@ export const config: Config = {
 		max: env.DB_MIGRATING || env.DB_SEEDING ? 1 : undefined,
 	},
 }
-
-console.log('config', config)

@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import { Controller } from '$lib/server/api/common/types/controller'
 import { CollectionsService } from '$lib/server/api/services/collections.service'
 import { inject, injectable } from 'tsyringe'
-import { requireAuth } from '../middleware/auth.middleware'
+import { requireAuth } from '../middleware/require-auth.middleware'
 
 @injectable()
 export class CollectionController extends Controller {

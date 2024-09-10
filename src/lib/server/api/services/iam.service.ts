@@ -1,3 +1,5 @@
+import { CredentialsType } from '$lib/server/api/databases/tables'
+import type { ChangePasswordDto } from '$lib/server/api/dtos/change-password.dto'
 import type { UpdateEmailDto } from '$lib/server/api/dtos/update-email.dto'
 import type { UpdateProfileDto } from '$lib/server/api/dtos/update-profile.dto'
 import type { VerifyPasswordDto } from '$lib/server/api/dtos/verify-password.dto'
@@ -66,6 +68,11 @@ export class IamService {
 		return this.usersService.updateUser(userId, {
 			email,
 		})
+	}
+
+	async updatePassword(userId: string, data: ChangePasswordDto) {
+		const { password } = data
+		await this.usersService.updatePassword(userId, password)
 	}
 
 	async verifyPassword(userId: string, data: VerifyPasswordDto) {

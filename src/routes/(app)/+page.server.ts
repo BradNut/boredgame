@@ -1,10 +1,6 @@
-import { db } from '$lib/server/api/packages/drizzle'
 import { fail } from '@sveltejs/kit'
-import { eq } from 'drizzle-orm'
 import type { MetaTagsProps } from 'svelte-meta-tags'
-import { collections, usersTable, wishlistsTable } from '../../lib/server/api/databases/tables'
 import type { PageServerLoad } from './$types'
-// import { userFullyAuthenticated } from '$lib/server/auth-utils';
 
 export const load: PageServerLoad = async (event) => {
 	const { locals, url } = event
@@ -60,6 +56,8 @@ export const load: PageServerLoad = async (event) => {
 			collections: collectionsData.collections,
 		}
 	}
+
+	console.log('Not Authed')
 
 	return { metaTagsChild: metaTags, user: null, wishlists: [], collections: [] }
 }

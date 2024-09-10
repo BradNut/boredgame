@@ -69,6 +69,22 @@ export class UsersService {
 		return this.usersRepository.findOneById(id)
 	}
 
+	async updatePassword(userId: string, password: string) {
+		const hashedPassword = await this.tokenService.createHashedToken(password)
+		const currentCredentials = await this.credentialsRepository.findPasswordCredentialsByUserId(userId)
+		if (!currentCredentials) {
+			await this.credentialsRepository.create({
+				user_id: userId,
+				type: CredentialsType.PASSWORD,
+				secret_data: hashedPassword,
+			})
+		} else {
+			await this.credentialsRepository.update(currentCredentials.id, {
+				secret_data: hashedPassword,
+			})
+		}
+	}
+
 	async verifyPassword(userId: string, data: { password: string }) {
 		const user = await this.usersRepository.findOneById(userId)
 		if (!user) {

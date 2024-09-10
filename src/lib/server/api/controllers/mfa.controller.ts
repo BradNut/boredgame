@@ -8,7 +8,7 @@ import { UsersService } from '$lib/server/api/services/users.service'
 import { zValidator } from '@hono/zod-validator'
 import { inject, injectable } from 'tsyringe'
 import { CredentialsType } from '../databases/tables'
-import { requireAuth } from '../middleware/auth.middleware'
+import { requireAuth } from '../middleware/require-auth.middleware'
 
 @injectable()
 export class MfaController extends Controller {

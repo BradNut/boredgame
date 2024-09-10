@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@fontsource/fira-mono':
-        specifier: ^5.0.14
-        version: 5.0.14
+        specifier: ^5.0.15
+        version: 5.0.15
       '@hono/swagger-ui':
         specifier: ^0.4.1
         version: 0.4.1(hono@4.5.11)
@@ -1245,8 +1245,8 @@ packages:
   '@floating-ui/utils@0.2.7':
     resolution: {integrity: sha512-X8R8Oj771YRl/w+c1HqAC1szL8zWQRwFvgDwT129k9ACdBoud/+/rX9V0qiMl6LWUdP9voC2nDVZYPMQQsb6eA==}
 
-  '@fontsource/fira-mono@5.0.14':
-    resolution: {integrity: sha512-4IKa+cuHipk/vr2frgZh4pyR2XcoQk/j3zmMlo8uuAGUB3IPLpQlgN6Qm5d3RfRZ7dXGlTn/PWiAJeU8bkmD4w==}
+  '@fontsource/fira-mono@5.0.15':
+    resolution: {integrity: sha512-wc3TpF2GBbtFDKNbb444BrC3mEKuoPLITSYCKweNIrqBvAalIfJGloY/MVrmSGaMNgaAKUpdgy4eAWPLkUVzaA==}
 
   '@gcornut/valibot-json-schema@0.31.0':
     resolution: {integrity: sha512-3xGptCurm23e7nuPQkdrE5rEs1FeTPHhAUsBuwwqG4/YeZLwJOoYZv+fmsppUEfo5y9lzUwNQrNqLS/q7HMc7g==}
@@ -5489,7 +5489,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.7': {}
 
-  '@fontsource/fira-mono@5.0.14': {}
+  '@fontsource/fira-mono@5.0.15': {}
 
   '@gcornut/valibot-json-schema@0.31.0':
     dependencies:

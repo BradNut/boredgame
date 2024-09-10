@@ -1,10 +1,8 @@
 import { LuciaService } from '$lib/server/api/services/lucia.service'
 import type { MiddlewareHandler } from 'hono'
 import { createMiddleware } from 'hono/factory'
-import type { Session, User } from 'lucia'
 import { verifyRequestOrigin } from 'oslo/request'
 import { container } from 'tsyringe'
-import { Unauthorized } from '../common/exceptions'
 import type { HonoTypes } from '../common/types/hono'
 
 // resolve dependencies from the container
@@ -39,16 +37,5 @@ export const validateAuthSession: MiddlewareHandler<HonoTypes> = createMiddlewar
 	}
 	c.set('session', session)
 	c.set('user', user)
-	return next()
-})
-
-export const requireAuth: MiddlewareHandler<{
-	Variables: {
-		session: Session
-		user: User
-	}
-}> = createMiddleware(async (c, next) => {
-	const user = c.var.user
-	if (!user) throw Unauthorized('You must be logged in to access this resource')
 	return next()
 })

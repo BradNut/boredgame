@@ -73,21 +73,6 @@ onNavigate(async (navigation) => {
 {/if}
 
 <MetaTags {...metaTags} />
-
 <PageLoadingIndicator />
-
-<div class="layout">
-	{@render children()}
-</div>
-
+{@render children()}
 <Toaster />
-<!-- <Loading /> -->
-
-<style lang="postcss">
-	.layout {
-		display: flex;
-		position: relative;
-		flex-direction: column;
-		min-height: 100vh;
-	}
-</style>

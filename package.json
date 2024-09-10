@@ -76,7 +76,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@fontsource/fira-mono": "^5.0.14",
+		"@fontsource/fira-mono": "^5.0.15",
 		"@hono/swagger-ui": "^0.4.1",
 		"@hono/zod-openapi": "^0.15.3",
 		"@hono/zod-validator": "^0.2.2",
