@@ -48,24 +48,26 @@ export const actions: Actions = {
 			})
 		}
 
-		const currentPasswordVerified = await locals.api.me.verify.password
+		const { error: verifyPasswordError } = await locals.api.me.verify.password
 			.$post({
 				json: { password: form.data.current_password },
 			})
 			.then(locals.parseApiResponse)
 
-		if (!currentPasswordVerified) {
+		console.log('verifyPasswordError', verifyPasswordError)
+
+		if (verifyPasswordError) {
+			console.error(verifyPasswordError)
 			return setError(form, 'current_password', 'Your password is incorrect')
 		}
 		if (authedUser?.username) {
-			let sessionCookie: Cookie
 			try {
 				if (form.data.password !== form.data.confirm_password) {
 					return setError(form, 'Password and confirm password do not match')
 				}
-				await locals.api.me.change.password.$put({
+				await locals.api.me.update.password.$put({
 					json: { password: form.data.password, confirm_password: form.data.confirm_password },
-				}).then(locals.parseApiResponse)
+				})
 			} catch (e) {
 				console.error(e)
 				form.data.password = ''
@@ -73,11 +75,6 @@ export const actions: Actions = {
 				form.data.current_password = ''
 				return setError(form, 'current_password', 'Your password is incorrect.')
 			}
-			event.cookies.set(sessionCookie.name, sessionCookie.value, {
-				path: '.',
-				...sessionCookie.attributes,
-			})
-
 			const message = {
 				type: 'success',
 				message: 'Password Updated. Please sign in.',
@@ -85,10 +82,5 @@ export const actions: Actions = {
 			redirect(302, '/login', message, event)
 		}
 		return setError(form, 'Error occurred. Please try again or contact support if you need further help.')
-		// TODO: Add toast instead?
-		// form.data.password = '';
-		// form.data.confirm_password = '';
-		// form.data.current_password = '';
-		// return message(form, 'Profile updated successfully.');
 	},
 }
