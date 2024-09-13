@@ -53,7 +53,7 @@ const { form: formData, enhance } = form
 					aria-label={`${hiddenCurrentPassword ? 'Show' : 'Hide'} Current Password}`}
 					onPressedChange={() => (hiddenCurrentPassword = !hiddenCurrentPassword)}
 				>
-					{#if hiddenCurrentPassword}<EyeOff />{:else}<EyeIcon />{/if}
+					{#if hiddenCurrentPassword}<EyeIcon />{:else}<EyeOff />{/if}
 				</Toggle>
 			</span>
 		</Form.Control>
@@ -73,7 +73,7 @@ const { form: formData, enhance } = form
 					aria-label={`${hiddenPassword ? 'Show' : 'Hide'} Password}`}
 					onPressedChange={() => (hiddenPassword = !hiddenPassword)}
 				>
-					{#if hiddenPassword}<EyeOff />{:else}<EyeIcon />{/if}
+					{#if hiddenPassword}<EyeIcon />{:else}<EyeOff />{/if}
 				</Toggle>
 			</span>
 		</Form.Control>
@@ -93,7 +93,7 @@ const { form: formData, enhance } = form
 					aria-label={`${hiddenConfirmPassword ? 'Show' : 'Hide'} Confirm Password}`}
 					onPressedChange={() => (hiddenConfirmPassword = !hiddenConfirmPassword)}
 				>
-					{#if hiddenConfirmPassword}<EyeOff />{:else}<EyeIcon />{/if}
+					{#if hiddenConfirmPassword}<EyeIcon />{:else}<EyeOff />{/if}
 				</Toggle>
 			</span>
 		</Form.Control>

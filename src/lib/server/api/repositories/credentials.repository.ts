@@ -7,6 +7,7 @@ import { takeFirstOrThrow } from '../common/utils/repository'
 
 export type CreateCredentials = InferInsertModel<typeof credentialsTable>
 export type UpdateCredentials = Partial<CreateCredentials>
+export type DeleteCredentials = Pick<CreateCredentials, 'id'>
 
 @injectable()
 export class CredentialsRepository {
