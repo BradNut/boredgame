@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { Argon2id } from 'oslo/password'
 import { container } from 'tsyringe'
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
+import { afterAll, beforeAll, describe, expect, expectTypeOf, it, vi } from 'vitest'
 import { HashingService } from '../services/hashing.service'
 import { TokensService } from '../services/tokens.service'
 
@@ -18,30 +18,28 @@ describe('TokensService', () => {
 	})
 
 	describe('Generate Token', () => {
-		const hashedPassword = new Argon2id().hash('111')
-
-		hashingService.hash = vi.fn().mockResolvedValue(hashedPassword)
-		hashingService.verify = vi.fn().mockResolvedValue(true)
-
-		const spy_hashingService_hash = vi.spyOn(hashingService, 'hash')
-		const spy_hashingService_verify = vi.spyOn(hashingService, 'verify')
-
 		it('should resolve', async () => {
-			expect(service.createHashedToken('111')).resolves.string
+			const hashedPassword = await new Argon2id().hash('111')
+			hashingService.hash = vi.fn().mockResolvedValue(hashedPassword)
+			const spy_hashingService_hash = vi.spyOn(hashingService, 'hash')
+			const spy_hashingService_verify = vi.spyOn(hashingService, 'verify')
+			await expectTypeOf(service.createHashedToken('111')).resolves.toBeString()
+			expect(spy_hashingService_hash).toBeCalledTimes(1)
+			expect(spy_hashingService_verify).toBeCalledTimes(0)
 		})
 		it('should generate a token that is verifiable', async () => {
+			hashingService.hash = vi.fn().mockResolvedValue(await new Argon2id().hash('111'))
+			hashingService.verify = vi.fn().mockResolvedValue(true)
+			const spy_hashingService_hash = vi.spyOn(hashingService, 'hash')
+			const spy_hashingService_verify = vi.spyOn(hashingService, 'verify')
 			const token = await service.createHashedToken('111')
+			expect(token).not.toBeNaN()
 			expect(token).not.toBeUndefined()
 			expect(token).not.toBeNull()
 			const verifiable = await service.verifyHashedToken(token, '111')
 			expect(verifiable).toBeTruthy()
-		})
-
-		it('should generate a hashed token', async () => {
-			expect(spy_hashingService_hash).toHaveBeenCalledTimes(2)
-		})
-		it('should verify a hashed token', async () => {
-			expect(spy_hashingService_verify).toHaveBeenCalledTimes(1)
+			expect(spy_hashingService_hash).toBeCalledTimes(1)
+			expect(spy_hashingService_verify).toBeCalledTimes(1)
 		})
 	})
 })

@@ -44,13 +44,13 @@ export class IamService {
 		}
 
 		const existingUserForNewUsername = await this.usersService.findOneByUsername(data.username)
-		if (existingUserForNewUsername && existingUserForNewUsername.id !== userId) {
+		if (existingUserForNewUsername && existingUserForNewUsername.id !== user.id) {
 			return {
 				error: 'Username already in use',
 			}
 		}
 
-		return this.usersService.updateUser(userId, {
+		return this.usersService.updateUser(user.id, {
 			first_name: data.firstName,
 			last_name: data.lastName,
 			username: data.username !== user.username ? data.username : user.username,
