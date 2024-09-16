@@ -2,7 +2,7 @@ import { takeFirstOrThrow } from '$lib/server/api/common/utils/repository'
 import { DrizzleService } from '$lib/server/api/services/drizzle.service'
 import { type InferInsertModel, eq } from 'drizzle-orm'
 import { inject, injectable } from 'tsyringe'
-import { collections } from '../databases/tables'
+import { collection_items, collections } from '../databases/tables'
 
 export type CreateCollection = InferInsertModel<typeof collections>
 export type UpdateCollection = Partial<CreateCollection>
@@ -48,6 +48,23 @@ export class CollectionsRepository {
 	async findAllByUserId(userId: string, db = this.drizzle.db) {
 		return db.query.collections.findMany({
 			where: eq(collections.user_id, userId),
+		})
+	}
+
+	async findAllByUserIdWithDetails(userId: string, db = this.drizzle.db) {
+		return db.query.collections.findMany({
+			where: eq(collections.user_id, userId),
+			columns: {
+				cuid: true,
+				name: true,
+			},
+			with: {
+				collection_items: {
+					columns: {
+						cuid: true
+					}
+				},
+			}
 		})
 	}
 

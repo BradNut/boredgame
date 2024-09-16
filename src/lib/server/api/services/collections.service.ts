@@ -16,6 +16,10 @@ export class CollectionsService {
 		return this.collectionsRepository.findAllByUserId(userId);
 	}
 
+	async findAllByUserIdWithDetails(userId: string) {
+		return this.collectionsRepository.findAllByUserIdWithDetails(userId);
+	}
+
 	async findOneById(id: string) {
 		return this.collectionsRepository.findOneById(id);
 	}

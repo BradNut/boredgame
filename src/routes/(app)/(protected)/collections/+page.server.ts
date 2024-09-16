@@ -1,13 +1,12 @@
 import { notSignedInMessage } from '$lib/flashMessages'
+import { collection_items, collections, gamesTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
-import { userNotAuthenticated } from '$lib/server/auth-utils'
 import { modifyListGameSchema } from '$lib/validations/zod-schemas'
 import { type Actions, error, fail } from '@sveltejs/kit'
 import { and, eq } from 'drizzle-orm'
 import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { superValidate } from 'sveltekit-superforms/server'
-import { collection_items, collections, gamesTable } from '../../../../lib/server/api/databases/tables'
 
 export async function load(event) {
 	const { locals } = event
@@ -18,23 +17,10 @@ export async function load(event) {
 	}
 
 	try {
-		const userCollections = await db.query.collections.findMany({
-			columns: {
-				cuid: true,
-				name: true,
-				created_at: true,
-			},
-			where: eq(collections.user_id, authedUser.id),
-		})
-		console.log('collections', userCollections)
-
-		if (userCollections?.length === 0) {
-			console.log('Collection was not found')
-			return fail(404, {})
-		}
+		const { data, error } = await locals.api.collections.$get().then(locals.parseApiResponse)
 
 		return {
-			collections: userCollections,
+			collections: data?.collections || [],
 		}
 	} catch (e) {
 		console.error(e)

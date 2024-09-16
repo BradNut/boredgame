@@ -44,6 +44,7 @@ const routes = app
 	.route('/me', container.resolve(IamController).routes())
 	.route('/user', container.resolve(UserController).routes())
 	.route('/login', container.resolve(LoginController).routes())
+	.route('/oauth', container.resolve(OAuthController).routes())
 	.route('/signup', container.resolve(SignupController).routes())
 	.route('/wishlists', container.resolve(WishlistController).routes())
 	.route('/collections', container.resolve(CollectionController).routes())
