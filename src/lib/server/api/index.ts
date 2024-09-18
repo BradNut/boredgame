@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 import { CollectionController } from '$lib/server/api/controllers/collection.controller'
 import { MfaController } from '$lib/server/api/controllers/mfa.controller'
+import { OAuthController } from '$lib/server/api/controllers/oauth.controller'
 import { SignupController } from '$lib/server/api/controllers/signup.controller'
 import { UserController } from '$lib/server/api/controllers/user.controller'
 import { WishlistController } from '$lib/server/api/controllers/wishlist.controller'

@@ -33,8 +33,8 @@ export class UserRolesRepository {
 		})
 	}
 
-	async findOneByIdOrThrow(id: string) {
-		const userRole = await this.findOneById(id)
+	async findOneByIdOrThrow(id: string, db = this.drizzle.db) {
+		const userRole = await this.findOneById(id, db)
 		if (!userRole) throw Error('User not found')
 		return userRole
 	}

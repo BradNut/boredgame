@@ -1,41 +1,41 @@
 <script lang="ts">
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { superForm } from 'sveltekit-superforms/client';
-	import * as flashModule from 'sveltekit-flash-message/client';
-	import { AlertCircle } from "lucide-svelte";
-	import { signInSchema } from '$lib/validations/auth';
-	import * as Card from '$lib/components/ui/card';
-	import * as Form from '$lib/components/ui/form';
-	import { Label } from '$components/ui/label';
-	import { Input } from '$components/ui/input';
-	import { Button } from '$components/ui/button';
-  import * as Alert from "$components/ui/alert";
-	import { send, receive } from '$lib/utils/pageCrossfade';
-	import { boredState } from '$lib/stores/boredState.js';
+import * as Alert from '$components/ui/alert'
+import { Button } from '$components/ui/button'
+import { Input } from '$components/ui/input'
+import { Label } from '$components/ui/label'
+import * as Card from '$lib/components/ui/card'
+import * as Form from '$lib/components/ui/form'
+import { boredState } from '$lib/stores/boredState.js'
+import { receive, send } from '$lib/utils/pageCrossfade'
+import { signInSchema } from '$lib/validations/auth'
+import { AlertCircle } from 'lucide-svelte'
+import * as flashModule from 'sveltekit-flash-message/client'
+import { zodClient } from 'sveltekit-superforms/adapters'
+import { superForm } from 'sveltekit-superforms/client'
 
-	let { data } = $props();
+let { data } = $props()
 
-	const superLoginForm = superForm(data.form, {
-		onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
-  	onResult: () => boredState.update((n) => ({ ...n, loading: false })),
-		flashMessage: {
-			module: flashModule,
-			onError: ({ result, flashMessage }) => {
-				// Error handling for the flash message:
-				// - result is the ActionResult
-				// - message is the flash store (not the status message store)
-				const errorMessage = result.error.message
-				flashMessage.set({ type: 'error', message: errorMessage });
-			}
+const superLoginForm = superForm(data.form, {
+	onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
+	onResult: () => boredState.update((n) => ({ ...n, loading: false })),
+	flashMessage: {
+		module: flashModule,
+		onError: ({ result, flashMessage }) => {
+			// Error handling for the flash message:
+			// - result is the ActionResult
+			// - message is the flash store (not the status message store)
+			const errorMessage = result.error.message
+			flashMessage.set({ type: 'error', message: errorMessage })
 		},
-		syncFlashMessage: false,
-		taintedMessage: null,
-		// validators: zodClient(signInSchema),
-		// validationMethod: 'oninput',
-		delayMs: 0,
-	});
+	},
+	syncFlashMessage: false,
+	taintedMessage: null,
+	// validators: zodClient(signInSchema),
+	// validationMethod: 'oninput',
+	delayMs: 0,
+})
 
-	const { form: loginForm, enhance } = superLoginForm;
+const { form: loginForm, enhance } = superLoginForm
 </script>
 
 <svelte:head>
@@ -62,6 +62,9 @@
 		</Card.Content>
 	</Card.Root>
 </div>
+
+<h1>Sign in</h1>
+<a href="/login/github">Sign in with GitHub</a>
 
 {#snippet usernamePasswordForm()}
 	<form method="POST" use:enhance>

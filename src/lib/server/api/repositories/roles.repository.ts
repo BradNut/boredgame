@@ -28,29 +28,29 @@ export class RolesRepository {
 	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
 
 	async findOneById(id: string, db = this.drizzle.db) {
-		return db.query.roles.findFirst({
+		return db.query.rolesTable.findFirst({
 			where: eq(rolesTable.id, id),
 		})
 	}
 
 	async findOneByIdOrThrow(id: string, db = this.drizzle.db) {
-		const role = await this.findOneById(id)
+		const role = await this.findOneById(id, db)
 		if (!role) throw Error('Role not found')
 		return role
 	}
 
 	async findAll(db = this.drizzle.db) {
-		return db.query.roles.findMany()
+		return db.query.rolesTable.findMany()
 	}
 
 	async findOneByName(name: string, db = this.drizzle.db) {
-		return db.query.roles.findFirst({
+		return db.query.rolesTable.findFirst({
 			where: eq(rolesTable.name, name),
 		})
 	}
 
 	async findOneByNameOrThrow(name: string, db = this.drizzle.db) {
-		const role = await this.findOneByName(name)
+		const role = await this.findOneByName(name, db)
 		if (!role) throw Error('Role not found')
 		return role
 	}

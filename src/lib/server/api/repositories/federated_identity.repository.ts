@@ -1,21 +1,24 @@
-import { inject, injectable } from "tsyringe";
-import { DrizzleService } from "../services/drizzle.service";
-import { and, eq, type InferInsertModel } from "drizzle-orm";
-import { federatedIdentityTable } from "../databases/tables";
-import { takeFirstOrThrow } from "../common/utils/repository";
+import { type InferInsertModel, and, eq } from 'drizzle-orm'
+import { inject, injectable } from 'tsyringe'
+import { takeFirstOrThrow } from '../common/utils/repository'
+import { federatedIdentityTable } from '../databases/tables'
+import { DrizzleService } from '../services/drizzle.service'
 
 export type CreateFederatedIdentity = InferInsertModel<typeof federatedIdentityTable>
 
 @injectable()
 export class FederatedIdentityRepository {
-
-	constructor(
-		@inject(DrizzleService) private readonly drizzle: DrizzleService
-	) { }
+	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
 
 	async findOneByUserIdAndProvider(userId: string, provider: string) {
 		return this.drizzle.db.query.federatedIdentityTable.findFirst({
-			where: and(eq(federatedIdentityTable.user_id, userId), eq(federatedIdentityTable.identity_provider, provider))
+			where: and(eq(federatedIdentityTable.user_id, userId), eq(federatedIdentityTable.identity_provider, provider)),
+		})
+	}
+
+	async findOneByFederatedUserIdAndProvider(federatedUserId: string, provider: string) {
+		return this.drizzle.db.query.federatedIdentityTable.findFirst({
+			where: and(eq(federatedIdentityTable.federated_user_id, federatedUserId), eq(federatedIdentityTable.identity_provider, provider)),
 		})
 	}
 

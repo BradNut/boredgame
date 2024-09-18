@@ -2,7 +2,7 @@ import { takeFirstOrThrow } from '$lib/server/api/common/utils/repository'
 import { DrizzleService } from '$lib/server/api/services/drizzle.service'
 import { type InferInsertModel, eq } from 'drizzle-orm'
 import { inject, injectable } from 'tsyringe'
-import { collection_items, collections } from '../databases/tables'
+import { collections } from '../databases/tables'
 
 export type CreateCollection = InferInsertModel<typeof collections>
 export type UpdateCollection = Partial<CreateCollection>
@@ -61,10 +61,10 @@ export class CollectionsRepository {
 			with: {
 				collection_items: {
 					columns: {
-						cuid: true
-					}
+						cuid: true,
+					},
 				},
-			}
+			},
 		})
 	}
 
