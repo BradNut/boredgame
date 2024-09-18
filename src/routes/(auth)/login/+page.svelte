@@ -12,6 +12,7 @@ import { AlertCircle } from 'lucide-svelte'
 import * as flashModule from 'sveltekit-flash-message/client'
 import { zodClient } from 'sveltekit-superforms/adapters'
 import { superForm } from 'sveltekit-superforms/client'
+import { Github } from 'lucide-svelte'
 
 let { data } = $props()
 
@@ -47,8 +48,10 @@ const { form: loginForm, enhance } = superLoginForm
 		<Card.Header>
 			<Card.Title class="text-2xl">Log into your account</Card.Title>
 		</Card.Header>
-		<Card.Content>
+		<Card.Content class="grid gap-4">
 			{@render usernamePasswordForm()}
+			<span class="text-center text-sm text-muted-foreground">or sign in with</span>
+			{@render oAuthButtons()}
 			<p class="px-8 py-4 text-center text-sm text-muted-foreground">
 				By clicking continue, you agree to our
 				<a href="/terms" class="underline underline-offset-4 hover:text-primary">
@@ -62,9 +65,6 @@ const { form: loginForm, enhance } = superLoginForm
 		</Card.Content>
 	</Card.Root>
 </div>
-
-<h1>Sign in</h1>
-<a href="/login/github">Sign in with GitHub</a>
 
 {#snippet usernamePasswordForm()}
 	<form method="POST" use:enhance>
@@ -87,6 +87,12 @@ const { form: loginForm, enhance } = superLoginForm
 			<Button variant="link" class="text-secondary-foreground" href="/password/reset">Forgot Password?</Button>
 		</div>
 	</form>
+{/snippet}
+
+{#snippet oAuthButtons()}
+	<div class="grid gap-4">
+		<Button href="/login/github" variant="outline" class="w-full"><Github class="mr-2 h-4 w-4" />GitHub</Button>
+	</div>
 {/snippet}
 
 <style lang="postcss">
