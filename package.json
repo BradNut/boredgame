@@ -121,6 +121,7 @@
 		"radix-svelte": "^0.9.0",
 		"rate-limit-redis": "^4.2.0",
 		"reflect-metadata": "^0.2.2",
+		"simple-icons": "^13.10.0",
 		"svelte-french-toast": "^1.2.0",
 		"svelte-lazy-loader": "^1.0.0",
 		"tailwind-merge": "^2.5.2",

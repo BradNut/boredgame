@@ -143,6 +143,9 @@ importers:
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
+      simple-icons:
+        specifier: ^13.10.0
+        version: 13.10.0
       svelte-french-toast:
         specifier: ^1.2.0
         version: 1.2.0(svelte@5.0.0-next.175)
@@ -4222,6 +4225,10 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
+  simple-icons@13.10.0:
+    resolution: {integrity: sha512-akHZxjNvq4nLlLsKxDot7A+ZYXgjhAP4GwvWEItHeKiquuWXoI8xGGfP+hzGLbTmbmi2teYmHMS45PIOFy6EFA==}
+    engines: {node: '>=0.12.18'}
+
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
@@ -4236,10 +4243,6 @@ packages:
   sorcery@0.11.1:
     resolution: {integrity: sha512-o7npfeJE6wi6J9l0/5LKshFzZ2rMatRiCDwYeDQaOzqdzRJwALhX7mk/A/ecg6wjMu7wdZbmXfD2S/vpOg0bdQ==}
     hasBin: true
-
-  source-map-js@1.2.0:
-    resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
-    engines: {node: '>=0.10.0'}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -8423,7 +8426,7 @@ snapshots:
     dependencies:
       chokidar: 4.0.0
       immutable: 4.3.7
-      source-map-js: 1.2.0
+      source-map-js: 1.2.1
     optional: true
 
   satori-html@0.3.2:
@@ -8551,6 +8554,8 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
+  simple-icons@13.10.0: {}
+
   simple-swizzle@0.2.2:
     dependencies:
       is-arrayish: 0.3.2
@@ -8569,9 +8574,6 @@ snapshots:
       buffer-crc32: 1.0.0
       minimist: 1.2.8
       sander: 0.5.1
-
-  source-map-js@1.2.0:
-    optional: true
 
   source-map-js@1.2.1: {}
 
