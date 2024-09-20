@@ -19,6 +19,8 @@ const EnvSchema = z.object({
 	DB_SEEDING: stringBoolean,
 	GITHUB_CLIENT_ID: z.string(),
 	GITHUB_CLIENT_SECRET: z.string(),
+	GOOGLE_CLIENT_ID: z.string(),
+	GOOGLE_CLIENT_SECRET: z.string(),
 	NODE_ENV: z.string().default('development'),
 	ORIGIN: z.string(),
 	PUBLIC_SITE_NAME: z.string(),

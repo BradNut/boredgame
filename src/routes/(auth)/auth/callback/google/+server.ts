@@ -8,7 +8,7 @@ export async function GET(event: RequestEvent): Promise<Response> {
 	const state = url.searchParams.get('state')
 	console.log('code', code, 'state', state)
 
-	const { data, error } = await locals.api.oauth.github.$get({ query: { code, state } }).then(locals.parseApiResponse)
+	const { data, error } = await locals.api.oauth.google.$get({ query: { code, state } }).then(locals.parseApiResponse)
 
 	if (error) {
 		return new Response(JSON.stringify(error), {

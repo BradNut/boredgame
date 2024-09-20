@@ -129,5 +129,6 @@
 		"tailwindcss-animate": "^1.0.7",
 		"tsyringe": "^4.8.0",
 		"zod-to-json-schema": "^3.23.3"
-	}
+	},
+	"license": "MIT"
 }
