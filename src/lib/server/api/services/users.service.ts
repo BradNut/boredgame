@@ -10,7 +10,7 @@ import { type UpdateUser, UsersRepository } from '../repositories/users.reposito
 import { CollectionsService } from './collections.service'
 import { DrizzleService } from './drizzle.service'
 import { WishlistsService } from './wishlists.service'
-import type {OAuthUser} from "$lib/server/api/common/types/oauth-user";
+import type {OAuthUser} from "$lib/server/api/common/types/oauth";
 
 @injectable()
 export class UsersService {

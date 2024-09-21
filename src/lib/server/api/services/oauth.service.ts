@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 import { FederatedIdentityRepository } from '../repositories/federated_identity.repository'
 import { UsersService } from './users.service'
-import type {OAuthUser} from "$lib/server/api/common/types/oauth-user";
+import type {OAuthUser, OAuthProviders} from "$lib/server/api/common/types/oauth";
 
 @injectable()
 export class OAuthService {
@@ -10,7 +10,7 @@ export class OAuthService {
 		@inject(UsersService) private readonly usersService: UsersService,
 	) {}
 
-	async handleOAuthUser(oAuthUser: OAuthUser, oauthProvider: string) {
+	async handleOAuthUser(oAuthUser: OAuthUser, oauthProvider: OAuthProviders) {
 		const federatedUser = await this.federatedIdentityRepository.findOneByFederatedUserIdAndProvider(oAuthUser.sub, oauthProvider)
 
 		if (federatedUser) {

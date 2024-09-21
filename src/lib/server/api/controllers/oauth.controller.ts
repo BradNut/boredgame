@@ -7,7 +7,7 @@ import { OAuth2RequestError } from 'arctic'
 import { getCookie, setCookie } from 'hono/cookie'
 import { TimeSpan } from 'oslo'
 import { inject, injectable } from 'tsyringe'
-import type {OAuthUser} from "$lib/server/api/common/types/oauth-user";
+import type {OAuthUser} from "$lib/server/api/common/types/oauth";
 
 @injectable()
 export class OAuthController extends Controller {
@@ -41,7 +41,7 @@ export class OAuthController extends Controller {
 					const oAuthUser: OAuthUser = {
 						sub: `${githubUser.id}`,
 						username: githubUser.login,
-						email: null
+						email: undefined
 					}
 
 					const userId = await this.oauthService.handleOAuthUser(oAuthUser, 'github')

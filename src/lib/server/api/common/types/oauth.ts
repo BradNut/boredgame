@@ -7,3 +7,5 @@ export type OAuthUser = {
 	email?: string;
 	email_verified?: boolean;
 }
+
+export type OAuthProviders = 'github' | 'google' | 'apple'
