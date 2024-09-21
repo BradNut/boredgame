@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 import { FederatedIdentityRepository } from '../repositories/federated_identity.repository'
 import { UsersService } from './users.service'
+import type {OAuthUser} from "$lib/server/api/common/types/oauth-user";
 
 @injectable()
 export class OAuthService {
@@ -9,14 +10,14 @@ export class OAuthService {
 		@inject(UsersService) private readonly usersService: UsersService,
 	) {}
 
-	async handleOAuthUser(oauthUserId: number, oauthUsername: string, oauthProvider: string) {
-		const federatedUser = await this.federatedIdentityRepository.findOneByFederatedUserIdAndProvider(`${oauthUserId}`, oauthProvider)
+	async handleOAuthUser(oAuthUser: OAuthUser, oauthProvider: string) {
+		const federatedUser = await this.federatedIdentityRepository.findOneByFederatedUserIdAndProvider(oAuthUser.sub, oauthProvider)
 
 		if (federatedUser) {
 			return federatedUser.user_id
 		}
 
-		const user = await this.usersService.createOAuthUser(oauthUserId, oauthUsername, oauthProvider)
+		const user = await this.usersService.createOAuthUser(oAuthUser, oauthProvider)
 
 		if (!user) {
 			throw new Error('Failed to create user')
