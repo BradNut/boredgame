@@ -40,7 +40,7 @@ console.log('items', items)
 <div class="games">
 	<div class="games-list">
 		{#if items.length === 0}
-			<h2>No gamesTable in your collection</h2>
+			<h2>No games in your collection</h2>
 		{:else}
 			{#each items as game (game.game_id)}
 				<Game {game} />

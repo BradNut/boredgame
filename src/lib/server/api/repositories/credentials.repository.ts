@@ -44,7 +44,7 @@ export class CredentialsRepository {
 	}
 
 	async findOneByIdOrThrow(id: string, db = this.drizzle.db) {
-		const credentials = await this.findOneById(id)
+		const credentials = await this.findOneById(id, db)
 		if (!credentials) throw Error('Credentials not found')
 		return credentials
 	}

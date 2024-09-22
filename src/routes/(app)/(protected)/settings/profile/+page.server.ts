@@ -18,14 +18,6 @@ export const load: PageServerLoad = async (event) => {
 		throw redirect(302, '/login', notSignedInMessage, event)
 	}
 
-	console.log('authedUser', authedUser)
-	// if (userNotAuthenticated(user, session)) {
-	// 	redirect(302, '/login', notSignedInMessage, event);
-	// }
-	// const dbUser = await db.query.usersTable.findFirst({
-	// 	where: eq(usersTable.id, user!.id!),
-	// });
-
 	const profileForm = await superValidate(zod(updateProfileSchema), {
 		defaults: {
 			firstName: authedUser?.firstName ?? '',

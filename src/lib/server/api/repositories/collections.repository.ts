@@ -51,6 +51,23 @@ export class CollectionsRepository {
 		})
 	}
 
+	async findAllByUserIdWithDetails(userId: string, db = this.drizzle.db) {
+		return db.query.collections.findMany({
+			where: eq(collections.user_id, userId),
+			columns: {
+				cuid: true,
+				name: true,
+			},
+			with: {
+				collection_items: {
+					columns: {
+						cuid: true,
+					},
+				},
+			},
+		})
+	}
+
 	async create(data: CreateCollection, db = this.drizzle.db) {
 		return db.insert(collections).values(data).returning().then(takeFirstOrThrow)
 	}
