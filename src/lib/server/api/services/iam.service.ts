@@ -1,3 +1,5 @@
+import { CredentialsType } from '$lib/server/api/databases/tables'
+import type { ChangePasswordDto } from '$lib/server/api/dtos/change-password.dto'
 import type { UpdateEmailDto } from '$lib/server/api/dtos/update-email.dto'
 import type { UpdateProfileDto } from '$lib/server/api/dtos/update-profile.dto'
 import type { VerifyPasswordDto } from '$lib/server/api/dtos/verify-password.dto'
@@ -42,13 +44,13 @@ export class IamService {
 		}
 
 		const existingUserForNewUsername = await this.usersService.findOneByUsername(data.username)
-		if (existingUserForNewUsername && existingUserForNewUsername.id !== userId) {
+		if (existingUserForNewUsername && existingUserForNewUsername.id !== user.id) {
 			return {
 				error: 'Username already in use',
 			}
 		}
 
-		return this.usersService.updateUser(userId, {
+		return this.usersService.updateUser(user.id, {
 			first_name: data.firstName,
 			last_name: data.lastName,
 			username: data.username !== user.username ? data.username : user.username,
@@ -66,6 +68,11 @@ export class IamService {
 		return this.usersService.updateUser(userId, {
 			email,
 		})
+	}
+
+	async updatePassword(userId: string, data: ChangePasswordDto) {
+		const { password } = data
+		await this.usersService.updatePassword(userId, password)
 	}
 
 	async verifyPassword(userId: string, data: VerifyPasswordDto) {

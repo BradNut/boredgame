@@ -102,7 +102,7 @@ export const actions: Actions = {
 
 		const { error: verifyPasswordError } = await locals.api.me.verify.password
 			.$post({
-				json: { password: addTwoFactorForm.data.current_password },
+				json: { password: addTwoFactorForm.data.password },
 			})
 			.then(locals.parseApiResponse)
 
@@ -144,7 +144,7 @@ export const actions: Actions = {
 		}
 		const { error: verifyPasswordError } = await locals.api.me.verify.password
 			.$post({
-				json: { password: removeTwoFactorForm.data.current_password },
+				json: { password: removeTwoFactorForm.data.password },
 			})
 			.then(locals.parseApiResponse)
 

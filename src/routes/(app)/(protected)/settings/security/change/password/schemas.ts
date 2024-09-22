@@ -13,8 +13,8 @@ export const changeUserPasswordSchema = z
 export type ChangeUserPasswordSchema = typeof changeUserPasswordSchema
 
 const refinePasswords = async (confirm_password: string, password: string, ctx: z.RefinementCtx) => {
-	comparePasswords(confirm_password, password, ctx)
-	checkPasswordStrength(password, ctx)
+	await comparePasswords(confirm_password, password, ctx)
+	await checkPasswordStrength(password, ctx)
 }
 
 const comparePasswords = async (confirm_password: string, password: string, ctx: z.RefinementCtx) => {

@@ -3,10 +3,10 @@
 import Game from '$components/Game.svelte'
 import type { UICollection } from '$lib/types'
 
-export let data
+const { data } = $props()
+const { items = [] } = data
 console.log(`Page data: ${JSON.stringify(data)}`)
 let collection: UICollection = data?.collection ?? {}
-let items = data?.items || []
 console.log('items', items)
 
 // async function handleNextPageEvent(event: CustomEvent) {
@@ -40,7 +40,7 @@ console.log('items', items)
 <div class="games">
 	<div class="games-list">
 		{#if items.length === 0}
-			<h2>No gamesTable in your collection</h2>
+			<h2>No games in your collection</h2>
 		{:else}
 			{#each items as game (game.game_id)}
 				<Game {game} />

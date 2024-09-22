@@ -15,6 +15,8 @@ export const usersTable = pgTable('users', {
 	last_name: text('last_name'),
 	verified: boolean('verified').default(false),
 	receive_email: boolean('receive_email').default(false),
+	email_verified: boolean('email_verified').default(false),
+	picture: text('picture'),
 	mfa_enabled: boolean('mfa_enabled').notNull().default(false),
 	theme: text('theme').default('system'),
 	...timestamps,

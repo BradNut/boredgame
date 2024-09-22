@@ -42,7 +42,7 @@ const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = remov
 			<Form.Field form={removeTwoFactorForm} name="current_password">
 				<Form.Control let:attrs>
 					<Form.Label for="password">Current Password</Form.Label>
-					<Input type="password" {...attrs} bind:value={$removeTwoFactorFormData.current_password} />
+					<Input type="password" {...attrs} bind:value={$removeTwoFactorFormData.password} autocomplete="password" />
 				</Form.Control>
 				<Form.Description>Please enter your current password.</Form.Description>
 				<Form.FieldErrors />
@@ -64,7 +64,7 @@ const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = remov
 			<Form.Field form={addTwoFactorForm} name="current_password">
 				<Form.Control let:attrs>
 					<Form.Label for="password">Enter Password</Form.Label>
-					<Input type="password" {...attrs} bind:value={$addTwoFactorFormData.current_password} />
+					<Input type="password" {...attrs} bind:value={$addTwoFactorFormData.password} autocomplete="password" />
 				</Form.Control>
 				<Form.Description>Please enter your current password.</Form.Description>
 				<Form.FieldErrors />

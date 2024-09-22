@@ -5,8 +5,8 @@ import * as Card from '$lib/components/ui/card'
 
 const { data } = $props()
 
-const totpEnabled = true
-const hardwareTokenEnabled = true
+const totpEnabled = data.totpEnabled
+const hardwareTokenEnabled = data.hardwareTokenEnabled
 </script>
 
 <h1>Two-factor authentication</h1>
@@ -19,7 +19,7 @@ const hardwareTokenEnabled = true
 		<section>
 		<div class="two-factor-method">
 			<div class="two-factor-method-content">
-				<h2>Authenticator app {#if hardwareTokenEnabled}<Badge variant="outline" className="text-green-500 border-green-500">Configured</Badge>{/if}</h2>
+				<h2>Authenticator app {#if totpEnabled}<Badge variant="outline" className="text-green-500 border-green-500">Configured</Badge>{/if}</h2>
 				<p>Use an authenticator app or browser extension to get two-factor authentication codes when prompted.</p>
 			</div>
 			<Button href="/settings/security/mfa/totp">Edit</Button>

@@ -17,8 +17,6 @@ const welcomeName = $derived.by(() => {
 
 	return welcomeName
 })
-
-$inspect(data)
 </script>
 
 <div class="container">
@@ -53,5 +51,7 @@ $inspect(data)
 		place-content: center;
 		max-width: 900px;
 		gap: 0.25rem;
+		margin-left: auto;
+		margin-right: auto;
 	}
 </style>

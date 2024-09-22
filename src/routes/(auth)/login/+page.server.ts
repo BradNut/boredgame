@@ -1,3 +1,4 @@
+import { StatusCodes } from '$lib/constants/status-codes'
 import { signinUsernameDto } from '$lib/dtos/signin-username.dto'
 import { type Actions, fail } from '@sveltejs/kit'
 import { redirect } from 'sveltekit-flash-message/server'
@@ -135,6 +136,8 @@ export const actions: Actions = {
 
 		form.data.username = ''
 		form.data.password = ''
+
+		redirect(StatusCodes.TEMPORARY_REDIRECT, '/')
 
 		// if (
 		// 	twoFactorDetails?.enabled &&

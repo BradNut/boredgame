@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 import { CollectionController } from '$lib/server/api/controllers/collection.controller'
 import { MfaController } from '$lib/server/api/controllers/mfa.controller'
+import { OAuthController } from '$lib/server/api/controllers/oauth.controller'
 import { SignupController } from '$lib/server/api/controllers/signup.controller'
 import { UserController } from '$lib/server/api/controllers/user.controller'
 import { WishlistController } from '$lib/server/api/controllers/wishlist.controller'
@@ -44,6 +45,7 @@ const routes = app
 	.route('/me', container.resolve(IamController).routes())
 	.route('/user', container.resolve(UserController).routes())
 	.route('/login', container.resolve(LoginController).routes())
+	.route('/oauth', container.resolve(OAuthController).routes())
 	.route('/signup', container.resolve(SignupController).routes())
 	.route('/wishlists', container.resolve(WishlistController).routes())
 	.route('/collections', container.resolve(CollectionController).routes())

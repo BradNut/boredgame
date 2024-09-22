@@ -48,53 +48,26 @@ export const actions: Actions = {
 			})
 		}
 
-		console.log('updating profile')
-		if (!event.locals.user) {
-			redirect(302, '/login', notSignedInMessage, event)
-		}
+		const { error: verifyPasswordError } = await locals.api.me.verify.password
+			.$post({
+				json: { password: form.data.current_password },
+			})
+			.then(locals.parseApiResponse)
 
-		if (!event.locals.session) {
-			return fail(401)
-		}
+		console.log('verifyPasswordError', verifyPasswordError)
 
-		const dbUser = await db.query.usersTable.findFirst({
-			where: eq(usersTable.id, authedUser.id),
-		})
-
-		// if (!dbUser?.hashed_password) {
-		// 	form.data.password = '';
-		// 	form.data.confirm_password = '';
-		// 	form.data.current_password = '';
-		// 	return setError(
-		// 		form,
-		// 		'Error occurred. Please try again or contact support if you need further help.',
-		// 	);
-		// }
-
-		const currentPasswordVerified = await new Argon2id().verify(
-			// dbUser.hashed_password,
-			form.data.current_password,
-		)
-
-		if (!currentPasswordVerified) {
+		if (verifyPasswordError) {
+			console.error(verifyPasswordError)
 			return setError(form, 'current_password', 'Your password is incorrect')
 		}
 		if (authedUser?.username) {
-			let sessionCookie: Cookie
 			try {
 				if (form.data.password !== form.data.confirm_password) {
 					return setError(form, 'Password and confirm password do not match')
 				}
-				const hashedPassword = await new Argon2id().hash(form.data.password)
-				await lucia.invalidateUserSessions(authedUser.id)
-				// await db
-				// 	.update(usersTable)
-				// 	.set({ hashed_password: hashedPassword })
-				// 	.where(eq(usersTable.id, user.id));
-				await lucia.createSession(user.id, {
-					country: event.locals.session?.ipCountry ?? 'unknown',
+				await locals.api.me.update.password.$put({
+					json: { password: form.data.password, confirm_password: form.data.confirm_password },
 				})
-				sessionCookie = lucia.createBlankSessionCookie()
 			} catch (e) {
 				console.error(e)
 				form.data.password = ''
@@ -102,11 +75,6 @@ export const actions: Actions = {
 				form.data.current_password = ''
 				return setError(form, 'current_password', 'Your password is incorrect.')
 			}
-			event.cookies.set(sessionCookie.name, sessionCookie.value, {
-				path: '.',
-				...sessionCookie.attributes,
-			})
-
 			const message = {
 				type: 'success',
 				message: 'Password Updated. Please sign in.',
@@ -114,10 +82,5 @@ export const actions: Actions = {
 			redirect(302, '/login', message, event)
 		}
 		return setError(form, 'Error occurred. Please try again or contact support if you need further help.')
-		// TODO: Add toast instead?
-		// form.data.password = '';
-		// form.data.confirm_password = '';
-		// form.data.current_password = '';
-		// return message(form, 'Profile updated successfully.');
 	},
 }
