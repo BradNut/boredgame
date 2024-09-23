@@ -1,7 +1,7 @@
 import { CredentialsRepository } from '$lib/server/api/repositories/credentials.repository'
 import { HMAC } from 'oslo/crypto'
-import { decodeHex, encodeHex } from 'oslo/encoding'
-import { TOTPController } from 'oslo/otp'
+import { decodeHex, encodeHexLowerCase } from '@oslojs/encoding'
+import { verifyTOTP } from '@oslojs/otp'
 import { inject, injectable } from 'tsyringe'
 import type { CredentialsType } from '../databases/tables'
 
@@ -27,7 +27,7 @@ export class TotpService {
 		try {
 			return await this.credentialsRepository.create({
 				user_id: userId,
-				secret_data: encodeHex(twoFactorSecret),
+				secret_data: encodeHexLowerCase(twoFactorSecret),
 				type: 'totp',
 			})
 		} catch (e) {
@@ -49,6 +49,6 @@ export class TotpService {
 		if (!credential) {
 			throw new Error('TOTP credential not found')
 		}
-		return await new TOTPController().verify(code, decodeHex(credential.secret_data))
+		return await verifyTOTP(decodeHex(credential.secret_data), 30, 6, code)
 	}
 }
