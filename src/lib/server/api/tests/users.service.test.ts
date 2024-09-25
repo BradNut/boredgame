@@ -1,12 +1,12 @@
 import 'reflect-metadata'
 import { CredentialsType } from '$lib/server/api/databases/tables'
 import { faker } from '@faker-js/faker'
-import { Argon2id } from 'oslo/password'
 import { container } from 'tsyringe'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import { CredentialsRepository } from '../repositories/credentials.repository'
 import { UsersRepository } from '../repositories/users.repository'
 import { CollectionsService } from '../services/collections.service'
+import { DrizzleService } from '../services/drizzle.service'
 import { TokensService } from '../services/tokens.service'
 import { UserRolesService } from '../services/user_roles.service'
 import { UsersService } from '../services/users.service'
@@ -15,21 +15,44 @@ import { WishlistsService } from '../services/wishlists.service'
 describe('UsersService', () => {
 	let service: UsersService
 	const credentialsRepository = vi.mocked(CredentialsRepository.prototype)
+	const drizzleService = vi.mocked(DrizzleService.prototype, { deep: true })
 	const tokensService = vi.mocked(TokensService.prototype)
 	const usersRepository = vi.mocked(UsersRepository.prototype)
 	const userRolesService = vi.mocked(UserRolesService.prototype)
 	const wishlistsService = vi.mocked(WishlistsService.prototype)
 	const collectionsService = vi.mocked(CollectionsService.prototype)
 
+	// Mocking the dependencies
+	vi.mock('pg', () => ({
+		Pool: vi.fn().mockImplementation(() => ({
+			connect: vi.fn(),
+			end: vi.fn(),
+		})),
+	}))
+
+	vi.mock('drizzle-orm/node-postgres', () => ({
+		drizzle: vi.fn().mockImplementation(() => ({
+			transaction: vi.fn().mockImplementation((callback) => callback()),
+			// Add other methods you need to mock
+		})),
+	}))
+
 	beforeAll(() => {
 		service = container
 			.register<CredentialsRepository>(CredentialsRepository, { useValue: credentialsRepository })
+			.register<DrizzleService>(DrizzleService, { useValue: drizzleService })
 			.register<TokensService>(TokensService, { useValue: tokensService })
 			.register<UsersRepository>(UsersRepository, { useValue: usersRepository })
 			.register<UserRolesService>(UserRolesService, { useValue: userRolesService })
 			.register<WishlistsService>(WishlistsService, { useValue: wishlistsService })
 			.register<CollectionsService>(CollectionsService, { useValue: collectionsService })
 			.resolve(UsersService)
+
+		drizzleService.db = {
+			transaction: vi.fn().mockImplementation(async (callback) => {
+				return await callback()
+			}),
+		} as any
 	})
 
 	afterAll(() => {
@@ -62,8 +85,11 @@ describe('UsersService', () => {
 
 	describe('Create User', () => {
 		it('should resolve', async () => {
-			const hashedPassword = new Argon2id().hash('111')
+			const hashedPassword = 'testhash'
 			tokensService.createHashedToken = vi.fn().mockResolvedValue(hashedPassword)
+			// drizzleService.db = {
+			// 	transaction: vi.fn().mockResolvedValue(dbUser satisfies Awaited<ReturnType<typeof drizzleService.db.transaction>>),
+			// }
 			usersRepository.create = vi.fn().mockResolvedValue(dbUser satisfies Awaited<ReturnType<typeof usersRepository.create>>)
 			credentialsRepository.create = vi.fn().mockResolvedValue(dbCredentials satisfies Awaited<ReturnType<typeof credentialsRepository.create>>)
 			userRolesService.addRoleToUser = vi.fn().mockResolvedValue(undefined)
@@ -96,7 +122,7 @@ describe('UsersService', () => {
 	})
 	describe('Update User', () => {
 		it('should resolve Password Exiting Credentials', async () => {
-			const hashedPassword = new Argon2id().hash('111')
+			const hashedPassword = 'testhash'
 			tokensService.createHashedToken = vi.fn().mockResolvedValue(hashedPassword)
 			credentialsRepository.update = vi.fn().mockResolvedValue(dbCredentials satisfies Awaited<ReturnType<typeof credentialsRepository.update>>)
 			credentialsRepository.findPasswordCredentialsByUserId = vi
@@ -112,7 +138,7 @@ describe('UsersService', () => {
 			expect(spy_credentialsRepository_update).toBeCalledTimes(1)
 		})
 		it('Should Create User Password No Existing Credentials', async () => {
-			const hashedPassword = new Argon2id().hash('111')
+			const hashedPassword = 'testhash'
 			tokensService.createHashedToken = vi.fn().mockResolvedValue(hashedPassword)
 			credentialsRepository.findPasswordCredentialsByUserId = vi.fn().mockResolvedValue(null)
 			credentialsRepository.create = vi.fn().mockResolvedValue(dbCredentials satisfies Awaited<ReturnType<typeof credentialsRepository.create>>)

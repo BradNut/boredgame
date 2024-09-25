@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import { Argon2id } from 'oslo/password'
 import { container } from 'tsyringe'
 import { afterAll, beforeAll, describe, expect, expectTypeOf, it, vi } from 'vitest'
 import { HashingService } from '../services/hashing.service'
@@ -19,7 +18,7 @@ describe('TokensService', () => {
 
 	describe('Generate Token', () => {
 		it('should resolve', async () => {
-			const hashedPassword = await new Argon2id().hash('111')
+			const hashedPassword = 'testhash'
 			hashingService.hash = vi.fn().mockResolvedValue(hashedPassword)
 			const spy_hashingService_hash = vi.spyOn(hashingService, 'hash')
 			const spy_hashingService_verify = vi.spyOn(hashingService, 'verify')
@@ -28,7 +27,7 @@ describe('TokensService', () => {
 			expect(spy_hashingService_verify).toBeCalledTimes(0)
 		})
 		it('should generate a token that is verifiable', async () => {
-			hashingService.hash = vi.fn().mockResolvedValue(await new Argon2id().hash('111'))
+			hashingService.hash = vi.fn().mockResolvedValue('testhash')
 			hashingService.verify = vi.fn().mockResolvedValue(true)
 			const spy_hashingService_hash = vi.spyOn(hashingService, 'hash')
 			const spy_hashingService_verify = vi.spyOn(hashingService, 'verify')

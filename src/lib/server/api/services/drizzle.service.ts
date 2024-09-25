@@ -7,7 +7,7 @@ import { type Disposable, injectable } from 'tsyringe'
 @injectable()
 export class DrizzleService implements Disposable {
 	protected readonly pool: pg.Pool
-	readonly db: NodePgDatabase<typeof schema>
+	db: NodePgDatabase<typeof schema>
 	readonly schema: typeof schema = schema
 
 	constructor() {

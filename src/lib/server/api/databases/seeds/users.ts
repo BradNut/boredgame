@@ -1,9 +1,8 @@
 import * as schema from '$lib/server/api/databases/tables'
 import type { db } from '$lib/server/api/packages/drizzle'
 import { eq } from 'drizzle-orm'
-import { Argon2id } from 'oslo/password'
-import { config } from '../../common/config'
 import users from './data/users.json'
+import { HashingService } from '../../services/hashing.service'
 
 type JsonRole = {
 	name: string
@@ -11,6 +10,7 @@ type JsonRole = {
 }
 
 export default async function seed(db: db) {
+	const hashingService = new HashingService()
 	const adminRole = await db.select().from(schema.rolesTable).where(eq(schema.rolesTable.name, 'admin'))
 	const userRole = await db.select().from(schema.rolesTable).where(eq(schema.rolesTable.name, 'user'))
 
@@ -32,7 +32,7 @@ export default async function seed(db: db) {
 	await db.insert(schema.credentialsTable).values({
 		user_id: adminUser[0].id,
 		type: schema.CredentialsType.PASSWORD,
-		secret_data: await new Argon2id().hash(`${process.env.ADMIN_PASSWORD}`),
+		secret_data: await hashingService.hash(`${process.env.ADMIN_PASSWORD}`),
 	})
 
 	await db.insert(schema.collections).values({ user_id: adminUser[0].id }).onConflictDoNothing()
@@ -60,6 +60,7 @@ export default async function seed(db: db) {
 		.onConflictDoNothing()
 
 	console.log('Admin user given user role.')
+	const hasingService = new HashingService()
 	await Promise.all(
 		users.map(async (user) => {
 			const [insertedUser] = await db
@@ -71,7 +72,7 @@ export default async function seed(db: db) {
 			await db.insert(schema.credentialsTable).values({
 				user_id: insertedUser?.id,
 				type: schema.CredentialsType.PASSWORD,
-				secret_data: await new Argon2id().hash(user.password),
+				secret_data: await hasingService.hash(user.password),
 			})
 			await db.insert(schema.collections).values({ user_id: insertedUser?.id })
 			await db.insert(schema.wishlistsTable).values({ user_id: insertedUser?.id })

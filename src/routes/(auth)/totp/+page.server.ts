@@ -4,8 +4,7 @@ import { twoFactorTable, usersTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth'
 import { type Actions, fail } from '@sveltejs/kit'
-import { and, eq } from 'drizzle-orm'
-import { Argon2id } from 'oslo/password'
+import { eq } from 'drizzle-orm'
 import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { superValidate } from 'sveltekit-superforms/server'
@@ -268,21 +267,21 @@ function totpTimeElapsed(initiatedTime: Date) {
 	return false
 }
 
-async function checkRecoveryCode(recoveryCode: string, userId: string) {
-	const userRecoveryCodes = await db.query.recoveryCodesTable.findMany({
-		where: and(eq(recoveryCodesTable.used, false), eq(recoveryCodesTable.userId, userId)),
-	})
-	for (const code of userRecoveryCodes) {
-		const validRecoveryCode = await new Argon2id().verify(code.code, recoveryCode)
-		if (validRecoveryCode) {
-			await db
-				.update(recoveryCodesTable)
-				.set({
-					used: true,
-				})
-				.where(eq(recoveryCodesTable.id, code.id))
-			return true
-		}
-	}
-	return false
-}
+// async function checkRecoveryCode(recoveryCode: string, userId: string) {
+// 	const userRecoveryCodes = await db.query.recoveryCodesTable.findMany({
+// 		where: and(eq(recoveryCodesTable.used, false), eq(recoveryCodesTable.userId, userId)),
+// 	})
+// 	for (const code of userRecoveryCodes) {
+// 		const validRecoveryCode = await new Argon2id().verify(code.code, recoveryCode)
+// 		if (validRecoveryCode) {
+// 			await db
+// 				.update(recoveryCodesTable)
+// 				.set({
+// 					used: true,
+// 				})
+// 				.where(eq(recoveryCodesTable.id, code.id))
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
