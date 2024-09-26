@@ -31,7 +31,7 @@ importers:
         version: 3.5.5
       '@lucia-auth/adapter-drizzle':
         specifier: ^1.1.0
-        version: 1.1.0(drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4))(lucia@3.2.0)
+        version: 1.1.0(drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0(pg-native@3.2.0))(postgres@3.4.4))(lucia@3.2.0)
       '@lukeed/uuid':
         specifier: ^2.0.1
         version: 2.0.1
@@ -97,10 +97,10 @@ importers:
         version: 11.0.6
       drizzle-orm:
         specifier: ^0.32.2
-        version: 0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4)
+        version: 0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0(pg-native@3.2.0))(postgres@3.4.4)
       drizzle-zod:
         specifier: ^0.5.1
-        version: 0.5.1(drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4))(zod@3.23.8)
+        version: 0.5.1(drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0(pg-native@3.2.0))(postgres@3.4.4))(zod@3.23.8)
       feather-icons:
         specifier: ^4.29.2
         version: 4.29.2
@@ -142,7 +142,10 @@ importers:
         version: 1.2.1
       pg:
         specifier: ^8.13.0
-        version: 8.13.0
+        version: 8.13.0(pg-native@3.2.0)
+      pg-native:
+        specifier: ^3.2.0
+        version: 3.2.0
       postgres:
         specifier: ^3.4.4
         version: 3.4.4
@@ -3263,6 +3266,9 @@ packages:
   libphonenumber-js@1.11.8:
     resolution: {integrity: sha512-0fv/YKpJBAgXKy0kaS3fnqoUVN8901vUYAKIGD/MWZaDfhJt1nZjPL3ZzdZBt/G8G8Hw2J1xOIrXWdNHFHPAvg==}
 
+  libpq@1.8.13:
+    resolution: {integrity: sha512-t1wpnGVgwRIFSKoe4RFUllAFj953kNMcdXhGvFJwI0r6lJQqgSwTeiIciaCinjOmHk0HnFeWQSMC6Uw2591G4A==}
+
   lilconfig@2.1.0:
     resolution: {integrity: sha512-utWOt/GHzuUxnLKxB6dk81RoOeoNeHgbrXiuGk4yyF5qlRz+iIVWu56E2fqGHFrXz0QNUhLB/8nKqvRH66JKGQ==}
     engines: {node: '>=10'}
@@ -3459,6 +3465,9 @@ packages:
 
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
+
+  nan@2.19.0:
+    resolution: {integrity: sha512-nO1xXxfh/RWNxfd/XPfbIfFk5vgLsAxUR9y5O0cHMJu/AW9U95JLXqthYHjEp+8gQ5p96K9jUp8nbVOxCdRbtw==}
 
   nanoid@3.3.7:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
@@ -3658,6 +3667,9 @@ packages:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
     engines: {node: '>=4.0.0'}
 
+  pg-native@3.2.0:
+    resolution: {integrity: sha512-9q9I6RmT285DiRc0xkYb8e+bwOIIbnfVLddnzzXW35K1sZc74dR+symo2oeuzSW/sDQ8n24gWAvlGWK/GDJ3+Q==}
+
   pg-numeric@1.0.2:
     resolution: {integrity: sha512-BM/Thnrw5jm2kKLE5uJkXqqExRUY/toLHda65XgFTBTFYZyopbKjBe29Ii3RbkvlsMoFwD+tHeGaCjjv0gHlyw==}
     engines: {node: '>=4'}
@@ -3672,6 +3684,9 @@ packages:
 
   pg-protocol@1.7.0:
     resolution: {integrity: sha512-hTK/mE36i8fDDhgDFjy6xNOG+LCorxLG3WO17tku+ij6sVHXh1jQUJ8hYAnRhNla4QVD2H8er/FOjc/+EgC6yQ==}
+
+  pg-types@1.13.0:
+    resolution: {integrity: sha512-lfKli0Gkl/+za/+b6lzENajczwZHc7D5kiUCZfgm914jipD2kIOIvEkAhZ8GrW3/TUoP9w8FHjwpPObBye5KQQ==}
 
   pg-types@2.2.0:
     resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
@@ -3963,6 +3978,10 @@ packages:
   postcss@8.4.47:
     resolution: {integrity: sha512-56rxCq7G/XfB4EkXq9Egn5GCqugWvDFjafDOThIdMBsI15iqPqR5r15TfSr1YPYeEI19YeaXMCbY6u88Y76GLQ==}
     engines: {node: ^10 || ^12 || >=14}
+
+  postgres-array@1.0.3:
+    resolution: {integrity: sha512-5wClXrAP0+78mcsNX3/ithQ5exKvCyK5lr5NEEEeGwwM6NJdQgzIJBVxLvRW+huFpX92F2QnZ5CcokH0VhK2qQ==}
+    engines: {node: '>=0.10.0'}
 
   postgres-array@2.0.0:
     resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
@@ -5678,9 +5697,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lucia-auth/adapter-drizzle@1.1.0(drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4))(lucia@3.2.0)':
+  '@lucia-auth/adapter-drizzle@1.1.0(drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0(pg-native@3.2.0))(postgres@3.4.4))(lucia@3.2.0)':
     dependencies:
-      drizzle-orm: 0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4)
+      drizzle-orm: 0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0(pg-native@3.2.0))(postgres@3.4.4)
       lucia: 3.2.0
 
   '@lukeed/csprng@1.1.0': {}
@@ -6849,16 +6868,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4):
+  drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0(pg-native@3.2.0))(postgres@3.4.4):
     optionalDependencies:
       '@neondatabase/serverless': 0.9.5
       '@types/pg': 8.11.10
-      pg: 8.13.0
+      pg: 8.13.0(pg-native@3.2.0)
       postgres: 3.4.4
 
-  drizzle-zod@0.5.1(drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4))(zod@3.23.8):
+  drizzle-zod@0.5.1(drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0(pg-native@3.2.0))(postgres@3.4.4))(zod@3.23.8):
     dependencies:
-      drizzle-orm: 0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4)
+      drizzle-orm: 0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0(pg-native@3.2.0))(postgres@3.4.4)
       zod: 3.23.8
 
   eastasianwidth@0.2.0: {}
@@ -7566,6 +7585,11 @@ snapshots:
   libphonenumber-js@1.11.8:
     optional: true
 
+  libpq@1.8.13:
+    dependencies:
+      bindings: 1.5.0
+      nan: 2.19.0
+
   lilconfig@2.1.0: {}
 
   lilconfig@3.1.2: {}
@@ -7736,6 +7760,8 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
+  nan@2.19.0: {}
+
   nanoid@3.3.7: {}
 
   nanoid@5.0.7: {}
@@ -7896,15 +7922,28 @@ snapshots:
 
   pg-int8@1.0.1: {}
 
+  pg-native@3.2.0:
+    dependencies:
+      libpq: 1.8.13
+      pg-types: 1.13.0
+
   pg-numeric@1.0.2: {}
 
-  pg-pool@3.7.0(pg@8.13.0):
+  pg-pool@3.7.0(pg@8.13.0(pg-native@3.2.0)):
     dependencies:
-      pg: 8.13.0
+      pg: 8.13.0(pg-native@3.2.0)
 
   pg-protocol@1.6.1: {}
 
   pg-protocol@1.7.0: {}
+
+  pg-types@1.13.0:
+    dependencies:
+      pg-int8: 1.0.1
+      postgres-array: 1.0.3
+      postgres-bytea: 1.0.0
+      postgres-date: 1.0.7
+      postgres-interval: 1.2.0
 
   pg-types@2.2.0:
     dependencies:
@@ -7924,15 +7963,16 @@ snapshots:
       postgres-interval: 3.0.0
       postgres-range: 1.1.4
 
-  pg@8.13.0:
+  pg@8.13.0(pg-native@3.2.0):
     dependencies:
       pg-connection-string: 2.7.0
-      pg-pool: 3.7.0(pg@8.13.0)
+      pg-pool: 3.7.0(pg@8.13.0(pg-native@3.2.0))
       pg-protocol: 1.7.0
       pg-types: 2.2.0
       pgpass: 1.0.5
     optionalDependencies:
       pg-cloudflare: 1.1.1
+      pg-native: 3.2.0
 
   pgpass@1.0.5:
     dependencies:
@@ -8241,6 +8281,8 @@ snapshots:
       nanoid: 3.3.7
       picocolors: 1.1.0
       source-map-js: 1.2.1
+
+  postgres-array@1.0.3: {}
 
   postgres-array@2.0.0: {}
 
