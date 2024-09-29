@@ -5,7 +5,11 @@ import { defineConfig } from 'drizzle-kit'
 export default defineConfig({
 	dialect: 'postgresql',
 	out: './src/lib/server/api/databases/migrations',
+<<<<<<< HEAD
 	schema: './src/lib/server/api/databases/tables/*.table.ts',
+=======
+	schema: './src/lib/server/api/databases/tables/index.ts',
+>>>>>>> 5849219833a6b9a99ec24a960962c4c537e93748
 	dbCredentials: {
 		host: env.DATABASE_HOST || 'localhost',
 		port: Number(env.DATABASE_PORT) || 5432,
