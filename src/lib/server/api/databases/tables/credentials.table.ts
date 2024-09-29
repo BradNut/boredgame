@@ -1,6 +1,6 @@
-import { timestamps } from '$lib/server/api/common/utils/table.utils'
 import { type InferSelectModel } from 'drizzle-orm'
 import { pgTable, text, uuid } from 'drizzle-orm/pg-core'
+import { timestamps } from '../../common/utils/table.utils'
 import { usersTable } from './users.table'
 
 export enum CredentialsType {

@@ -1,4 +1,4 @@
-import { timestamps } from '$lib/server/api/common/utils/table.utils'
+import { timestamps } from '../../common/utils/table.utils'
 import type { InferSelectModel } from 'drizzle-orm'
 import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core'
 import { usersTable } from './users.table'

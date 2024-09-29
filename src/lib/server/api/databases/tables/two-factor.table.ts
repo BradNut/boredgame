@@ -1,4 +1,4 @@
-import { timestamps } from '$lib/server/api/common/utils/table.utils'
+import { timestamps } from '../../common/utils/table.utils'
 import { createId as cuid2 } from '@paralleldrive/cuid2'
 import { type InferSelectModel, relations } from 'drizzle-orm'
 import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'

@@ -1,7 +1,7 @@
-import { timestamps } from '$lib/server/api/common/utils/table.utils'
 import { createId as cuid2 } from '@paralleldrive/cuid2'
 import { type InferSelectModel, relations, sql } from 'drizzle-orm'
 import { index, integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { timestamps } from '../../common/utils/table.utils'
 import { categories_to_games_table } from './categoriesToGames'
 import { gamesToExternalIds } from './gamesToExternalIds'
 import { mechanics_to_games } from './mechanicsToGames'
