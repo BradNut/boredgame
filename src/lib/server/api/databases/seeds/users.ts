@@ -1,8 +1,8 @@
-import * as schema from '$lib/server/api/databases/tables'
-import type { db } from '$lib/server/api/packages/drizzle'
 import { eq } from 'drizzle-orm'
-import users from './data/users.json'
+import type { db } from '../../packages/drizzle'
 import { HashingService } from '../../services/hashing.service'
+import * as schema from '../tables'
+import users from './data/users.json'
 
 type JsonRole = {
 	name: string
