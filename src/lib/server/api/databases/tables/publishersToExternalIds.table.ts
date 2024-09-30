@@ -1,6 +1,7 @@
 import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core'
 import { externalIdsTable } from './externalIds.table'
 import { publishersTable } from './publishers.table'
+import { relations } from 'drizzle-orm'
 
 export const publishersToExternalIdsTable = pgTable(
 	'publishers_to_external_ids',
@@ -20,3 +21,14 @@ export const publishersToExternalIdsTable = pgTable(
 		}
 	},
 )
+
+export const publishersToExternalIdsRelations = relations(publishersToExternalIdsTable, ({ one }) => ({
+	publisher: one(publishersTable, {
+		fields: [publishersToExternalIdsTable.publisherId],
+		references: [publishersTable.id],
+	}),
+	externalId: one(externalIdsTable, {
+		fields: [publishersToExternalIdsTable.externalId],
+		references: [externalIdsTable.id],
+	}),
+}))

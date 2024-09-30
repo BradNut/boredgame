@@ -18,6 +18,6 @@ export const publishersTable = pgTable('publishers', {
 export type Publishers = InferSelectModel<typeof publishersTable>
 
 export const publishers_relations = relations(publishersTable, ({ many }) => ({
-	publishers_to_games: many(publishers_to_games),
+	publishersToGames: many(publishers_to_games),
 	publishersToExternalIds: many(publishersToExternalIdsTable),
 }))
