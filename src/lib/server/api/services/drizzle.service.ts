@@ -1,8 +1,8 @@
-import { config } from '$lib/server/api/common/config'
-import * as schema from '$lib/server/api/databases/tables'
 import { type NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres'
 import pg from 'pg'
 import { type Disposable, injectable } from 'tsyringe'
+import { config } from '../common/config'
+import * as schema from '../databases/tables'
 
 @injectable()
 export class DrizzleService implements Disposable {
