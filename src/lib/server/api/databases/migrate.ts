@@ -11,7 +11,7 @@ const connection = postgres({
 	user: env.DATABASE_USER || 'root',
 	password: env.DATABASE_PASSWORD || '',
 	database: env.DATABASE_DB || 'boredgame',
-	ssl: env.NODE_ENV === 'development' ? false : 'require',
+	ssl: false, // env.NODE_ENV === 'development' ? false : 'require',
 	max: 1,
 })
 const db = drizzle(connection)
