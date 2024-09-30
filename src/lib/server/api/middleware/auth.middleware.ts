@@ -1,10 +1,12 @@
+import { LuciaService } from '$lib/server/api/services/lucia.service'
 import type { MiddlewareHandler } from 'hono'
 import { createMiddleware } from 'hono/factory'
-import type { Session, User } from 'lucia'
 import { verifyRequestOrigin } from 'oslo/request'
-import { Unauthorized } from '../common/exceptions'
-import { lucia } from '../packages/lucia'
-import type { HonoTypes } from '../types'
+import { container } from 'tsyringe'
+import type { HonoTypes } from '../common/types/hono'
+
+// resolve dependencies from the container
+const { lucia } = container.resolve(LuciaService)
 
 export const verifyOrigin: MiddlewareHandler<HonoTypes> = createMiddleware(async (c, next) => {
 	if (c.req.method === 'GET') {
@@ -27,7 +29,7 @@ export const validateAuthSession: MiddlewareHandler<HonoTypes> = createMiddlewar
 	}
 
 	const { session, user } = await lucia.validateSession(sessionId)
-	if (session && session.fresh) {
+	if (session?.fresh) {
 		c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize(), { append: true })
 	}
 	if (!session) {
@@ -35,16 +37,5 @@ export const validateAuthSession: MiddlewareHandler<HonoTypes> = createMiddlewar
 	}
 	c.set('session', session)
 	c.set('user', user)
-	return next()
-})
-
-export const requireAuth: MiddlewareHandler<{
-	Variables: {
-		session: Session
-		user: User
-	}
-}> = createMiddleware(async (c, next) => {
-	const user = c.var.user
-	if (!user) throw Unauthorized('You must be logged in to access this resource')
 	return next()
 })

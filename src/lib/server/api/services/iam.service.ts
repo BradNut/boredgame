@@ -1,7 +1,9 @@
+import { CredentialsType } from '$lib/server/api/databases/tables'
+import type { ChangePasswordDto } from '$lib/server/api/dtos/change-password.dto'
 import type { UpdateEmailDto } from '$lib/server/api/dtos/update-email.dto'
 import type { UpdateProfileDto } from '$lib/server/api/dtos/update-profile.dto'
 import type { VerifyPasswordDto } from '$lib/server/api/dtos/verify-password.dto'
-import { LuciaProvider } from '$lib/server/api/providers/lucia.provider'
+import { LuciaService } from '$lib/server/api/services/lucia.service'
 import { UsersService } from '$lib/server/api/services/users.service'
 import { inject, injectable } from 'tsyringe'
 
@@ -25,12 +27,12 @@ simple as possible. This makes the service easier to read, test and understand.
 @injectable()
 export class IamService {
 	constructor(
-		@inject(LuciaProvider) private readonly lucia: LuciaProvider,
+		@inject(LuciaService) private luciaService: LuciaService,
 		@inject(UsersService) private readonly usersService: UsersService,
 	) {}
 
 	async logout(sessionId: string) {
-		return this.lucia.invalidateSession(sessionId)
+		return this.luciaService.lucia.invalidateSession(sessionId)
 	}
 
 	async updateProfile(userId: string, data: UpdateProfileDto) {
@@ -42,13 +44,13 @@ export class IamService {
 		}
 
 		const existingUserForNewUsername = await this.usersService.findOneByUsername(data.username)
-		if (existingUserForNewUsername && existingUserForNewUsername.id !== userId) {
+		if (existingUserForNewUsername && existingUserForNewUsername.id !== user.id) {
 			return {
 				error: 'Username already in use',
 			}
 		}
 
-		return this.usersService.updateUser(userId, {
+		return this.usersService.updateUser(user.id, {
 			first_name: data.firstName,
 			last_name: data.lastName,
 			username: data.username !== user.username ? data.username : user.username,
@@ -66,6 +68,11 @@ export class IamService {
 		return this.usersService.updateUser(userId, {
 			email,
 		})
+	}
+
+	async updatePassword(userId: string, data: ChangePasswordDto) {
+		const { password } = data
+		await this.usersService.updatePassword(userId, password)
 	}
 
 	async verifyPassword(userId: string, data: VerifyPasswordDto) {

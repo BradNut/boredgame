@@ -1,33 +1,33 @@
 <script lang="ts">
-	// import { tick, onDestroy } from 'svelte';
-	import Game from '$components/Game.svelte';
-	import type { UICollection } from '$lib/types';
+// import { tick, onDestroy } from 'svelte';
+import Game from '$components/Game.svelte'
+import type { UICollection } from '$lib/types'
 
-	export let data;
-	console.log(`Page data: ${JSON.stringify(data)}`);
-	let collection: UICollection = data?.collection ?? {};
-	let items = data?.items || [];
-	console.log('items', items);
+const { data } = $props()
+const { items = [] } = data
+console.log(`Page data: ${JSON.stringify(data)}`)
+let collection: UICollection = data?.collection ?? {}
+console.log('items', items)
 
-	// async function handleNextPageEvent(event: CustomEvent) {
-	// 	if (+event?.detail?.page === page + 1) {
-	// 		page += 1;
-	// 	}
-	// 	await tick();
-	// }
+// async function handleNextPageEvent(event: CustomEvent) {
+// 	if (+event?.detail?.page === page + 1) {
+// 		page += 1;
+// 	}
+// 	await tick();
+// }
 
-	// async function handlePreviousPageEvent(event: CustomEvent) {
-	// 	if (+event?.detail?.page === page - 1) {
-	// 		page -= 1;
-	// 	}
-	// 	await tick();
-	// }
+// async function handlePreviousPageEvent(event: CustomEvent) {
+// 	if (+event?.detail?.page === page - 1) {
+// 		page -= 1;
+// 	}
+// 	await tick();
+// }
 
-	// async function handlePerPageEvent(event: CustomEvent) {
-	// 	page = 1;
-	// 	pageSize = event.detail.pageSize;
-	// 	await tick();
-	// }
+// async function handlePerPageEvent(event: CustomEvent) {
+// 	page = 1;
+// 	pageSize = event.detail.pageSize;
+// 	await tick();
+// }
 </script>
 
 <svelte:head>

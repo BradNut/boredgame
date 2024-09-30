@@ -1,26 +1,28 @@
 <script lang="ts">
-	export let data;
-	let wishlists = data?.wishlists || [];
+const { data } = $props()
+const { wishlists = [] } = data
 </script>
 
 <svelte:head>
 	<title>Your Wishlists | Bored Game</title>
 </svelte:head>
 
-<h1>Your wishlists</h1>
+<div class="container">
+	<h1>Your wishlistsTable</h1>
 
-<div class="wishlists">
-	<div class="wishlist-list">
-		{#if wishlists.length === 0}
-			<h2>You have no wishlists</h2>
-		{:else}
-			{#each wishlists as wishlist}
-				<div class="collection grid gap-0.5">
-					<h2><a href="/wishlists/{wishlist.cuid}">{wishlist.name}</a></h2>
-					<h3>Created at: {new Date(wishlist.created_at).toLocaleString()}</h3>
-				</div>
-			{/each}
-		{/if}
+	<div class="wishlists">
+		<div class="wishlist-list">
+			{#if wishlists.length === 0}
+				<h2>You have no wishlistsTable</h2>
+			{:else}
+				{#each wishlists as wishlist}
+					<div class="collection grid gap-0.5">
+						<h2><a href="/wishlists/{wishlist.cuid}">{wishlist.name}</a></h2>
+						<h3>Created at: {new Date(wishlist.created_at).toLocaleString()}</h3>
+					</div>
+				{/each}
+			{/if}
+		</div>
 	</div>
 </div>
 

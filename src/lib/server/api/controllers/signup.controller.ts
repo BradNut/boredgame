@@ -1,26 +1,24 @@
 import 'reflect-metadata'
-import type { Controller } from '$lib/server/api/common/interfaces/controller.interface'
+import { Controller } from '$lib/server/api/common/types/controller'
 import { signupUsernameEmailDto } from '$lib/server/api/dtos/signup-username-email.dto'
 import { limiter } from '$lib/server/api/middleware/rate-limiter.middleware'
-import { LuciaProvider } from '$lib/server/api/providers/lucia.provider'
 import { LoginRequestsService } from '$lib/server/api/services/loginrequest.service'
+import { LuciaService } from '$lib/server/api/services/lucia.service'
 import { UsersService } from '$lib/server/api/services/users.service'
 import { zValidator } from '@hono/zod-validator'
-import { Hono } from 'hono'
 import { setCookie } from 'hono/cookie'
 import { TimeSpan } from 'oslo'
 import { inject, injectable } from 'tsyringe'
-import type { HonoTypes } from '../types'
 
 @injectable()
-export class SignupController implements Controller {
-	controller = new Hono<HonoTypes>()
-
+export class SignupController extends Controller {
 	constructor(
 		@inject(UsersService) private readonly usersService: UsersService,
 		@inject(LoginRequestsService) private readonly loginRequestService: LoginRequestsService,
-		@inject(LuciaProvider) private lucia: LuciaProvider,
-	) {}
+		@inject(LuciaService) private luciaService: LuciaService,
+	) {
+		super()
+	}
 
 	routes() {
 		return this.controller.post('/', zValidator('json', signupUsernameEmailDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
@@ -38,7 +36,7 @@ export class SignupController implements Controller {
 			}
 
 			const session = await this.loginRequestService.createUserSession(user.id, c.req, undefined)
-			const sessionCookie = this.lucia.createSessionCookie(session.id)
+			const sessionCookie = this.luciaService.lucia.createSessionCookie(session.id)
 			console.log('set cookie', sessionCookie)
 			setCookie(c, sessionCookie.name, sessionCookie.value, {
 				path: sessionCookie.attributes.path,

@@ -1,7 +1,7 @@
-import { timestamps } from '../../common/utils/table.utils'
 import { createId as cuid2 } from '@paralleldrive/cuid2'
 import { type InferSelectModel, relations } from 'drizzle-orm'
 import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core'
+import { timestamps } from '../../common/utils/table'
 import { usersTable } from './users.table'
 
 export const twoFactorTable = pgTable('two_factor', {

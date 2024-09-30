@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import postgres from 'postgres'
 import config from '../../../../../drizzle.config'
-import env from '../../../../env'
+import env from '../common/env'
 
 const connection = postgres({
 	host: env.DATABASE_HOST || 'localhost',
@@ -17,7 +17,11 @@ const connection = postgres({
 const db = drizzle(connection)
 
 try {
-	await migrate(db, { migrationsFolder: config.out! })
+	if (!config.out) {
+		console.error('No migrations folder specified in drizzle.config.ts')
+		process.exit()
+	}
+	await migrate(db, { migrationsFolder: config.out })
 	console.log('Migrations complete')
 } catch (e) {
 	console.error(e)

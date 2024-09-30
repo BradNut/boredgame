@@ -39,7 +39,7 @@
 
 <h1>Do the admin stuff</h1>
 
-<slot />
+{@render children()}
 
 <Toaster />
 

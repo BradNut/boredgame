@@ -1,27 +1,24 @@
 import 'reflect-metadata'
 import { StatusCodes } from '$lib/constants/status-codes'
-import type { Controller } from '$lib/server/api/common/interfaces/controller.interface'
+import { Controller } from '$lib/server/api/common/types/controller'
 import { verifyTotpDto } from '$lib/server/api/dtos/verify-totp.dto'
-import { db } from '$lib/server/api/packages/drizzle'
 import { RecoveryCodesService } from '$lib/server/api/services/recovery-codes.service'
 import { TotpService } from '$lib/server/api/services/totp.service'
 import { UsersService } from '$lib/server/api/services/users.service'
 import { zValidator } from '@hono/zod-validator'
-import { Hono } from 'hono'
 import { inject, injectable } from 'tsyringe'
 import { CredentialsType } from '../databases/tables'
-import { requireAuth } from '../middleware/auth.middleware'
-import type { HonoTypes } from '../types'
+import { requireAuth } from '../middleware/require-auth.middleware'
 
 @injectable()
-export class MfaController implements Controller {
-	controller = new Hono<HonoTypes>()
-
+export class MfaController extends Controller {
 	constructor(
 		@inject(RecoveryCodesService) private readonly recoveryCodesService: RecoveryCodesService,
 		@inject(TotpService) private readonly totpService: TotpService,
 		@inject(UsersService) private readonly usersService: UsersService,
-	) {}
+	) {
+		super()
+	}
 
 	routes() {
 		return this.controller
@@ -52,8 +49,9 @@ export class MfaController implements Controller {
 				const user = c.var.user
 				// You can only view recovery codes once and that is on creation
 				const existingCodes = await this.recoveryCodesService.findAllRecoveryCodesByUserId(user.id)
-				if (existingCodes) {
-					return c.body('You have already generated recovery codes', StatusCodes.BAD_REQUEST)
+				if (existingCodes && existingCodes.length > 0) {
+					console.log('Recovery Codes found', existingCodes)
+					return c.json({ recoveryCodes: existingCodes })
 				}
 				const recoveryCodes = await this.recoveryCodesService.createRecoveryCodes(user.id)
 				return c.json({ recoveryCodes })

@@ -1,5 +1,5 @@
 import { notSignedInMessage } from '$lib/flashMessages'
-import { games, wishlist_items, wishlists } from '$lib/server/api/databases/tables'
+import { gamesTable, wishlist_items, wishlistsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { userNotAuthenticated } from '$lib/server/auth-utils'
 import { modifyListGameSchema } from '$lib/validations/zod-schemas'
@@ -20,18 +20,18 @@ export async function load(event) {
 	try {
 		const wishlist = await db
 			.select({
-				wishlistId: wishlists.id,
+				wishlistId: wishlistsTable.id,
 				wishlistItems: {
 					id: wishlist_items.id,
 					gameId: wishlist_items.game_id,
-					gameName: games.name,
-					gameThumbUrl: games.thumb_url,
+					gameName: gamesTable.name,
+					gameThumbUrl: gamesTable.thumb_url,
 				},
 			})
-			.from(wishlists)
-			.leftJoin(wishlist_items, eq(wishlists.id, wishlist_items.wishlist_id))
-			.leftJoin(games, eq(games.id, wishlist_items.game_id))
-			.where(eq(wishlists.id, params.id))
+			.from(wishlistsTable)
+			.leftJoin(wishlist_items, eq(wishlistsTable.id, wishlist_items.wishlist_id))
+			.leftJoin(gamesTable, eq(gamesTable.id, wishlist_items.game_id))
+			.where(eq(wishlistsTable.id, params.id))
 		return {
 			wishlist,
 		}
@@ -44,10 +44,11 @@ export async function load(event) {
 export const actions: Actions = {
 	// Add game to a wishlist
 	add: async (event) => {
-		const { params, locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+		const { locals, params } = event
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 		const form = await superValidate(event, zod(modifyListGameSchema))
 
@@ -61,8 +62,8 @@ export const actions: Actions = {
 			})
 		}
 
-		const game = await db.query.games.findFirst({
-			where: eq(games.id, form.id),
+		const game = await db.query.gamesTable.findFirst({
+			where: eq(gamesTable.id, form.id),
 		})
 
 		if (!game) {
@@ -71,8 +72,8 @@ export const actions: Actions = {
 			})
 		}
 
-		const wishlist = await db.query.wishlists.findFirst({
-			where: eq(wishlists.id, params.id),
+		const wishlist = await db.query.wishlistsTable.findFirst({
+			where: eq(wishlistsTable.id, params.id),
 		})
 
 		if (wishlist?.user_id !== locals.user.id) {
@@ -103,25 +104,28 @@ export const actions: Actions = {
 	// Create new wishlist
 	create: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 	},
 	// Delete a wishlist
 	delete: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 	},
 	// Remove game from a wishlist
 	remove: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 	},
 }

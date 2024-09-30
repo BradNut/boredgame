@@ -1,16 +1,14 @@
 import 'reflect-metadata'
-import type { Controller } from '$lib/server/api/common/interfaces/controller.interface'
+import { Controller } from '$lib/server/api/common/types/controller'
 import { WishlistsService } from '$lib/server/api/services/wishlists.service'
-import { Hono } from 'hono'
 import { inject, injectable } from 'tsyringe'
-import { requireAuth } from '../middleware/auth.middleware'
-import type { HonoTypes } from '../types'
+import { requireAuth } from '../middleware/require-auth.middleware'
 
 @injectable()
-export class WishlistController implements Controller {
-	controller = new Hono<HonoTypes>()
-
-	constructor(@inject(WishlistsService) private readonly wishlistsService: WishlistsService) {}
+export class WishlistController extends Controller {
+	constructor(@inject(WishlistsService) private readonly wishlistsService: WishlistsService) {
+		super()
+	}
 
 	routes() {
 		return this.controller

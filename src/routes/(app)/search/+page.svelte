@@ -1,41 +1,41 @@
 <script lang="ts">
-	import { dev } from '$app/environment';
-	import { superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
-	import { createToolbar, melt } from '@melt-ui/svelte';
-	import { LayoutList, LayoutGrid } from 'lucide-svelte';
-	import Game from '$components/Game.svelte';
-	import * as Pagination from "$lib/components/ui/pagination";
-	import GameSearchForm from '$components/search/GameSearchForm.svelte';
-	import { search_schema } from '$lib/zodValidation';
+import { dev } from '$app/environment'
+import Game from '$components/Game.svelte'
+import GameSearchForm from '$components/search/GameSearchForm.svelte'
+import * as Pagination from '$lib/components/ui/pagination'
+import { search_schema } from '$lib/zodValidation'
+import { createToolbar, melt } from '@melt-ui/svelte'
+import { LayoutGrid, LayoutList } from 'lucide-svelte'
+import { superForm } from 'sveltekit-superforms'
+import { zodClient } from 'sveltekit-superforms/adapters'
+import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte'
 
-	export let data;
+export let data
 
-	const { games, totalCount } = data.searchData;
+const { games, totalCount } = data.searchData
 
-	console.log('data found', data);
-	console.log('found games', games);
-	console.log('found totalCount', totalCount);
+console.log('data found', data)
+console.log('found gamesTable', games)
+console.log('found totalCount', totalCount)
 
-	const form = superForm(data.form, {
-		validators: zodClient(search_schema),
-	});
+const form = superForm(data.form, {
+	validators: zodClient(search_schema),
+})
 
-	let pageSize: number = form.limit || 10;
+let pageSize: number = form.limit || 10
 
-	const {
-    elements: { root: toolbarRoot },
-    builders: { createToolbarGroup },
-  } = createToolbar();
-  const {
-    elements: { group: listStyleGroup, item: listStyleItem },
-  } = createToolbarGroup();
+const {
+	elements: { root: toolbarRoot },
+	builders: { createToolbarGroup },
+} = createToolbar()
+const {
+	elements: { group: listStyleGroup, item: listStyleItem },
+} = createToolbarGroup()
 
-	const gameListStyle: 'grid' | 'list' = 'grid';
-	function handleListStyle(event) {
-		console.log(event, typeof event);
-	}
+const gameListStyle: 'grid' | 'list' = 'grid'
+function handleListStyle(event) {
+	console.log(event, typeof event)
+}
 </script>
 
 <div class="game-search">
@@ -65,7 +65,7 @@
 					<Game {game} />
 				{/each}
 			{:else}
-				<h2>Sorry no games found!</h2>
+				<h2>Sorry no gamesTable found!</h2>
 			{/if}
 		</div>
 		<Pagination.Root count={totalCount} perPage={pageSize} let:pages let:currentPage>

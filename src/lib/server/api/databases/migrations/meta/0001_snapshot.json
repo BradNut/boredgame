@@ -1,6 +1,6 @@
 {
-  "id": "52e7c416-89cb-4c6a-9118-68a03cfc2920",
-  "prevId": "e120d11a-bf28-4c96-9f2f-96e23e23c7e2",
+  "id": "e1230cae-67ce-4669-885a-3d3fe4462f9e",
+  "prevId": "4760134e-48bb-47db-b431-56903dad6e24",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -338,6 +338,70 @@
         }
       }
     },
+    "public.credentials": {
+      "name": "credentials",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'password'"
+        },
+        "secret_data": {
+          "name": "secret_data",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "credentials_user_id_users_id_fk": {
+          "name": "credentials_user_id_users_id_fk",
+          "tableFrom": "credentials",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.expansions": {
       "name": "expansions",
       "schema": "",
@@ -465,6 +529,75 @@
           ]
         }
       }
+    },
+    "public.federated_identity": {
+      "name": "federated_identity",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "identity_provider": {
+          "name": "identity_provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "federated_user_id": {
+          "name": "federated_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "federated_username": {
+          "name": "federated_username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "federated_identity_user_id_users_id_fk": {
+          "name": "federated_identity_user_id_users_id_fk",
+          "tableFrom": "federated_identity",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
     },
     "public.games": {
       "name": "games",
@@ -1290,7 +1423,7 @@
           "name": "initiated_time",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "user_id": {
           "name": "user_id",
@@ -1461,12 +1594,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "hashed_password": {
-          "name": "hashed_password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "email": {
           "name": "email",
           "type": "text",
@@ -1497,6 +1624,26 @@
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
+          "default": false
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "picture": {
+          "name": "picture",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mfa_enabled": {
+          "name": "mfa_enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
           "default": false
         },
         "theme": {
@@ -1720,6 +1867,7 @@
     }
   },
   "schemas": {},
+  "sequences": {},
   "_meta": {
     "columns": {},
     "schemas": {},

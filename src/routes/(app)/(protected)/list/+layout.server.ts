@@ -1,5 +1,5 @@
 import { notSignedInMessage } from '$lib/flashMessages'
-import { wishlists } from '$lib/server/api/databases/tables'
+import { wishlistsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { eq } from 'drizzle-orm'
 import { redirect } from 'sveltekit-flash-message/server'
@@ -14,7 +14,7 @@ export async function load(event) {
 
 	try {
 		const dbWishlists = await db.query.wishlists.findMany({
-			where: eq(wishlists.user_id, authedUser.id),
+			where: eq(wishlistsTable.user_id, authedUser.id),
 		})
 
 		return {

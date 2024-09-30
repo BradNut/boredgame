@@ -1,20 +1,15 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
-	import toast from 'svelte-french-toast';
-	import { ListChecks, ListTodo, LogOut, User } from 'lucide-svelte';
-	import * as DropdownMenu from '$components/ui/dropdown-menu';
-	import * as Avatar from '$components/ui/avatar';
-	import { invalidateAll } from '$app/navigation';
-	import Logo from '$components/logo.svelte';
-	import type { Users } from '$db/schema';
+import { applyAction, enhance } from '$app/forms'
+import { invalidateAll } from '$app/navigation'
+import Logo from '$components/logo.svelte'
+import * as Avatar from '$components/ui/avatar'
+import * as DropdownMenu from '$components/ui/dropdown-menu'
+import { ListChecks, ListTodo, LogOut, Settings } from 'lucide-svelte'
+import toast from 'svelte-french-toast'
 
-	type HeaderProps = {
-		user: Users | null;
-	};
+let { user = null } = $props()
 
-	let { user = null }: HeaderProps = $props();
-
-	let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)');
+let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)')
 </script>
 
 <header>
@@ -28,39 +23,48 @@
 	</div>
 	<nav>
 		{#if user}
-			<DropdownMenu.Root>
-				<DropdownMenu.Trigger>
-					<Avatar.Root asChild>
-						<Avatar.Fallback class="text-3xl font-medium text-magnum-700 h-16 w-16 bg-neutral-100">
-							{avatar}
-						</Avatar.Fallback>
-					</Avatar.Root>
-				</DropdownMenu.Trigger>
-				<DropdownMenu.Content>
-					<DropdownMenu.Group>
-						<DropdownMenu.Label>Account</DropdownMenu.Label>
-						<DropdownMenu.Separator />
-						<a href="/profile">
-							<DropdownMenu.Item>
-								<User class="mr-2 h-4 w-4" />
-								<span>Profile</span>
-							</DropdownMenu.Item>
-						</a>
-						<a href="/collections">
-							<DropdownMenu.Item>
-								<ListChecks class="mr-2 h-4 w-4" />
-								<span>Collections</span>
-							</DropdownMenu.Item>
-						</a>
-						<a href="/wishlists">
-							<DropdownMenu.Item>
-								<ListTodo class="mr-2 h-4 w-4" />
-								<span>Wishlists</span>
-							</DropdownMenu.Item>
-						</a>
-						<DropdownMenu.Item>
-							<form
-								use:enhance={() => {
+			{@render userDropdown()}
+		{:else}
+			<a href="/login"> <span class="flex-auto">Login</span></a>
+			<a href="/signup"> <span class="flex-auto">Sign Up</span></a>
+		{/if}
+	</nav>
+</header>
+
+{#snippet userDropdown()}
+	<DropdownMenu.Root>
+		<DropdownMenu.Trigger>
+			<Avatar.Root asChild>
+				<Avatar.Fallback class="text-3xl font-medium text-magnum-700 h-16 w-16 bg-neutral-100">
+					{avatar}
+				</Avatar.Fallback>
+			</Avatar.Root>
+		</DropdownMenu.Trigger>
+		<DropdownMenu.Content>
+			<DropdownMenu.Group>
+				<DropdownMenu.Label>Account</DropdownMenu.Label>
+				<DropdownMenu.Separator />
+				<a href="/settings">
+					<DropdownMenu.Item>
+						<Settings class="mr-2 h-4 w-4" />
+						<span>Settings</span>
+					</DropdownMenu.Item>
+				</a>
+				<a href="/collections">
+					<DropdownMenu.Item>
+						<ListChecks class="mr-2 h-4 w-4" />
+						<span>Collections</span>
+					</DropdownMenu.Item>
+				</a>
+				<a href="/wishlists">
+					<DropdownMenu.Item>
+						<ListTodo class="mr-2 h-4 w-4" />
+						<span>Wishlists</span>
+					</DropdownMenu.Item>
+				</a>
+				<DropdownMenu.Item>
+					<form
+							use:enhance={() => {
 									return async ({ result }) => {
 										console.log(result);
 										if (result.type === 'success' || result.type === 'redirect') {
@@ -76,26 +80,21 @@
 										await applyAction(result);
 									};
 								}}
-								action="/logout"
-								method="POST"
-							>
-								<button type="submit">
-									<div class="flex items-center gap-1">
-										<LogOut class="mr-2 h-4 w-4" />
-										<span>Sign out</span>
-									</div>
-								</button>
-							</form>
-						</DropdownMenu.Item>
-					</DropdownMenu.Group>
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
-		{:else}
-			<a href="/login"> <span class="flex-auto">Login</span></a>
-			<a href="/signup"> <span class="flex-auto">Sign Up</span></a>
-		{/if}
-	</nav>
-</header>
+							action="/logout"
+							method="POST"
+					>
+						<button type="submit">
+							<div class="flex items-center gap-1">
+								<LogOut class="mr-2 h-4 w-4" />
+								<span>Sign out</span>
+							</div>
+						</button>
+					</form>
+				</DropdownMenu.Item>
+			</DropdownMenu.Group>
+		</DropdownMenu.Content>
+	</DropdownMenu.Root>
+{/snippet}
 
 <style lang="postcss">
 	header {

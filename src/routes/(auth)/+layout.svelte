@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { Button } from '$lib/components/ui/button';
-	import Logo from '$lib/components/logo.svelte';
-	import Transition from '$lib/components/transition.svelte';
+import { page } from '$app/stores'
+import Logo from '$lib/components/logo.svelte'
+import Transition from '$lib/components/transition.svelte'
+import { Button } from '$lib/components/ui/button'
 
-	let { data, children } = $props();
+let { data, children } = $props()
 </script>
 
 <div class="container">
@@ -32,7 +32,7 @@
 		<div class="quote-wrapper">
 			<blockquote class="quote">
 				<p>
-					"How many games do I own? What was the last one I played? What haven't I played in a long
+					"How many gamesTable do I own? What was the last one I played? What haven't I played in a long
 					time? If this sounds like you then Bored Game is your new best friend."
 				</p>
 				<footer>Bradley</footer>

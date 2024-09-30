@@ -1,5 +1,5 @@
 import { notSignedInMessage } from '$lib/flashMessages.js'
-import { games, wishlist_items, wishlists } from '$lib/server/api/databases/tables'
+import { gamesTable, wishlist_items, wishlistsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
 import { userNotAuthenticated } from '$lib/server/auth-utils'
 import { modifyListGameSchema } from '$lib/validations/zod-schemas'
@@ -23,7 +23,7 @@ export async function load(event) {
 			name: true,
 			createdAt: true,
 		},
-		where: eq(wishlists.user_id, authedUser.id),
+		where: eq(wishlistsTable.user_id, authedUser.id),
 	})
 	console.log('wishlists', userWishlists)
 
@@ -50,7 +50,7 @@ export const actions: Actions = {
 
 		try {
 			const game = await db.query.games.findFirst({
-				where: eq(games.id, form.data.id),
+				where: eq(gamesTable.id, form.data.id),
 			})
 
 			if (!game) {
@@ -65,7 +65,7 @@ export const actions: Actions = {
 
 			if (game) {
 				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, authedUser.id),
+					where: eq(wishlistsTable.user_id, authedUser.id),
 				})
 
 				if (!wishlist) {
@@ -90,18 +90,20 @@ export const actions: Actions = {
 	// Create new wishlist
 	create: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 		return error(405, 'Method not allowed')
 	},
 	// Delete a wishlist
 	delete: async (event) => {
 		const { locals } = event
-		const { user, session } = locals
-		if (userNotAuthenticated(user, session)) {
-			return fail(401)
+
+		const authedUser = await locals.getAuthedUser()
+		if (!authedUser) {
+			throw redirect(302, '/login', notSignedInMessage, event)
 		}
 		return error(405, 'Method not allowed')
 	},
@@ -116,8 +118,8 @@ export const actions: Actions = {
 		const form = await superValidate(event, zod(modifyListGameSchema))
 
 		try {
-			const game = await db.query.games.findFirst({
-				where: eq(games.id, form.data.id),
+			const game = await db.query.gamesTable.findFirst({
+				where: eq(gamesTable.id, form.data.id),
 			})
 
 			if (!game) {
@@ -131,8 +133,8 @@ export const actions: Actions = {
 			}
 
 			if (game) {
-				const wishlist = await db.query.wishlists.findFirst({
-					where: eq(wishlists.user_id, authedUser.id),
+				const wishlist = await db.query.wishlistsTable.findFirst({
+					where: eq(wishlistsTable.user_id, authedUser.id),
 				})
 
 				if (!wishlist) {

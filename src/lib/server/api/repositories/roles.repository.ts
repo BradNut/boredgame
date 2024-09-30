@@ -1,9 +1,8 @@
-import type { Repository } from '$lib/server/api/common/interfaces/repository.interface'
-import { DatabaseProvider } from '$lib/server/api/providers/database.provider'
+import { DrizzleService } from '$lib/server/api/services/drizzle.service'
 import { type InferInsertModel, eq } from 'drizzle-orm'
 import { inject, injectable } from 'tsyringe'
-import { takeFirstOrThrow } from '../common/utils/repository.utils'
-import { roles } from '../databases/tables'
+import { takeFirstOrThrow } from '../common/utils/repository'
+import { rolesTable } from '../databases/tables'
 
 /* -------------------------------------------------------------------------- */
 /*                                 Repository                                 */
@@ -21,54 +20,50 @@ storing data. They should not contain any business logic, only database queries.
  In our case the method 'trxHost' is used to set the transaction context.
 */
 
-export type CreateRole = InferInsertModel<typeof roles>
+export type CreateRole = InferInsertModel<typeof rolesTable>
 export type UpdateRole = Partial<CreateRole>
 
 @injectable()
-export class RolesRepository implements Repository {
-	constructor(@inject(DatabaseProvider) private readonly db: DatabaseProvider) {}
+export class RolesRepository {
+	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
 
-	async findOneById(id: string) {
-		return this.db.query.roles.findFirst({
-			where: eq(roles.id, id),
+	async findOneById(id: string, db = this.drizzle.db) {
+		return db.query.rolesTable.findFirst({
+			where: eq(rolesTable.id, id),
 		})
 	}
 
-	async findOneByIdOrThrow(id: string) {
-		const role = await this.findOneById(id)
+	async findOneByIdOrThrow(id: string, db = this.drizzle.db) {
+		const role = await this.findOneById(id, db)
 		if (!role) throw Error('Role not found')
 		return role
 	}
 
-	async findAll() {
-		return this.db.query.roles.findMany()
+	async findAll(db = this.drizzle.db) {
+		return db.query.rolesTable.findMany()
 	}
 
-	async findOneByName(name: string) {
-		return this.db.query.roles.findFirst({
-			where: eq(roles.name, name),
+	async findOneByName(name: string, db = this.drizzle.db) {
+		return db.query.rolesTable.findFirst({
+			where: eq(rolesTable.name, name),
 		})
 	}
 
-	async findOneByNameOrThrow(name: string) {
-		const role = await this.findOneByName(name)
+	async findOneByNameOrThrow(name: string, db = this.drizzle.db) {
+		const role = await this.findOneByName(name, db)
 		if (!role) throw Error('Role not found')
 		return role
 	}
 
-	async create(data: CreateRole) {
-		return this.db.insert(roles).values(data).returning().then(takeFirstOrThrow)
+	async create(data: CreateRole, db = this.drizzle.db) {
+		return db.insert(rolesTable).values(data).returning().then(takeFirstOrThrow)
 	}
 
-	async update(id: string, data: UpdateRole) {
-		return this.db.update(roles).set(data).where(eq(roles.id, id)).returning().then(takeFirstOrThrow)
+	async update(id: string, data: UpdateRole, db = this.drizzle.db) {
+		return db.update(rolesTable).set(data).where(eq(rolesTable.id, id)).returning().then(takeFirstOrThrow)
 	}
 
-	async delete(id: string) {
-		return this.db.delete(roles).where(eq(roles.id, id)).returning().then(takeFirstOrThrow)
-	}
-
-	trxHost(trx: DatabaseProvider) {
-		return new RolesRepository(trx)
+	async delete(id: string, db = this.drizzle.db) {
+		return db.delete(rolesTable).where(eq(rolesTable.id, id)).returning().then(takeFirstOrThrow)
 	}
 }

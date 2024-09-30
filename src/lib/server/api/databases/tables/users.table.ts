@@ -1,8 +1,8 @@
-import { timestamps } from '../../common/utils/table.utils'
 import { createId as cuid2 } from '@paralleldrive/cuid2'
 import { type InferSelectModel, relations } from 'drizzle-orm'
 import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core'
-import { user_roles } from './userRoles'
+import { timestamps } from '../../common/utils/table'
+import { user_roles } from './userRoles.table'
 
 export const usersTable = pgTable('users', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -15,6 +15,8 @@ export const usersTable = pgTable('users', {
 	last_name: text('last_name'),
 	verified: boolean('verified').default(false),
 	receive_email: boolean('receive_email').default(false),
+	email_verified: boolean('email_verified').default(false),
+	picture: text('picture'),
 	mfa_enabled: boolean('mfa_enabled').notNull().default(false),
 	theme: text('theme').default('system'),
 	...timestamps,

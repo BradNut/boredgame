@@ -1,13 +1,14 @@
-import { redirect } from 'sveltekit-flash-message/server';
-import { notSignedInMessage } from '$lib/flashMessages';
-import { userNotAuthenticated } from '$lib/server/auth-utils';
+import { notSignedInMessage } from '$lib/flashMessages'
+import { userNotAuthenticated } from '$lib/server/auth-utils'
+import { redirect } from 'sveltekit-flash-message/server'
 
 export async function load(event) {
-	const { locals } = event;
-	const { user, session } = locals;
-	if (userNotAuthenticated(user, session)) {
-		redirect(302, '/login', notSignedInMessage, event);
+	const { locals } = event
+
+	const authedUser = await locals.getAuthedUser()
+	if (!authedUser) {
+		throw redirect(302, '/login', notSignedInMessage, event)
 	}
 
-	return {};
+	return {}
 }

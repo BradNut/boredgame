@@ -1,30 +1,28 @@
 import 'reflect-metadata'
-import type { Controller } from '$lib/server/api/common/interfaces/controller.interface'
+import { Controller } from '$lib/server/api/common/types/controller'
 import { signinUsernameDto } from '$lib/server/api/dtos/signin-username.dto'
-import { LuciaProvider } from '$lib/server/api/providers/lucia.provider'
+import { LuciaService } from '$lib/server/api/services/lucia.service'
 import { zValidator } from '@hono/zod-validator'
-import { Hono } from 'hono'
 import { setCookie } from 'hono/cookie'
 import { TimeSpan } from 'oslo'
 import { inject, injectable } from 'tsyringe'
 import { limiter } from '../middleware/rate-limiter.middleware'
 import { LoginRequestsService } from '../services/loginrequest.service'
-import type { HonoTypes } from '../types'
 
 @injectable()
-export class LoginController implements Controller {
-	controller = new Hono<HonoTypes>()
-
+export class LoginController extends Controller {
 	constructor(
 		@inject(LoginRequestsService) private readonly loginRequestsService: LoginRequestsService,
-		@inject(LuciaProvider) private lucia: LuciaProvider,
-	) {}
+		@inject(LuciaService) private luciaService: LuciaService,
+	) {
+		super()
+	}
 
 	routes() {
 		return this.controller.post('/', zValidator('json', signinUsernameDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 			const { username, password } = c.req.valid('json')
 			const session = await this.loginRequestsService.verify({ username, password }, c.req)
-			const sessionCookie = this.lucia.createSessionCookie(session.id)
+			const sessionCookie = this.luciaService.lucia.createSessionCookie(session.id)
 			console.log('set cookie', sessionCookie)
 			setCookie(c, sessionCookie.name, sessionCookie.value, {
 				path: sessionCookie.attributes.path,

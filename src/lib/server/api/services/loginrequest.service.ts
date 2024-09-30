@@ -1,10 +1,10 @@
 import type { SigninUsernameDto } from '$lib/server/api/dtos/signin-username.dto'
+import { LuciaService } from '$lib/server/api/services/lucia.service'
 import type { HonoRequest } from 'hono'
 import { inject, injectable } from 'tsyringe'
 import { BadRequest } from '../common/exceptions'
 import type { Credentials } from '../databases/tables'
 import { DatabaseProvider } from '../providers/database.provider'
-import { LuciaProvider } from '../providers/lucia.provider'
 import { CredentialsRepository } from '../repositories/credentials.repository'
 import { UsersRepository } from '../repositories/users.repository'
 import { MailerService } from './mailer.service'
@@ -13,7 +13,7 @@ import { TokensService } from './tokens.service'
 @injectable()
 export class LoginRequestsService {
 	constructor(
-		@inject(LuciaProvider) private readonly lucia: LuciaProvider,
+		@inject(LuciaService) private luciaService: LuciaService,
 		@inject(DatabaseProvider) private readonly db: DatabaseProvider,
 		@inject(TokensService) private readonly tokensService: TokensService,
 		@inject(MailerService) private readonly mailerService: MailerService,
@@ -60,7 +60,7 @@ export class LoginRequestsService {
 	async createUserSession(existingUserId: string, req: HonoRequest, totpCredentials: Credentials | undefined) {
 		const requestIpAddress = req.header('x-real-ip')
 		const requestIpCountry = req.header('x-vercel-ip-country')
-		return this.lucia.createSession(existingUserId, {
+		return this.luciaService.lucia.createSession(existingUserId, {
 			ip_country: requestIpCountry || 'unknown',
 			ip_address: requestIpAddress || 'unknown',
 			twoFactorAuthEnabled: !!totpCredentials && totpCredentials?.secret_data !== null && totpCredentials?.secret_data !== '',

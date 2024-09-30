@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import capitalize from 'just-capitalize';
-	import { Button } from '$lib/components/ui/button';
-	// import AddRolesForm from './add-roles-form.svelte';
+import { enhance } from '$app/forms'
+import { Button } from '$lib/components/ui/button'
+import capitalize from 'just-capitalize'
+// import AddRolesForm from './add-rolesTable-form.svelte';
 
-	const { data } = $props();
+const { data } = $props()
 
-	const { user, availableRoles } = data;
-	const { user_roles }: { user_roles: { role: { name: string, cuid: string } }[] } = user;
+const { user, availableRoles } = data
+const { user_roles }: { user_roles: { role: { name: string; cuid: string } }[] } = user
 </script>
 
 <h1>User Details</h1>

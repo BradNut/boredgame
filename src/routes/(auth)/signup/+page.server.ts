@@ -115,7 +115,7 @@ export const actions: Actions = {
 		// await db.insert(collections).values({
 		// 	user_id: user[0].id,
 		// });
-		// await db.insert(wishlists).values({
+		// await db.insert(wishlistsTable).values({
 		// 	user_id: user[0].id,
 		// });
 		//

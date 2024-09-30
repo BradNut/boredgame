@@ -1,22 +1,17 @@
 import { notSignedInMessage } from '$lib/flashMessages'
-import { recoveryCodesTable, twoFactorTable, usersTable } from '$lib/server/api/databases/tables'
+import env from '$lib/server/api/common/env'
+import { twoFactorTable, usersTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
-import { lucia } from '$lib/server/api/packages/lucia'
 import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth'
-import { type Actions, error, fail } from '@sveltejs/kit'
-import { and, eq } from 'drizzle-orm'
-import { decodeHex } from 'oslo/encoding'
-import { TOTPController } from 'oslo/otp'
-import { Argon2id } from 'oslo/password'
+import { type Actions, fail } from '@sveltejs/kit'
+import { eq } from 'drizzle-orm'
 import { redirect } from 'sveltekit-flash-message/server'
-import { RateLimiter } from 'sveltekit-rate-limiter/server'
 import { zod } from 'sveltekit-superforms/adapters'
-import { setError, superValidate } from 'sveltekit-superforms/server'
-import env from '../../../env'
+import { superValidate } from 'sveltekit-superforms/server'
 import type { PageServerLoad, RequestEvent } from './$types'
 
 export const load: PageServerLoad = async (event) => {
-	const { cookies, locals } = event
+	const { locals } = event
 
 	const authedUser = await locals.getAuthedUser()
 	if (!authedUser) {
@@ -77,14 +72,9 @@ export const load: PageServerLoad = async (event) => {
 	}
 }
 
-const limiter = new RateLimiter({
-	// A rate is defined by [number, unit]
-	IPUA: [5, 'm'],
-})
-
 export const actions: Actions = {
 	validateTotp: async (event) => {
-		const { cookies, locals } = event
+		const { locals } = event
 
 		const authedUser = await locals.getAuthedUser()
 		if (!authedUser) {
@@ -277,21 +267,21 @@ function totpTimeElapsed(initiatedTime: Date) {
 	return false
 }
 
-async function checkRecoveryCode(recoveryCode: string, userId: string) {
-	const userRecoveryCodes = await db.query.recoveryCodesTable.findMany({
-		where: and(eq(recoveryCodesTable.used, false), eq(recoveryCodesTable.userId, userId)),
-	})
-	for (const code of userRecoveryCodes) {
-		const validRecoveryCode = await new Argon2id().verify(code.code, recoveryCode)
-		if (validRecoveryCode) {
-			await db
-				.update(recoveryCodesTable)
-				.set({
-					used: true,
-				})
-				.where(eq(recoveryCodesTable.id, code.id))
-			return true
-		}
-	}
-	return false
-}
+// async function checkRecoveryCode(recoveryCode: string, userId: string) {
+// 	const userRecoveryCodes = await db.query.recoveryCodesTable.findMany({
+// 		where: and(eq(recoveryCodesTable.used, false), eq(recoveryCodesTable.userId, userId)),
+// 	})
+// 	for (const code of userRecoveryCodes) {
+// 		const validRecoveryCode = await new Argon2id().verify(code.code, recoveryCode)
+// 		if (validRecoveryCode) {
+// 			await db
+// 				.update(recoveryCodesTable)
+// 				.set({
+// 					used: true,
+// 				})
+// 				.where(eq(recoveryCodesTable.id, code.id))
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }

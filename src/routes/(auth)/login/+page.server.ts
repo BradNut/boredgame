@@ -1,13 +1,9 @@
+import { StatusCodes } from '$lib/constants/status-codes'
 import { signinUsernameDto } from '$lib/dtos/signin-username.dto'
-import { db } from '$lib/server/api/packages/drizzle'
-import { lucia } from '$lib/server/api/packages/lucia'
 import { type Actions, fail } from '@sveltejs/kit'
-import { eq, or } from 'drizzle-orm'
-import { Argon2id } from 'oslo/password'
 import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
 import { setError, superValidate } from 'sveltekit-superforms/server'
-import { credentialsTable, usersTable } from '../../../lib/server/api/databases/tables'
 import type { PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async (event) => {
@@ -52,7 +48,9 @@ export const actions: Actions = {
 		const form = await superValidate(event, zod(signinUsernameDto))
 
 		const { error } = await locals.api.login.$post({ json: form.data }).then(locals.parseApiResponse)
-		if (error) return setError(form, 'username', error)
+		if (error) {
+			return setError(form, 'username', error)
+		}
 
 		if (!form.valid) {
 			form.data.password = ''
@@ -138,6 +136,8 @@ export const actions: Actions = {
 
 		form.data.username = ''
 		form.data.password = ''
+
+		redirect(StatusCodes.TEMPORARY_REDIRECT, '/')
 
 		// if (
 		// 	twoFactorDetails?.enabled &&
