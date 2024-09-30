@@ -30,7 +30,7 @@ export const config: Config = {
 		host: env.DATABASE_HOST,
 		port: env.DATABASE_PORT,
 		database: env.DATABASE_DB,
-		ssl: env.DATABASE_HOST !== 'localhost',
+		ssl: false, // env.DATABASE_HOST !== 'localhost',
 		max: env.DB_MIGRATING || env.DB_SEEDING ? 1 : undefined,
 	},
 }
