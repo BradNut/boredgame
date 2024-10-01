@@ -7,7 +7,7 @@ export class RedisService implements Disposable {
 	readonly client: Redis
 
 	constructor() {
-		this.client = new Redis(config.REDIS_URL, {
+		this.client = new Redis(config.redis.url, {
 			maxRetriesPerRequest: null,
 		})
 	}
