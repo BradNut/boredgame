@@ -1,9 +1,9 @@
 import { notSignedInMessage } from '$lib/flashMessages'
 import env from '$lib/server/api/common/env'
+import { decodeHex, encodeBase32 } from '@oslojs/encoding'
+import { createTOTPKeyURI } from '@oslojs/otp'
 import { type Actions, fail } from '@sveltejs/kit'
 import kebabCase from 'just-kebab-case'
-import { encodeBase32, decodeHex } from '@oslojs/encoding'
-import { createTOTPKeyURI } from '@oslojs/otp'
 import QRCode from 'qrcode'
 import { redirect } from 'sveltekit-flash-message/server'
 import { zod } from 'sveltekit-superforms/adapters'
@@ -63,7 +63,7 @@ export const load: PageServerLoad = async (event) => {
 		})
 	}
 	const decodedHexSecret = decodeHex(createdTotpCredentials.secret_data)
-	const secret = encodeBase32(new TextEncoder().encode(decodedHexSecret))
+	const secret = encodeBase32(decodedHexSecret)
 	const intervalInSeconds = 30
 	const digits = 6
 

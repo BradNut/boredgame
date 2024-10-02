@@ -51,6 +51,7 @@ export class WishlistsRepository {
 			columns: {
 				cuid: true,
 				name: true,
+				createdAt: true,
 			},
 		})
 	}

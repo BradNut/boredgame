@@ -16,7 +16,7 @@ export class RecoveryCodesRepository {
 	}
 
 	async findAllByUserId(userId: string, db = this.drizzle.db) {
-		return db.query.recoveryCodesTable.findFirst({
+		return db.query.recoveryCodesTable.findMany({
 			where: eq(recoveryCodesTable.userId, userId),
 		})
 	}

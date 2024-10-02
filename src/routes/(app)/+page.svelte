@@ -8,7 +8,7 @@ const welcomeName = $derived.by(() => {
 		welcomeName += data?.user?.firstName
 	}
 	if (data?.user?.lastName) {
-		welcomeName += ' ' + data?.user?.lastName
+		welcomeName = welcomeName.length === 0 ? data?.user?.lastName : welcomeName
 	}
 
 	if (welcomeName.length === 0) {
@@ -23,7 +23,7 @@ const welcomeName = $derived.by(() => {
 	{#if user}
 		<h1>Welcome, {welcomeName}!</h1>
 		<div>
-			<h2>You wishlistsTable:</h2>
+			<h2>You wishlists:</h2>
 			{#each wishlists as wishlist}
 				<a href="/wishlists/{wishlist.cuid}">{wishlist.name}</a>
 			{/each}

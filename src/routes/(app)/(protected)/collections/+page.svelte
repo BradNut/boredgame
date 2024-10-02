@@ -1,5 +1,6 @@
 <script lang="ts">
 import * as Card from '$components/ui/card'
+
 const { data } = $props()
 let collections = data?.collections || []
 </script>
@@ -9,14 +10,13 @@ let collections = data?.collections || []
 </svelte:head>
 
 <div class="container">
-<h1>Your Collections</h1>
-
+	<h1>Your Collections</h1>
 	<div class="collection-list">
 		{#if collections.length === 0}
 			<h2>You have no collections</h2>
 		{:else}
 			{#each collections as collection}
-				<Card.Root>
+				<Card.Root class="shadow-sm hover:shadow-md transition-shadow duration-300 ease-in-out">
 					<Card.Header>
 						<Card.Title>{collection.name}</Card.Title>
 					</Card.Header>
@@ -25,10 +25,6 @@ let collections = data?.collections || []
 						<p>Created at: {new Date(collection.createdAt).toLocaleString()}</p>
 					</Card.Content>
 				</Card.Root>
-				<!-- <div class="collection grid gap-0.5">
-					<h2><a href="/collections/{collection.cuid}">{collection.name}</a></h2>
-					<h3>Created at: {new Date(collection.createdAt).toLocaleString()}</h3>
-				</div> -->
 			{/each}
 		{/if}
 	</div>

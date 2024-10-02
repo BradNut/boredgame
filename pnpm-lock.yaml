@@ -27,8 +27,8 @@ importers:
         specifier: ^1.2.48
         version: 1.2.48
       '@internationalized/date':
-        specifier: ^3.5.5
-        version: 3.5.5
+        specifier: ^3.5.6
+        version: 3.5.6
       '@lucia-auth/adapter-drizzle':
         specifier: ^1.1.0
         version: 1.1.0(drizzle-orm@0.32.2(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0(pg-native@3.2.0))(postgres@3.4.4))(lucia@3.2.0)
@@ -78,8 +78,8 @@ importers:
         specifier: ^1.9.1
         version: 1.9.1
       bullmq:
-        specifier: ^5.14.0
-        version: 5.14.0
+        specifier: ^5.15.0
+        version: 5.15.0
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -1415,8 +1415,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@internationalized/date@3.5.5':
-    resolution: {integrity: sha512-H+CfYvOZ0LTJeeLOqm19E3uj/4YjrmOFtBufDHPfvtI80hFAMqtrp7oCACpe4Cil5l8S0Qu/9dYfZc/5lY8WQQ==}
+  '@internationalized/date@3.5.6':
+    resolution: {integrity: sha512-jLxQjefH9VI5P9UQuqB6qNKnvFt1Ky1TPIzHGsIlCi7sZZoMR8SdYbBGRvM0y+Jtb+ez4ieBzmiAUcpmPYpyOw==}
 
   '@ioredis/commands@1.2.0':
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
@@ -2366,8 +2366,8 @@ packages:
   buffer-from@1.1.2:
     resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
 
-  bullmq@5.14.0:
-    resolution: {integrity: sha512-qxZHtRuGEp0oHM1aNokuZ4gA0xr6vcZQPe1OLuQoDTuhaEXB4faxApUoo85v/PHnzrniAAqNT9kqD+UBbmECDQ==}
+  bullmq@5.15.0:
+    resolution: {integrity: sha512-h53shVjx8s6wxYGtUfzAfENpSP7N5T0D4PMTvbZncozLjb8yUKhopfpa7PmcpQfq7SSO9dm/OZ9XQuGOCSGNug==}
 
   bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
@@ -5668,7 +5668,7 @@ snapshots:
   '@img/sharp-win32-x64@0.33.5':
     optional: true
 
-  '@internationalized/date@3.5.5':
+  '@internationalized/date@3.5.6':
     dependencies:
       '@swc/helpers': 0.5.13
 
@@ -5746,7 +5746,7 @@ snapshots:
     dependencies:
       '@floating-ui/core': 1.6.7
       '@floating-ui/dom': 1.6.10
-      '@internationalized/date': 3.5.5
+      '@internationalized/date': 3.5.6
       dequal: 2.0.3
       focus-trap: 7.5.4
       nanoid: 5.0.7
@@ -5756,7 +5756,7 @@ snapshots:
     dependencies:
       '@floating-ui/core': 1.6.7
       '@floating-ui/dom': 1.6.10
-      '@internationalized/date': 3.5.5
+      '@internationalized/date': 3.5.6
       dequal: 2.0.3
       focus-trap: 7.5.4
       nanoid: 5.0.7
@@ -6577,7 +6577,7 @@ snapshots:
 
   bits-ui@0.21.15(svelte@5.0.0-next.175):
     dependencies:
-      '@internationalized/date': 3.5.5
+      '@internationalized/date': 3.5.6
       '@melt-ui/svelte': 0.76.2(svelte@5.0.0-next.175)
       nanoid: 5.0.7
       svelte: 5.0.0-next.175
@@ -6631,7 +6631,7 @@ snapshots:
 
   buffer-from@1.1.2: {}
 
-  bullmq@5.14.0:
+  bullmq@5.15.0:
     dependencies:
       cron-parser: 4.9.0
       ioredis: 5.4.1
