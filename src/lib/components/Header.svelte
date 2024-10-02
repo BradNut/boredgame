@@ -1,15 +1,14 @@
 <script lang="ts">
-import { applyAction, enhance } from '$app/forms'
-import { invalidateAll } from '$app/navigation'
-import Logo from '$components/logo.svelte'
-import * as Avatar from '$components/ui/avatar'
-import * as DropdownMenu from '$components/ui/dropdown-menu'
-import { ListChecks, ListTodo, LogOut, Settings } from 'lucide-svelte'
-import toast from 'svelte-french-toast'
+	import { applyAction, enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
+	import Logo from '$components/logo.svelte';
+	import * as Avatar from '$components/ui/avatar';
+	import * as DropdownMenu from '$components/ui/dropdown-menu';
+	import { ListChecks, ListTodo, LogOut, Settings } from 'lucide-svelte';
 
-let { user = null } = $props()
+	let { user = null } = $props();
 
-let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)')
+	let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)');
 </script>
 
 <header>
@@ -63,26 +62,7 @@ let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)')
 					</DropdownMenu.Item>
 				</a>
 				<DropdownMenu.Item>
-					<form
-							use:enhance={() => {
-									return async ({ result }) => {
-										console.log(result);
-										if (result.type === 'success' || result.type === 'redirect') {
-											toast.success('Logged Out');
-										} else if (result.type === 'error') {
-											console.log(result);
-											toast.error(`Error: ${result.error.message}`);
-										} else {
-											toast.error(`Something went wrong.`);
-											console.log(result);
-										}
-										await invalidateAll();
-										await applyAction(result);
-									};
-								}}
-							action="/logout"
-							method="POST"
-					>
+					<form action="/logout" method="POST">
 						<button type="submit">
 							<div class="flex items-center gap-1">
 								<LogOut class="mr-2 h-4 w-4" />

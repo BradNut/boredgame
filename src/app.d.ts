@@ -21,17 +21,12 @@ declare global {
 			parseApiResponse: typeof parseApiResponse;
 			getAuthedUser: () => Promise<Returned<User> | null>;
 			getAuthedUserOrThrow: () => Promise<Returned<User>>;
-			auth: import('lucia').AuthRequest;
-			user: import('lucia').User | null;
-			session: import('lucia').Session | null;
-			startTimer: number;
-			ip: string;
-			country: string;
-			error: string;
-			errorId: string;
-			errorStackTrace: string;
-			message: unknown;
-			track: unknown;
+		}
+		namespace Superforms {
+			type Message = {
+				type: 'error' | 'success' | 'info',
+				text: string
+			}
 		}
 		interface Error {
 			code?: string;
