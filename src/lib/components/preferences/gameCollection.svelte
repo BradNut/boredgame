@@ -1,43 +1,43 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { boredState } from '$lib/stores/boredState';
-	import { collectionStore } from '$lib/stores/collectionStore';
-	import { ToastType } from '$lib/types';
-	// import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
-	import ClearCollectionDialog from '../dialog/ClearCollectionDialog.svelte';
-	import { toast } from '../toast/toast';
+import { browser } from '$app/environment'
+import { boredState } from '$lib/stores/boredState'
+import { collectionStore } from '$lib/stores/collectionStore'
+import { ToastType } from '$lib/types'
+// import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
+import ClearCollectionDialog from '../dialog/ClearCollectionDialog.svelte'
+import { toast } from '../toast/toast'
 
-	function saveCollection() {
-		if (!browser) return;
-		localStorage.collection = JSON.stringify($collectionStore);
-		toast.send('Saved collection', { duration: 3000, type: ToastType.INFO });
-	}
+function saveCollection() {
+	if (!browser) return
+	localStorage.collection = JSON.stringify($collectionStore)
+	toast.send('Saved collection', { duration: 3000, type: ToastType.INFO })
+}
 
-	function exportCollection() {
-		if (!browser) return;
-		const collectionBlob = new Blob([JSON.stringify($collectionStore)], {
-			type: 'application/json;charset=utf-8'
-		});
-		let url = window.URL || window.webkitURL;
-		let link = url.createObjectURL(collectionBlob);
-		let a = document.createElement('a');
-		a.setAttribute('download', `collection.json`);
-		a.setAttribute('href', link);
-		a.click();
-		document.body.removeChild(a);
-		toast.send('Exported collection', { duration: 3000, type: ToastType.INFO });
-	}
+function exportCollection() {
+	if (!browser) return
+	const collectionBlob = new Blob([JSON.stringify($collectionStore)], {
+		type: 'application/json;charset=utf-8',
+	})
+	let url = window.URL || window.webkitURL
+	let link = url.createObjectURL(collectionBlob)
+	let a = document.createElement('a')
+	a.setAttribute('download', `collection.json`)
+	a.setAttribute('href', link)
+	a.click()
+	document.body.removeChild(a)
+	toast.send('Exported collection', { duration: 3000, type: ToastType.INFO })
+}
 
-	function clearCollection() {
-		if ($collectionStore.length > 0) {
-			boredState.update((n) => ({
-				...n,
-				dialog: { isOpen: true, content: ClearCollectionDialog }
-			}));
-		} else {
-			toast.send('Nothing to clear', { duration: 3000, type: ToastType.ERROR });
-		}
+function clearCollection() {
+	if ($collectionStore.length > 0) {
+		boredState.update((n) => ({
+			...n,
+			dialog: { isOpen: true, content: ClearCollectionDialog },
+		}))
+	} else {
+		toast.send('Nothing to clear', { duration: 3000, type: ToastType.ERROR })
 	}
+}
 </script>
 
 <div>
@@ -61,7 +61,7 @@
 	</div>
 </div>
 
-<style lang="scss">
+<style lang="postcss">
 	:global(.collection-title) {
 		padding-bottom: var(--spacing-8);
 		font-size: var(--font-24);

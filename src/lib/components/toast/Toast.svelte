@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { fly, fade } from 'svelte/transition';
-	import { flip } from 'svelte/animate';
-	import Portal from '$lib/Portal.svelte';
-	import ToastMessage from './ToastMessage.svelte';
-	import { toast } from './toast';
+import Portal from '$lib/Portal.svelte'
+import { flip } from 'svelte/animate'
+import { fade, fly } from 'svelte/transition'
+import ToastMessage from './ToastMessage.svelte'
+import { toast } from './toast'
 </script>
 
 <Portal>
@@ -48,7 +48,7 @@
 	</div>
 </Portal>
 
-<style lang="scss">
+<style lang="postcss">
 	.toast-wrapper {
 		display: flex;
 		flex-flow: column;

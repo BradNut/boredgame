@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
-	import { boredState } from '$lib/stores/boredState';
-	import { collectionStore } from '$lib/stores/collectionStore';
-	import { browser } from '$app/environment';
+import { browser } from '$app/environment'
+import { boredState } from '$lib/stores/boredState'
+import { collectionStore } from '$lib/stores/collectionStore'
+import { fade } from 'svelte/transition'
 
-	function clearCollection() {
-		if (browser) {
-			localStorage.collection = JSON.stringify([]);
-			collectionStore.removeAll();
-		}
-		boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
+function clearCollection() {
+	if (browser) {
+		localStorage.collection = JSON.stringify([])
+		collectionStore.removeAll()
 	}
+	boredState.update((n) => ({ ...n, dialog: { isOpen: false } }))
+}
 
-	$: isOpen = $boredState?.dialog?.isOpen;
+$: isOpen = $boredState?.dialog?.isOpen
 </script>
 
 <!-- <Dialog
@@ -40,7 +40,7 @@
 	</div>
 <!-- </Dialog> -->
 
-<style lang="scss">
+<style lang="postcss">
 	.dialog {
 		display: grid;
 		gap: 1.5rem;

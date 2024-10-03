@@ -1,9 +1,9 @@
 <script lang="ts">
-  export let labelText: string;
-  export let showLabel: boolean;
-  export let name: string;
-  export let value: boolean;
-  export let onChange: FormDataEvent<HTMLInputElement>;
+export let labelText: string
+export let showLabel: boolean
+export let name: string
+export let value: boolean
+export let onChange: FormDataEvent<HTMLInputElement>
 </script>
 
 <label for={name} class="checkbox">
@@ -30,7 +30,7 @@
   {/if}
 </label>
 
-<style lang="scss">
+<style lang="postcss">
   .checkbox {
     display: grid;
     grid-template-columns: min-content auto;

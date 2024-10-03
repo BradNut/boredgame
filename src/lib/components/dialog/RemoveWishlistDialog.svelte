@@ -1,27 +1,27 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
-	// import {
-	// 	Dialog,
-	// 	DialogDescription,
-	// 	DialogOverlay,
-	// 	DialogTitle
-	// } from '@rgossiaux/svelte-headlessui';
-	import { boredState } from '$lib/stores/boredState';
-	import { wishlistStore } from '$lib/stores/wishlistStore';
-	import { removeFromWishlist } from '$lib/utils/manipulateWishlist';
-	import { browser } from '$app/environment';
+import { browser } from '$app/environment'
+// import {
+// 	Dialog,
+// 	DialogDescription,
+// 	DialogOverlay,
+// 	DialogTitle
+// } from '@rgossiaux/svelte-headlessui';
+import { boredState } from '$lib/stores/boredState'
+import { wishlistStore } from '$lib/stores/wishlistStore'
+import { removeFromWishlist } from '$lib/utils/manipulateWishlist'
+import { fade } from 'svelte/transition'
 
-	function removeGame() {
-		if ($boredState?.dialog?.additionalData) {
-			removeFromWishlist($boredState?.dialog?.additionalData);
-		}
-		if (browser) {
-			localStorage.wishlist = JSON.stringify($wishlistStore);
-		}
-		boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
+function removeGame() {
+	if ($boredState?.dialog?.additionalData) {
+		removeFromWishlist($boredState?.dialog?.additionalData)
 	}
+	if (browser) {
+		localStorage.wishlist = JSON.stringify($wishlistStore)
+	}
+	boredState.update((n) => ({ ...n, dialog: { isOpen: false } }))
+}
 
-	$: isOpen = $boredState?.dialog?.isOpen;
+$: isOpen = $boredState?.dialog?.isOpen
 </script>
 
 <!-- <Dialog
@@ -49,7 +49,7 @@
 	</div>
 <!-- </Dialog> -->
 
-<style lang="scss">
+<style lang="postcss">
 	.dialog {
 		display: grid;
 		gap: 1.5rem;

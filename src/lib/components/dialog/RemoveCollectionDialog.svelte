@@ -1,32 +1,24 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
-	// import { Button, buttonVariants } from '$components/ui/button';
-	import { Button, buttonVariants } from '$components/ui/button';
-	import {
-		Dialog,
-		DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-	} from '$components/ui/dialog';
-	import { boredState } from '$lib/stores/boredState';
-	import { collectionStore } from '$lib/stores/collectionStore';
-	import { removeFromCollection } from '$lib/utils/manipulateCollection';
-	import { browser } from '$app/environment';
+import { browser } from '$app/environment'
+// import { Button, buttonVariants } from '$components/ui/button';
+import { Button, buttonVariants } from '$components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '$components/ui/dialog'
+import { boredState } from '$lib/stores/boredState'
+import { collectionStore } from '$lib/stores/collectionStore'
+import { removeFromCollection } from '$lib/utils/manipulateCollection'
+import { fade } from 'svelte/transition'
 
-	function removeGame() {
-		if ($boredState?.dialog?.additionalData) {
-			removeFromCollection($boredState?.dialog?.additionalData);
-		}
-		if (browser) {
-			localStorage.collection = JSON.stringify($collectionStore);
-		}
-		boredState.update((n) => ({ ...n, dialog: { isOpen: false } }));
+function removeGame() {
+	if ($boredState?.dialog?.additionalData) {
+		removeFromCollection($boredState?.dialog?.additionalData)
 	}
+	if (browser) {
+		localStorage.collection = JSON.stringify($collectionStore)
+	}
+	boredState.update((n) => ({ ...n, dialog: { isOpen: false } }))
+}
 
-	$: isOpen = $boredState?.dialog?.isOpen;
+$: isOpen = $boredState?.dialog?.isOpen
 </script>
 
 <Dialog modal={true}>
@@ -82,7 +74,7 @@
 	</div>
 </Dialog> -->
 
-<style lang="scss">
+<style lang="postcss">
 	.dialog {
 		display: grid;
 		gap: 1.5rem;

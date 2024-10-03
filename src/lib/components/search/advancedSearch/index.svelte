@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { boredState } from '$lib/stores/boredState';
+import { boredState } from '$lib/stores/boredState'
 
-	export let form;
-	export let errors;
-	export let constraints;
-	console.log('advanced search data', $form);
+export let form
+export let errors
+export let constraints
+console.log('advanced search data', $form)
 
-	let submitting = $boredState?.loading;
-	let minAge = +$form?.minAge || 1;
-	let minPlayers = +$form?.minPlayers || 1;
-	let maxPlayers = +$form?.maxPlayers || 1;
-	let exactMinPlayers = Boolean($form?.exactMinPlayers) || false;
-	let exactMaxPlayers = Boolean($form?.exactMaxPlayers) || false;
+let submitting = $boredState?.loading
+let minAge = +$form?.minAge || 1
+let minPlayers = +$form?.minPlayers || 1
+let maxPlayers = +$form?.maxPlayers || 1
+let exactMinPlayers = Boolean($form?.exactMinPlayers) || false
+let exactMaxPlayers = Boolean($form?.exactMaxPlayers) || false
 </script>
 
 <fieldset class="advanced-search" aria-busy={submitting} disabled={submitting}>
@@ -90,7 +90,7 @@
 	</div>
 </fieldset>
 
-<style lang="scss">
+<style lang="postcss">
 	fieldset {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
