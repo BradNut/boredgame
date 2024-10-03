@@ -23,15 +23,13 @@ export const flyAndScale = (node: Element, params: FlyAndScaleParams = { y: -8, 
 		const [minB, maxB] = scaleB
 
 		const percentage = (valueA - minA) / (maxA - minA)
-		const valueB = percentage * (maxB - minB) + minB
-
-		return valueB
+		return percentage * (maxB - minB) + minB
 	}
 
 	const styleToString = (style: Record<string, number | string | undefined>): string => {
 		return Object.keys(style).reduce((str, key) => {
 			if (style[key] === undefined) return str
-			return str + `${key}:${style[key]};`
+			return `${str}${key}:${style[key]};`
 		}, '')
 	}
 

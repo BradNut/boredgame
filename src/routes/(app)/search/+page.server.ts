@@ -10,7 +10,7 @@ import { superValidate } from 'sveltekit-superforms/server'
 
 async function searchForGames(locals: App.Locals, eventFetch: typeof fetch, urlQueryParams: URLSearchParams) {
 	try {
-		console.log('urlQueryParams search gamesTable', urlQueryParams)
+		console.log('urlQueryParams search games', urlQueryParams)
 
 		const headers = new Headers()
 		headers.set('Content-Type', 'application/json')
@@ -29,13 +29,13 @@ async function searchForGames(locals: App.Locals, eventFetch: typeof fetch, urlQ
 		}
 
 		const games = await response.json()
-		console.log('gamesTable from DB', games)
+		console.log('games from DB', games)
 
 		const gameNameSearch = urlQueryParams.get('q') ?? ''
 		let totalCount = games?.length || 0
 
 		if (totalCount === 0 || !games.find((game: GameType) => game.slug === kebabCase(gameNameSearch))) {
-			console.log('No gamesTable found in DB for', gameNameSearch)
+			console.log('No games found in DB for', gameNameSearch)
 			const searchQueryParams = urlQueryParams ? `?${urlQueryParams}` : ''
 			const externalResponse = await eventFetch(`/api/external/search${searchQueryParams}`, requestInit)
 

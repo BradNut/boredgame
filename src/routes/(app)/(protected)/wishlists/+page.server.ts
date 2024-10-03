@@ -1,7 +1,6 @@
 import { notSignedInMessage } from '$lib/flashMessages.js'
 import { gamesTable, wishlist_items, wishlistsTable } from '$lib/server/api/databases/tables'
 import { db } from '$lib/server/api/packages/drizzle'
-import { userNotAuthenticated } from '$lib/server/auth-utils'
 import { modifyListGameSchema } from '$lib/validations/zod-schemas'
 import { type Actions, error, fail } from '@sveltejs/kit'
 import { and, eq } from 'drizzle-orm'
@@ -17,15 +16,8 @@ export async function load(event) {
 		throw redirect(302, '/login', notSignedInMessage, event)
 	}
 
-	const userWishlists = await db.query.wishlists.findMany({
-		columns: {
-			cuid: true,
-			name: true,
-			createdAt: true,
-		},
-		where: eq(wishlistsTable.user_id, authedUser.id),
-	})
-	console.log('wishlists', userWishlists)
+	const { data } = await locals.api.wishlists.$get().then(locals.parseApiResponse)
+	const userWishlists = data?.wishlists
 
 	if (userWishlists?.length === 0) {
 		console.log('Wishlists not found')

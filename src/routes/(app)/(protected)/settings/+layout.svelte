@@ -34,15 +34,21 @@ let { children } = $props()
 	.security-nav {
 		display: flex;
 
+		@media (width <= 1000px) {
+			display: grid;
+		}
+
 		nav {
-			width: 16rem;
-			position: sticky;
-			top: 0;
-			left: 0;
-			background-color: #fff;
-			padding: 1rem;
-			border-right: 1px solid #ddd;
-			height: 100vh;
+			@media (width > 1000px) {
+				width: 16rem;
+				position: sticky;
+				top: 0;
+				left: 0;
+				background-color: #fff;
+				padding: 1rem;
+				border-right: 1px solid #ddd;
+				height: 100vh;
+			}
 
 			ul {
 				list-style-type: none;

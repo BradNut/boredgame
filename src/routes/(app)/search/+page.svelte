@@ -15,7 +15,7 @@ export let data
 const { games, totalCount } = data.searchData
 
 console.log('data found', data)
-console.log('found gamesTable', games)
+console.log('found games', games)
 console.log('found totalCount', totalCount)
 
 const form = superForm(data.form, {
@@ -65,7 +65,7 @@ function handleListStyle(event) {
 					<Game {game} />
 				{/each}
 			{:else}
-				<h2>Sorry no gamesTable found!</h2>
+				<h2>Sorry no games found!</h2>
 			{/if}
 		</div>
 		<Pagination.Root count={totalCount} perPage={pageSize} let:pages let:currentPage>

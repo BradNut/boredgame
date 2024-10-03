@@ -61,6 +61,6 @@ container.resolve(AuthCleanupJobs).deleteStaleLoginRequests()
 /* -------------------------------------------------------------------------- */
 /*                                   Exports                                  */
 /* -------------------------------------------------------------------------- */
-export const rpc = hc<typeof routes>(config.ORIGIN)
+export const rpc = hc<typeof routes>(config.api.origin)
 export type ApiClient = typeof rpc
 export type ApiRoutes = typeof routes

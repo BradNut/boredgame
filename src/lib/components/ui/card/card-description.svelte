@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { HTMLAttributes } from "svelte/elements";
-	import { cn } from "$lib/utils.js";
+	import { cn } from "$lib/utils/ui.js";
 
 	type $$Props = HTMLAttributes<HTMLParagraphElement>;
 
@@ -8,6 +8,6 @@
 	export { className as class };
 </script>
 
-<p class={cn("text-sm text-muted-foreground", className)} {...$$restProps}>
+<p class={cn("text-muted-foreground text-sm", className)} {...$$restProps}>
 	<slot />
 </p>

@@ -48,6 +48,11 @@ export class CollectionsRepository {
 	async findAllByUserId(userId: string, db = this.drizzle.db) {
 		return db.query.collections.findMany({
 			where: eq(collections.user_id, userId),
+			columns: {
+				cuid: true,
+				name: true,
+				createdAt: true,
+			},
 		})
 	}
 

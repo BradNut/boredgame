@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { theme } from '$state/theme';
-	import toast, { Toaster } from 'svelte-french-toast';
+	import { toastMessage } from '$lib/utils/superforms.js';
 
 	const { data } = $props();
 	const { user } = data;
@@ -19,29 +19,13 @@
 		$theme = user?.theme || 'system';
 		document.querySelector('html')?.setAttribute('data-theme', $theme);
 	});
-
-	$effect(() => {
-		if ($flash) {
-			if ($flash.type === 'success') {
-				toast.success($flash.message);
-			} else {
-				toast.error($flash.message, {
-					duration: 5000
-				});
-			}
-
-			// Clearing the flash message could sometimes
-			// be required here to avoid double-toasting.
-			flash.set(undefined);
-		}
-	});
 </script>
 
 <h1>Do the admin stuff</h1>
 
 {@render children()}
 
-<Toaster />
+<!-- <Toaster /> -->
 
 <style lang="postcss">
 	:global(main) {

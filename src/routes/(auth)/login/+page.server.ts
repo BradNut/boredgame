@@ -12,21 +12,11 @@ export const load: PageServerLoad = async (event) => {
 	const authedUser = await locals.getAuthedUser()
 
 	if (authedUser) {
+		console.log('user already signed in')
 		const message = { type: 'success', message: 'You are already signed in' } as const
 		throw redirect('/', message, event)
+		// redirect(302, '/', message, event)
 	}
-
-	// if (userFullyAuthenticated(user, session)) {
-	// 	const message = { type: 'success', message: 'You are already signed in' } as const;
-	// 	throw redirect('/', message, event);
-	// } else if (userNotFullyAuthenticated(user, session)) {
-	// 	await lucia.invalidateSession(locals.session!.id!);
-	// 	const sessionCookie = lucia.createBlankSessionCookie();
-	// 	cookies.set(sessionCookie.name, sessionCookie.value, {
-	// 		path: '.',
-	// 		...sessionCookie.attributes,
-	// 	});
-	// }
 	const form = await superValidate(event, zod(signinUsernameDto))
 
 	return {
@@ -58,81 +48,6 @@ export const actions: Actions = {
 				form,
 			})
 		}
-
-		// let session;
-		// let sessionCookie;
-		// const user: Users | undefined = await db.query.usersTable.findFirst({
-		// 	where: or(eq(usersTable.username, form.data.username), eq(usersTable.email, form.data.username)),
-		// });
-		//
-		// if (!user) {
-		// 	form.data.password = '';
-		// 	return setError(form, 'username', 'Your username or password is incorrect.');
-		// }
-		//
-		// let twoFactorDetails;
-		//
-		try {
-			// 	const password = form.data.password;
-			// 	console.log('user', JSON.stringify(user, null, 2));
-			//
-			// 	if (!user?.hashed_password) {
-			// 		console.log('invalid username/password');
-			// 		form.data.password = '';
-			// 		return setError(form, 'password', 'Your username or password is incorrect.');
-			// 	}
-			//
-			// 	const validPassword = await new Argon2id().verify(user.hashed_password, password);
-			// 	if (!validPassword) {
-			// 		console.log('invalid password');
-			// 		form.data.password = '';
-			// 		return setError(form, 'password', 'Your username or password is incorrect.');
-			// 	}
-			//
-			// 	console.log('ip', locals.ip);
-			// 	console.log('country', locals.country);
-			//
-			// 	twoFactorDetails = await db.query.twoFactor.findFirst({
-			// 		where: eq(twoFactor.userId, user?.id),
-			// 	});
-			//
-			// 	if (twoFactorDetails?.secret && twoFactorDetails?.enabled) {
-			// 		await db.update(twoFactor).set({
-			// 			initiatedTime: new Date(),
-			// 		});
-			//
-			// 		session = await lucia.createSession(user.id, {
-			// 			ip_country: locals.country,
-			// 			ip_address: locals.ip,
-			// 			twoFactorAuthEnabled:
-			// 				twoFactorDetails?.enabled &&
-			// 				twoFactorDetails?.secret !== null &&
-			// 				twoFactorDetails?.secret !== '',
-			// 			isTwoFactorAuthenticated: false,
-			// 		});
-			// 	} else {
-			// 		session = await lucia.createSession(user.id, {
-			// 			ip_country: locals.country,
-			// 			ip_address: locals.ip,
-			// 			twoFactorAuthEnabled: false,
-			// 			isTwoFactorAuthenticated: false,
-			// 		});
-			// 	}
-			// 	console.log('logging in session', session);
-			// 	sessionCookie = lucia.createSessionCookie(session.id);
-			// 	console.log('logging in session cookie', sessionCookie);
-		} catch (e) {
-			// TODO: need to return error message to the client
-			console.error(e)
-			form.data.password = ''
-			return setError(form, '', 'Your username or password is incorrect.')
-		}
-
-		// console.log('setting session cookie', sessionCookie);
-		// event.cookies.set(sessionCookie.name, sessionCookie.value, {
-		// 	path: '.',
-		// 	...sessionCookie.attributes,
-		// });
 
 		form.data.username = ''
 		form.data.password = ''

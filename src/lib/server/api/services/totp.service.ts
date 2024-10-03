@@ -1,5 +1,4 @@
 import { CredentialsRepository } from '$lib/server/api/repositories/credentials.repository'
-import { HMAC } from 'oslo/crypto'
 import { decodeHex, encodeHexLowerCase } from '@oslojs/encoding'
 import { verifyTOTP } from '@oslojs/otp'
 import { inject, injectable } from 'tsyringe'
@@ -22,12 +21,11 @@ export class TotpService {
 	}
 
 	async create(userId: string) {
-		const twoFactorSecret = await new HMAC('SHA-1').generateKey()
-
+		const secret = new Uint8Array(20)
 		try {
 			return await this.credentialsRepository.create({
 				user_id: userId,
-				secret_data: encodeHexLowerCase(twoFactorSecret),
+				secret_data: encodeHexLowerCase(crypto.getRandomValues(secret)),
 				type: 'totp',
 			})
 		} catch (e) {
