@@ -1,6 +1,6 @@
 <script lang="ts">
-import { PUBLIC_SITE_URL } from '$env/static/public'
-const src = `${PUBLIC_SITE_URL}/js/script.js`
+import { PUBLIC_PLAUSIBLE_URL, PUBLIC_SITE_URL } from '$env/static/public'
+const src = `${PUBLIC_PLAUSIBLE_URL}/js/script.js`
 const dataDomain = PUBLIC_SITE_URL.replace('https://', '').replace('http://', '')
 </script>
 
