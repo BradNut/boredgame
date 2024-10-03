@@ -70,7 +70,7 @@ export const load: PageServerLoad = async (event) => {
 	const totpUri = createTOTPKeyURI(issuer, accountName, decodedHexSecret, intervalInSeconds, digits)
 
 	addTwoFactorForm.data = {
-		current_password: '',
+		password: '',
 		two_factor_code: '',
 	}
 	return {
@@ -109,7 +109,7 @@ export const actions: Actions = {
 
 		if (verifyPasswordError) {
 			console.log(verifyPasswordError)
-			return setError(addTwoFactorForm, 'current_password', 'Your password is incorrect')
+			return setError(addTwoFactorForm, 'password', 'Your password is incorrect')
 		}
 
 		if (addTwoFactorForm.data.two_factor_code === '') {
@@ -151,7 +151,7 @@ export const actions: Actions = {
 
 		if (verifyPasswordError) {
 			console.log(verifyPasswordError)
-			return setError(removeTwoFactorForm, 'current_password', 'Your password is incorrect')
+			return setError(removeTwoFactorForm, 'password', 'Your password is incorrect')
 		}
 
 		const { error: deleteTotpError } = await locals.api.mfa.totp.$delete().then(locals.parseApiResponse)

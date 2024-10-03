@@ -47,6 +47,6 @@ export class TotpService {
 		if (!credential) {
 			throw new Error('TOTP credential not found')
 		}
-		return await verifyTOTP(decodeHex(credential.secret_data), 30, 6, code)
+		return verifyTOTP(decodeHex(credential.secret_data), 30, 6, code)
 	}
 }

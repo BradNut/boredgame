@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BoredGame" type="NodeJSConfigurationType" path-to-js-file="node_modules/vite/bin/vite.js" typescript-loader="bundled" working-dir="$PROJECT_DIR$">
+    <envs>
+      <env name="NODE_ENV" value="development" />
+    </envs>
+    <method v="2" />
+  </configuration>
+</component>

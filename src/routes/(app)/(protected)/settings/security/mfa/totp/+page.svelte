@@ -1,4 +1,5 @@
 <script lang="ts">
+import CopyCodeBlock from '$components/CopyCodeBlock.svelte'
 import PinInput from '$components/pin-input.svelte'
 import * as Alert from '$components/ui/alert'
 import * as Form from '$components/ui/form'
@@ -39,7 +40,7 @@ const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = remov
 		<h2>Currently you have two factor authentication <span class="text-green-500">enabled</span></h2>
 		<p>To disable two factor authentication, please enter your current password.</p>
 		<form method="POST" action="?/disableTotp" use:removeTwoFactorEnhance data-sveltekit-replacestate>
-			<Form.Field form={removeTwoFactorForm} name="current_password">
+			<Form.Field form={removeTwoFactorForm} name="password">
 				<Form.Control let:attrs>
 					<Form.Label for="password">Current Password</Form.Label>
 					<Input type="password" {...attrs} bind:value={$removeTwoFactorFormData.password} autocomplete="password" />
@@ -61,7 +62,7 @@ const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = remov
 				<Form.Description>This is the code from your authenticator app.</Form.Description>
 				<Form.FieldErrors />
 			</Form.Field>
-			<Form.Field form={addTwoFactorForm} name="current_password">
+			<Form.Field form={addTwoFactorForm} name="password">
 				<Form.Control let:attrs>
 					<Form.Label for="password">Enter Password</Form.Label>
 					<Input type="password" {...attrs} bind:value={$addTwoFactorFormData.password} autocomplete="password" />
@@ -71,7 +72,10 @@ const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = remov
 			</Form.Field>
 			<Form.Button>Submit</Form.Button>
 		</form>
-		<span>Secret: {secret}</span>
+		<div class="mt-4">
+			<p>Secret:</p>
+			<CopyCodeBlock codeContent={secret || ''} language="text" />
+		</div>
 	{/if}
 </section>
 
