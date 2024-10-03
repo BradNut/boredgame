@@ -1,43 +1,43 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { boredState } from '$lib/stores/boredState';
-	import { wishlistStore } from '$lib/stores/wishlistStore';
-	import { ToastType } from '$lib/types';
-	// import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
-	import ClearWishlistDialog from '../dialog/ClearWishlistDialog.svelte';
-	import { toast } from '../toast/toast';
+import { browser } from '$app/environment'
+import { boredState } from '$lib/stores/boredState'
+import { wishlistStore } from '$lib/stores/wishlistStore'
+import { ToastType } from '$lib/types'
+// import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
+import ClearWishlistDialog from '../dialog/ClearWishlistDialog.svelte'
+import { toast } from '../toast/toast'
 
-	function saveWishlist() {
-		if (!browser) return;
-		localStorage.wishlist = JSON.stringify($wishlistStore);
-		toast.send('Saved wishlist', { duration: 3000, type: ToastType.INFO });
-	}
+function saveWishlist() {
+	if (!browser) return
+	localStorage.wishlist = JSON.stringify($wishlistStore)
+	toast.send('Saved wishlist', { duration: 3000, type: ToastType.INFO })
+}
 
-	function exportWishlist() {
-		if (!browser) return;
-		const wishlistBlob = new Blob([JSON.stringify($wishlistStore)], {
-			type: 'application/json;charset=utf-8'
-		});
-		let url = window.URL || window.webkitURL;
-		let link = url.createObjectURL(wishlistBlob);
-		let a = document.createElement('a');
-		a.setAttribute('download', `wishlist.json`);
-		a.setAttribute('href', link);
-		a.click();
-		document.body.removeChild(a);
-		toast.send('Exported wishlist', { duration: 3000, type: ToastType.INFO });
-	}
+function exportWishlist() {
+	if (!browser) return
+	const wishlistBlob = new Blob([JSON.stringify($wishlistStore)], {
+		type: 'application/json;charset=utf-8',
+	})
+	let url = window.URL || window.webkitURL
+	let link = url.createObjectURL(wishlistBlob)
+	let a = document.createElement('a')
+	a.setAttribute('download', `wishlist.json`)
+	a.setAttribute('href', link)
+	a.click()
+	document.body.removeChild(a)
+	toast.send('Exported wishlist', { duration: 3000, type: ToastType.INFO })
+}
 
-	function clearWishlist() {
-		if ($wishlistStore.length > 0) {
-			boredState.update((n) => ({
-				...n,
-				dialog: { isOpen: true, content: ClearWishlistDialog }
-			}));
-		} else {
-			toast.send('Nothing to clear', { duration: 3000, type: ToastType.ERROR });
-		}
+function clearWishlist() {
+	if ($wishlistStore.length > 0) {
+		boredState.update((n) => ({
+			...n,
+			dialog: { isOpen: true, content: ClearWishlistDialog },
+		}))
+	} else {
+		toast.send('Nothing to clear', { duration: 3000, type: ToastType.ERROR })
 	}
+}
 </script>
 
 <div>
@@ -61,7 +61,7 @@
 	</div>
 </div>
 
-<style lang="scss">
+<style lang="postcss">
 	:global(.wishlist-title) {
 		padding-bottom: var(--spacing-8);
 		font-size: var(--font-24);

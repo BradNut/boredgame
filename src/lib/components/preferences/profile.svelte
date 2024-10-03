@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { fade } from 'svelte/transition';
-	import cogOutline from '@iconify-icons/mdi/cog-outline';
-	import Themes from './themes.svelte';
-	import GameCollection from './gameCollection.svelte';
-	import GameWishlist from './gameWishlist.svelte';
+import cogOutline from '@iconify-icons/mdi/cog-outline'
+import { fade } from 'svelte/transition'
+import GameCollection from './gameCollection.svelte'
+import GameWishlist from './gameWishlist.svelte'
+import Themes from './themes.svelte'
 </script>
 
 <div class="container">
@@ -65,7 +65,7 @@
 	<!-- </Popover> -->
 </div>
 
-<style lang="scss">
+<style lang="postcss">
 	.container {
 		width: 24px;
 		height: 24px;

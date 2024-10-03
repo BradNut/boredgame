@@ -1,41 +1,41 @@
 <script lang="ts">
-	// Based on https://carbon-components-svelte.onrender.com/components/Pagination
-	import { afterUpdate, createEventDispatcher } from 'svelte';
-	import { fade } from 'svelte/transition';
-	// import {
-	// 	Listbox,
-	// 	ListboxButton,
-	// 	ListboxOption,
-	// 	ListboxOptions
-	// } from '@rgossiaux/svelte-headlessui';
-	// import {
-	// 	CheckIcon,
-	// 	ChevronLeftIcon,
-	// 	ChevronRightIcon
-	// } from '@rgossiaux/svelte-heroicons/outline';
+// Based on https://carbon-components-svelte.onrender.com/components/Pagination
+import { afterUpdate, createEventDispatcher } from 'svelte'
+import { fade } from 'svelte/transition'
+// import {
+// 	Listbox,
+// 	ListboxButton,
+// 	ListboxOption,
+// 	ListboxOptions
+// } from '@rgossiaux/svelte-headlessui';
+// import {
+// 	CheckIcon,
+// 	ChevronLeftIcon,
+// 	ChevronRightIcon
+// } from '@rgossiaux/svelte-heroicons/outline';
 
-	const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher()
 
-	export let pageSize: number; // Reactive, bind
-	export let page: number = 1; // Reactive, bind
-	export let totalItems: number;
-	export let showItemsLeft = false;
-	export let pageSizeInputDisabled: boolean = false;
-	export let pageSizes: ReadonlyArray<Number> = [10];
-	export let forwardText: string;
-	export let backwardText: string;
-	export let disabled: boolean = false;
+export let pageSize: number // Reactive, bind
+export let page: number = 1 // Reactive, bind
+export let totalItems: number
+export let showItemsLeft = false
+export let pageSizeInputDisabled: boolean = false
+export let pageSizes: ReadonlyArray<Number> = [10]
+export let forwardText: string
+export let backwardText: string
+export let disabled: boolean = false
 
-	afterUpdate(() => {
-		if (page > totalPages) {
-			page = totalPages;
-		}
-	});
+afterUpdate(() => {
+	if (page > totalPages) {
+		page = totalPages
+	}
+})
 
-	$: totalPages = Math.max(Math.ceil(totalItems / pageSize), 1);
-	$: backButtonDisabled = disabled || page === 1;
-	$: forwardButtonDisabled = disabled || page === totalPages;
-	$: itemsLeft = totalItems - page * pageSize >= 0 ? totalItems - page * pageSize : 0;
+$: totalPages = Math.max(Math.ceil(totalItems / pageSize), 1)
+$: backButtonDisabled = disabled || page === 1
+$: forwardButtonDisabled = disabled || page === totalPages
+$: itemsLeft = totalItems - page * pageSize >= 0 ? totalItems - page * pageSize : 0
 </script>
 
 <div class="container">
@@ -108,7 +108,7 @@
 	</div>
 </div>
 
-<style lang="scss">
+<style lang="postcss">
 	.container {
 		display: flex;
 		flex: wrap;
