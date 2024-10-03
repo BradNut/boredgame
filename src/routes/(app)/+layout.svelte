@@ -19,4 +19,11 @@ const { data, children } = $props()
 </div>
 
 <style lang="postcss">
+	:global(.dialog-overlay) {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		background-color: rgb(0 0 0);
+		opacity: 0.8;
+	}
 </style>

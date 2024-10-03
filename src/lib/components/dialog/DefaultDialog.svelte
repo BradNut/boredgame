@@ -1,28 +1,28 @@
 <script lang="ts">
-	import { type SvelteComponent, createEventDispatcher } from 'svelte';
-	import { fade } from 'svelte/transition';
-	// import {
-	// 	Dialog,
-	// 	DialogDescription,
-	// 	DialogOverlay,
-	// 	DialogTitle
-	// } from '@rgossiaux/svelte-headlessui';
-	import { boredState } from '$lib/stores/boredState';
+// import {
+// 	Dialog,
+// 	DialogDescription,
+// 	DialogOverlay,
+// 	DialogTitle
+// } from '@rgossiaux/svelte-headlessui';
+import { boredState } from '$lib/stores/boredState'
+import { type SvelteComponent, createEventDispatcher } from 'svelte'
+import { fade } from 'svelte/transition'
 
-	export let title: string;
-	export let description: string;
-	export let danger = false;
-	export let alert = false;
-	export let passive = false;
-	export let primaryButtonText = '';
-	export let primaryButtonDisabled = false;
-	export let primaryButtonIcon: typeof SvelteComponent<any> = undefined;
-	export let primaryButtonIconDescription = '';
-	export let secondaryButtonText = '';
+export let title: string
+export let description: string
+export let danger = false
+export let alert = false
+export let passive = false
+export let primaryButtonText = ''
+export let primaryButtonDisabled = false
+export let primaryButtonIcon: typeof SvelteComponent<any> = undefined
+export let primaryButtonIconDescription = ''
+export let secondaryButtonText = ''
 
-	const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher()
 
-	$: isOpen = $boredState?.dialog?.isOpen;
+$: isOpen = $boredState?.dialog?.isOpen
 </script>
 
 <!-- <Dialog
@@ -74,7 +74,7 @@
 	</div>
 <!-- </Dialog> -->
 
-<style lang="scss">
+<style lang="postcss">
 	.dialog {
 		display: grid;
 		gap: 1.5rem;

@@ -12,7 +12,7 @@ import { Toaster } from '$lib/components/ui/sonner'
 import PageLoadingIndicator from '$lib/page_loading_indicator.svelte'
 import { toastMessage } from '$lib/utils/superforms.js'
 import { theme } from '$state/theme'
-import { ModeWatcher } from 'mode-watcher'
+// import { ModeWatcher } from 'mode-watcher'
 
 const dev = process.env.NODE_ENV !== 'production'
 
@@ -21,12 +21,12 @@ const { user } = data
 
 const metaTags = $derived({
 	titleTemplate: '%s | Bored Game',
-	description: 'Bored Game, keep track of your gamesTable.',
+	description: 'Bored Game, keep track of your games.',
 	openGraph: {
 		type: 'website',
 		titleTemplate: '%s | Bored Game',
 		locale: 'en_US',
-		description: 'Bored Game, keep track of your gamesTable',
+		description: 'Bored Game, keep track of your games',
 	},
 	...$page.data.metaTagsChild,
 })
