@@ -6,26 +6,37 @@ import { SignupController } from '$lib/server/api/controllers/signup.controller'
 import { UserController } from '$lib/server/api/controllers/user.controller'
 import { WishlistController } from '$lib/server/api/controllers/wishlist.controller'
 import { AuthCleanupJobs } from '$lib/server/api/jobs/auth-cleanup.job'
-import { Hono } from 'hono'
+import { OpenAPIHono } from '@hono/zod-openapi'
+import type { PinoLogger } from 'hono-pino'
 import { hc } from 'hono/client'
 import { cors } from 'hono/cors'
-import { logger } from 'hono/logger'
+import { notFound, onError } from 'stoker/middlewares';
 import { container } from 'tsyringe'
 import { config } from './common/config'
 import { IamController } from './controllers/iam.controller'
 import { LoginController } from './controllers/login.controller'
 import { validateAuthSession, verifyOrigin } from './middleware/auth.middleware'
+import { pinoLogger } from './middleware/pino-logger.middleware'
+
+type AppBindings = {
+	Variables: {
+		logger: PinoLogger
+	}
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                     App                                    */
 /* -------------------------------------------------------------------------- */
-export const app = new Hono().basePath('/api')
+export const app = new OpenAPIHono<AppBindings>().basePath('/api')
 
 /* -------------------------------------------------------------------------- */
 /*                             Global Middlewares                             */
 /* -------------------------------------------------------------------------- */
 app.use(verifyOrigin).use(validateAuthSession)
-app.use(logger())
+app.use(pinoLogger())
+
+app.notFound(notFound)
+app.onError(onError)
 
 app.use(
 	'/*',
@@ -51,6 +62,11 @@ const routes = app
 	.route('/collections', container.resolve(CollectionController).routes())
 	.route('/mfa', container.resolve(MfaController).routes())
 	.get('/', (c) => c.json({ message: 'Server is healthy' }))
+	.get('/error', (c) => {
+		c.status(422);
+		c.var.logger.info('Logged here');
+		throw new Error('Test error')
+	})
 
 /* -------------------------------------------------------------------------- */
 /*                                  Cron Jobs                                 */
