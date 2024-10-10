@@ -1,13 +1,15 @@
-import { config } from 'dotenv'
-import { expand } from 'dotenv-expand'
-import { ZodError, z } from 'zod'
+import { config } from 'dotenv';
+import { expand } from 'dotenv-expand';
+import { type ZodError, z } from 'zod';
+
+expand(config());
 
 const stringBoolean = z.coerce
 	.string()
 	.transform((val) => {
-		return val === 'true'
+		return val === 'true';
 	})
-	.default('false')
+	.default('false');
 
 const EnvSchema = z.object({
 	DATABASE_USER: z.string(),
@@ -22,34 +24,29 @@ const EnvSchema = z.object({
 	GITHUB_CLIENT_SECRET: z.string(),
 	GOOGLE_CLIENT_ID: z.string(),
 	GOOGLE_CLIENT_SECRET: z.string(),
+	LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
 	NODE_ENV: z.string().default('development'),
 	ORIGIN: z.string(),
 	PUBLIC_SITE_NAME: z.string(),
 	PUBLIC_SITE_URL: z.string(),
-	PUBLIC_UMAMI_DO_NOT_TRACK: z.string(),
+	PUBLIC_UMAMI_DO_NOT_TRACK: z.string().default('true'),
 	PUBLIC_UMAMI_ID: z.string(),
 	PUBLIC_UMAMI_URL: z.string(),
 	REDIS_URL: z.string(),
 	TWO_FACTOR_TIMEOUT: z.coerce.number().default(300000),
-})
+});
 
-export type EnvSchema = z.infer<typeof EnvSchema>
+export type env = z.infer<typeof EnvSchema>;
 
-expand(config())
+let env: env;
 
 try {
-	EnvSchema.parse(process.env)
-} catch (error) {
-	if (error instanceof ZodError) {
-		let message = 'Missing required values in .env:\n'
-		for (const issue of error.issues) {
-			message += `${issue.path[0]}\n`
-		}
-		const e = new Error(message)
-		e.stack = ''
-		throw e
-	}
-	console.error(error)
+	env = EnvSchema.parse(process.env);
+} catch (e) {
+	const error = e as ZodError;
+	console.error('❌ Missing required values in .env:\n');
+	console.error(error.flatten().fieldErrors);
+	process.exit(1);
 }
 
-export default EnvSchema.parse(process.env)
+export default env;
