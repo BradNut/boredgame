@@ -1,102 +1,102 @@
-import { notSignedInMessage } from '$lib/flashMessages'
-import { usersTable } from '$lib/server/api/databases/tables'
-import { db } from '$lib/server/api/packages/drizzle'
-import { type Actions, fail } from '@sveltejs/kit'
-import { eq } from 'drizzle-orm'
-import { redirect } from 'sveltekit-flash-message/server'
-import { zod } from 'sveltekit-superforms/adapters'
-import { message, setError, superValidate } from 'sveltekit-superforms/server'
-import { z } from 'zod'
-import type { PageServerLoad } from './$types'
-import { updateEmailSchema, updateProfileSchema } from './schemas'
+import { notSignedInMessage } from '$lib/flashMessages';
+import { usersTable } from '$lib/server/api/databases/tables';
+import { db } from '$lib/server/api/packages/drizzle';
+import { type Actions, fail } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import { redirect } from 'sveltekit-flash-message/server';
+import { zod } from 'sveltekit-superforms/adapters';
+import { message, setError, superValidate } from 'sveltekit-superforms/server';
+import { z } from 'zod';
+import type { PageServerLoad } from './$types';
+import { updateEmailFormSchema, updateProfileFormSchema } from './schemas';
 
 export const load: PageServerLoad = async (event) => {
-	const { locals } = event
+	const { locals } = event;
 
-	const authedUser = await locals.getAuthedUser()
+	const authedUser = await locals.getAuthedUser();
 	if (!authedUser) {
-		throw redirect(302, '/login', notSignedInMessage, event)
+		throw redirect(302, '/login', notSignedInMessage, event);
 	}
 
-	const profileForm = await superValidate(zod(updateProfileSchema), {
+	const updateProfileForm = await superValidate(zod(updateProfileFormSchema), {
 		defaults: {
 			firstName: authedUser?.firstName ?? '',
 			lastName: authedUser?.lastName ?? '',
 			username: authedUser?.username ?? '',
 		},
-	})
-	const emailForm = await superValidate(zod(updateEmailSchema), {
+	});
+	const updateEmailForm = await superValidate(zod(updateEmailFormSchema), {
 		defaults: {
 			email: authedUser?.email ?? '',
 		},
-	})
+	});
 
 	// const twoFactorDetails = await db.query.twoFactor.findFirst({
 	// 	where: eq(twoFactor.userId, authedUser!.id!),
 	// });
 
 	return {
-		profileForm,
-		emailForm,
+		updateProfileForm,
+		updateEmailForm,
 		hasSetupTwoFactor: false, //!!twoFactorDetails?.enabled,
-	}
-}
+	};
+};
 
 const changeEmailIfNotEmpty = z.object({
 	email: z.string().trim().max(64, { message: 'Email must be less than 64 characters' }).email({ message: 'Please enter a valid email' }),
-})
+});
 
 export const actions: Actions = {
 	profileUpdate: async (event) => {
-		const { locals } = event
+		const { locals } = event;
 
-		const authedUser = await locals.getAuthedUser()
+		const authedUser = await locals.getAuthedUser();
 
 		if (!authedUser) {
-			redirect(302, '/login', notSignedInMessage, event)
+			redirect(302, '/login', notSignedInMessage, event);
 		}
 
-		const form = await superValidate(event, zod(updateProfileSchema))
+		const form = await superValidate(event, zod(updateProfileFormSchema));
 
-		const { error } = await locals.api.me.update.profile.$put({ json: form.data }).then(locals.parseApiResponse)
-		console.log('data from profile update', error)
+		const { error } = await locals.api.me.update.profile.$put({ json: form.data }).then(locals.parseApiResponse);
+		console.log('data from profile update', error);
 		if (error) {
-			return setError(form, 'username', error)
+			return setError(form, 'username', error);
 		}
 
 		if (!form.valid) {
 			return fail(400, {
 				form,
-			})
+			});
 		}
 
-		console.log('profile updated successfully')
-		return message(form, { type: 'success', message: 'Profile updated successfully!' })
+		console.log('profile updated successfully');
+		return message(form, { type: 'success', message: 'Profile updated successfully!' });
 	},
 	changeEmail: async (event) => {
-		const form = await superValidate(event, zod(updateEmailSchema))
+		const form = await superValidate(event, zod(updateEmailFormSchema));
 
-		const newEmail = form.data?.email
+		const newEmail = form.data?.email;
 		if (!form.valid || !newEmail || (newEmail !== '' && !changeEmailIfNotEmpty.safeParse(form.data).success)) {
 			return fail(400, {
 				form,
-			})
+			});
 		}
 
 		if (!event.locals.user) {
-			redirect(302, '/login', notSignedInMessage, event)
+			redirect(302, '/login', notSignedInMessage, event);
 		}
 
-		const user = event.locals.user
+		const user = event.locals.user;
 		const existingUser = await db.query.usersTable.findFirst({
 			where: eq(usersTable.email, newEmail),
-		})
+		});
 
 		if (existingUser && existingUser.id !== user.id) {
-			return setError(form, 'email', 'That email is already taken')
+			return setError(form, 'email', 'That email is already taken');
 		}
 
-		await db.update(usersTable).set({ email: form.data.email }).where(eq(usersTable.id, user.id))
+		await db.update(usersTable).set({ email: form.data.email }).where(eq(usersTable.id, user.id));
 
 		// if (user.email !== form.data.email) {
 		// Send email to confirm new email?
@@ -114,6 +114,6 @@ export const actions: Actions = {
 		// });
 		// }
 
-		return message(form, { type: 'success', message: 'Email updated successfully!' })
+		return message(form, { type: 'success', message: 'Email updated successfully!' });
 	},
-}
+};

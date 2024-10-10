@@ -1,11 +1,11 @@
-import { Hono } from 'hono'
-import type { BlankSchema } from 'hono/types'
-import type { HonoTypes } from './hono'
+import { Hono } from 'hono';
+import type { BlankSchema } from 'hono/types';
+import type { AppBindings } from './hono';
 
 export abstract class Controller {
-	protected readonly controller: Hono<HonoTypes, BlankSchema, '/'>
+	protected readonly controller: Hono<AppBindings, BlankSchema, '/'>;
 	constructor() {
-		this.controller = new Hono()
+		this.controller = new Hono();
 	}
-	abstract routes(): Hono<HonoTypes, BlankSchema, '/'>
+	abstract routes(): Hono<AppBindings, BlankSchema, '/'>;
 }

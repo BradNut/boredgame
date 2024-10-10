@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import createApp from '$lib/server/api/common/create-app';
+import configureOpenAPI from '$lib/server/api/configure-open-api';
 import { CollectionController } from '$lib/server/api/controllers/collection.controller';
 import { MfaController } from '$lib/server/api/controllers/mfa.controller';
 import { OAuthController } from '$lib/server/api/controllers/oauth.controller';
@@ -7,15 +8,17 @@ import { SignupController } from '$lib/server/api/controllers/signup.controller'
 import { UserController } from '$lib/server/api/controllers/user.controller';
 import { WishlistController } from '$lib/server/api/controllers/wishlist.controller';
 import { AuthCleanupJobs } from '$lib/server/api/jobs/auth-cleanup.job';
+import { extendZodWithOpenApi } from 'hono-zod-openapi';
 import { hc } from 'hono/client';
 import { container } from 'tsyringe';
+import { z } from 'zod';
 import { config } from './common/config';
 import { IamController } from './controllers/iam.controller';
 import { LoginController } from './controllers/login.controller';
 
-export const app = createApp();
+extendZodWithOpenApi(z);
 
-// configureOpenAPI(app);
+export const app = createApp();
 
 /* -------------------------------------------------------------------------- */
 /*                                   Routes                                   */
@@ -30,6 +33,9 @@ const routes = app
 	.route('/collections', container.resolve(CollectionController).routes())
 	.route('/mfa', container.resolve(MfaController).routes())
 	.get('/', (c) => c.json({ message: 'Server is healthy' }));
+
+// @ts-ignore - this is a workaround for https://github.com/paolostyle/hono-zod-openapi/issues/2
+configureOpenAPI(app);
 
 /* -------------------------------------------------------------------------- */
 /*                                  Cron Jobs                                 */

@@ -1,8 +1,8 @@
-import { usersTable } from '$lib/server/api/databases/tables/users.table'
-import { DrizzleService } from '$lib/server/api/services/drizzle.service'
-import { type InferInsertModel, eq } from 'drizzle-orm'
-import { inject, injectable } from 'tsyringe'
-import { takeFirstOrThrow } from '../common/utils/repository'
+import { usersTable } from '$lib/server/api/databases/tables/users.table';
+import { DrizzleService } from '$lib/server/api/services/drizzle.service';
+import { type InferInsertModel, eq } from 'drizzle-orm';
+import { inject, injectable } from 'tsyringe';
+import { takeFirstOrThrow } from '../common/utils/repository';
 
 /* -------------------------------------------------------------------------- */
 /*                                 Repository                                 */
@@ -20,8 +20,8 @@ storing data. They should not contain any business logic, only database queries.
  In our case the method 'trxHost' is used to set the transaction context.
 */
 
-export type CreateUser = InferInsertModel<typeof usersTable>
-export type UpdateUser = Partial<CreateUser>
+export type CreateUser = InferInsertModel<typeof usersTable>;
+export type UpdateUser = Partial<CreateUser>;
 
 @injectable()
 export class UsersRepository {
@@ -30,36 +30,36 @@ export class UsersRepository {
 	async findOneById(id: string, db = this.drizzle.db) {
 		return db.query.usersTable.findFirst({
 			where: eq(usersTable.id, id),
-		})
+		});
 	}
 
 	async findOneByIdOrThrow(id: string, db = this.drizzle.db) {
-		const user = await this.findOneById(id)
-		if (!user) throw Error('User not found')
-		return user
+		const user = await this.findOneById(id);
+		if (!user) throw Error('User not found');
+		return user;
 	}
 
 	async findOneByUsername(username: string, db = this.drizzle.db) {
 		return db.query.usersTable.findFirst({
 			where: eq(usersTable.username, username),
-		})
+		});
 	}
 
 	async findOneByEmail(email: string, db = this.drizzle.db) {
 		return db.query.usersTable.findFirst({
 			where: eq(usersTable.email, email),
-		})
+		});
 	}
 
 	async create(data: CreateUser, db = this.drizzle.db) {
-		return db.insert(usersTable).values(data).returning().then(takeFirstOrThrow)
+		return db.insert(usersTable).values(data).returning().then(takeFirstOrThrow);
 	}
 
 	async update(id: string, data: UpdateUser, db = this.drizzle.db) {
-		return db.update(usersTable).set(data).where(eq(usersTable.id, id)).returning().then(takeFirstOrThrow)
+		return db.update(usersTable).set(data).where(eq(usersTable.id, id)).returning().then(takeFirstOrThrow);
 	}
 
 	async delete(id: string, db = this.drizzle.db) {
-		return db.delete(usersTable).where(eq(usersTable.id, id)).returning().then(takeFirstOrThrow)
+		return db.delete(usersTable).where(eq(usersTable.id, id)).returning().then(takeFirstOrThrow);
 	}
 }

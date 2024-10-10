@@ -1,5 +1,6 @@
 import { StatusCodes } from '$lib/constants/status-codes';
 import { Controller } from '$lib/server/api/common/types/controller';
+import { iam, updateProfile } from '$lib/server/api/controllers/iam.routes';
 import { changePasswordDto } from '$lib/server/api/dtos/change-password.dto';
 import { updateEmailDto } from '$lib/server/api/dtos/update-email.dto';
 import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
@@ -9,6 +10,7 @@ import { IamService } from '$lib/server/api/services/iam.service';
 import { LoginRequestsService } from '$lib/server/api/services/loginrequest.service';
 import { LuciaService } from '$lib/server/api/services/lucia.service';
 import { zValidator } from '@hono/zod-validator';
+import { openApi } from 'hono-zod-openapi';
 import { setCookie } from 'hono/cookie';
 import { inject, injectable } from 'tsyringe';
 import { requireAuth } from '../middleware/require-auth.middleware';
@@ -24,22 +26,27 @@ export class IamController extends Controller {
 	}
 
 	routes() {
-		const tags = ['IAM'];
-
 		return this.controller
-			.get('/', requireAuth, async (c) => {
+			.get('/', requireAuth, openApi(iam), async (c) => {
 				const user = c.var.user;
 				return c.json({ user });
 			})
-			.put('/update/profile', requireAuth, zValidator('json', updateProfileDto), limiter({ limit: 30, minutes: 60 }), async (c) => {
-				const user = c.var.user;
-				const { firstName, lastName, username } = c.req.valid('json');
-				const updatedUser = await this.iamService.updateProfile(user.id, { firstName, lastName, username });
-				if (!updatedUser) {
-					return c.json('Username already in use', StatusCodes.BAD_REQUEST);
-				}
-				return c.json({ user: updatedUser }, StatusCodes.OK);
-			})
+			.put(
+				'/update/profile',
+				requireAuth,
+				openApi(updateProfile),
+				zValidator('json', updateProfileDto),
+				limiter({ limit: 30, minutes: 60 }),
+				async (c) => {
+					const user = c.var.user;
+					const { firstName, lastName, username } = c.req.valid('json');
+					const updatedUser = await this.iamService.updateProfile(user.id, { firstName, lastName, username });
+					if (!updatedUser) {
+						return c.json('Username already in use', StatusCodes.BAD_REQUEST);
+					}
+					return c.json({ user: updatedUser }, StatusCodes.OK);
+				},
+			)
 			.post('/verify/password', requireAuth, zValidator('json', verifyPasswordDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const user = c.var.user;
 				const { password } = c.req.valid('json');
