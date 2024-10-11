@@ -1,7 +1,9 @@
 import { StatusCodes } from '$lib/constants/status-codes';
 import { unauthorizedSchema } from '$lib/server/api/common/exceptions';
+import { createAuthCookieSchema } from '$lib/server/api/common/openapi/create-cookie-schema';
 import { selectUserSchema } from '$lib/server/api/databases/tables/users.table';
 import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
+import { z } from '@hono/zod-openapi';
 import { defineOpenApiOperation } from 'hono-zod-openapi';
 import { createErrorSchema } from 'stoker/openapi/schemas';
 
@@ -27,6 +29,10 @@ export const updateProfile = defineOpenApiOperation({
 	tags,
 	request: {
 		json: updateProfileDto,
+		cookies: createAuthCookieSchema(),
+		headers: z.object({
+			authorization: z.string(),
+		}),
 	},
 	responses: {
 		[StatusCodes.OK]: {
