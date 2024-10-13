@@ -4,7 +4,7 @@ import type { Promisify, RateLimitInfo } from 'hono-rate-limiter';
 import type { Session, User } from 'lucia';
 
 // export type AppOpenAPI = OpenAPIHono<AppBindings>;
-export type AppOpenAPI = Hono;
+export type AppOpenAPI = Hono<AppBindings>;
 
 export type AppBindings = {
 	Variables: {

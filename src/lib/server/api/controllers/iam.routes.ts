@@ -27,12 +27,9 @@ export const iam = defineOpenApiOperation({
 
 export const updateProfile = defineOpenApiOperation({
 	tags,
+	security: [{ bearerAuth: [] }],
 	request: {
 		json: updateProfileDto,
-		cookies: createAuthCookieSchema(),
-		headers: z.object({
-			authorization: z.string(),
-		}),
 	},
 	responses: {
 		[StatusCodes.OK]: {

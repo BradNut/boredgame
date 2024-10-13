@@ -34,7 +34,6 @@ const routes = app
 	.route('/mfa', container.resolve(MfaController).routes())
 	.get('/', (c) => c.json({ message: 'Server is healthy' }));
 
-// @ts-expect-error - this is a workaround for https://github.com/paolostyle/hono-zod-openapi/issues/2
 configureOpenAPI(app);
 
 /* -------------------------------------------------------------------------- */
