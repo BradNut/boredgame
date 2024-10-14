@@ -1,16 +1,15 @@
 import { StatusCodes } from '$lib/constants/status-codes';
 import { unauthorizedSchema } from '$lib/server/api/common/exceptions';
-import { createAuthCookieSchema } from '$lib/server/api/common/openapi/create-cookie-schema';
 import { selectUserSchema } from '$lib/server/api/databases/tables/users.table';
 import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
-import { z } from '@hono/zod-openapi';
-import { defineOpenApiOperation } from 'hono-zod-openapi';
 import { createErrorSchema } from 'stoker/openapi/schemas';
+import { taggedAuthRoute } from '../common/openapi/create-auth-route';
+import { changePasswordDto } from '../dtos/change-password.dto';
+import { verifyPasswordDto } from '../dtos/verify-password.dto';
 
-const tags = ['IAM'];
+const tag = 'IAM';
 
-export const iam = defineOpenApiOperation({
-	tags,
+export const iam = taggedAuthRoute(tag, {
 	responses: {
 		[StatusCodes.OK]: {
 			description: 'User profile',
@@ -25,9 +24,7 @@ export const iam = defineOpenApiOperation({
 	},
 });
 
-export const updateProfile = defineOpenApiOperation({
-	tags,
-	security: [{ bearerAuth: [] }],
+export const updateProfile = taggedAuthRoute(tag, {
 	request: {
 		json: updateProfileDto,
 	},
@@ -37,9 +34,102 @@ export const updateProfile = defineOpenApiOperation({
 			schema: selectUserSchema,
 			mediaType: 'application/json',
 		},
-		[StatusCodes.UNPROCESSABLE_ENTITY]: {
+		[StatusCodes.BAD_REQUEST]: {
 			description: 'The validation error(s)',
 			schema: createErrorSchema(updateProfileDto),
+			mediaType: 'application/json',
+		},
+		[StatusCodes.UNPROCESSABLE_ENTITY]: {
+			description: 'Username already in use',
+			mediaType: 'application/json',
+		},
+		[StatusCodes.UNAUTHORIZED]: {
+			description: 'Unauthorized',
+			schema: createErrorSchema(unauthorizedSchema),
+			mediaType: 'application/json',
+		},
+	},
+});
+
+export const verifyPassword = taggedAuthRoute(tag, {
+	request: {
+		json: verifyPasswordDto,
+	},
+	responses: {
+		[StatusCodes.OK]: {
+			description: 'Password verified',
+			mediaType: 'application/json',
+		},
+		[StatusCodes.BAD_REQUEST]: {
+			description: 'The validation error(s)',
+			schema: createErrorSchema(verifyPasswordDto),
+			mediaType: 'application/json',
+		},
+		[StatusCodes.BAD_REQUEST]: {
+			description: 'Incorrect password',
+			mediaType: 'application/json',
+		},
+		[StatusCodes.UNAUTHORIZED]: {
+			description: 'Unauthorized',
+			schema: createErrorSchema(unauthorizedSchema),
+			mediaType: 'application/json',
+		},
+	},
+});
+
+export const updatePassword = taggedAuthRoute(tag, {
+	request: {
+		json: changePasswordDto,
+	},
+	responses: {
+		[StatusCodes.OK]: {
+			description: 'Password updated',
+			mediaType: 'application/json',
+		},
+		[StatusCodes.BAD_REQUEST]: {
+			description: 'The validation error(s)',
+			schema: createErrorSchema(changePasswordDto),
+			mediaType: 'application/json',
+		},
+		[StatusCodes.BAD_REQUEST]: {
+			description: 'Incorrect password',
+			mediaType: 'application/json',
+		},
+		[StatusCodes.UNAUTHORIZED]: {
+			description: 'Unauthorized',
+			schema: createErrorSchema(unauthorizedSchema),
+			mediaType: 'application/json',
+		},
+	},
+});
+
+export const updateEmail = taggedAuthRoute(tag, {
+	responses: {
+		[StatusCodes.OK]: {
+			description: 'Email updated',
+			mediaType: 'application/json',
+		},
+		[StatusCodes.BAD_REQUEST]: {
+			description: 'The validation error(s)',
+			schema: createErrorSchema(changePasswordDto),
+			mediaType: 'application/json',
+		},
+		[StatusCodes.BAD_REQUEST]: {
+			description: "Cannot change email address",
+			mediaType: 'application/json',
+		},
+		[StatusCodes.UNAUTHORIZED]: {
+			description: 'Unauthorized',
+			schema: createErrorSchema(unauthorizedSchema),
+			mediaType: 'application/json',
+		},
+	},
+});
+
+export const logout = taggedAuthRoute(tag, {
+	responses: {
+		[StatusCodes.OK]: {
+			description: 'Logged out',
 			mediaType: 'application/json',
 		},
 		[StatusCodes.UNAUTHORIZED]: {

@@ -81,8 +81,8 @@ importers:
         specifier: ^1.9.1
         version: 1.9.1
       bullmq:
-        specifier: ^5.19.0
-        version: 5.19.0
+        specifier: ^5.19.1
+        version: 5.19.1
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -123,8 +123,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0(hono@4.6.4)
       hono-zod-openapi:
-        specifier: ^0.2.1
-        version: 0.2.1(hono@4.6.4)(zod@3.23.8)
+        specifier: ^0.3.0
+        version: 0.3.0(hono@4.6.4)(zod@3.23.8)
       html-entities:
         specifier: ^2.5.2
         version: 2.5.2
@@ -2554,8 +2554,8 @@ packages:
   buffer@6.0.3:
     resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
-  bullmq@5.19.0:
-    resolution: {integrity: sha512-S6ZxVqPgzvKVkGjUN5Qwi0bDgM2aZPKsgJ8ESe5gUOOt3APDRPfDAzrkUz1FkTd1nfgc3HFBN8MCipWDGTdFGA==}
+  bullmq@5.19.1:
+    resolution: {integrity: sha512-ziQ2C0ZS39MwerK+C1W88L4niDgrByVTogr8PeLHVEPhSHNCW39a/ROphNAdGWZ4M4hcXolloyAGgdtEz5Fw5A==}
 
   bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
@@ -3337,8 +3337,8 @@ packages:
     peerDependencies:
       hono: ^4.1.1
 
-  hono-zod-openapi@0.2.1:
-    resolution: {integrity: sha512-KHxVkmokPzRuXWpner1Hb3Eey/FmZOn8+IMNISWhvMIdvdKOo8qbjNzTUmRMRZZYewqa1SeSy2slFCZrUNBfGw==}
+  hono-zod-openapi@0.3.0:
+    resolution: {integrity: sha512-Ledae1WTC+ct7Mj61y+KnrwgPm34CkU1wTt85C2bBoD60b7DR7ExJEUj77tZU7O8Y7G8p9NWwYngfbzGDTBtYA==}
     peerDependencies:
       hono: ^4.6.3
       zod: ^3.21.4
@@ -7008,7 +7008,7 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
-  bullmq@5.19.0:
+  bullmq@5.19.1:
     dependencies:
       cron-parser: 4.9.0
       ioredis: 5.4.1
@@ -7860,7 +7860,7 @@ snapshots:
     dependencies:
       hono: 4.6.4
 
-  hono-zod-openapi@0.2.1(hono@4.6.4)(zod@3.23.8):
+  hono-zod-openapi@0.3.0(hono@4.6.4)(zod@3.23.8):
     dependencies:
       '@hono/zod-validator': 0.4.1(hono@4.6.4)(zod@3.23.8)
       hono: 4.6.4

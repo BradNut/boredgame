@@ -44,13 +44,13 @@ export default function configureOpenAPI(app: AppOpenAPI) {
 					type: 'http',
 					scheme: 'bearer',
 				},
+				cookieAuth: {
+					type: 'apiKey',
+					name: 'session',
+					in: 'cookie',
+				}
 			},
 		},
-		security: [
-			{
-				bearerAuth: [],
-			},
-		],
 	});
 
 	app.get(

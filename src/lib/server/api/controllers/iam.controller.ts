@@ -1,6 +1,5 @@
 import { StatusCodes } from '$lib/constants/status-codes';
 import { Controller } from '$lib/server/api/common/types/controller';
-import { iam, updateProfile } from '$lib/server/api/controllers/iam.routes';
 import { changePasswordDto } from '$lib/server/api/dtos/change-password.dto';
 import { updateEmailDto } from '$lib/server/api/dtos/update-email.dto';
 import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
@@ -14,6 +13,7 @@ import { openApi } from 'hono-zod-openapi';
 import { setCookie } from 'hono/cookie';
 import { inject, injectable } from 'tsyringe';
 import { requireAuth } from '../middleware/require-auth.middleware';
+import { iam, logout, updateEmail, updatePassword, updateProfile, verifyPassword } from './iam.routes';
 
 @injectable()
 export class IamController extends Controller {
@@ -42,26 +42,26 @@ export class IamController extends Controller {
 					const { firstName, lastName, username } = c.req.valid('json');
 					const updatedUser = await this.iamService.updateProfile(user.id, { firstName, lastName, username });
 					if (!updatedUser) {
-						return c.json('Username already in use', StatusCodes.BAD_REQUEST);
+						return c.json('Username already in use', StatusCodes.UNPROCESSABLE_ENTITY);
 					}
 					return c.json({ user: updatedUser }, StatusCodes.OK);
 				},
 			)
-			.post('/verify/password', requireAuth, zValidator('json', verifyPasswordDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
+			.post('/verify/password', requireAuth, zValidator('json', verifyPasswordDto), openApi(verifyPassword), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const user = c.var.user;
 				const { password } = c.req.valid('json');
 				const passwordVerified = await this.iamService.verifyPassword(user.id, { password });
 				if (!passwordVerified) {
 					console.log('Incorrect password');
-					return c.json('Incorrect password', StatusCodes.BAD_REQUEST);
+					return c.json('Incorrect password', StatusCodes.BAD_GATEWAY);
 				}
 				return c.json({}, StatusCodes.OK);
 			})
-			.put('/update/password', requireAuth, zValidator('json', changePasswordDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
+			.put('/update/password', requireAuth, openApi(updatePassword), zValidator('json', changePasswordDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const user = c.var.user;
 				const { password, confirm_password } = c.req.valid('json');
 				if (password !== confirm_password) {
-					return c.json('Passwords do not match', StatusCodes.BAD_REQUEST);
+					return c.json('Passwords do not match', StatusCodes.UNPROCESSABLE_ENTITY);
 				}
 				try {
 					await this.iamService.updatePassword(user.id, { password, confirm_password });
@@ -80,19 +80,19 @@ export class IamController extends Controller {
 					return c.json({ status: 'success' });
 				} catch (error) {
 					console.error('Error updating password', error);
-					return c.json('Error updating password', StatusCodes.BAD_REQUEST);
+					return c.json('Error updating password', StatusCodes.UNPROCESSABLE_ENTITY);
 				}
 			})
-			.post('/update/email', requireAuth, zValidator('json', updateEmailDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
+			.post('/update/email', requireAuth, openApi(updateEmail), zValidator('json', updateEmailDto), limiter({ limit: 10, minutes: 60 }), async (c) => {
 				const user = c.var.user;
 				const { email } = c.req.valid('json');
 				const updatedUser = await this.iamService.updateEmail(user.id, { email });
 				if (!updatedUser) {
-					return c.json('Email already in use', StatusCodes.BAD_REQUEST);
+					return c.json('Cannot change email address', StatusCodes.BAD_REQUEST);
 				}
 				return c.json({ user: updatedUser }, StatusCodes.OK);
 			})
-			.post('/logout', requireAuth, async (c) => {
+			.post('/logout', requireAuth, openApi(logout), async (c) => {
 				const sessionId = c.var.session.id;
 				await this.iamService.logout(sessionId);
 				const sessionCookie = this.luciaService.lucia.createBlankSessionCookie();
