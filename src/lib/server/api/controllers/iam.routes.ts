@@ -65,7 +65,7 @@ export const verifyPassword = taggedAuthRoute(tag, {
 			schema: createErrorSchema(verifyPasswordDto),
 			mediaType: 'application/json',
 		},
-		[StatusCodes.BAD_REQUEST]: {
+		[StatusCodes.UNPROCESSABLE_ENTITY]: {
 			description: 'Incorrect password',
 			mediaType: 'application/json',
 		},
@@ -91,13 +91,17 @@ export const updatePassword = taggedAuthRoute(tag, {
 			schema: createErrorSchema(changePasswordDto),
 			mediaType: 'application/json',
 		},
-		[StatusCodes.BAD_REQUEST]: {
-			description: 'Incorrect password',
-			mediaType: 'application/json',
-		},
 		[StatusCodes.UNAUTHORIZED]: {
 			description: 'Unauthorized',
 			schema: createErrorSchema(unauthorizedSchema),
+			mediaType: 'application/json',
+		},
+		[StatusCodes.FORBIDDEN]: {
+			description: 'Incorrect password',
+			mediaType: 'application/json',
+		},
+		[StatusCodes.INTERNAL_SERVER_ERROR]: {
+			description: 'Error updating password',
 			mediaType: 'application/json',
 		},
 	},
@@ -114,13 +118,13 @@ export const updateEmail = taggedAuthRoute(tag, {
 			schema: createErrorSchema(changePasswordDto),
 			mediaType: 'application/json',
 		},
-		[StatusCodes.BAD_REQUEST]: {
-			description: "Cannot change email address",
-			mediaType: 'application/json',
-		},
 		[StatusCodes.UNAUTHORIZED]: {
 			description: 'Unauthorized',
 			schema: createErrorSchema(unauthorizedSchema),
+			mediaType: 'application/json',
+		},
+		[StatusCodes.FORBIDDEN]: {
+			description: 'Cannot change email address',
 			mediaType: 'application/json',
 		},
 	},
