@@ -1,5 +1,4 @@
 import { notSignedInMessage } from '$lib/flashMessages';
-import { usersTable } from '$lib/server/api/databases/tables';
 import { db } from '$lib/server/api/packages/drizzle';
 import { type Actions, fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
@@ -7,6 +6,7 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { zod } from 'sveltekit-superforms/adapters';
 import { message, setError, superValidate } from 'sveltekit-superforms/server';
 import { z } from 'zod';
+import { usersTable } from '../../../../../lib/server/api/databases/postgres/tables';
 import type { PageServerLoad } from './$types';
 import { updateEmailFormSchema, updateProfileFormSchema } from './schemas';
 

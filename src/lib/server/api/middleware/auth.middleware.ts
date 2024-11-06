@@ -1,4 +1,5 @@
-import { LuciaService } from '$lib/server/api/services/lucia.service';
+import { createSessionTokenCookie } from '$lib/server/api/common/utils/cookies';
+import { SessionsService } from '$lib/server/api/services/sessions.service';
 import type { MiddlewareHandler } from 'hono';
 import { createMiddleware } from 'hono/factory';
 import { verifyRequestOrigin } from 'oslo/request';
@@ -6,7 +7,7 @@ import { container } from 'tsyringe';
 import type { AppBindings } from '../common/types/hono';
 
 // resolve dependencies from the container
-const { lucia } = container.resolve(LuciaService);
+const sessionService = container.resolve(SessionsService);
 
 export const verifyOrigin: MiddlewareHandler<AppBindings> = createMiddleware(async (c, next) => {
 	if (c.req.method === 'GET') {
@@ -30,7 +31,7 @@ export const validateAuthSession: MiddlewareHandler<AppBindings> = createMiddlew
 
 	const { session, user } = await lucia.validateSession(sessionId);
 	if (session?.fresh) {
-		c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize(), { append: true });
+		c.header('Set-Cookie', createSessionTokenCookie(session.id).serialize(), { append: true });
 	}
 	if (!session) {
 		c.header('Set-Cookie', lucia.createBlankSessionCookie().serialize(), { append: true });

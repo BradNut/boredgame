@@ -1,45 +1,45 @@
-import { notSignedInMessage } from '$lib/flashMessages'
-import env from '$lib/server/api/common/env'
-import { twoFactorTable, usersTable } from '$lib/server/api/databases/tables'
-import { db } from '$lib/server/api/packages/drizzle'
-import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth'
-import { type Actions, fail } from '@sveltejs/kit'
-import { eq } from 'drizzle-orm'
-import { redirect } from 'sveltekit-flash-message/server'
-import { zod } from 'sveltekit-superforms/adapters'
-import { superValidate } from 'sveltekit-superforms/server'
-import type { PageServerLoad, RequestEvent } from './$types'
+import { notSignedInMessage } from '$lib/flashMessages';
+import env from '$lib/server/api/common/env';
+import { db } from '$lib/server/api/packages/drizzle';
+import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth';
+import { type Actions, fail } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import { redirect } from 'sveltekit-flash-message/server';
+import { zod } from 'sveltekit-superforms/adapters';
+import { superValidate } from 'sveltekit-superforms/server';
+import { twoFactorTable, usersTable } from '../../../lib/server/api/databases/postgres/tables';
+import type { PageServerLoad, RequestEvent } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-	const { locals } = event
+	const { locals } = event;
 
-	const authedUser = await locals.getAuthedUser()
+	const authedUser = await locals.getAuthedUser();
 	if (!authedUser) {
-		throw redirect(302, '/login', notSignedInMessage, event)
+		throw redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	const dbUser = await db.query.usersTable.findFirst({
 		where: eq(usersTable.username, authedUser.username),
-	})
+	});
 
 	const twoFactorDetails = await db.query.twoFactorTable.findFirst({
 		where: eq(twoFactorTable.userId, authedUser.id),
-	})
+	});
 
 	if (!twoFactorDetails || !twoFactorDetails.enabled) {
 		const message = {
 			type: 'error',
 			message: 'Two factor authentication is not enabled',
-		} as const
-		redirect(302, '/login', message, event)
+		} as const;
+		redirect(302, '/login', message, event);
 	}
 
-	let twoFactorInitiatedTime = twoFactorDetails.initiatedTime
+	let twoFactorInitiatedTime = twoFactorDetails.initiatedTime;
 	if (twoFactorInitiatedTime === null) {
-		console.log('twoFactorInitiatedTime is null')
-		twoFactorInitiatedTime = new Date()
-		console.log('twoFactorInitiatedTime', twoFactorInitiatedTime)
-		await db.update(twoFactorTable).set({ initiatedTime: twoFactorInitiatedTime }).where(eq(twoFactorTable.userId, dbUser!.id!))
+		console.log('twoFactorInitiatedTime is null');
+		twoFactorInitiatedTime = new Date();
+		console.log('twoFactorInitiatedTime', twoFactorInitiatedTime);
+		await db.update(twoFactorTable).set({ initiatedTime: twoFactorInitiatedTime }).where(eq(twoFactorTable.userId, dbUser!.id!));
 	}
 
 	// Check if two factor started less than TWO_FACTOR_TIMEOUT
@@ -69,25 +69,25 @@ export const load: PageServerLoad = async (event) => {
 	return {
 		totpForm: await superValidate(event, zod(totpSchema)),
 		recoveryCodeForm: await superValidate(event, zod(recoveryCodeSchema)),
-	}
-}
+	};
+};
 
 export const actions: Actions = {
 	validateTotp: async (event) => {
-		const { locals } = event
+		const { locals } = event;
 
-		const authedUser = await locals.getAuthedUser()
+		const authedUser = await locals.getAuthedUser();
 		if (!authedUser) {
-			throw redirect(302, '/login', notSignedInMessage, event)
+			throw redirect(302, '/login', notSignedInMessage, event);
 		}
 
-		const { dbUser, twoFactorDetails } = await validateUserData(event, locals)
+		const { dbUser, twoFactorDetails } = await validateUserData(event, locals);
 
-		const totpForm = await superValidate(event, zod(totpSchema))
+		const totpForm = await superValidate(event, zod(totpSchema));
 
 		if (!totpForm.valid) {
-			totpForm.data.totpToken = ''
-			return fail(400, { totpForm })
+			totpForm.data.totpToken = '';
+			return fail(400, { totpForm });
 		}
 
 		// let sessionCookie
@@ -144,23 +144,23 @@ export const actions: Actions = {
 		//
 		// totpForm.data.totpToken = ''
 		// const message = { type: 'success', message: 'Signed In!' } as const
-		redirect(302, '/', message, event)
+		redirect(302, '/', message, event);
 	},
 	validateRecoveryCode: async (event) => {
-		const { cookies, locals } = event
+		const { cookies, locals } = event;
 
-		const authedUser = await locals.getAuthedUser()
+		const authedUser = await locals.getAuthedUser();
 		if (!authedUser) {
-			throw redirect(302, '/login', notSignedInMessage, event)
+			throw redirect(302, '/login', notSignedInMessage, event);
 		}
 
-		const { dbUser, twoFactorDetails } = await validateUserData(event, locals)
+		const { dbUser, twoFactorDetails } = await validateUserData(event, locals);
 
-		const recoveryCodeForm = await superValidate(event, zod(recoveryCodeSchema))
+		const recoveryCodeForm = await superValidate(event, zod(recoveryCodeSchema));
 		if (!recoveryCodeForm.valid) {
 			return fail(400, {
 				form: recoveryCodeForm,
-			})
+			});
 		}
 
 		// let sessionCookie
@@ -215,56 +215,56 @@ export const actions: Actions = {
 		// 	...sessionCookie.attributes,
 		// })
 
-		recoveryCodeForm.data.recoveryCode = ''
-		const message = { type: 'success', message: 'Signed In!' } as const
-		redirect(302, '/', message, event)
+		recoveryCodeForm.data.recoveryCode = '';
+		const message = { type: 'success', message: 'Signed In!' } as const;
+		redirect(302, '/', message, event);
 	},
-}
+};
 
 async function validateUserData(event: RequestEvent, locals: App.Locals) {
-	const { user, session } = locals
+	const { user, session } = locals;
 
 	if (!user || !session) {
-		throw fail(401)
+		throw fail(401);
 	}
 
 	const dbUser = await db.query.usersTable.findFirst({
 		where: eq(usersTable.username, user.username),
-	})
+	});
 
 	if (!dbUser) {
-		throw fail(401)
+		throw fail(401);
 	}
 
-	const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated
+	const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
 	const twoFactorDetails = await db.query.twoFactorTable.findFirst({
 		where: eq(twoFactorTable.userId, dbUser!.id!),
-	})
+	});
 
 	if (!twoFactorDetails) {
-		const message = { type: 'error', message: 'Unable to process request' } as const
-		throw redirect(302, '/login', message, event)
+		const message = { type: 'error', message: 'Unable to process request' } as const;
+		throw redirect(302, '/login', message, event);
 	}
 
 	if (isTwoFactorAuthenticated && twoFactorDetails.enabled && twoFactorDetails.secret !== '') {
-		const message = { type: 'success', message: 'You are already signed in' } as const
-		throw redirect('/', message, event)
+		const message = { type: 'success', message: 'You are already signed in' } as const;
+		throw redirect('/', message, event);
 	}
-	return { dbUser, twoFactorDetails }
+	return { dbUser, twoFactorDetails };
 }
 
 function totpTimeElapsed(initiatedTime: Date) {
 	if (initiatedTime === null || initiatedTime === undefined) {
-		return true
+		return true;
 	}
 
-	const timeElapsed = Date.now() - initiatedTime.getTime()
-	console.log('Time elapsed', timeElapsed)
+	const timeElapsed = Date.now() - initiatedTime.getTime();
+	console.log('Time elapsed', timeElapsed);
 	if (timeElapsed > env.TWO_FACTOR_TIMEOUT) {
-		console.log('Time elapsed was more than TWO_FACTOR_TIMEOUT', timeElapsed, env.TWO_FACTOR_TIMEOUT)
-		return true
+		console.log('Time elapsed was more than TWO_FACTOR_TIMEOUT', timeElapsed, env.TWO_FACTOR_TIMEOUT);
+		return true;
 	}
-	return false
+	return false;
 }
 
 // async function checkRecoveryCode(recoveryCode: string, userId: string) {

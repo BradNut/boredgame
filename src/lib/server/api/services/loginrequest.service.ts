@@ -1,19 +1,19 @@
-import type { SigninUsernameDto } from '$lib/server/api/dtos/signin-username.dto'
-import { LuciaService } from '$lib/server/api/services/lucia.service'
-import type { HonoRequest } from 'hono'
-import { inject, injectable } from 'tsyringe'
-import { BadRequest } from '../common/exceptions'
-import type { Credentials } from '../databases/tables'
-import { DatabaseProvider } from '../providers/database.provider'
-import { CredentialsRepository } from '../repositories/credentials.repository'
-import { UsersRepository } from '../repositories/users.repository'
-import { MailerService } from './mailer.service'
-import { TokensService } from './tokens.service'
+import type { SigninUsernameDto } from '$lib/server/api/dtos/signin-username.dto';
+import { SessionsService } from '$lib/server/api/services/sessions.service';
+import type { HonoRequest } from 'hono';
+import { inject, injectable } from 'tsyringe';
+import { BadRequest } from '../common/exceptions';
+import type { Credentials } from '../databases/postgres/tables';
+import { DatabaseProvider } from '../providers/database.provider';
+import { CredentialsRepository } from '../repositories/credentials.repository';
+import { UsersRepository } from '../repositories/users.repository';
+import { MailerService } from './mailer.service';
+import { TokensService } from './tokens.service';
 
 @injectable()
 export class LoginRequestsService {
 	constructor(
-		@inject(LuciaService) private luciaService: LuciaService,
+		@inject(SessionsService) private sessionsService: SessionsService,
 		@inject(DatabaseProvider) private readonly db: DatabaseProvider,
 		@inject(TokensService) private readonly tokensService: TokensService,
 		@inject(MailerService) private readonly mailerService: MailerService,
@@ -34,46 +34,48 @@ export class LoginRequestsService {
 	// }
 
 	async verify(data: SigninUsernameDto, req: HonoRequest) {
-		const requestIpAddress = req.header('x-real-ip')
-		const requestIpCountry = req.header('x-vercel-ip-country')
-		const existingUser = await this.usersRepository.findOneByUsername(data.username)
+		const requestIpAddress = req.header('x-real-ip');
+		const requestIpCountry = req.header('x-vercel-ip-country');
+		const existingUser = await this.usersRepository.findOneByUsername(data.username);
 
 		if (!existingUser) {
-			throw BadRequest('User not found')
+			throw BadRequest('User not found');
 		}
 
-		const credential = await this.credentialsRepository.findPasswordCredentialsByUserId(existingUser.id)
+		const credential = await this.credentialsRepository.findPasswordCredentialsByUserId(existingUser.id);
 
 		if (!credential) {
-			throw BadRequest('Invalid credentials')
+			throw BadRequest('Invalid credentials');
 		}
 
 		if (!(await this.tokensService.verifyHashedToken(credential.secret_data, data.password))) {
-			throw BadRequest('Invalid credentials')
+			throw BadRequest('Invalid credentials');
 		}
 
-		const totpCredentials = await this.credentialsRepository.findTOTPCredentialsByUserId(existingUser.id)
+		const totpCredentials = await this.credentialsRepository.findTOTPCredentialsByUserId(existingUser.id);
 
-		return await this.createUserSession(existingUser.id, req, totpCredentials)
+		return await this.createUserSession(existingUser.id, req, totpCredentials);
 	}
 
 	async createUserSession(existingUserId: string, req: HonoRequest, totpCredentials: Credentials | undefined) {
-		const requestIpAddress = req.header('x-real-ip')
-		const requestIpCountry = req.header('x-vercel-ip-country')
-		return this.luciaService.lucia.createSession(existingUserId, {
-			ip_country: requestIpCountry || 'unknown',
-			ip_address: requestIpAddress || 'unknown',
-			twoFactorAuthEnabled: !!totpCredentials && totpCredentials?.secret_data !== null && totpCredentials?.secret_data !== '',
-			isTwoFactorAuthenticated: false,
-		})
+		const requestIpAddress = req.header('x-real-ip');
+		const requestIpCountry = req.header('x-vercel-ip-country');
+		return this.sessionsService.createSession(
+			this.sessionsService.generateSessionToken(),
+			existingUserId,
+			requestIpCountry || 'unknown',
+			requestIpAddress || 'unknown',
+			!!totpCredentials && totpCredentials?.secret_data !== null && totpCredentials?.secret_data !== '',
+			false,
+		);
 	}
 
 	// Create a new user and send a welcome email - or other onboarding process
 	private async handleNewUserRegistration(email: string) {
-		const newUser = await this.usersRepository.create({ email, verified: true })
-		this.mailerService.sendWelcome({ to: email, props: null })
+		const newUser = await this.usersRepository.create({ email, verified: true });
+		this.mailerService.sendWelcome({ to: email, props: null });
 		// TODO: add whatever onboarding process or extra data you need here
-		return newUser
+		return newUser;
 	}
 
 	// Fetch a valid request from the database, verify the token and burn the request if it is valid

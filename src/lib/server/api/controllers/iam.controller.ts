@@ -1,5 +1,6 @@
 import { StatusCodes } from '$lib/constants/status-codes';
 import { Controller } from '$lib/server/api/common/types/controller';
+import { deleteSessionTokenCookie } from '$lib/server/api/common/utils/cookies';
 import { changePasswordDto } from '$lib/server/api/dtos/change-password.dto';
 import { updateEmailDto } from '$lib/server/api/dtos/update-email.dto';
 import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
@@ -7,7 +8,7 @@ import { verifyPasswordDto } from '$lib/server/api/dtos/verify-password.dto';
 import { limiter } from '$lib/server/api/middleware/rate-limiter.middleware';
 import { IamService } from '$lib/server/api/services/iam.service';
 import { LoginRequestsService } from '$lib/server/api/services/loginrequest.service';
-import { LuciaService } from '$lib/server/api/services/lucia.service';
+import { SessionsService } from '$lib/server/api/services/sessions.service';
 import { zValidator } from '@hono/zod-validator';
 import { openApi } from 'hono-zod-openapi';
 import { setCookie } from 'hono/cookie';
@@ -20,7 +21,7 @@ export class IamController extends Controller {
 	constructor(
 		@inject(IamService) private readonly iamService: IamService,
 		@inject(LoginRequestsService) private readonly loginRequestService: LoginRequestsService,
-		@inject(LuciaService) private luciaService: LuciaService,
+		@inject(SessionsService) private sessionsService: SessionsService,
 	) {
 		super();
 	}
@@ -78,18 +79,9 @@ export class IamController extends Controller {
 					}
 					try {
 						await this.iamService.updatePassword(user.id, { password, confirm_password });
-						await this.luciaService.lucia.invalidateUserSessions(user.id);
+						await this.sessionsService.invalidateSession(user.id);
 						await this.loginRequestService.createUserSession(user.id, c.req, undefined);
-						const sessionCookie = this.luciaService.lucia.createBlankSessionCookie();
-						setCookie(c, sessionCookie.name, sessionCookie.value, {
-							path: sessionCookie.attributes.path,
-							maxAge: sessionCookie.attributes.maxAge,
-							domain: sessionCookie.attributes.domain,
-							sameSite: sessionCookie.attributes.sameSite as any,
-							secure: sessionCookie.attributes.secure,
-							httpOnly: sessionCookie.attributes.httpOnly,
-							expires: sessionCookie.attributes.expires,
-						});
+						deleteSessionTokenCookie(c);
 						return c.json({ status: 'success' });
 					} catch (error) {
 						console.error('Error updating password', error);
@@ -116,16 +108,7 @@ export class IamController extends Controller {
 			.post('/logout', requireAuth, openApi(logout), async (c) => {
 				const sessionId = c.var.session.id;
 				await this.iamService.logout(sessionId);
-				const sessionCookie = this.luciaService.lucia.createBlankSessionCookie();
-				setCookie(c, sessionCookie.name, sessionCookie.value, {
-					path: sessionCookie.attributes.path,
-					maxAge: sessionCookie.attributes.maxAge,
-					domain: sessionCookie.attributes.domain,
-					sameSite: sessionCookie.attributes.sameSite as any,
-					secure: sessionCookie.attributes.secure,
-					httpOnly: sessionCookie.attributes.httpOnly,
-					expires: sessionCookie.attributes.expires,
-				});
+				deleteSessionTokenCookie(c);
 				return c.json({ status: 'success' });
 			});
 	}

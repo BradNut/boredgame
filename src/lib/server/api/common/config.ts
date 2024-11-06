@@ -18,5 +18,7 @@ export const config: Config = {
 		database: env.DATABASE_DB,
 		ssl: false, // env.DATABASE_HOST !== 'localhost',
 		max: env.DB_MIGRATING || env.DB_SEEDING ? 1 : undefined,
+		migrating: env.DB_MIGRATING,
+		seeding: env.DB_SEEDING,
 	},
 };

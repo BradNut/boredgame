@@ -1,0 +1,23 @@
+import type { InferSelectModel } from 'drizzle-orm';
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { timestamps } from '../../../common/utils/table';
+import { usersTable } from './users.table';
+
+export enum CredentialsType {
+	SECRET = 'secret',
+	PASSWORD = 'password',
+	TOTP = 'totp',
+	HOTP = 'hotp',
+}
+
+export const credentialsTable = pgTable('credentials', {
+	id: uuid().primaryKey().defaultRandom(),
+	user_id: uuid()
+		.notNull()
+		.references(() => usersTable.id, { onDelete: 'cascade' }),
+	type: text().notNull().default(CredentialsType.PASSWORD),
+	secret_data: text().notNull(),
+	...timestamps,
+});
+
+export type Credentials = InferSelectModel<typeof credentialsTable>;

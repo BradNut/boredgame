@@ -1,11 +1,11 @@
 import { StatusCodes } from '$lib/constants/status-codes';
 import { unauthorizedSchema } from '$lib/server/api/common/exceptions';
 import cuidParamsSchema from '$lib/server/api/common/openapi/cuidParamsSchema';
-import { selectCollectionSchema } from '$lib/server/api/databases/tables';
 import { z } from '@hono/zod-openapi';
 import { IdParamsSchema } from 'stoker/openapi/schemas';
 import { createErrorSchema } from 'stoker/openapi/schemas';
 import { taggedAuthRoute } from '../common/openapi/create-auth-route';
+import { selectCollectionSchema } from '../databases/postgres/tables';
 
 const tag = 'Collection';
 

@@ -1,6 +1,6 @@
 import { StatusCodes } from '$lib/constants/status-codes';
 import { unauthorizedSchema } from '$lib/server/api/common/exceptions';
-import { selectUserSchema } from '$lib/server/api/databases/tables/users.table';
+import { selectUserSchema } from '$lib/server/api/databases/postgres/tables/users.table';
 import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
 import { createErrorSchema } from 'stoker/openapi/schemas';
 import { taggedAuthRoute } from '../common/openapi/create-auth-route';
