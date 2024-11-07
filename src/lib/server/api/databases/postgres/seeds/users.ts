@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import type { db } from '../../../packages/drizzle';
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { HashingService } from '../../../services/hashing.service';
 import * as schema from '../tables';
 import users from './data/users.json';
@@ -9,7 +9,7 @@ type JsonRole = {
 	primary: boolean;
 };
 
-export default async function seed(db: db) {
+export default async function seed(db: NodePgDatabase<typeof schema>) {
 	const hashingService = new HashingService();
 	const adminRole = await db.select().from(schema.rolesTable).where(eq(schema.rolesTable.name, 'admin'));
 	const userRole = await db.select().from(schema.rolesTable).where(eq(schema.rolesTable.name, 'user'));

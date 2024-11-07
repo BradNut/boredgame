@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import createApp from '$lib/server/api/common/create-app';
 import configureOpenAPI from '$lib/server/api/configure-open-api';
 import { CollectionController } from '$lib/server/api/controllers/collection.controller';

@@ -1,6 +1,6 @@
 import { StatusCodes } from '$lib/constants/status-codes';
 import { Controller } from '$lib/server/api/common/types/controller';
-import { deleteSessionTokenCookie } from '$lib/server/api/common/utils/cookies';
+import { createBlankSessionTokenCookie } from '$lib/server/api/common/utils/cookies';
 import { changePasswordDto } from '$lib/server/api/dtos/change-password.dto';
 import { updateEmailDto } from '$lib/server/api/dtos/update-email.dto';
 import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';

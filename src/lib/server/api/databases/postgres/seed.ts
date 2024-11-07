@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { type Table, getTableName, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import env from '../../common/env';

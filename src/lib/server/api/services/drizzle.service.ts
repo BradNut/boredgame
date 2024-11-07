@@ -1,4 +1,4 @@
-import env from '$lib/server/api/common/env';
+import 'reflect-metadata';
 import { type NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
 import { type Disposable, injectable } from 'tsyringe';
@@ -22,9 +22,11 @@ export class DrizzleService implements Disposable {
 			max: config.postgres.max,
 		});
 		this.pool = pool;
-		this.db = drizzle(pool, {
+		this.db = drizzle({
+			client: pool,
+			casing: 'snake_case',
 			schema,
-			logger: env.NODE_ENV === 'development',
+			logger: !config.isProduction,
 		});
 	}
 
