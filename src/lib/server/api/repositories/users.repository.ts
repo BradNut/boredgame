@@ -1,4 +1,4 @@
-import { usersTable } from '$lib/server/api/databases/tables/users.table';
+import { usersTable } from '$lib/server/api/databases/postgres/tables/users.table';
 import { DrizzleService } from '$lib/server/api/services/drizzle.service';
 import { type InferInsertModel, eq } from 'drizzle-orm';
 import { inject, injectable } from 'tsyringe';

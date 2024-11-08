@@ -1,22 +1,24 @@
-import { drizzle } from 'drizzle-orm/node-postgres'
-import pg from 'pg'
-import { config } from '../common/config'
-import * as schema from '../databases/tables'
+import { drizzle } from 'drizzle-orm/node-postgres';
+import pg from 'pg';
+import { config } from '../common/config';
+import * as schema from '../databases/postgres/tables';
 
 // create the connection
 export const pool = new pg.Pool({
-	user: config.DATABASE_USER,
-	password: config.DATABASE_PASSWORD,
-	host: config.DATABASE_HOST,
-	port: Number(config.DATABASE_PORT).valueOf(),
-	database: config.DATABASE_DB,
-	ssl: config.DATABASE_HOST !== 'localhost',
-	max: config.DB_MIGRATING || config.DB_SEEDING ? 1 : undefined,
-})
+	user: config.postgres.user,
+	password: config.postgres.password,
+	host: config.postgres.host,
+	port: Number(config.postgres.port).valueOf(),
+	database: config.postgres.database,
+	ssl: config.postgres.host !== 'localhost',
+	max: config.postgres.migrating || config.postgres.seeding ? 1 : undefined,
+});
 
-export const db = drizzle(pool, {
+export const db = drizzle({
+	client: pool,
+	casing: 'snake_case',
 	schema,
-	logger: config.NODE_ENV === 'development',
-})
+	logger: !config.isProduction,
+});
 
-export type db = typeof db
+export type db = typeof db;

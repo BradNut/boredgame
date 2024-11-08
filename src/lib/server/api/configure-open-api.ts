@@ -1,6 +1,4 @@
-// import type { AppOpenAPI } from '$lib/server/api/common/types/hono';
 import { apiReference } from '@scalar/hono-api-reference';
-import { Hono } from 'hono';
 
 import type { AppOpenAPI } from '$lib/server/api/common/types/hono';
 // import { createOpenApiDocument } from 'hono-zod-openapi';
@@ -39,6 +37,19 @@ export default function configureOpenAPI(app: AppOpenAPI) {
 			title: 'Bored Game API',
 			description: 'Bored Game API',
 			version: packageJSON.version,
+		},
+		components: {
+			securitySchemes: {
+				bearerAuth: {
+					type: 'http',
+					scheme: 'bearer',
+				},
+				cookieAuth: {
+					type: 'apiKey',
+					name: 'session',
+					in: 'cookie',
+				}
+			},
 		},
 	});
 

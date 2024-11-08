@@ -13,8 +13,11 @@ export default defineConfig({
 		// 		cleanArtifacts: true,
 		// 	}
 		// }),
-		sveltekit()
+		sveltekit(),
 	],
+	esbuild: {
+		target: 'es2022',
+	},
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}'],
 		mockReset: true,
@@ -33,8 +36,8 @@ export default defineConfig({
 				@custom-media --above_med (width > 700px);
 				@custom-media --above_large (width > 900px);
 				@custom-media --above_xlarge (width > 1200px);
-				`
-			}
-		}
+				`,
+			},
+		},
 	},
 });

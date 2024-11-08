@@ -1,14 +1,14 @@
 export interface Config {
-	isProduction: boolean
-	domain: string
-	api: ApiConfig
+	isProduction: boolean;
+	domain: string;
+	api: ApiConfig;
 	// storage: StorageConfig
-	redis: RedisConfig
-	postgres: PostgresConfig
+	redis: RedisConfig;
+	postgres: PostgresConfig;
 }
 
 interface ApiConfig {
-	origin: string
+	origin: string;
 }
 
 // interface StorageConfig {
@@ -19,15 +19,17 @@ interface ApiConfig {
 // }
 
 interface RedisConfig {
-	url: string
+	url: string;
 }
 
 interface PostgresConfig {
-	user: string
-	password: string
-	host: string
-	port: number
-	database: string
-	ssl: boolean
-	max: number | undefined
+	user: string;
+	password: string;
+	host: string;
+	port: number;
+	database: string;
+	ssl: boolean;
+	max: number | undefined;
+	migrating: boolean;
+	seeding: boolean;
 }

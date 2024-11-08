@@ -1,17 +1,17 @@
-import { timestamp } from 'drizzle-orm/pg-core'
-import { customType } from 'drizzle-orm/pg-core'
+import { timestamp } from 'drizzle-orm/pg-core';
+import { customType } from 'drizzle-orm/pg-core';
 
 export const citext = customType<{ data: string }>({
 	dataType() {
-		return 'citext'
+		return 'citext';
 	},
-})
+});
 
 export const cuid2 = customType<{ data: string }>({
 	dataType() {
-		return 'text'
+		return 'text';
 	},
-})
+});
 
 export const timestamps = {
 	createdAt: timestamp('created_at', {
@@ -25,5 +25,6 @@ export const timestamps = {
 		withTimezone: true,
 	})
 		.notNull()
-		.defaultNow(),
-}
+		.defaultNow()
+		.$onUpdate(() => new Date()),
+};

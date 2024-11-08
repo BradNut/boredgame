@@ -1,36 +1,36 @@
-import { PUBLIC_SITE_URL } from '$env/static/public'
-import { type Games, externalIdsTable, gamesTable, gamesToExternalIdsTable } from '$lib/server/api/databases/tables'
-import { db } from '$lib/server/api/packages/drizzle'
-import { error } from '@sveltejs/kit'
-import { eq } from 'drizzle-orm'
-import kebabCase from 'just-kebab-case'
+import { PUBLIC_SITE_URL } from '$env/static/public';
+import { db } from '$lib/server/api/packages/drizzle';
+import { error } from '@sveltejs/kit';
+import { eq } from 'drizzle-orm';
+import kebabCase from 'just-kebab-case';
+import { type Games, externalIdsTable, gamesTable, gamesToExternalIdsTable } from '../../server/api/databases/postgres/tables';
 
 export async function getGame(locals: App.Locals, id: string) {
 	if (!id || id === '') {
-		error(400, 'Invalid Request')
+		error(400, 'Invalid Request');
 	}
 
 	try {
 		return await db.query.games.findFirst({
 			where: eq(gamesTable.id, id),
-		})
+		});
 	} catch (e) {
-		console.error(e)
+		console.error(e);
 		return new Response('Could not get gamesTable', {
 			status: 500,
-		})
+		});
 	}
 }
 
 export async function createGame(locals: App.Locals, game: Games, externalId: string) {
 	if (!game || !externalId || externalId === '') {
-		error(400, 'Invalid Request')
+		error(400, 'Invalid Request');
 	}
 
 	try {
 		const dbExternalId = await db.query.externalIds.findFirst({
 			where: eq(externalIdsTable.externalId, externalId),
-		})
+		});
 
 		if (dbExternalId) {
 			const foundGame = await db
@@ -40,22 +40,22 @@ export async function createGame(locals: App.Locals, game: Games, externalId: st
 					slug: gamesTable.slug,
 				})
 				.from(gamesTable)
-				.leftJoin(gamesToExternalIdsTable, eq(gamesToExternalIdsTable.externalId, externalId))
-			console.log('Game already exists', foundGame)
+				.leftJoin(gamesToExternalIdsTable, eq(gamesToExternalIdsTable.externalId, externalId));
+			console.log('Game already exists', foundGame);
 			if (foundGame.length > 0) {
-				console.log('Game name', foundGame[0].name)
+				console.log('Game name', foundGame[0].name);
 				return new Response('Game already exists', {
 					headers: {
 						'Content-Type': 'application/json',
 						Location: `${PUBLIC_SITE_URL}/api/game/${foundGame[0].id}`,
 					},
 					status: 409,
-				})
+				});
 			}
 		}
 
-		let dbGames: Games[] = []
-		console.log('Creating game', JSON.stringify(game, null, 2))
+		let dbGames: Games[] = [];
+		console.log('Creating game', JSON.stringify(game, null, 2));
 		await db.transaction(async (transaction) => {
 			dbGames = await transaction
 				.insert(gamesTable)
@@ -73,46 +73,46 @@ export async function createGame(locals: App.Locals, game: Games, externalId: st
 					min_playtime: game.min_playtime,
 					max_playtime: game.max_playtime,
 				})
-				.returning()
+				.returning();
 			const dbExternalIds = await transaction
 				.insert(externalIdsTable)
 				.values({
 					externalId,
 					type: 'game',
 				})
-				.returning({ id: externalIdsTable.id })
+				.returning({ id: externalIdsTable.id });
 			await transaction.insert(gamesToExternalIdsTable).values({
 				gameId: dbGames[0].id,
 				externalId: dbExternalIds[0].id,
-			})
-		})
+			});
+		});
 
 		if (dbGames.length === 0) {
 			return new Response('Could not create game', {
 				status: 500,
-			})
+			});
 		}
 
-		console.log('Created game', JSON.stringify(dbGames[0], null, 2))
+		console.log('Created game', JSON.stringify(dbGames[0], null, 2));
 		return new Response(JSON.stringify(dbGames[0]), {
 			status: 201,
-		})
+		});
 	} catch (e) {
-		console.error(e)
-		throw new Error('Something went wrong creating Game')
+		console.error(e);
+		throw new Error('Something went wrong creating Game');
 	}
 }
 
 export async function createOrUpdateGameMinimal(locals: App.Locals, game: Games, externalId: string) {
 	if (!game || !externalId || externalId === '') {
-		error(400, 'Invalid Request')
+		error(400, 'Invalid Request');
 	}
 
-	console.log('Creating or updating minimal game data', JSON.stringify(game, null, 2))
-	const externalUrl = `https://boardgamegeek.com/boardgame/${externalId}`
+	console.log('Creating or updating minimal game data', JSON.stringify(game, null, 2));
+	const externalUrl = `https://boardgamegeek.com/boardgame/${externalId}`;
 	try {
-		let dbGames: Games[] = []
-		console.log('Creating game', JSON.stringify(game, null, 2))
+		let dbGames: Games[] = [];
+		console.log('Creating game', JSON.stringify(game, null, 2));
 		await db.transaction(async (transaction) => {
 			dbGames = await transaction
 				.insert(gamesTable)
@@ -147,7 +147,7 @@ export async function createOrUpdateGameMinimal(locals: App.Locals, game: Games,
 						max_playtime: game.max_playtime,
 					},
 				})
-				.returning()
+				.returning();
 			const dbExternalIds = await transaction
 				.insert(externalIdsTable)
 				.values({
@@ -155,42 +155,42 @@ export async function createOrUpdateGameMinimal(locals: App.Locals, game: Games,
 					type: 'game',
 				})
 				.onConflictDoNothing()
-				.returning({ id: externalIdsTable.id })
+				.returning({ id: externalIdsTable.id });
 			await transaction
 				.insert(gamesToExternalIdsTable)
 				.values({
 					gameId: dbGames[0].id,
 					externalId: dbExternalIds[0].id,
 				})
-				.onConflictDoNothing()
-		})
+				.onConflictDoNothing();
+		});
 
 		if (dbGames.length === 0) {
 			return new Response('Could not create game', {
 				status: 500,
-			})
+			});
 		}
 
-		console.log('Created game', JSON.stringify(dbGames[0], null, 2))
+		console.log('Created game', JSON.stringify(dbGames[0], null, 2));
 		return new Response(JSON.stringify(dbGames[0]), {
 			status: 201,
-		})
+		});
 	} catch (e) {
-		console.error(e)
-		throw new Error('Something went wrong creating Game')
+		console.error(e);
+		throw new Error('Something went wrong creating Game');
 	}
 }
 
 export async function createOrUpdateGame(locals: App.Locals, game: Games, externalId: string) {
 	if (!game || !externalId || externalId === '') {
-		error(400, 'Invalid Request')
+		error(400, 'Invalid Request');
 	}
 
 	try {
-		const externalUrl = `https://boardgamegeek.com/boardgame/${externalId}`
+		const externalUrl = `https://boardgamegeek.com/boardgame/${externalId}`;
 		const dbExternalId = await db.query.externalIds.findFirst({
 			where: eq(externalIdsTable.externalId, externalId),
-		})
+		});
 
 		if (dbExternalId) {
 			const foundGame = await db
@@ -200,22 +200,22 @@ export async function createOrUpdateGame(locals: App.Locals, game: Games, extern
 					slug: gamesTable.slug,
 				})
 				.from(gamesTable)
-				.leftJoin(gamesToExternalIdsTable, eq(gamesToExternalIdsTable.externalId, externalId))
-			console.log('Game already exists', foundGame)
+				.leftJoin(gamesToExternalIdsTable, eq(gamesToExternalIdsTable.externalId, externalId));
+			console.log('Game already exists', foundGame);
 			if (foundGame.length > 0) {
-				console.log('Game name', foundGame[0].name)
+				console.log('Game name', foundGame[0].name);
 				return new Response('Game already exists', {
 					headers: {
 						'Content-Type': 'application/json',
 						Location: `${PUBLIC_SITE_URL}/api/game/${foundGame[0].id}`,
 					},
 					status: 409,
-				})
+				});
 			}
 		}
 
-		let dbGames: Games[] = []
-		console.log('Creating game', JSON.stringify(game, null, 2))
+		let dbGames: Games[] = [];
+		console.log('Creating game', JSON.stringify(game, null, 2));
 		await db.transaction(async (transaction) => {
 			dbGames = await transaction
 				.insert(gamesTable)
@@ -250,7 +250,7 @@ export async function createOrUpdateGame(locals: App.Locals, game: Games, extern
 						max_playtime: game.max_playtime,
 					},
 				})
-				.returning()
+				.returning();
 			const dbExternalIds = await transaction
 				.insert(externalIdsTable)
 				.values({
@@ -258,35 +258,35 @@ export async function createOrUpdateGame(locals: App.Locals, game: Games, extern
 					type: 'game',
 				})
 				.onConflictDoNothing()
-				.returning({ id: externalIdsTable.id })
+				.returning({ id: externalIdsTable.id });
 			await transaction
 				.insert(gamesToExternalIdsTable)
 				.values({
 					gameId: dbGames[0].id,
 					externalId: dbExternalIds[0].id,
 				})
-				.onConflictDoNothing()
-		})
+				.onConflictDoNothing();
+		});
 
 		if (dbGames.length === 0) {
 			return new Response('Could not create game', {
 				status: 500,
-			})
+			});
 		}
 
-		console.log('Created game', JSON.stringify(dbGames[0], null, 2))
+		console.log('Created game', JSON.stringify(dbGames[0], null, 2));
 		return new Response(JSON.stringify(dbGames[0]), {
 			status: 201,
-		})
+		});
 	} catch (e) {
-		console.error(e)
-		throw new Error('Something went wrong creating Game')
+		console.error(e);
+		throw new Error('Something went wrong creating Game');
 	}
 }
 
 export async function updateGame(locals: App.Locals, game: Games, id: string) {
 	if (!game || !id || id === '') {
-		error(400, 'Invalid Request')
+		error(400, 'Invalid Request');
 	}
 
 	try {
@@ -307,17 +307,17 @@ export async function updateGame(locals: App.Locals, game: Games, id: string) {
 				max_playtime: game.max_playtime,
 			})
 			.where(eq(gamesTable.id, id))
-			.returning()
+			.returning();
 		return new Response(JSON.stringify(dbGame[0]), {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-		})
+		});
 	} catch (e) {
-		console.error(e)
+		console.error(e);
 		return new Response('Could not get publishersTable', {
 			status: 500,
-		})
+		});
 	}
 }
 

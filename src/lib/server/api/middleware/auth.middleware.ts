@@ -1,12 +1,22 @@
-import { LuciaService } from '$lib/server/api/services/lucia.service';
+import 'reflect-metadata';
+import {
+	type SessionCookie,
+	cookieExpiresAt,
+	cookieName,
+	createBlankSessionTokenCookie,
+	createSessionTokenCookie,
+	setSessionCookie,
+} from '$lib/server/api/common/utils/cookies';
+import { SessionsService } from '$lib/server/api/services/sessions.service';
 import type { MiddlewareHandler } from 'hono';
 import { createMiddleware } from 'hono/factory';
+import { parseCookies } from 'oslo/cookie';
 import { verifyRequestOrigin } from 'oslo/request';
 import { container } from 'tsyringe';
 import type { AppBindings } from '../common/types/hono';
 
 // resolve dependencies from the container
-const { lucia } = container.resolve(LuciaService);
+const sessionService = container.resolve(SessionsService);
 
 export const verifyOrigin: MiddlewareHandler<AppBindings> = createMiddleware(async (c, next) => {
 	if (c.req.method === 'GET') {
@@ -21,20 +31,22 @@ export const verifyOrigin: MiddlewareHandler<AppBindings> = createMiddleware(asy
 });
 
 export const validateAuthSession: MiddlewareHandler<AppBindings> = createMiddleware(async (c, next) => {
-	const sessionId = lucia.readSessionCookie(c.req.header('Cookie') ?? '');
+	const cookies = parseCookies(c.req.header('Cookie') ?? '');
+	const sessionId = cookies.get(cookieName) ?? null;
 	if (!sessionId) {
 		c.set('user', null);
 		c.set('session', null);
 		return next();
 	}
 
-	const { session, user } = await lucia.validateSession(sessionId);
-	if (session?.fresh) {
-		c.header('Set-Cookie', lucia.createSessionCookie(session.id).serialize(), { append: true });
+	const { session, user } = await sessionService.validateSessionToken(sessionId);
+	let sessionCookie: SessionCookie;
+	if (session !== null) {
+		sessionCookie = createSessionTokenCookie(session.id, cookieExpiresAt);
+	} else {
+		sessionCookie = createBlankSessionTokenCookie();
 	}
-	if (!session) {
-		c.header('Set-Cookie', lucia.createBlankSessionCookie().serialize(), { append: true });
-	}
+	setSessionCookie(c, sessionCookie);
 	c.set('session', session);
 	c.set('user', user);
 	return next();

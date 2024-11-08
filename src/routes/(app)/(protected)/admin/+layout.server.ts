@@ -1,16 +1,16 @@
-import { forbiddenMessage, notSignedInMessage } from '$lib/flashMessages'
-import { user_roles } from '$lib/server/api/databases/tables'
-import { db } from '$lib/server/api/packages/drizzle'
-import { errorMessage } from '$lib/utils/superforms'
-import { eq } from 'drizzle-orm'
-import { loadFlash, redirect } from 'sveltekit-flash-message/server'
+import { forbiddenMessage, notSignedInMessage } from '$lib/flashMessages';
+import { db } from '$lib/server/api/packages/drizzle';
+import { errorMessage } from '$lib/utils/superforms';
+import { eq } from 'drizzle-orm';
+import { loadFlash, redirect } from 'sveltekit-flash-message/server';
+import { user_roles } from '../../../../lib/server/api/databases/postgres/tables';
 
 export const load = loadFlash(async (event) => {
-	const { locals } = event
+	const { locals } = event;
 
-	const authedUser = await locals.getAuthedUser()
+	const authedUser = await locals.getAuthedUser();
 	if (!authedUser) {
-		throw redirect(302, '/login', notSignedInMessage, event)
+		throw redirect(302, '/login', notSignedInMessage, event);
 	}
 
 	const dbUserRoles = await db.query.user_roles.findMany({
@@ -22,13 +22,13 @@ export const load = loadFlash(async (event) => {
 				},
 			},
 		},
-	})
+	});
 
-	const containsAdminRole = dbUserRoles.some((userRole) => userRole?.role?.name === 'admin')
+	const containsAdminRole = dbUserRoles.some((userRole) => userRole?.role?.name === 'admin');
 	if (!dbUserRoles?.length || !containsAdminRole) {
-		console.log('Not an admin')
-		redirect(302, '/', forbiddenMessage, event)
+		console.log('Not an admin');
+		redirect(302, '/', forbiddenMessage, event);
 	}
 
-	return {}
-})
+	return {};
+});

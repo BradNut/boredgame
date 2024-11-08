@@ -1,8 +1,8 @@
-import { DrizzleService } from '$lib/server/api/services/drizzle.service'
-import { type InferInsertModel, eq } from 'drizzle-orm'
-import { inject, injectable } from 'tsyringe'
-import { takeFirstOrThrow } from '../common/utils/repository'
-import { user_roles } from '../databases/tables'
+import { DrizzleService } from '$lib/server/api/services/drizzle.service';
+import { type InferInsertModel, eq } from 'drizzle-orm';
+import { inject, injectable } from 'tsyringe';
+import { takeFirstOrThrow } from '../common/utils/repository';
+import { user_roles } from '../databases/postgres/tables';
 
 /* -------------------------------------------------------------------------- */
 /*                                 Repository                                 */
@@ -20,8 +20,8 @@ storing data. They should not contain any business logic, only database queries.
  In our case the method 'trxHost' is used to set the transaction context.
 */
 
-export type CreateUserRole = InferInsertModel<typeof user_roles>
-export type UpdateUserRole = Partial<CreateUserRole>
+export type CreateUserRole = InferInsertModel<typeof user_roles>;
+export type UpdateUserRole = Partial<CreateUserRole>;
 
 @injectable()
 export class UserRolesRepository {
@@ -30,26 +30,26 @@ export class UserRolesRepository {
 	async findOneById(id: string, db = this.drizzle.db) {
 		return db.query.user_roles.findFirst({
 			where: eq(user_roles.id, id),
-		})
+		});
 	}
 
 	async findOneByIdOrThrow(id: string, db = this.drizzle.db) {
-		const userRole = await this.findOneById(id, db)
-		if (!userRole) throw Error('User not found')
-		return userRole
+		const userRole = await this.findOneById(id, db);
+		if (!userRole) throw Error('User not found');
+		return userRole;
 	}
 
 	async findAllByUserId(userId: string, db = this.drizzle.db) {
 		return db.query.user_roles.findMany({
 			where: eq(user_roles.user_id, userId),
-		})
+		});
 	}
 
 	async create(data: CreateUserRole, db = this.drizzle.db) {
-		return db.insert(user_roles).values(data).returning().then(takeFirstOrThrow)
+		return db.insert(user_roles).values(data).returning().then(takeFirstOrThrow);
 	}
 
 	async delete(id: string, db = this.drizzle.db) {
-		return db.delete(user_roles).where(eq(user_roles.id, id)).returning().then(takeFirstOrThrow)
+		return db.delete(user_roles).where(eq(user_roles.id, id)).returning().then(takeFirstOrThrow);
 	}
 }

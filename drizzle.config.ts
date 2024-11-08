@@ -1,11 +1,12 @@
-import 'dotenv/config'
-import env from './src/lib/server/api/common/env'
-import { defineConfig } from 'drizzle-kit'
+import 'dotenv/config';
+import { defineConfig } from 'drizzle-kit';
+import env from './src/lib/server/api/common/env';
 
 export default defineConfig({
 	dialect: 'postgresql',
-	out: './src/lib/server/api/databases/migrations',
-	schema: './src/lib/server/api/databases/tables/index.ts',
+	out: './src/lib/server/api/databases/postgres/migrations',
+	schema: './src/lib/server/api/databases/postgres/tables/index.ts',
+	casing: 'snake_case',
 	dbCredentials: {
 		host: env.DATABASE_HOST || 'localhost',
 		port: Number(env.DATABASE_PORT) || 5432,
@@ -22,4 +23,4 @@ export default defineConfig({
 		table: 'migrations',
 		schema: 'public',
 	},
-})
+});

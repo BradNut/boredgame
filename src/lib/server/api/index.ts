@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import createApp from '$lib/server/api/common/create-app';
 import configureOpenAPI from '$lib/server/api/configure-open-api';
 import { CollectionController } from '$lib/server/api/controllers/collection.controller';
@@ -34,7 +33,6 @@ const routes = app
 	.route('/mfa', container.resolve(MfaController).routes())
 	.get('/', (c) => c.json({ message: 'Server is healthy' }));
 
-// @ts-ignore - this is a workaround for https://github.com/paolostyle/hono-zod-openapi/issues/2
 configureOpenAPI(app);
 
 /* -------------------------------------------------------------------------- */

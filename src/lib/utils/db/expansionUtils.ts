@@ -1,12 +1,12 @@
-import { PUBLIC_SITE_URL } from '$env/static/public'
-import { type Expansions, expansionsTable } from '$lib/server/api/databases/tables'
-import { db } from '$lib/server/api/packages/drizzle'
-import { error } from '@sveltejs/kit'
-import { and, eq } from 'drizzle-orm'
+import { PUBLIC_SITE_URL } from '$env/static/public';
+import { db } from '$lib/server/api/packages/drizzle';
+import { error } from '@sveltejs/kit';
+import { and, eq } from 'drizzle-orm';
+import { type Expansions, expansionsTable } from '../../server/api/databases/postgres/tables';
 
 export async function createExpansion(locals: App.Locals, expansion: Expansions) {
 	if (!expansion || expansion?.base_game_id === '' || expansion?.game_id === '') {
-		error(400, 'Invalid Request')
+		error(400, 'Invalid Request');
 	}
 
 	try {
@@ -17,41 +17,41 @@ export async function createExpansion(locals: App.Locals, expansion: Expansions)
 				game_id: true,
 				base_game_id: true,
 			},
-		})
-		console.log('Expansion already exists', foundExpansion)
+		});
+		console.log('Expansion already exists', foundExpansion);
 		if (foundExpansion) {
-			console.log('Expansion Game ID', foundExpansion.game_id)
+			console.log('Expansion Game ID', foundExpansion.game_id);
 			return new Response('Expansion already exists', {
 				headers: {
 					'Content-Type': 'application/json',
 					Location: `${PUBLIC_SITE_URL}/api/game/${foundExpansion.game_id}`,
 				},
 				status: 409,
-			})
+			});
 		}
 
-		console.log('Creating expansion', JSON.stringify(expansion, null, 2))
+		console.log('Creating expansion', JSON.stringify(expansion, null, 2));
 		const dbExpansion = await db
 			.insert(expansionsTable)
 			.values({
 				base_game_id: expansion.base_game_id,
 				game_id: expansion.game_id,
 			})
-			.returning()
+			.returning();
 
 		if (dbExpansion.length === 0) {
 			return new Response('Could not create expansion', {
 				status: 500,
-			})
+			});
 		}
 
-		console.log('Created expansion', JSON.stringify(dbExpansion[0], null, 2))
+		console.log('Created expansion', JSON.stringify(dbExpansion[0], null, 2));
 		return new Response(JSON.stringify(dbExpansion[0]), {
 			status: 201,
-		})
+		});
 	} catch (e) {
-		console.error(e)
-		throw new Error('Something went wrong creating Expansion')
+		console.error(e);
+		throw new Error('Something went wrong creating Expansion');
 	}
 }
 
