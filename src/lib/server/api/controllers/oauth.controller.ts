@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Controller } from '$lib/server/api/common/types/controller';
 import type { OAuthUser } from '$lib/server/api/common/types/oauth';
-import { createSessionTokenCookie } from '$lib/server/api/common/utils/cookies';
+import { cookieExpiresAt, createSessionTokenCookie, setSessionCookie } from '$lib/server/api/common/utils/cookies';
 import { OAuthService } from '$lib/server/api/services/oauth.service';
 import { SessionsService } from '$lib/server/api/services/sessions.service';
 import { github, google } from '$lib/server/auth';
@@ -50,21 +50,8 @@ export class OAuthController extends Controller {
 
 					const sessionToken = this.sessionsService.generateSessionToken();
 					const session = await this.sessionsService.createSession(sessionToken, userId, '', '', false, false);
-					const sessionCookie = createSessionTokenCookie(session.id, new Date(new TimeSpan(2, 'w').milliseconds()));
-
-					setCookie(c, sessionCookie.name, sessionCookie.value, {
-						path: sessionCookie.attributes.path,
-						maxAge:
-							sessionCookie?.attributes?.maxAge && sessionCookie?.attributes?.maxAge < new TimeSpan(365, 'd').seconds()
-								? sessionCookie.attributes.maxAge
-								: new TimeSpan(2, 'w').seconds(),
-						domain: sessionCookie.attributes.domain,
-						sameSite: sessionCookie.attributes.sameSite as any,
-						secure: sessionCookie.attributes.secure,
-						httpOnly: sessionCookie.attributes.httpOnly,
-						expires: sessionCookie.attributes.expires,
-					});
-
+					const sessionCookie = createSessionTokenCookie(session.id, cookieExpiresAt);
+					setSessionCookie(c, sessionCookie);
 					return c.json({ message: 'ok' });
 				} catch (error) {
 					console.error(error);
@@ -106,22 +93,10 @@ export class OAuthController extends Controller {
 					};
 
 					const userId = await this.oauthService.handleOAuthUser(oAuthUser, 'google');
-
-					const session = await this.sessionsService.createSession();
-					const sessionCookie = this.luciaService.lucia.createSessionCookie(session.id);
-
-					setCookie(c, sessionCookie.name, sessionCookie.value, {
-						path: sessionCookie.attributes.path,
-						maxAge:
-							sessionCookie?.attributes?.maxAge && sessionCookie?.attributes?.maxAge < new TimeSpan(365, 'd').seconds()
-								? sessionCookie.attributes.maxAge
-								: new TimeSpan(2, 'w').seconds(),
-						domain: sessionCookie.attributes.domain,
-						sameSite: sessionCookie.attributes.sameSite as any,
-						secure: sessionCookie.attributes.secure,
-						httpOnly: sessionCookie.attributes.httpOnly,
-						expires: sessionCookie.attributes.expires,
-					});
+					const sessionToken = this.sessionsService.generateSessionToken();
+					const session = await this.sessionsService.createSession(sessionToken, userId, '', '', false, false);
+					const sessionCookie = createSessionTokenCookie(session.id, cookieExpiresAt);
+					setSessionCookie(c, sessionCookie);
 
 					return c.json({ message: 'ok' });
 				} catch (error) {

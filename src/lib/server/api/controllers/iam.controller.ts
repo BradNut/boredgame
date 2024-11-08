@@ -1,6 +1,6 @@
 import { StatusCodes } from '$lib/constants/status-codes';
 import { Controller } from '$lib/server/api/common/types/controller';
-import { createBlankSessionTokenCookie } from '$lib/server/api/common/utils/cookies';
+import { createBlankSessionTokenCookie, setSessionCookie } from '$lib/server/api/common/utils/cookies';
 import { changePasswordDto } from '$lib/server/api/dtos/change-password.dto';
 import { updateEmailDto } from '$lib/server/api/dtos/update-email.dto';
 import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
@@ -81,7 +81,8 @@ export class IamController extends Controller {
 						await this.iamService.updatePassword(user.id, { password, confirm_password });
 						await this.sessionsService.invalidateSession(user.id);
 						await this.loginRequestService.createUserSession(user.id, c.req, undefined);
-						deleteSessionTokenCookie(c);
+						const sessionCookie = createBlankSessionTokenCookie();
+						setSessionCookie(c, sessionCookie);
 						return c.json({ status: 'success' });
 					} catch (error) {
 						console.error('Error updating password', error);
@@ -108,7 +109,8 @@ export class IamController extends Controller {
 			.post('/logout', requireAuth, openApi(logout), async (c) => {
 				const sessionId = c.var.session.id;
 				await this.iamService.logout(sessionId);
-				deleteSessionTokenCookie(c);
+				const sessionCookie = createBlankSessionTokenCookie();
+				setSessionCookie(c, sessionCookie);
 				return c.json({ status: 'success' });
 			});
 	}

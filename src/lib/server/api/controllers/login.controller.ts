@@ -1,12 +1,10 @@
 import 'reflect-metadata';
 import { Controller } from '$lib/server/api/common/types/controller';
-import { cookieExpiresAt, createSessionTokenCookie } from '$lib/server/api/common/utils/cookies';
+import { cookieExpiresAt, createSessionTokenCookie, setSessionCookie } from '$lib/server/api/common/utils/cookies';
 import { signinUsernameDto } from '$lib/server/api/dtos/signin-username.dto';
 import { SessionsService } from '$lib/server/api/services/sessions.service';
 import { zValidator } from '@hono/zod-validator';
 import { openApi } from 'hono-zod-openapi';
-import { setCookie } from 'hono/cookie';
-import { TimeSpan } from 'oslo';
 import { inject, injectable } from 'tsyringe';
 import { limiter } from '../middleware/rate-limiter.middleware';
 import { LoginRequestsService } from '../services/loginrequest.service';
@@ -32,18 +30,7 @@ export class LoginController extends Controller {
 				const session = await this.loginRequestsService.verify({ username, password }, c.req);
 				const sessionCookie = createSessionTokenCookie(session.id, cookieExpiresAt);
 				console.log('set cookie', sessionCookie);
-				setCookie(c, sessionCookie.name, sessionCookie.value, {
-					path: sessionCookie.attributes.path,
-					maxAge:
-						sessionCookie?.attributes?.maxAge && sessionCookie?.attributes?.maxAge < new TimeSpan(365, 'd').seconds()
-							? sessionCookie.attributes.maxAge
-							: new TimeSpan(2, 'w').seconds(),
-					domain: sessionCookie.attributes.domain,
-					sameSite: sessionCookie.attributes.sameSite as any,
-					secure: sessionCookie.attributes.secure,
-					httpOnly: sessionCookie.attributes.httpOnly,
-					expires: sessionCookie.attributes.expires,
-				});
+				setSessionCookie(c, sessionCookie);
 				return c.json({ message: 'ok' });
 			},
 		);

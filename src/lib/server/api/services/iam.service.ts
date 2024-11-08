@@ -27,12 +27,12 @@ simple as possible. This makes the service easier to read, test and understand.
 @injectable()
 export class IamService {
 	constructor(
-		@inject(SessionsService) private luciaService: SessionsService,
+		@inject(SessionsService) private sessionsService: SessionsService,
 		@inject(UsersService) private readonly usersService: UsersService,
 	) {}
 
 	async logout(sessionId: string) {
-		return this.luciaService.lucia.invalidateSession(sessionId);
+		return this.sessionsService.invalidateSession(sessionId);
 	}
 
 	async updateProfile(userId: string, data: UpdateProfileDto) {

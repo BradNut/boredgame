@@ -40,6 +40,7 @@ export class SessionsService {
 	}
 
 	async validateSessionToken(token: string): Promise<SessionValidationResult> {
+		// TODO: Why was this needed in the docs? https://lucia-next.pages.dev/sessions/basic-api/drizzle-orm
 		// const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 		const sessions = await this.sessionsRepository.findBySessionId(token);
 		if (sessions.length < 1) {
