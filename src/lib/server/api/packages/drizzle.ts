@@ -1,10 +1,10 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
+import pg from 'pg';
 import { config } from '../common/config';
 import * as schema from '../databases/postgres/tables';
 
 // create the connection
-export const pool = new Pool({
+export const pool = new pg.Pool({
 	user: config.postgres.user,
 	password: config.postgres.password,
 	host: config.postgres.host,

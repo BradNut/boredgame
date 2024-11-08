@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { Controller } from '$lib/server/api/common/types/controller';
+import { cookieExpiresAt, createSessionTokenCookie } from '$lib/server/api/common/utils/cookies';
 import { signinUsernameDto } from '$lib/server/api/dtos/signin-username.dto';
 import { SessionsService } from '$lib/server/api/services/sessions.service';
 import { zValidator } from '@hono/zod-validator';
@@ -29,7 +30,7 @@ export class LoginController extends Controller {
 			async (c) => {
 				const { username, password } = c.req.valid('json');
 				const session = await this.loginRequestsService.verify({ username, password }, c.req);
-				const sessionCookie = this.luciaService.lucia.createSessionCookie(session.id);
+				const sessionCookie = createSessionTokenCookie(session.id, cookieExpiresAt);
 				console.log('set cookie', sessionCookie);
 				setCookie(c, sessionCookie.name, sessionCookie.value, {
 					path: sessionCookie.attributes.path,

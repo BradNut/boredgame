@@ -8,6 +8,7 @@ import { github, google } from '$lib/server/auth';
 import { OAuth2RequestError } from 'arctic';
 import { getCookie, setCookie } from 'hono/cookie';
 import { TimeSpan } from 'oslo';
+
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
@@ -48,8 +49,7 @@ export class OAuthController extends Controller {
 					const userId = await this.oauthService.handleOAuthUser(oAuthUser, 'github');
 
 					const sessionToken = this.sessionsService.generateSessionToken();
-					const session = await this.sessionsService.createSession(sessionToken, userId,
-							req.);
+					const session = await this.sessionsService.createSession(sessionToken, userId, '', '', false, false);
 					const sessionCookie = createSessionTokenCookie(session.id, new Date(new TimeSpan(2, 'w').milliseconds()));
 
 					setCookie(c, sessionCookie.name, sessionCookie.value, {
@@ -107,7 +107,7 @@ export class OAuthController extends Controller {
 
 					const userId = await this.oauthService.handleOAuthUser(oAuthUser, 'google');
 
-					const session = await this.luciaService.lucia.createSession(userId, {});
+					const session = await this.sessionsService.createSession();
 					const sessionCookie = this.luciaService.lucia.createSessionCookie(session.id);
 
 					setCookie(c, sessionCookie.name, sessionCookie.value, {
