@@ -1,9 +1,5 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
 	import Logo from '$components/logo.svelte';
-	import * as Avatar from '$components/ui/avatar';
-	import * as DropdownMenu from '$components/ui/dropdown-menu';
 	import { ListChecks, ListTodo, LogOut, Settings } from 'lucide-svelte';
 
 	let { user = null } = $props();

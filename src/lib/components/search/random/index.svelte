@@ -1,12 +1,12 @@
 <script lang="ts">
-import { Button } from '$components/ui/button'
-import { boredState } from '$lib/stores/boredState'
-import { gameStore } from '$lib/stores/gameSearchStore'
-import type { SearchSchema } from '$lib/zodValidation'
-import type { SuperValidated } from 'sveltekit-superforms'
-import { superForm } from 'sveltekit-superforms/client'
+	import { Button } from '$components/ui/button';
+	import { boredState } from '$lib/stores/boredState';
+	import { gameStore } from '$lib/stores/gameSearchStore';
+	import type { SearchSchema } from '$lib/zodValidation';
+	import type { SuperValidated } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms/client';
 
-export let data: SuperValidated<SearchSchema>
+	export let data: SuperValidated<SearchSchema>
 const { enhance } = superForm(data, {
 	onSubmit: () => {
 		gameStore.removeAll()

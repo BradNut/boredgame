@@ -1,9 +1,9 @@
-import { createId as cuid2 } from '@paralleldrive/cuid2';
-import { type InferSelectModel, relations } from 'drizzle-orm';
-import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
-import { timestamps } from '../../../common/utils/table';
-import { collections } from './collections.table';
-import { gamesTable } from './games.table';
+import {createId as cuid2} from '@paralleldrive/cuid2';
+import {type InferSelectModel, relations} from 'drizzle-orm';
+import {integer, pgTable, text, uuid} from 'drizzle-orm/pg-core';
+import {timestamps} from '../../../common/utils/table';
+import {collections} from './collections.table';
+import {gamesTable} from './games.table';
 
 export const collection_items = pgTable('collection_items', {
 	id: uuid().primaryKey().defaultRandom(),

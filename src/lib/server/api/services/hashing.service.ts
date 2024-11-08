@@ -1,7 +1,7 @@
-import { scrypt } from 'node:crypto'
-import { decodeHex, encodeHexLowerCase } from '@oslojs/encoding'
-import { constantTimeEqual } from '@oslojs/crypto/subtle'
-import { injectable } from 'tsyringe'
+import {scrypt} from 'node:crypto'
+import {decodeHex, encodeHexLowerCase} from '@oslojs/encoding'
+import {constantTimeEqual} from '@oslojs/crypto/subtle'
+import {injectable} from 'tsyringe'
 
 @injectable()
 export class HashingService {

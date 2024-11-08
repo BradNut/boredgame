@@ -1,9 +1,9 @@
 <script lang="ts">
-import Portal from '$lib/Portal.svelte'
-import { flip } from 'svelte/animate'
-import { fade, fly } from 'svelte/transition'
-import ToastMessage from './ToastMessage.svelte'
-import { toast } from './toast'
+	import Portal from '$lib/Portal.svelte';
+	import { flip } from 'svelte/animate';
+	import { fade, fly } from 'svelte/transition';
+	import ToastMessage from './ToastMessage.svelte';
+	import { toast } from './toast';
 </script>
 
 <Portal>

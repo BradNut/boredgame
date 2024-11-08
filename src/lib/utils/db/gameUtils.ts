@@ -1,9 +1,14 @@
-import { PUBLIC_SITE_URL } from '$env/static/public';
-import { db } from '$lib/server/api/packages/drizzle';
-import { error } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import {PUBLIC_SITE_URL} from '$env/static/public';
+import {db} from '$lib/server/api/packages/drizzle';
+import {error} from '@sveltejs/kit';
+import {eq} from 'drizzle-orm';
 import kebabCase from 'just-kebab-case';
-import { type Games, externalIdsTable, gamesTable, gamesToExternalIdsTable } from '../../server/api/databases/postgres/tables';
+import {
+	externalIdsTable,
+	type Games,
+	gamesTable,
+	gamesToExternalIdsTable
+} from '../../server/api/databases/postgres/tables';
 
 export async function getGame(locals: App.Locals, id: string) {
 	if (!id || id === '') {

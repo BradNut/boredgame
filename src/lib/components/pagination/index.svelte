@@ -1,8 +1,8 @@
 <script lang="ts">
-// Based on https://carbon-components-svelte.onrender.com/components/Pagination
-import { afterUpdate, createEventDispatcher } from 'svelte'
-import { fade } from 'svelte/transition'
-// import {
+	// Based on https://carbon-components-svelte.onrender.com/components/Pagination
+	import { afterUpdate, createEventDispatcher } from 'svelte';
+	import { fade } from 'svelte/transition';
+	// import {
 // 	Listbox,
 // 	ListboxButton,
 // 	ListboxOption,

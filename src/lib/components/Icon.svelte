@@ -1,6 +1,7 @@
 <script lang="ts">
-  import feather from 'feather-icons';
-  export const directions: string[] = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
+	import feather from 'feather-icons';
+
+	export const directions: string[] = ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'];
 
   export let name: string;
   export let direction: string = 'n';

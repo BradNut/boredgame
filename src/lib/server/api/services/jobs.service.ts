@@ -1,6 +1,6 @@
-import { RedisProvider } from '$lib/server/api/providers/redis.provider'
-import { type Processor, Queue, Worker } from 'bullmq'
-import { inject, injectable } from 'tsyringe'
+import {RedisProvider} from '$lib/server/api/providers/redis.provider'
+import {type Processor, Queue, Worker} from 'bullmq'
+import {inject, injectable} from 'tsyringe'
 
 @injectable()
 export class JobsService {

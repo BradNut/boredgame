@@ -1,17 +1,17 @@
 <script lang="ts">
-import { browser } from '$app/environment'
-// import {
-// 	Dialog,
-// 	DialogDescription,
-// 	DialogOverlay,
-// 	DialogTitle
-// } from '@rgossiaux/svelte-headlessui';
-import { boredState } from '$lib/stores/boredState'
-import { wishlistStore } from '$lib/stores/wishlistStore'
-import { removeFromWishlist } from '$lib/utils/manipulateWishlist'
-import { fade } from 'svelte/transition'
+	import { browser } from '$app/environment';
+	// import {
+	// 	Dialog,
+	// 	DialogDescription,
+	// 	DialogOverlay,
+	// 	DialogTitle
+	// } from '@rgossiaux/svelte-headlessui';
+	import { boredState } from '$lib/stores/boredState';
+	import { wishlistStore } from '$lib/stores/wishlistStore';
+	import { removeFromWishlist } from '$lib/utils/manipulateWishlist';
+	import { fade } from 'svelte/transition';
 
-function removeGame() {
+	function removeGame() {
 	if ($boredState?.dialog?.additionalData) {
 		removeFromWishlist($boredState?.dialog?.additionalData)
 	}

@@ -1,13 +1,13 @@
 <script lang="ts">
-import { browser } from '$app/environment'
-import { boredState } from '$lib/stores/boredState'
-import { collectionStore } from '$lib/stores/collectionStore'
-import { ToastType } from '$lib/types'
-// import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
-import ClearCollectionDialog from '../dialog/ClearCollectionDialog.svelte'
-import { toast } from '../toast/toast'
+	import { browser } from '$app/environment';
+	import { boredState } from '$lib/stores/boredState';
+	import { collectionStore } from '$lib/stores/collectionStore';
+	import { ToastType } from '$lib/types';
+	// import { SaveIcon, ShareIcon, TrashIcon } from '@rgossiaux/svelte-heroicons/outline';
+	import ClearCollectionDialog from '../dialog/ClearCollectionDialog.svelte';
+	import { toast } from '../toast/toast';
 
-function saveCollection() {
+	function saveCollection() {
 	if (!browser) return
 	localStorage.collection = JSON.stringify($collectionStore)
 	toast.send('Saved collection', { duration: 3000, type: ToastType.INFO })

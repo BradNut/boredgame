@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { IamService } from '$lib/server/api/services/iam.service';
-import { SessionsService } from '$lib/server/api/services/sessions.service';
-import { UsersService } from '$lib/server/api/services/users.service';
-import { faker } from '@faker-js/faker';
-import { container } from 'tsyringe';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import {IamService} from '$lib/server/api/services/iam.service';
+import {SessionsService} from '$lib/server/api/services/sessions.service';
+import {UsersService} from '$lib/server/api/services/users.service';
+import {faker} from '@faker-js/faker';
+import {container} from 'tsyringe';
+import {afterAll, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 
 describe('IamService', () => {
 	let service: IamService;

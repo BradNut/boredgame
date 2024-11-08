@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { refinePasswords } from "$lib/validations/account";
+import {z} from "zod";
+import {refinePasswords} from "$lib/validations/account";
 
 export const signupUsernameEmailDto = z.object({
 	firstName: z.string().trim().optional(),

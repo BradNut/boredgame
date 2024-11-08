@@ -1,5 +1,5 @@
-import type { BoredStore, Dialog } from '$lib/types';
-import { writable } from 'svelte/store';
+import type {BoredStore, Dialog} from '$lib/types';
+import {writable} from 'svelte/store';
 import DefaultDialog from '../components/dialog/DefaultDialog.svelte';
 // import { BoredStore } from '$lib/types';
 

@@ -1,7 +1,7 @@
-import { relations } from 'drizzle-orm';
-import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
-import { categoriesTable } from './categories.table';
-import { gamesTable } from './games.table';
+import {relations} from 'drizzle-orm';
+import {pgTable, primaryKey, uuid} from 'drizzle-orm/pg-core';
+import {categoriesTable} from './categories.table';
+import {gamesTable} from './games.table';
 
 export const categories_to_games_table = pgTable(
 	'categories_to_games',

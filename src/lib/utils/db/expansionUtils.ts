@@ -1,8 +1,8 @@
-import { PUBLIC_SITE_URL } from '$env/static/public';
-import { db } from '$lib/server/api/packages/drizzle';
-import { error } from '@sveltejs/kit';
-import { and, eq } from 'drizzle-orm';
-import { type Expansions, expansionsTable } from '../../server/api/databases/postgres/tables';
+import {PUBLIC_SITE_URL} from '$env/static/public';
+import {db} from '$lib/server/api/packages/drizzle';
+import {error} from '@sveltejs/kit';
+import {and, eq} from 'drizzle-orm';
+import {type Expansions, expansionsTable} from '../../server/api/databases/postgres/tables';
 
 export async function createExpansion(locals: App.Locals, expansion: Expansions) {
 	if (!expansion || expansion?.base_game_id === '' || expansion?.game_id === '') {

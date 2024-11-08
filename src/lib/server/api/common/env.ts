@@ -1,6 +1,6 @@
-import { config } from 'dotenv';
-import { expand } from 'dotenv-expand';
-import { type ZodError, z } from 'zod';
+import {config} from 'dotenv';
+import {expand} from 'dotenv-expand';
+import {z, type ZodError} from 'zod';
 
 expand(config());
 

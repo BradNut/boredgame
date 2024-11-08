@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { faker } from '@faker-js/faker';
-import { container } from 'tsyringe';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { RoleName } from '../databases/postgres/tables';
-import { UserRolesRepository } from '../repositories/user_roles.repository';
-import { RolesService } from '../services/roles.service';
-import { UserRolesService } from '../services/user_roles.service';
+import {faker} from '@faker-js/faker';
+import {container} from 'tsyringe';
+import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest';
+import {RoleName} from '../databases/postgres/tables';
+import {UserRolesRepository} from '../repositories/user_roles.repository';
+import {RolesService} from '../services/roles.service';
+import {UserRolesService} from '../services/user_roles.service';
 
 describe('UserRolesService', () => {
 	let service: UserRolesService;

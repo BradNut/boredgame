@@ -1,9 +1,9 @@
 import 'reflect-metadata';
-import { CredentialsType, credentialsTable } from '$lib/server/api/databases/postgres/tables/credentials.table';
-import { DrizzleService } from '$lib/server/api/services/drizzle.service';
-import { type InferInsertModel, and, eq } from 'drizzle-orm';
-import { inject, injectable } from 'tsyringe';
-import { takeFirstOrThrow } from '../common/utils/repository';
+import {credentialsTable, CredentialsType} from '$lib/server/api/databases/postgres/tables/credentials.table';
+import {DrizzleService} from '$lib/server/api/services/drizzle.service';
+import {and, eq, type InferInsertModel} from 'drizzle-orm';
+import {inject, injectable} from 'tsyringe';
+import {takeFirstOrThrow} from '../common/utils/repository';
 
 export type CreateCredentials = InferInsertModel<typeof credentialsTable>;
 export type UpdateCredentials = Partial<CreateCredentials>;

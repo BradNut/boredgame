@@ -1,6 +1,4 @@
-<script lang="ts">
-	import { PUBLIC_UMAMI_DO_NOT_TRACK, PUBLIC_UMAMI_URL, PUBLIC_UMAMI_ID } from '$env/static/public';
-</script>
+<script lang="ts"></script>
 
 <svelte:head>
 	<script

@@ -1,12 +1,12 @@
 <script lang="ts">
-import { toast } from '$lib/components/toast/toast'
-import { boredState } from '$lib/stores/boredState'
-import { collectionStore } from '$lib/stores/collectionStore'
-import { gameStore } from '$lib/stores/gameSearchStore'
-import { type SavedGameType, ToastType } from '$lib/types'
-import { mapSavedGameToGame } from '$lib/utils/gameMapper'
+	import { toast } from '$lib/components/toast/toast';
+	import { boredState } from '$lib/stores/boredState';
+	import { collectionStore } from '$lib/stores/collectionStore';
+	import { gameStore } from '$lib/stores/gameSearchStore';
+	import { type SavedGameType, ToastType } from '$lib/types';
+	import { mapSavedGameToGame } from '$lib/utils/gameMapper';
 
-async function getRandomCollectionGame() {
+	async function getRandomCollectionGame() {
 	if ($collectionStore.length > 0) {
 		boredState.update((n) => ({ ...n, loading: true }))
 		let randomNumber: number = Math.round(Math.random() * $collectionStore.length - 1)

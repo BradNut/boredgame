@@ -1,9 +1,14 @@
-import { PUBLIC_SITE_URL } from '$env/static/public';
-import { db } from '$lib/server/api/packages/drizzle';
-import { error } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import {PUBLIC_SITE_URL} from '$env/static/public';
+import {db} from '$lib/server/api/packages/drizzle';
+import {error} from '@sveltejs/kit';
+import {eq} from 'drizzle-orm';
 import kebabCase from 'just-kebab-case';
-import { type Publishers, externalIdsTable, publishersTable, publishersToExternalIdsTable } from '../../server/api/databases/postgres/tables';
+import {
+	externalIdsTable,
+	type Publishers,
+	publishersTable,
+	publishersToExternalIdsTable
+} from '../../server/api/databases/postgres/tables';
 
 export async function getPublisher(locals: App.Locals, id: string) {
 	const publisher = await db.select().from(publishersTable).where(eq(publishersTable.id, id));

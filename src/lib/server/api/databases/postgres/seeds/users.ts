@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm';
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { HashingService } from '../../../services/hashing.service';
+import {eq} from 'drizzle-orm';
+import type {NodePgDatabase} from 'drizzle-orm/node-postgres';
+import {HashingService} from '../../../services/hashing.service';
 import * as schema from '../tables';
 import users from './data/users.json';
 

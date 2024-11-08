@@ -1,8 +1,8 @@
-import { DrizzleService } from '$lib/server/api/services/drizzle.service';
-import { type InferInsertModel, eq } from 'drizzle-orm';
-import { inject, injectable } from 'tsyringe';
-import { takeFirstOrThrow } from '../common/utils/repository';
-import { rolesTable } from '../databases/postgres/tables';
+import {DrizzleService} from '$lib/server/api/services/drizzle.service';
+import {eq, type InferInsertModel} from 'drizzle-orm';
+import {inject, injectable} from 'tsyringe';
+import {takeFirstOrThrow} from '../common/utils/repository';
+import {rolesTable} from '../databases/postgres/tables';
 
 /* -------------------------------------------------------------------------- */
 /*                                 Repository                                 */

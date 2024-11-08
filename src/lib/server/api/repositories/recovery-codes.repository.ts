@@ -1,9 +1,9 @@
 import 'reflect-metadata';
-import { takeFirstOrThrow } from '$lib/server/api/common/utils/repository';
-import { DrizzleService } from '$lib/server/api/services/drizzle.service';
-import { type InferInsertModel, eq } from 'drizzle-orm';
-import { inject, injectable } from 'tsyringe';
-import { recoveryCodesTable } from '../databases/postgres/tables';
+import {takeFirstOrThrow} from '$lib/server/api/common/utils/repository';
+import {DrizzleService} from '$lib/server/api/services/drizzle.service';
+import {eq, type InferInsertModel} from 'drizzle-orm';
+import {inject, injectable} from 'tsyringe';
+import {recoveryCodesTable} from '../databases/postgres/tables';
 
 export type CreateRecoveryCodes = InferInsertModel<typeof recoveryCodesTable>;
 

@@ -1,5 +1,5 @@
-import { toast } from 'svelte-sonner'
-import { message, type ErrorStatus, type SuperValidated } from 'sveltekit-superforms'
+import {toast} from 'svelte-sonner'
+import {type ErrorStatus, message, type SuperValidated} from 'sveltekit-superforms'
 
 export type Message = {
 	type: 'error' | 'success' | 'info'

@@ -1,4 +1,4 @@
-import type { ClientResponse } from "hono/client";
+import type {ClientResponse} from "hono/client";
 
 export async function parseApiResponse<T>(response: ClientResponse<T>) {
 	if (response.status === 204 || response.headers.get('Content-Length') === '0') {

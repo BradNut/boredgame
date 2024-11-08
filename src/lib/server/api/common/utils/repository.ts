@@ -1,4 +1,4 @@
-import { HTTPException } from 'hono/http-exception'
+import {HTTPException} from 'hono/http-exception'
 
 export const takeFirst = <T>(values: T[]): T | null => {
 	if (values.length === 0) return null

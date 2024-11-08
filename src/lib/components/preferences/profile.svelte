@@ -1,9 +1,9 @@
 <script lang="ts">
-import cogOutline from '@iconify-icons/mdi/cog-outline'
-import { fade } from 'svelte/transition'
-import GameCollection from './gameCollection.svelte'
-import GameWishlist from './gameWishlist.svelte'
-import Themes from './themes.svelte'
+	import cogOutline from '@iconify-icons/mdi/cog-outline';
+	import { fade } from 'svelte/transition';
+	import GameCollection from './gameCollection.svelte';
+	import GameWishlist from './gameWishlist.svelte';
+	import Themes from './themes.svelte';
 </script>
 
 <div class="container">

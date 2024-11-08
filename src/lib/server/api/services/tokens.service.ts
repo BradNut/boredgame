@@ -1,7 +1,7 @@
-import { inject, injectable } from "tsyringe";
-import { generateRandomString } from "oslo/crypto";
-import { TimeSpan, createDate, type TimeSpanUnit } from 'oslo';
-import { HashingService } from "./hashing.service";
+import {inject, injectable} from "tsyringe";
+import {generateRandomString} from "oslo/crypto";
+import {createDate, TimeSpan, type TimeSpanUnit} from 'oslo';
+import {HashingService} from "./hashing.service";
 
 @injectable()
 export class TokensService {

@@ -1,14 +1,14 @@
-import { PUBLIC_SITE_URL } from '$env/static/public';
-import { db } from '$lib/server/api/packages/drizzle';
-import { error } from '@sveltejs/kit';
-import { eq } from 'drizzle-orm';
+import {PUBLIC_SITE_URL} from '$env/static/public';
+import {db} from '$lib/server/api/packages/drizzle';
+import {error} from '@sveltejs/kit';
+import {eq} from 'drizzle-orm';
 import kebabCase from 'just-kebab-case';
 import {
 	type Categories,
-	type Mechanics,
 	categoriesTable,
 	categoriesToExternalIdsTable,
 	externalIdsTable,
+	type Mechanics,
 } from '../../server/api/databases/postgres/tables';
 
 export async function createCategory(locals: App.Locals, category: Categories, externalId: string) {

@@ -1,5 +1,4 @@
-import { timestamp } from 'drizzle-orm/pg-core';
-import { customType } from 'drizzle-orm/pg-core';
+import {customType, timestamp} from 'drizzle-orm/pg-core';
 
 export const citext = customType<{ data: string }>({
 	dataType() {

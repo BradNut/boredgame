@@ -1,9 +1,9 @@
-import { config } from '$lib/server/api/common/config';
+import {config} from '$lib/server/api/common/config';
 import env from '$lib/server/api/common/env';
-import type { Context } from 'hono';
-import { setCookie } from 'hono/cookie';
-import type { CookieOptions } from 'hono/utils/cookie';
-import { TimeSpan } from 'oslo';
+import type {Context} from 'hono';
+import {setCookie} from 'hono/cookie';
+import type {CookieOptions} from 'hono/utils/cookie';
+import {TimeSpan} from 'oslo';
 
 export const cookieMaxAge = 60 * 60 * 24 * 30;
 export const cookieExpiresMilliseconds = new TimeSpan(2, 'w').milliseconds();

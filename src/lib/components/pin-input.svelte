@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cn } from '$lib/utils/ui';
-	import { PinInput, type PinInputProps } from 'bits-ui';
+	import { type PinInputProps } from 'bits-ui';
 
 	interface Props extends Omit<PinInputProps, 'value'> {
 		value: string;

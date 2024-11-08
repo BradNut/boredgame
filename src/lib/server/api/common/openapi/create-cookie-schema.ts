@@ -1,5 +1,5 @@
-import { authCookieSchema } from '$lib/server/api/common/openapi/schemas';
-import { z } from '@hono/zod-openapi';
+import {authCookieSchema} from '$lib/server/api/common/openapi/schemas';
+import {z} from '@hono/zod-openapi';
 
 export type ZodSchema = z.ZodUnion<never> | z.AnyZodObject | z.ZodArray<z.AnyZodObject>;
 type ZodString = z.ZodString;

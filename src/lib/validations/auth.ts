@@ -1,6 +1,6 @@
-import { refinePasswords } from './account';
-import { userSchema } from './zod-schemas';
-import { z } from 'zod';
+import {refinePasswords} from './account';
+import {userSchema} from './zod-schemas';
+import {z} from 'zod';
 
 export const signUpSchema = userSchema
 	.pick({

@@ -1,7 +1,7 @@
-import type { InferSelectModel } from 'drizzle-orm';
-import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
-import { timestamps } from '../../../common/utils/table';
-import { usersTable } from './users.table';
+import type {InferSelectModel} from 'drizzle-orm';
+import {pgTable, text, uuid} from 'drizzle-orm/pg-core';
+import {timestamps} from '../../../common/utils/table';
+import {usersTable} from './users.table';
 
 export const federatedIdentityTable = pgTable('federated_identity', {
 	id: uuid().primaryKey().defaultRandom(),

@@ -1,4 +1,4 @@
-import { readable } from 'svelte/store';
+import {readable} from 'svelte/store';
 
 export function mediaQueryStore(query: string) {
 	if (typeof window === 'undefined') {

@@ -1,8 +1,8 @@
 import 'reflect-metadata'
-import { container } from 'tsyringe'
-import { afterAll, beforeAll, describe, expect, expectTypeOf, it, vi } from 'vitest'
-import { HashingService } from '../services/hashing.service'
-import { TokensService } from '../services/tokens.service'
+import {container} from 'tsyringe'
+import {afterAll, beforeAll, describe, expect, expectTypeOf, it, vi} from 'vitest'
+import {HashingService} from '../services/hashing.service'
+import {TokensService} from '../services/tokens.service'
 
 describe('TokensService', () => {
 	let service: TokensService

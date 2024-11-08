@@ -1,4 +1,5 @@
-import { readable } from 'svelte/store';
+import {readable} from 'svelte/store';
+
 export const breakpointMatcher = (mediaQueries: Record<string, MediaQueryList | string>) => {
 	if (typeof window === 'undefined') return readable(null); //return null if window doesn't exist
 

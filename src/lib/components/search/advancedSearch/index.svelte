@@ -1,7 +1,7 @@
 <script lang="ts">
-import { boredState } from '$lib/stores/boredState'
+	import { boredState } from '$lib/stores/boredState';
 
-export let form
+	export let form
 export let errors
 export let constraints
 console.log('advanced search data', $form)

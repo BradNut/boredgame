@@ -1,8 +1,8 @@
-import type { Sessions } from '$lib/server/api/databases/postgres/tables';
-import type { Hono } from 'hono';
-import type { PinoLogger } from 'hono-pino';
-import type { Promisify, RateLimitInfo } from 'hono-rate-limiter';
-import type { User } from 'lucia';
+import type {Sessions} from '$lib/server/api/databases/postgres/tables';
+import type {Hono} from 'hono';
+import type {PinoLogger} from 'hono-pino';
+import type {Promisify, RateLimitInfo} from 'hono-rate-limiter';
+import type {User} from 'lucia';
 
 // export type AppOpenAPI = OpenAPIHono<AppBindings>;
 export type AppOpenAPI = Hono<AppBindings>;

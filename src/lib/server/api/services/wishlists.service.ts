@@ -1,7 +1,7 @@
-import type { db } from '$lib/server/api/packages/drizzle'
-import { generateRandomAnimalName } from '$lib/utils/randomDataUtil'
-import { inject, injectable } from 'tsyringe'
-import { WishlistsRepository } from '../repositories/wishlists.repository'
+import type {db} from '$lib/server/api/packages/drizzle'
+import {generateRandomAnimalName} from '$lib/utils/randomDataUtil'
+import {inject, injectable} from 'tsyringe'
+import {WishlistsRepository} from '../repositories/wishlists.repository'
 
 @injectable()
 export class WishlistsService {

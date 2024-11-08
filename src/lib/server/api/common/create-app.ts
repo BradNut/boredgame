@@ -1,10 +1,10 @@
 import env from '$lib/server/api/common/env';
-import type { AppBindings } from '$lib/server/api/common/types/hono';
-import { validateAuthSession, verifyOrigin } from '$lib/server/api/middleware/auth.middleware';
-import { pinoLogger } from '$lib/server/api/middleware/pino-logger.middleware';
-import { Hono } from 'hono';
-import { cors } from 'hono/cors';
-import { notFound, onError, serveEmojiFavicon } from 'stoker/middlewares';
+import type {AppBindings} from '$lib/server/api/common/types/hono';
+import {validateAuthSession, verifyOrigin} from '$lib/server/api/middleware/auth.middleware';
+import {pinoLogger} from '$lib/server/api/middleware/pino-logger.middleware';
+import {Hono} from 'hono';
+import {cors} from 'hono/cors';
+import {notFound, onError, serveEmojiFavicon} from 'stoker/middlewares';
 
 export function createRouter() {
 	return new Hono<AppBindings>({

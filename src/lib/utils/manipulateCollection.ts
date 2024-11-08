@@ -1,8 +1,8 @@
-import { collectionStore } from '$lib/stores/collectionStore';
-import { toast } from '$lib/components/toast/toast';
-import { ToastType, type GameType, type SavedGameType } from '$lib/types';
-import { convertToSavedGame } from './gameMapper';
-import { saved_game_schema } from '../zodValidation';
+import {collectionStore} from '$lib/stores/collectionStore';
+import {toast} from '$lib/components/toast/toast';
+import {type GameType, type SavedGameType, ToastType} from '$lib/types';
+import {convertToSavedGame} from './gameMapper';
+import {saved_game_schema} from '../zodValidation';
 
 export function addToCollection(game: GameType | SavedGameType, index: number) {
 	try {

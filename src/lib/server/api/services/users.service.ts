@@ -1,16 +1,16 @@
-import type { OAuthUser } from '$lib/server/api/common/types/oauth';
-import type { SignupUsernameEmailDto } from '$lib/server/api/dtos/signup-username-email.dto';
-import { CredentialsRepository } from '$lib/server/api/repositories/credentials.repository';
-import { FederatedIdentityRepository } from '$lib/server/api/repositories/federated_identity.repository';
-import { WishlistsRepository } from '$lib/server/api/repositories/wishlists.repository';
-import { TokensService } from '$lib/server/api/services/tokens.service';
-import { UserRolesService } from '$lib/server/api/services/user_roles.service';
-import { inject, injectable } from 'tsyringe';
-import { CredentialsType, RoleName } from '../databases/postgres/tables';
-import { type UpdateUser, UsersRepository } from '../repositories/users.repository';
-import { CollectionsService } from './collections.service';
-import { DrizzleService } from './drizzle.service';
-import { WishlistsService } from './wishlists.service';
+import type {OAuthUser} from '$lib/server/api/common/types/oauth';
+import type {SignupUsernameEmailDto} from '$lib/server/api/dtos/signup-username-email.dto';
+import {CredentialsRepository} from '$lib/server/api/repositories/credentials.repository';
+import {FederatedIdentityRepository} from '$lib/server/api/repositories/federated_identity.repository';
+import {WishlistsRepository} from '$lib/server/api/repositories/wishlists.repository';
+import {TokensService} from '$lib/server/api/services/tokens.service';
+import {UserRolesService} from '$lib/server/api/services/user_roles.service';
+import {inject, injectable} from 'tsyringe';
+import {CredentialsType, RoleName} from '../databases/postgres/tables';
+import {type UpdateUser, UsersRepository} from '../repositories/users.repository';
+import {CollectionsService} from './collections.service';
+import {DrizzleService} from './drizzle.service';
+import {WishlistsService} from './wishlists.service';
 
 @injectable()
 export class UsersService {

@@ -1,7 +1,7 @@
-import { type InferSelectModel, relations } from 'drizzle-orm';
-import { boolean, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { cuid2 } from '../../../common/utils/table';
-import { usersTable } from './users.table';
+import {type InferSelectModel, relations} from 'drizzle-orm';
+import {boolean, pgTable, text, timestamp, uuid} from 'drizzle-orm/pg-core';
+import {cuid2} from '../../../common/utils/table';
+import {usersTable} from './users.table';
 
 export const sessionsTable = pgTable('sessions', {
 	id: cuid2().primaryKey(),

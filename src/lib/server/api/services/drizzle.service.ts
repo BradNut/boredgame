@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import { type NodePgDatabase, drizzle } from 'drizzle-orm/node-postgres';
+import {drizzle, type NodePgDatabase} from 'drizzle-orm/node-postgres';
 import pg from 'pg';
-import { type Disposable, injectable } from 'tsyringe';
-import { config } from '../common/config';
+import {type Disposable, injectable} from 'tsyringe';
+import {config} from '../common/config';
 import * as schema from '../databases/postgres/tables';
 
 @injectable()

@@ -1,14 +1,21 @@
 <script lang="ts">
-import { browser } from '$app/environment'
-// import { Button, buttonVariants } from '$components/ui/button';
-import { Button, buttonVariants } from '$components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '$components/ui/dialog'
-import { boredState } from '$lib/stores/boredState'
-import { collectionStore } from '$lib/stores/collectionStore'
-import { removeFromCollection } from '$lib/utils/manipulateCollection'
-import { fade } from 'svelte/transition'
+	import { browser } from '$app/environment';
+	// import { Button, buttonVariants } from '$components/ui/button';
+	import { Button, buttonVariants } from '$components/ui/button';
+	import {
+		Dialog,
+		DialogContent,
+		DialogDescription,
+		DialogFooter,
+		DialogHeader,
+		DialogTitle,
+		DialogTrigger,
+	} from '$components/ui/dialog';
+	import { boredState } from '$lib/stores/boredState';
+	import { collectionStore } from '$lib/stores/collectionStore';
+	import { removeFromCollection } from '$lib/utils/manipulateCollection';
 
-function removeGame() {
+	function removeGame() {
 	if ($boredState?.dialog?.additionalData) {
 		removeFromCollection($boredState?.dialog?.additionalData)
 	}

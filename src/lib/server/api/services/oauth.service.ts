@@ -1,7 +1,7 @@
-import { inject, injectable } from 'tsyringe'
-import { FederatedIdentityRepository } from '../repositories/federated_identity.repository'
-import { UsersService } from './users.service'
-import type {OAuthUser, OAuthProviders} from "$lib/server/api/common/types/oauth";
+import {inject, injectable} from 'tsyringe'
+import {FederatedIdentityRepository} from '../repositories/federated_identity.repository'
+import {UsersService} from './users.service'
+import type {OAuthProviders, OAuthUser} from "$lib/server/api/common/types/oauth";
 
 @injectable()
 export class OAuthService {

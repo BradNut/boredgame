@@ -1,8 +1,8 @@
 <script lang="ts">
-import { Button } from '$lib/components/ui/button'
-import { toastMessage } from '$lib/utils/superforms' // Adjust the path if necessary
+	import { Button } from '$lib/components/ui/button';
+	import { toastMessage } from '$lib/utils/superforms'; // Adjust the path if necessary
 
-const { codeContent, language }: { codeContent: string; language: string } = $props()
+	const { codeContent, language }: { codeContent: string; language: string } = $props()
 
 // Function to copy code to clipboard
 const copyToClipboard = () => {

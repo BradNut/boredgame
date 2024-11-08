@@ -1,4 +1,4 @@
-import type { SavedGameType } from "../types";
+import type {SavedGameType} from "../types";
 
 export function binarySearchOnStore(inputArray: SavedGameType[], item: SavedGameType, locale = 'en') {
 	const collator = Intl.Collator(locale)

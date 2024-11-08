@@ -1,7 +1,7 @@
-import { relations } from 'drizzle-orm';
-import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
-import { externalIdsTable } from './externalIds.table';
-import { gamesTable } from './games.table';
+import {relations} from 'drizzle-orm';
+import {pgTable, primaryKey, uuid} from 'drizzle-orm/pg-core';
+import {externalIdsTable} from './externalIds.table';
+import {gamesTable} from './games.table';
 
 export const gamesToExternalIdsTable = pgTable(
 	'games_to_external_ids',

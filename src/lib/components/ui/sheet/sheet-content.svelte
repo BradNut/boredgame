@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Dialog as SheetPrimitive } from "bits-ui";
-	import { SheetOverlay, SheetPortal, sheetVariants, type Side } from ".";
-	import { X } from "lucide-svelte";
-	import { cn } from "$lib/utils";
+	import { Dialog as SheetPrimitive } from 'bits-ui';
+	import { SheetOverlay, SheetPortal, sheetVariants, type Side } from '.';
+	import { X } from 'lucide-svelte';
+	import { cn } from '$lib/utils';
 
 	type $$Props = SheetPrimitive.ContentProps & {
 		side?: Side;

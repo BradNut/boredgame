@@ -1,20 +1,19 @@
-import { StatusCodes } from '$lib/constants/status-codes';
-import { Controller } from '$lib/server/api/common/types/controller';
-import { createBlankSessionTokenCookie, setSessionCookie } from '$lib/server/api/common/utils/cookies';
-import { changePasswordDto } from '$lib/server/api/dtos/change-password.dto';
-import { updateEmailDto } from '$lib/server/api/dtos/update-email.dto';
-import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
-import { verifyPasswordDto } from '$lib/server/api/dtos/verify-password.dto';
-import { limiter } from '$lib/server/api/middleware/rate-limiter.middleware';
-import { IamService } from '$lib/server/api/services/iam.service';
-import { LoginRequestsService } from '$lib/server/api/services/loginrequest.service';
-import { SessionsService } from '$lib/server/api/services/sessions.service';
-import { zValidator } from '@hono/zod-validator';
-import { openApi } from 'hono-zod-openapi';
-import { setCookie } from 'hono/cookie';
-import { inject, injectable } from 'tsyringe';
-import { requireAuth } from '../middleware/require-auth.middleware';
-import { iam, logout, updateEmail, updatePassword, updateProfile, verifyPassword } from './iam.routes';
+import {StatusCodes} from '$lib/constants/status-codes';
+import {Controller} from '$lib/server/api/common/types/controller';
+import {createBlankSessionTokenCookie, setSessionCookie} from '$lib/server/api/common/utils/cookies';
+import {changePasswordDto} from '$lib/server/api/dtos/change-password.dto';
+import {updateEmailDto} from '$lib/server/api/dtos/update-email.dto';
+import {updateProfileDto} from '$lib/server/api/dtos/update-profile.dto';
+import {verifyPasswordDto} from '$lib/server/api/dtos/verify-password.dto';
+import {limiter} from '$lib/server/api/middleware/rate-limiter.middleware';
+import {IamService} from '$lib/server/api/services/iam.service';
+import {LoginRequestsService} from '$lib/server/api/services/loginrequest.service';
+import {SessionsService} from '$lib/server/api/services/sessions.service';
+import {zValidator} from '@hono/zod-validator';
+import {openApi} from 'hono-zod-openapi';
+import {inject, injectable} from 'tsyringe';
+import {requireAuth} from '../middleware/require-auth.middleware';
+import {iam, logout, updateEmail, updatePassword, updateProfile, verifyPassword} from './iam.routes';
 
 @injectable()
 export class IamController extends Controller {

@@ -1,11 +1,11 @@
-import { createId as cuid2 } from '@paralleldrive/cuid2';
-import { type InferSelectModel, relations, sql } from 'drizzle-orm';
-import { index, integer, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
-import { timestamps } from '../../../common/utils/table';
-import { categories_to_games_table } from './categoriesToGames.table';
-import { gamesToExternalIdsTable } from './gamesToExternalIds.table';
-import { mechanics_to_games } from './mechanicsToGames.table';
-import { publishers_to_games } from './publishersToGames.table';
+import {createId as cuid2} from '@paralleldrive/cuid2';
+import {type InferSelectModel, relations, sql} from 'drizzle-orm';
+import {index, integer, pgTable, text, timestamp, uuid} from 'drizzle-orm/pg-core';
+import {timestamps} from '../../../common/utils/table';
+import {categories_to_games_table} from './categoriesToGames.table';
+import {gamesToExternalIdsTable} from './gamesToExternalIds.table';
+import {mechanics_to_games} from './mechanicsToGames.table';
+import {publishers_to_games} from './publishersToGames.table';
 
 export const gamesTable = pgTable(
 	'games',

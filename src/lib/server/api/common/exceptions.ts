@@ -1,7 +1,7 @@
-import { StatusCodes } from '$lib/constants/status-codes';
-import { HTTPException } from 'hono/http-exception';
+import {StatusCodes} from '$lib/constants/status-codes';
+import {HTTPException} from 'hono/http-exception';
 import * as HttpStatusPhrases from 'stoker/http-status-phrases';
-import { createMessageObjectSchema } from 'stoker/openapi/schemas';
+import {createMessageObjectSchema} from 'stoker/openapi/schemas';
 
 export function TooManyRequests(message = 'Too many requests') {
 	return new HTTPException(StatusCodes.TOO_MANY_REQUESTS, { message });

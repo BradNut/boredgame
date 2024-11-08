@@ -1,8 +1,8 @@
-import { DrizzleService } from '$lib/server/api/services/drizzle.service';
-import { type InferInsertModel, eq } from 'drizzle-orm';
-import { inject, injectable } from 'tsyringe';
-import { takeFirstOrThrow } from '../common/utils/repository';
-import { wishlistsTable } from '../databases/postgres/tables';
+import {DrizzleService} from '$lib/server/api/services/drizzle.service';
+import {eq, type InferInsertModel} from 'drizzle-orm';
+import {inject, injectable} from 'tsyringe';
+import {takeFirstOrThrow} from '../common/utils/repository';
+import {wishlistsTable} from '../databases/postgres/tables';
 
 export type CreateWishlist = InferInsertModel<typeof wishlistsTable>;
 export type UpdateWishlist = Partial<CreateWishlist>;

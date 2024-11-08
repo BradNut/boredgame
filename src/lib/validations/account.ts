@@ -1,5 +1,5 @@
-import { z } from 'zod'
-import { userSchema } from './zod-schemas'
+import {z} from 'zod'
+import {userSchema} from './zod-schemas'
 
 export const updateUserPasswordSchema = userSchema
 	.pick({ password: true, confirm_password: true })

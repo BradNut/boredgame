@@ -1,8 +1,8 @@
-import { type InferInsertModel, and, eq } from 'drizzle-orm';
-import { inject, injectable } from 'tsyringe';
-import { takeFirstOrThrow } from '../common/utils/repository';
-import { federatedIdentityTable } from '../databases/postgres/tables';
-import { DrizzleService } from '../services/drizzle.service';
+import {and, eq, type InferInsertModel} from 'drizzle-orm';
+import {inject, injectable} from 'tsyringe';
+import {takeFirstOrThrow} from '../common/utils/repository';
+import {federatedIdentityTable} from '../databases/postgres/tables';
+import {DrizzleService} from '../services/drizzle.service';
 
 export type CreateFederatedIdentity = InferInsertModel<typeof federatedIdentityTable>;
 

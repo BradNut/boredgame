@@ -1,8 +1,8 @@
-import { CredentialsRepository } from '$lib/server/api/repositories/credentials.repository';
-import { decodeHex, encodeHexLowerCase } from '@oslojs/encoding';
-import { verifyTOTP } from '@oslojs/otp';
-import { inject, injectable } from 'tsyringe';
-import type { CredentialsType } from '../databases/postgres/tables';
+import {CredentialsRepository} from '$lib/server/api/repositories/credentials.repository';
+import {decodeHex, encodeHexLowerCase} from '@oslojs/encoding';
+import {verifyTOTP} from '@oslojs/otp';
+import {inject, injectable} from 'tsyringe';
+import type {CredentialsType} from '../databases/postgres/tables';
 
 @injectable()
 export class TotpService {

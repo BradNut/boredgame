@@ -1,11 +1,10 @@
-import type { ChangePasswordDto } from '$lib/server/api/dtos/change-password.dto';
-import type { UpdateEmailDto } from '$lib/server/api/dtos/update-email.dto';
-import type { UpdateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
-import type { VerifyPasswordDto } from '$lib/server/api/dtos/verify-password.dto';
-import { SessionsService } from '$lib/server/api/services/sessions.service';
-import { UsersService } from '$lib/server/api/services/users.service';
-import { inject, injectable } from 'tsyringe';
-import { CredentialsType } from '../databases/postgres/tables';
+import type {ChangePasswordDto} from '$lib/server/api/dtos/change-password.dto';
+import type {UpdateEmailDto} from '$lib/server/api/dtos/update-email.dto';
+import type {UpdateProfileDto} from '$lib/server/api/dtos/update-profile.dto';
+import type {VerifyPasswordDto} from '$lib/server/api/dtos/verify-password.dto';
+import {SessionsService} from '$lib/server/api/services/sessions.service';
+import {UsersService} from '$lib/server/api/services/users.service';
+import {inject, injectable} from 'tsyringe';
 
 /* -------------------------------------------------------------------------- */
 /*                                   Service                                  */

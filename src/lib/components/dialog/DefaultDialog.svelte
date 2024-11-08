@@ -1,15 +1,15 @@
 <script lang="ts">
-// import {
-// 	Dialog,
-// 	DialogDescription,
-// 	DialogOverlay,
-// 	DialogTitle
-// } from '@rgossiaux/svelte-headlessui';
-import { boredState } from '$lib/stores/boredState'
-import { type SvelteComponent, createEventDispatcher } from 'svelte'
-import { fade } from 'svelte/transition'
+	// import {
+	// 	Dialog,
+	// 	DialogDescription,
+	// 	DialogOverlay,
+	// 	DialogTitle
+	// } from '@rgossiaux/svelte-headlessui';
+	import { boredState } from '$lib/stores/boredState';
+	import { createEventDispatcher, type SvelteComponent } from 'svelte';
+	import { fade } from 'svelte/transition';
 
-export let title: string
+	export let title: string
 export let description: string
 export let danger = false
 export let alert = false

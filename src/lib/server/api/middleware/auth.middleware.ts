@@ -1,19 +1,19 @@
 import 'reflect-metadata';
 import {
-	type SessionCookie,
 	cookieExpiresAt,
 	cookieName,
 	createBlankSessionTokenCookie,
 	createSessionTokenCookie,
+	type SessionCookie,
 	setSessionCookie,
 } from '$lib/server/api/common/utils/cookies';
-import { SessionsService } from '$lib/server/api/services/sessions.service';
-import type { MiddlewareHandler } from 'hono';
-import { getCookie } from 'hono/cookie';
-import { createMiddleware } from 'hono/factory';
-import { verifyRequestOrigin } from 'oslo/request';
-import { container } from 'tsyringe';
-import type { AppBindings } from '../common/types/hono';
+import {SessionsService} from '$lib/server/api/services/sessions.service';
+import type {MiddlewareHandler} from 'hono';
+import {getCookie} from 'hono/cookie';
+import {createMiddleware} from 'hono/factory';
+import {verifyRequestOrigin} from 'oslo/request';
+import {container} from 'tsyringe';
+import type {AppBindings} from '../common/types/hono';
 
 // resolve dependencies from the container
 const sessionService = container.resolve(SessionsService);

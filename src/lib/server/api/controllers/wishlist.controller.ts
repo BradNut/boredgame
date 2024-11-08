@@ -1,8 +1,8 @@
 import 'reflect-metadata'
-import { Controller } from '$lib/server/api/common/types/controller'
-import { WishlistsService } from '$lib/server/api/services/wishlists.service'
-import { inject, injectable } from 'tsyringe'
-import { requireAuth } from '../middleware/require-auth.middleware'
+import {Controller} from '$lib/server/api/common/types/controller'
+import {WishlistsService} from '$lib/server/api/services/wishlists.service'
+import {inject, injectable} from 'tsyringe'
+import {requireAuth} from '../middleware/require-auth.middleware'
 
 @injectable()
 export class WishlistController extends Controller {

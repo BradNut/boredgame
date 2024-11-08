@@ -1,9 +1,13 @@
-import { cookieExpiresAt, cookieExpiresMilliseconds, halfCookieExpiresMilliseconds } from '$lib/server/api/common/utils/cookies';
-import { SessionsRepository } from '$lib/server/api/repositories/sessions.repository';
-import { sha256 } from '@oslojs/crypto/sha2';
-import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
-import { inject, injectable } from 'tsyringe';
-import type { Sessions, Users } from '../databases/postgres/tables';
+import {
+	cookieExpiresAt,
+	cookieExpiresMilliseconds,
+	halfCookieExpiresMilliseconds
+} from '$lib/server/api/common/utils/cookies';
+import {SessionsRepository} from '$lib/server/api/repositories/sessions.repository';
+import {sha256} from '@oslojs/crypto/sha2';
+import {encodeBase32LowerCaseNoPadding, encodeHexLowerCase} from '@oslojs/encoding';
+import {inject, injectable} from 'tsyringe';
+import type {Sessions, Users} from '../databases/postgres/tables';
 
 export type SessionValidationResult = { session: Sessions; user: Users } | { session: null; user: null };
 

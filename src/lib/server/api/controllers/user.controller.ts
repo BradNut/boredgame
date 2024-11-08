@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import { Controller } from '$lib/server/api/common/types/controller';
-import { UsersService } from '$lib/server/api/services/users.service';
-import { inject, injectable } from 'tsyringe';
-import { requireAuth } from '../middleware/require-auth.middleware';
+import {Controller} from '$lib/server/api/common/types/controller';
+import {UsersService} from '$lib/server/api/services/users.service';
+import {inject, injectable} from 'tsyringe';
+import {requireAuth} from '../middleware/require-auth.middleware';
 
 @injectable()
 export class UserController extends Controller {

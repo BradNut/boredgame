@@ -1,5 +1,5 @@
-import { container } from 'tsyringe'
-import { db } from '../packages/drizzle'
+import {container} from 'tsyringe'
+import {db} from '../packages/drizzle'
 
 // Symbol
 export const DatabaseProvider = Symbol('DATABASE_TOKEN')

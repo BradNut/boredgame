@@ -1,10 +1,10 @@
 <script lang="ts">
-import { browser } from '$app/environment'
-import { boredState } from '$lib/stores/boredState'
-import { collectionStore } from '$lib/stores/collectionStore'
-import { fade } from 'svelte/transition'
+	import { browser } from '$app/environment';
+	import { boredState } from '$lib/stores/boredState';
+	import { collectionStore } from '$lib/stores/collectionStore';
+	import { fade } from 'svelte/transition';
 
-function clearCollection() {
+	function clearCollection() {
 	if (browser) {
 		localStorage.collection = JSON.stringify([])
 		collectionStore.removeAll()

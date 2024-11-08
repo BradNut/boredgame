@@ -1,14 +1,14 @@
 import 'reflect-metadata';
-import { StatusCodes } from '$lib/constants/status-codes';
-import { Controller } from '$lib/server/api/common/types/controller';
-import { verifyTotpDto } from '$lib/server/api/dtos/verify-totp.dto';
-import { RecoveryCodesService } from '$lib/server/api/services/recovery-codes.service';
-import { TotpService } from '$lib/server/api/services/totp.service';
-import { UsersService } from '$lib/server/api/services/users.service';
-import { zValidator } from '@hono/zod-validator';
-import { inject, injectable } from 'tsyringe';
-import { CredentialsType } from '../databases/postgres/tables';
-import { requireAuth } from '../middleware/require-auth.middleware';
+import {StatusCodes} from '$lib/constants/status-codes';
+import {Controller} from '$lib/server/api/common/types/controller';
+import {verifyTotpDto} from '$lib/server/api/dtos/verify-totp.dto';
+import {RecoveryCodesService} from '$lib/server/api/services/recovery-codes.service';
+import {TotpService} from '$lib/server/api/services/totp.service';
+import {UsersService} from '$lib/server/api/services/users.service';
+import {zValidator} from '@hono/zod-validator';
+import {inject, injectable} from 'tsyringe';
+import {CredentialsType} from '../databases/postgres/tables';
+import {requireAuth} from '../middleware/require-auth.middleware';
 
 @injectable()
 export class MfaController extends Controller {

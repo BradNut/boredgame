@@ -1,6 +1,6 @@
-import { writable } from 'svelte/store';
-import type { ToastData } from '$lib/types';
-import { ToastType } from '$lib/types';
+import {writable} from 'svelte/store';
+import type {ToastData} from '$lib/types';
+import {ToastType} from '$lib/types';
 
 // Custom store
 const newToast = () => {

@@ -1,4 +1,4 @@
-import { dev } from '$app/environment';
+import {dev} from '$app/environment';
 
 export const title = 'Bored Game';
 export const description = 'Bored? Find a game! Bored Game!';

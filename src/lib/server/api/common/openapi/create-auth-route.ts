@@ -1,4 +1,4 @@
-import { type HonoOpenApiOperation, type HonoOpenApiRequestSchemas, defineOpenApiOperation } from "hono-zod-openapi";
+import {defineOpenApiOperation, type HonoOpenApiOperation, type HonoOpenApiRequestSchemas} from "hono-zod-openapi";
 
 export const taggedAuthRoute = <T extends HonoOpenApiRequestSchemas>(
   tag: string,

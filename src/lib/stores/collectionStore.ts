@@ -1,5 +1,5 @@
-import { writable } from 'svelte/store';
-import type { SavedGameType } from '$lib/types';
+import {writable} from 'svelte/store';
+import type {SavedGameType} from '$lib/types';
 
 // Custom store
 const state = () => {

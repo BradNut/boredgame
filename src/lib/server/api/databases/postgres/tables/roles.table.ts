@@ -1,8 +1,8 @@
-import { createId as cuid2 } from '@paralleldrive/cuid2';
-import { type InferSelectModel, relations } from 'drizzle-orm';
-import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
-import { timestamps } from '../../../common/utils/table';
-import { user_roles } from './userRoles.table';
+import {createId as cuid2} from '@paralleldrive/cuid2';
+import {type InferSelectModel, relations} from 'drizzle-orm';
+import {pgTable, text, uuid} from 'drizzle-orm/pg-core';
+import {timestamps} from '../../../common/utils/table';
+import {user_roles} from './userRoles.table';
 
 export enum RoleName {
 	ADMIN = 'admin',

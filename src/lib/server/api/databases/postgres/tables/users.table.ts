@@ -1,9 +1,9 @@
-import { createId as cuid2 } from '@paralleldrive/cuid2';
-import { type InferSelectModel, relations } from 'drizzle-orm';
-import { boolean, pgTable, text, uuid } from 'drizzle-orm/pg-core';
-import { createSelectSchema } from 'drizzle-zod';
-import { timestamps } from '../../../common/utils/table';
-import { user_roles } from './userRoles.table';
+import {createId as cuid2} from '@paralleldrive/cuid2';
+import {type InferSelectModel, relations} from 'drizzle-orm';
+import {boolean, pgTable, text, uuid} from 'drizzle-orm/pg-core';
+import {createSelectSchema} from 'drizzle-zod';
+import {timestamps} from '../../../common/utils/table';
+import {user_roles} from './userRoles.table';
 
 export const usersTable = pgTable('users', {
 	id: uuid().primaryKey().defaultRandom(),

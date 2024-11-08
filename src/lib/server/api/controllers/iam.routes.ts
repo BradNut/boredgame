@@ -1,11 +1,11 @@
-import { StatusCodes } from '$lib/constants/status-codes';
-import { unauthorizedSchema } from '$lib/server/api/common/exceptions';
-import { selectUserSchema } from '$lib/server/api/databases/postgres/tables/users.table';
-import { updateProfileDto } from '$lib/server/api/dtos/update-profile.dto';
-import { createErrorSchema } from 'stoker/openapi/schemas';
-import { taggedAuthRoute } from '../common/openapi/create-auth-route';
-import { changePasswordDto } from '../dtos/change-password.dto';
-import { verifyPasswordDto } from '../dtos/verify-password.dto';
+import {StatusCodes} from '$lib/constants/status-codes';
+import {unauthorizedSchema} from '$lib/server/api/common/exceptions';
+import {selectUserSchema} from '$lib/server/api/databases/postgres/tables/users.table';
+import {updateProfileDto} from '$lib/server/api/dtos/update-profile.dto';
+import {createErrorSchema} from 'stoker/openapi/schemas';
+import {taggedAuthRoute} from '../common/openapi/create-auth-route';
+import {changePasswordDto} from '../dtos/change-password.dto';
+import {verifyPasswordDto} from '../dtos/verify-password.dto';
 
 const tag = 'IAM';
 

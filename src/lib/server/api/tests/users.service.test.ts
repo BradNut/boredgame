@@ -1,16 +1,16 @@
 import 'reflect-metadata';
-import { faker } from '@faker-js/faker';
-import { container } from 'tsyringe';
-import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
-import { CredentialsType } from '../databases/postgres/tables';
-import { CredentialsRepository } from '../repositories/credentials.repository';
-import { UsersRepository } from '../repositories/users.repository';
-import { CollectionsService } from '../services/collections.service';
-import { DrizzleService } from '../services/drizzle.service';
-import { TokensService } from '../services/tokens.service';
-import { UserRolesService } from '../services/user_roles.service';
-import { UsersService } from '../services/users.service';
-import { WishlistsService } from '../services/wishlists.service';
+import {faker} from '@faker-js/faker';
+import {container} from 'tsyringe';
+import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest';
+import {CredentialsType} from '../databases/postgres/tables';
+import {CredentialsRepository} from '../repositories/credentials.repository';
+import {UsersRepository} from '../repositories/users.repository';
+import {CollectionsService} from '../services/collections.service';
+import {DrizzleService} from '../services/drizzle.service';
+import {TokensService} from '../services/tokens.service';
+import {UserRolesService} from '../services/user_roles.service';
+import {UsersService} from '../services/users.service';
+import {WishlistsService} from '../services/wishlists.service';
 
 describe('UsersService', () => {
 	let service: UsersService;

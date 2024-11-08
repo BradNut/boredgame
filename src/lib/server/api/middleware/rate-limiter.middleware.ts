@@ -1,8 +1,8 @@
-import { rateLimiter } from 'hono-rate-limiter';
-import { RedisStore } from 'rate-limit-redis';
-import { container } from 'tsyringe';
-import type { AppBindings } from '../common/types/hono';
-import { RedisService } from '../services/redis.service';
+import {rateLimiter} from 'hono-rate-limiter';
+import {RedisStore} from 'rate-limit-redis';
+import {container} from 'tsyringe';
+import type {AppBindings} from '../common/types/hono';
+import {RedisService} from '../services/redis.service';
 
 // resolve dependencies from the container
 const { client } = container.resolve(RedisService);

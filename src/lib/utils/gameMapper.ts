@@ -1,6 +1,6 @@
-import type { GameType, SavedGameType } from '$lib/types';
+import type {GameType, SavedGameType} from '$lib/types';
 import kebabCase from 'just-kebab-case';
-import type { Games } from '$db/schema';
+import type {Games} from '$db/schema';
 
 export function convertToSavedGame(game: GameType | SavedGameType): SavedGameType {
 	return {

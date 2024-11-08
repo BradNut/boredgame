@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
-	import { MinusCircle, PlusCircle } from "lucide-svelte";
+	import { enhance } from '$app/forms';
+	import { MinusCircle, PlusCircle } from 'lucide-svelte';
 	import { Button } from '$components/ui/button';
-	import type { CollectionItems, Wishlists } from "$db/schema";
+	import type { CollectionItems, Wishlists } from '$db/schema';
 
 	export let game_id: string;
 	export let collection: CollectionItems;

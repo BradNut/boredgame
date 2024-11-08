@@ -1,7 +1,7 @@
-import { relations } from 'drizzle-orm';
-import { pgTable, primaryKey, uuid } from 'drizzle-orm/pg-core';
-import { gamesTable } from './games.table';
-import { mechanicsTable } from './mechanics.table';
+import {relations} from 'drizzle-orm';
+import {pgTable, primaryKey, uuid} from 'drizzle-orm/pg-core';
+import {gamesTable} from './games.table';
+import {mechanicsTable} from './mechanics.table';
 
 export const mechanics_to_games = pgTable(
 	'mechanics_to_games',

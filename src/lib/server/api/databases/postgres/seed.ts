@@ -1,7 +1,7 @@
-import { type Table, getTableName, sql } from 'drizzle-orm';
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import {getTableName, sql, type Table} from 'drizzle-orm';
+import type {NodePgDatabase} from 'drizzle-orm/node-postgres';
 import env from '../../common/env';
-import { DrizzleService } from '../../services/drizzle.service';
+import {DrizzleService} from '../../services/drizzle.service';
 import * as seeds from './seeds';
 import * as schema from './tables';
 

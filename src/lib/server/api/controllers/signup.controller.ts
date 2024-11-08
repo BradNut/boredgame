@@ -1,14 +1,14 @@
 import 'reflect-metadata';
-import { Controller } from '$lib/server/api/common/types/controller';
-import { signupUsernameEmailDto } from '$lib/server/api/dtos/signup-username-email.dto';
-import { limiter } from '$lib/server/api/middleware/rate-limiter.middleware';
-import { LoginRequestsService } from '$lib/server/api/services/loginrequest.service';
-import { SessionsService } from '$lib/server/api/services/sessions.service';
-import { UsersService } from '$lib/server/api/services/users.service';
-import { zValidator } from '@hono/zod-validator';
-import { setCookie } from 'hono/cookie';
-import { TimeSpan } from 'oslo';
-import { inject, injectable } from 'tsyringe';
+import {Controller} from '$lib/server/api/common/types/controller';
+import {signupUsernameEmailDto} from '$lib/server/api/dtos/signup-username-email.dto';
+import {limiter} from '$lib/server/api/middleware/rate-limiter.middleware';
+import {LoginRequestsService} from '$lib/server/api/services/loginrequest.service';
+import {SessionsService} from '$lib/server/api/services/sessions.service';
+import {UsersService} from '$lib/server/api/services/users.service';
+import {zValidator} from '@hono/zod-validator';
+import {setCookie} from 'hono/cookie';
+import {TimeSpan} from 'oslo';
+import {inject, injectable} from 'tsyringe';
 
 @injectable()
 export class SignupController extends Controller {

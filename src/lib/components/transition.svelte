@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
-  interface Transition {
+	interface Transition {
     type: 'fade' | 'stagger' | 'page';
     duration?: number;
     delay?: number;

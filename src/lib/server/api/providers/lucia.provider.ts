@@ -1,5 +1,5 @@
-import { container } from 'tsyringe'
-import { lucia } from '../packages/lucia'
+import {container} from 'tsyringe'
+import {lucia} from '../packages/lucia'
 
 // Symbol
 export const LuciaProvider = Symbol('LUCIA_PROVIDER')

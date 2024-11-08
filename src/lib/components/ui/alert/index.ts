@@ -1,4 +1,4 @@
-import { tv, type VariantProps } from "tailwind-variants";
+import {tv, type VariantProps} from "tailwind-variants";
 
 import Root from "./alert.svelte";
 import Description from "./alert-description.svelte";

@@ -1,5 +1,5 @@
-import { inject, injectable } from 'tsyringe'
-import { JobsService } from '../services/jobs.service'
+import {inject, injectable} from 'tsyringe'
+import {JobsService} from '../services/jobs.service'
 
 @injectable()
 export class AuthCleanupJobs {

@@ -1,6 +1,6 @@
-import { collections } from '$lib/server/api/databases/postgres/tables';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import type { z } from 'zod';
+import {collections} from '$lib/server/api/databases/postgres/tables';
+import {createInsertSchema, createSelectSchema} from 'drizzle-zod';
+import type {z} from 'zod';
 
 export const InsertCollectionSchema = createInsertSchema(collections, {
 	name: (schema) =>

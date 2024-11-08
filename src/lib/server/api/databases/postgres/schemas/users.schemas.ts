@@ -1,6 +1,6 @@
-import { usersTable } from '$lib/server/api/databases/postgres/tables';
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import type { z } from 'zod';
+import {usersTable} from '$lib/server/api/databases/postgres/tables';
+import {createInsertSchema, createSelectSchema} from 'drizzle-zod';
+import type {z} from 'zod';
 
 export const InsertUserSchema = createInsertSchema(usersTable, {
 	email: (schema) => schema.email.max(64).email().optional(),

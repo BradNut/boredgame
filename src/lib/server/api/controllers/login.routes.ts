@@ -1,7 +1,7 @@
-import { defineOpenApiOperation } from "hono-zod-openapi";
-import { StatusCodes } from '$lib/constants/status-codes';
-import { signinUsernameDto } from "../dtos/signin-username.dto";
-import { createErrorSchema } from "stoker/openapi/schemas";
+import {defineOpenApiOperation} from "hono-zod-openapi";
+import {StatusCodes} from '$lib/constants/status-codes';
+import {signinUsernameDto} from "../dtos/signin-username.dto";
+import {createErrorSchema} from "stoker/openapi/schemas";
 
 export const signinUsername = defineOpenApiOperation({
 	tags: ['Login'],

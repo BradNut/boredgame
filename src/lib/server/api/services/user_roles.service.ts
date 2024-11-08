@@ -1,7 +1,7 @@
-import type { db } from '$lib/server/api/packages/drizzle'
-import { type CreateUserRole, UserRolesRepository } from '$lib/server/api/repositories/user_roles.repository'
-import { RolesService } from '$lib/server/api/services/roles.service'
-import { inject, injectable } from 'tsyringe'
+import type {db} from '$lib/server/api/packages/drizzle'
+import {type CreateUserRole, UserRolesRepository} from '$lib/server/api/repositories/user_roles.repository'
+import {RolesService} from '$lib/server/api/services/roles.service'
+import {inject, injectable} from 'tsyringe'
 
 @injectable()
 export class UserRolesService {

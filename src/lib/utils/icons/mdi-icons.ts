@@ -1,4 +1,4 @@
-import { addCollection } from '@iconify/svelte';
+import {addCollection} from '@iconify/svelte';
 
 addCollection({
 	prefix: 'mdi',

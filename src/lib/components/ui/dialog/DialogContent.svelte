@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { X } from "lucide-svelte";
-	import { Dialog as DialogPrimitive } from "radix-svelte";
-	import { cn } from "$lib/utils";
-	import DialogOverlay from "./DialogOverlay.svelte";
-	import DialogPortal from "./DialogPortal.svelte";
+	import { X } from 'lucide-svelte';
+	import { cn } from '$lib/utils';
+	import DialogOverlay from './DialogOverlay.svelte';
+	import DialogPortal from './DialogPortal.svelte';
 
 	let className: string | undefined | null = undefined;
 	export { className as class };

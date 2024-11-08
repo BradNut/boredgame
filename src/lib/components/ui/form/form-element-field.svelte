@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
-	import type { FormPathLeaves, SuperForm } from "sveltekit-superforms";
+	import type { FormPathLeaves, SuperForm } from 'sveltekit-superforms';
+
 	type T = Record<string, unknown>;
 	type U = FormPathLeaves<T>;
 </script>

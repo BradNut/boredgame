@@ -1,5 +1,5 @@
-import type { collections } from 'server/api/databases/postgres/tables';
-import type { SvelteComponent } from 'svelte';
+import type {collections} from 'server/api/databases/postgres/tables';
+import type {SvelteComponent} from 'svelte';
 
 export type Message = { status: 'error' | 'success' | 'warning' | 'info'; text: string };
 

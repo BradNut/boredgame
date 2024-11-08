@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { StatusCodes } from '$lib/constants/status-codes';
-import { Controller } from '$lib/server/api/common/types/controller';
-import { allCollections, getCollectionByCUID, numberOfCollections } from '$lib/server/api/controllers/collection.routes';
-import { CollectionsService } from '$lib/server/api/services/collections.service';
-import { openApi } from 'hono-zod-openapi';
-import { inject, injectable } from 'tsyringe';
-import { requireAuth } from '../middleware/require-auth.middleware';
+import {StatusCodes} from '$lib/constants/status-codes';
+import {Controller} from '$lib/server/api/common/types/controller';
+import {allCollections, getCollectionByCUID, numberOfCollections} from '$lib/server/api/controllers/collection.routes';
+import {CollectionsService} from '$lib/server/api/services/collections.service';
+import {openApi} from 'hono-zod-openapi';
+import {inject, injectable} from 'tsyringe';
+import {requireAuth} from '../middleware/require-auth.middleware';
 
 @injectable()
 export class CollectionController extends Controller {

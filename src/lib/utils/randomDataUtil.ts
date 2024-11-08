@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import {faker} from '@faker-js/faker';
 
 export function generateRandomAnimalName() {
 	return fromRandomAnimalTypeGetAnimalName(faker.animal.type());

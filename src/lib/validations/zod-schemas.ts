@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { IntegerString } from '$lib/zodValidation';
+import {z} from 'zod';
+import {IntegerString} from '$lib/zodValidation';
 
 export type ListGame = {
 	id: string;

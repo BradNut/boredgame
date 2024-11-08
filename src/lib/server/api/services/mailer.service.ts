@@ -1,6 +1,6 @@
-import { injectable } from 'tsyringe'
-import { config } from '../common/config'
-import type { Email } from '../common/inferfaces/email.interface'
+import {injectable} from 'tsyringe'
+import {config} from '../common/config'
+import type {Email} from '../common/inferfaces/email.interface'
 
 type SendProps = {
 	to: string | string[]

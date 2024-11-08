@@ -1,5 +1,5 @@
-import { writable, type Writable } from 'svelte/store';
-import type { SavedGameType } from '../types';
+import {writable} from 'svelte/store';
+import type {SavedGameType} from '../types';
 
 export const createSearchStore = (data: SavedGameType[]) => {
 	const { subscribe, set, update } = writable({

@@ -1,6 +1,4 @@
-<script lang="ts">
-	import { Dialog as DialogPrimitive } from "radix-svelte";
-</script>
+<script lang="ts"></script>
 
 <DialogPrimitive.Portal>
 	<div

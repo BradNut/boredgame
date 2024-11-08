@@ -1,8 +1,8 @@
 import 'reflect-metadata'
-import { RecoveryCodesRepository } from '$lib/server/api/repositories/recovery-codes.repository'
-import { alphabet, generateRandomString } from 'oslo/crypto'
-import { inject, injectable } from 'tsyringe'
-import { HashingService } from './hashing.service'
+import {RecoveryCodesRepository} from '$lib/server/api/repositories/recovery-codes.repository'
+import {alphabet, generateRandomString} from 'oslo/crypto'
+import {inject, injectable} from 'tsyringe'
+import {HashingService} from './hashing.service'
 
 @injectable()
 export class RecoveryCodesService {
