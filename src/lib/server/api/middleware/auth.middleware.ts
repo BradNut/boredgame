@@ -9,8 +9,8 @@ import {
 } from '$lib/server/api/common/utils/cookies';
 import { SessionsService } from '$lib/server/api/services/sessions.service';
 import type { MiddlewareHandler } from 'hono';
+import { getCookie } from 'hono/cookie';
 import { createMiddleware } from 'hono/factory';
-import { parseCookies } from 'oslo/cookie';
 import { verifyRequestOrigin } from 'oslo/request';
 import { container } from 'tsyringe';
 import type { AppBindings } from '../common/types/hono';
@@ -18,6 +18,7 @@ import type { AppBindings } from '../common/types/hono';
 // resolve dependencies from the container
 const sessionService = container.resolve(SessionsService);
 
+// CSRF protection middleware
 export const verifyOrigin: MiddlewareHandler<AppBindings> = createMiddleware(async (c, next) => {
 	if (c.req.method === 'GET') {
 		return next();
@@ -31,8 +32,7 @@ export const verifyOrigin: MiddlewareHandler<AppBindings> = createMiddleware(asy
 });
 
 export const validateAuthSession: MiddlewareHandler<AppBindings> = createMiddleware(async (c, next) => {
-	const cookies = parseCookies(c.req.header('Cookie') ?? '');
-	const sessionId = cookies.get(cookieName) ?? null;
+	const sessionId = getCookie(c, cookieName) ?? null;
 	if (!sessionId) {
 		c.set('user', null);
 		c.set('session', null);
