@@ -1,15 +1,14 @@
 <script lang="ts">
-import AddToList from '$components/AddToList.svelte'
-import Badge from '$components/ui/badge/badge.svelte'
-import { Button } from '$components/ui/button'
-import { Dices, ExternalLinkIcon, MinusIcon, PlusIcon } from 'lucide-svelte'
-import { Image } from 'svelte-lazy-loader'
-import type { PageData } from './$types'
+import AddToList from '$components/AddToList.svelte';
+import Badge from '$components/ui/badge/badge.svelte';
+import { Button } from '$components/ui/button';
+import { Dices, ExternalLinkIcon, MinusIcon, PlusIcon } from 'lucide-svelte';
+import { Image } from 'svelte-lazy-loader';
 
-const { data } = $props()
-const { game, user, in_collection, in_wishlist } = data
+const { data } = $props();
+const { game, user, in_collection, in_wishlist } = data;
 
-let seeMore: boolean = $state(false)
+let seeMore: boolean = $state(false);
 </script>
 
 <svelte:head>

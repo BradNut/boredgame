@@ -1,24 +1,22 @@
 <script lang="ts">
-	import { getFlash } from 'sveltekit-flash-message';
-	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
-	import { theme } from '$state/theme';
-	import { toastMessage } from '$lib/utils/superforms.js';
+import { page } from '$app/stores';
+import { theme } from '$state/theme';
+import { getFlash } from 'sveltekit-flash-message';
 
-	const { data } = $props();
-	const { user } = data;
+const { data } = $props();
+const { user } = data;
 
-	const flash = getFlash(page, {
-		clearOnNavigate: true,
-		clearAfterMs: 3000,
-		clearArray: true
-	});
+const flash = getFlash(page, {
+	clearOnNavigate: true,
+	clearAfterMs: 3000,
+	clearArray: true,
+});
 
-	$effect(() => {
-		// set the theme to the user's active theme
-		$theme = user?.theme || 'system';
-		document.querySelector('html')?.setAttribute('data-theme', $theme);
-	});
+$effect(() => {
+	// set the theme to the user's active theme
+	$theme = user?.theme || 'system';
+	document.querySelector('html')?.setAttribute('data-theme', $theme);
+});
 </script>
 
 <h1>Do the admin stuff</h1>

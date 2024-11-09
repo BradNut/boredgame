@@ -1,10 +1,9 @@
 <script lang="ts">
-import { page } from '$app/stores'
-import Logo from '$lib/components/logo.svelte'
-import Transition from '$lib/components/transition.svelte'
-import { Button } from '$lib/components/ui/button'
+import { page } from '$app/stores';
+import Logo from '$lib/components/logo.svelte';
+import { Button } from '$lib/components/ui/button';
 
-let { data, children } = $props()
+let { data, children } = $props();
 </script>
 
 <div class="container">

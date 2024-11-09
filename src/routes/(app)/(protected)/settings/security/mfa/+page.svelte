@@ -1,12 +1,12 @@
 <script lang="ts">
-import { Badge } from '$components/ui/badge'
-import { Button } from '$components/ui/button'
-import * as Card from '$lib/components/ui/card'
+import { Badge } from '$components/ui/badge';
+import { Button } from '$components/ui/button';
+import * as Card from '$components/ui/card';
 
-const { data } = $props()
+const { data } = $props();
 
-const totpEnabled = data.totpEnabled
-const hardwareTokenEnabled = data.hardwareTokenEnabled
+const totpEnabled = data.totpEnabled;
+const hardwareTokenEnabled = data.hardwareTokenEnabled;
 </script>
 
 <h1>Two-factor authentication</h1>

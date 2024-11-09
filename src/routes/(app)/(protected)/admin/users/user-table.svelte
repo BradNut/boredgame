@@ -1,135 +1,114 @@
 <script lang="ts">
-  import {
-    createTable,
-    Render,
-    Subscribe,
-    createRender,
-  } from "svelte-headless-table";
-  import {
-    addPagination,
-    addSortBy,
-    addTableFilter,
-    addHiddenColumns,
-    addSelectedRows,
-  } from "svelte-headless-table/plugins";
-  import { readable } from "svelte/store";
-  import ArrowUpDown from "lucide-svelte/icons/arrow-up-down";
-  import ChevronDown from "lucide-svelte/icons/chevron-down";
-  import * as Table from "$lib/components/ui/table";
-  import DataTableActions from "./user-table-actions.svelte";
-  import { Button } from "$lib/components/ui/button";
-  import { Input } from "$lib/components/ui/input";
-  import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-  import DataTableCheckbox from "./user-table-checkbox.svelte";
-	import type { Users } from '$db/schema';
+import type { Users } from '$db/schema';
+import { Button } from '$lib/components/ui/button';
+import { Input } from '$lib/components/ui/input';
+import ArrowUpDown from 'lucide-svelte/icons/arrow-up-down';
+import ChevronDown from 'lucide-svelte/icons/chevron-down';
+import { Render, Subscribe, createRender, createTable } from 'svelte-headless-table';
+import { addHiddenColumns, addPagination, addSelectedRows, addSortBy, addTableFilter } from 'svelte-headless-table/plugins';
+import { readable } from 'svelte/store';
+import DataTableActions from './user-table-actions.svelte';
+import DataTableCheckbox from './user-table-checkbox.svelte';
 
-	export let users: Users[] = [];
+export let users: Users[] = [];
 
-  const table = createTable(readable(users), {
-    page: addPagination(),
-    sort: addSortBy({ disableMultiSort: true }),
-    filter: addTableFilter({
-      fn: ({ filterValue, value }) => value.includes(filterValue),
-    }),
-    hide: addHiddenColumns(),
-    select: addSelectedRows(),
-  });
+const table = createTable(readable(users), {
+	page: addPagination(),
+	sort: addSortBy({ disableMultiSort: true }),
+	filter: addTableFilter({
+		fn: ({ filterValue, value }) => value.includes(filterValue),
+	}),
+	hide: addHiddenColumns(),
+	select: addSelectedRows(),
+});
 
-  const columns = table.createColumns([
-    table.column({
-      accessor: "cuid",
-      header: (_, { pluginStates }) => {
-        const { allPageRowsSelected } = pluginStates.select;
-        return createRender(DataTableCheckbox, {
-          checked: allPageRowsSelected,
-        });
-      },
-      cell: ({ row }, { pluginStates }) => {
-        const { getRowState } = pluginStates.select;
-        const { isSelected } = getRowState(row);
+const columns = table.createColumns([
+	table.column({
+		accessor: 'cuid',
+		header: (_, { pluginStates }) => {
+			const { allPageRowsSelected } = pluginStates.select;
+			return createRender(DataTableCheckbox, {
+				checked: allPageRowsSelected,
+			});
+		},
+		cell: ({ row }, { pluginStates }) => {
+			const { getRowState } = pluginStates.select;
+			const { isSelected } = getRowState(row);
 
-        return createRender(DataTableCheckbox, {
-          checked: isSelected,
-        });
-      },
-      plugins: {
-        filter: {
-          exclude: true,
-        },
-      },
-    }),
-    table.column({
-      accessor: "username",
-      header: "Username",
-    }),
-    table.column({
-      accessor: "email",
-      header: "Email",
-			cell: ({ value }) => {
-				return value ?? "N/A";
-			}
-    }),
-    table.column({
-      accessor: "first_name",
-      header: "First Name",
-			cell: ({ value }) => {
-				return value && value.length > 0 ? value : "N/A";
+			return createRender(DataTableCheckbox, {
+				checked: isSelected,
+			});
+		},
+		plugins: {
+			filter: {
+				exclude: true,
 			},
-      plugins: {
-        filter: {
-          exclude: true,
-        },
-      },
-    }),
-		table.column({
-			accessor: "last_name",
-			header: "Last Name",
-			cell: ({ value }) => {
-				return value && value.length > 0 ? value : "N/A";
+		},
+	}),
+	table.column({
+		accessor: 'username',
+		header: 'Username',
+	}),
+	table.column({
+		accessor: 'email',
+		header: 'Email',
+		cell: ({ value }) => {
+			return value ?? 'N/A';
+		},
+	}),
+	table.column({
+		accessor: 'first_name',
+		header: 'First Name',
+		cell: ({ value }) => {
+			return value && value.length > 0 ? value : 'N/A';
+		},
+		plugins: {
+			filter: {
+				exclude: true,
 			},
-			plugins: {
-				filter: {
-					exclude: true,
-				},
+		},
+	}),
+	table.column({
+		accessor: 'last_name',
+		header: 'Last Name',
+		cell: ({ value }) => {
+			return value && value.length > 0 ? value : 'N/A';
+		},
+		plugins: {
+			filter: {
+				exclude: true,
 			},
-		}),
-    table.column({
-      accessor: ({ cuid }) => cuid,
-      header: "",
-      cell: ({ value }) => {
-        return createRender(DataTableActions, { cuid: value });
-      },
-      plugins: {
-        sort: {
-          disable: true,
-        },
-      },
-    }),
-  ]);
+		},
+	}),
+	table.column({
+		accessor: ({ cuid }) => cuid,
+		header: '',
+		cell: ({ value }) => {
+			return createRender(DataTableActions, { cuid: value });
+		},
+		plugins: {
+			sort: {
+				disable: true,
+			},
+		},
+	}),
+]);
 
-  const {
-    headerRows,
-    pageRows,
-    tableAttrs,
-    tableBodyAttrs,
-    pluginStates,
-    flatColumns,
-    rows,
-  } = table.createViewModel(columns);
+const { headerRows, pageRows, tableAttrs, tableBodyAttrs, pluginStates, flatColumns, rows } = table.createViewModel(columns);
 
-  const { pageIndex, hasNextPage, hasPreviousPage } = pluginStates.page;
-  const { filterValue } = pluginStates.filter;
-  const { hiddenColumnIds } = pluginStates.hide;
-  const { selectedDataIds } = pluginStates.select;
+const { pageIndex, hasNextPage, hasPreviousPage } = pluginStates.page;
+const { filterValue } = pluginStates.filter;
+const { hiddenColumnIds } = pluginStates.hide;
+const { selectedDataIds } = pluginStates.select;
 
-  const ids = flatColumns.map((col) => col.id);
-  let hideForId = Object.fromEntries(ids.map((id) => [id, true]));
+const ids = flatColumns.map((col) => col.id);
+let hideForId = Object.fromEntries(ids.map((id) => [id, true]));
 
-  $: $hiddenColumnIds = Object.entries(hideForId)
-    .filter(([, hide]) => !hide)
-    .map(([id]) => id);
+$: $hiddenColumnIds = Object.entries(hideForId)
+	.filter(([, hide]) => !hide)
+	.map(([id]) => id);
 
-  const columnsToHide: string[] = [];
+const columnsToHide: string[] = [];
 </script>
 
 <div>

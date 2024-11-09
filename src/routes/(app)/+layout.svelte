@@ -1,9 +1,9 @@
 <script lang="ts">
-import 'iconify-icon'
-import Footer from '$components/Footer.svelte'
-import Header from '$components/Header.svelte'
+import 'iconify-icon';
+import Footer from '$components/Footer.svelte';
+import Header from '$components/Header.svelte';
 
-const { data, children } = $props()
+const { data, children } = $props();
 </script>
 
 <div class="flex min-h-screen w-full flex-col">

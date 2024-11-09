@@ -1,8 +1,7 @@
 <script lang="ts">
-import * as Card from '$components/ui/card'
-
-const { data } = $props()
-let collections = data?.collections || []
+import * as Card from '$components/ui/card';
+const { data } = $props();
+let collections = data?.collections || [];
 </script>
 
 <svelte:head>

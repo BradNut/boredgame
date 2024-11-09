@@ -1,13 +1,13 @@
 <script lang="ts">
-import { page } from '$app/stores'
-import type { Route } from '$lib/types'
+import { page } from '$app/stores';
+import type { Route } from '$lib/types';
 
 const routes: Route[] = [
 	{ href: '/settings/profile', label: 'Profile' },
 	{ href: '/settings/security', label: 'Security' },
-]
+];
 
-let { children } = $props()
+let { children } = $props();
 </script>
 
 <div class="security-nav">

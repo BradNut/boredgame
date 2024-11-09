@@ -1,32 +1,32 @@
 <script lang="ts">
-import * as Alert from '$components/ui/alert'
-import * as Form from '$components/ui/form'
-import { Input } from '$components/ui/input'
-import { Toggle } from '$components/ui/toggle'
-import { AlertTriangle, EyeIcon, EyeOff } from 'lucide-svelte'
-import { zodClient } from 'sveltekit-superforms/adapters'
-import { superForm } from 'sveltekit-superforms/client'
-import { changeUserPasswordSchema } from './schemas'
+import * as Alert from '$components/ui/alert';
+import * as Form from '$components/ui/form';
+import { Input } from '$components/ui/input';
+import { Toggle } from '$components/ui/toggle';
+import { AlertTriangle, EyeIcon, EyeOff } from 'lucide-svelte';
+import { zodClient } from 'sveltekit-superforms/adapters';
+import { superForm } from 'sveltekit-superforms/client';
+import { changeUserPasswordSchema } from './schemas';
 
-const { data } = $props()
+const { data } = $props();
 
 const form = superForm(data.form, {
 	taintedMessage: null,
 	validators: zodClient(changeUserPasswordSchema),
 	delayMs: 500,
 	multipleSubmits: 'prevent',
-})
+});
 
-let hiddenCurrentPassword = $state(true)
-let hiddenPassword = $state(true)
-let hiddenConfirmPassword = $state(true)
-let currentPasswordInput = $derived(hiddenCurrentPassword ? 'password' : 'text')
-let passwordInput = $derived(hiddenPassword ? 'password' : 'text')
-let confirmPasswordInput = $derived(hiddenConfirmPassword ? 'password' : 'text')
+let hiddenCurrentPassword = $state(true);
+let hiddenPassword = $state(true);
+let hiddenConfirmPassword = $state(true);
+let currentPasswordInput = $derived(hiddenCurrentPassword ? 'password' : 'text');
+let passwordInput = $derived(hiddenPassword ? 'password' : 'text');
+let confirmPasswordInput = $derived(hiddenConfirmPassword ? 'password' : 'text');
 
 // $inspect(hiddenCurrentPassword, hiddenPassword, hiddenConfirmPassword)
 
-const { form: formData, enhance } = form
+const { form: formData, enhance } = form;
 </script>
 
 <form method="POST" use:enhance>

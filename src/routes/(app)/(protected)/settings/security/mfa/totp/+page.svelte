@@ -1,36 +1,34 @@
 <script lang="ts">
-import CopyCodeBlock from '$components/CopyCodeBlock.svelte'
-import PinInput from '$components/pin-input.svelte'
-import * as Alert from '$components/ui/alert'
-import * as Form from '$components/ui/form'
-import { Input } from '$components/ui/input'
-import { AlertTriangle } from 'lucide-svelte'
-import { zodClient } from 'sveltekit-superforms/adapters'
-import { superForm } from 'sveltekit-superforms/client'
-import { addTwoFactorSchema, removeTwoFactorSchema } from './schemas'
+import CopyCodeBlock from '$components/CopyCodeBlock.svelte';
+import PinInput from '$components/pin-input.svelte';
+import * as Form from '$components/ui/form';
+import { Input } from '$components/ui/input';
+import { zodClient } from 'sveltekit-superforms/adapters';
+import { superForm } from 'sveltekit-superforms/client';
+import { addTwoFactorSchema, removeTwoFactorSchema } from './schemas';
 
-const { data } = $props()
+const { data } = $props();
 
-const { qrCode, secret, twoFactorEnabled, recoveryCodes } = data
+const { qrCode, secret, twoFactorEnabled, recoveryCodes } = data;
 
 const addTwoFactorForm = superForm(data.addTwoFactorForm, {
 	taintedMessage: null,
 	validators: zodClient(addTwoFactorSchema),
 	delayMs: 500,
 	multipleSubmits: 'prevent',
-})
+});
 
 const removeTwoFactorForm = superForm(data.removeTwoFactorForm, {
 	taintedMessage: null,
 	validators: zodClient(removeTwoFactorSchema),
 	delayMs: 500,
 	multipleSubmits: 'prevent',
-})
+});
 
-console.log('Two Factor: ', twoFactorEnabled, recoveryCodes)
+console.log('Two Factor: ', twoFactorEnabled, recoveryCodes);
 
-const { form: addTwoFactorFormData, enhance: addTwoFactorEnhance } = addTwoFactorForm
-const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = removeTwoFactorForm
+const { form: addTwoFactorFormData, enhance: addTwoFactorEnhance } = addTwoFactorForm;
+const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = removeTwoFactorForm;
 </script>
 
 <section class="two-factor">

@@ -1,43 +1,42 @@
-import type { GameType, SearchQuery } from '$lib/types'
-import { mapAPIGameToBoredGame } from '$lib/utils/gameMapper'
-import { type RequestEvent, invalid } from '@sveltejs/kit'
+import type { SearchQuery } from '$lib/types';
+import { type RequestEvent, invalid } from '@sveltejs/kit';
 
 interface Actions {
-	[key: string]: any // Action
+	[key: string]: any; // Action
 }
 
 export const Games: Actions = {
 	search: async ({ request, locals }: RequestEvent): Promise<any> => {
-		console.log('In search action specific')
+		console.log('In search action specific');
 		// Do things in here
-		const form = await request.formData()
-		console.log('action form', form)
+		const form = await request.formData();
+		console.log('action form', form);
 		const queryParams: SearchQuery = {
 			order_by: 'rank',
 			ascending: false,
 			limit: 10,
 			skip: 0,
 			name: '',
-		}
+		};
 
-		const name = form.has('name') ? form.get('name') : await request?.text()
-		console.log('name', name)
+		const name = form.has('name') ? form.get('name') : await request?.text();
+		console.log('name', name);
 		if (name) {
-			queryParams.name = `${name}`
+			queryParams.name = `${name}`;
 		}
 
-		const newQueryParams: Record<string, string> = {}
+		const newQueryParams: Record<string, string> = {};
 		for (const key in queryParams) {
-			console.log('key', key)
-			console.log('queryParams[key]', queryParams[key])
-			newQueryParams[key] = `${queryParams[key]}`
+			console.log('key', key);
+			console.log('queryParams[key]', queryParams[key]);
+			newQueryParams[key] = `${queryParams[key]}`;
 		}
 
-		const urlQueryParams = new URLSearchParams(newQueryParams)
-		console.log('urlQueryParams', urlQueryParams)
+		const urlQueryParams = new URLSearchParams(newQueryParams);
+		console.log('urlQueryParams', urlQueryParams);
 
 		try {
-			throw new Error('test error')
+			throw new Error('test error');
 			// const url = `https://api.boardgameatlas.com/api/search${urlQueryParams ? `?${urlQueryParams}` : ''
 			//   }`;
 			// const response = await fetch(url, {
@@ -76,8 +75,8 @@ export const Games: Actions = {
 			//   totalCount: 0
 			// };
 		} catch (e) {
-			console.log(`Error searching board games ${e}`)
-			return invalid(400, { reason: 'Exception' })
+			console.log(`Error searching board games ${e}`);
+			return invalid(400, { reason: 'Exception' });
 		}
 	},
 
@@ -175,4 +174,4 @@ export const Games: Actions = {
 	//   const data = await getFormDataObject<any>(request);
 	//   return data;
 	// }
-}
+};

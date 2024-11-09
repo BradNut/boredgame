@@ -1,19 +1,14 @@
 <script lang="ts">
-import * as Alert from '$components/ui/alert'
-import { Button } from '$components/ui/button'
-import { Input } from '$components/ui/input'
-import { Label } from '$components/ui/label'
-import * as Card from '$lib/components/ui/card'
-import * as Form from '$lib/components/ui/form'
-import { boredState } from '$lib/stores/boredState.js'
-import { receive, send } from '$lib/utils/pageCrossfade'
-import { signInSchema } from '$lib/validations/auth'
-import { AlertCircle } from 'lucide-svelte'
-import * as flashModule from 'sveltekit-flash-message/client'
-import { zodClient } from 'sveltekit-superforms/adapters'
-import { superForm } from 'sveltekit-superforms/client'
+import { Button } from '$components/ui/button';
+import * as Card from '$components/ui/card';
+import * as Form from '$components/ui/form';
+import { Input } from '$components/ui/input';
+import { boredState } from '$lib/stores/boredState.js';
+import { receive, send } from '$lib/utils/pageCrossfade';
+import * as flashModule from 'sveltekit-flash-message/client';
+import { superForm } from 'sveltekit-superforms/client';
 
-let { data } = $props()
+let { data } = $props();
 
 const superLoginForm = superForm(data.form, {
 	onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
@@ -24,8 +19,8 @@ const superLoginForm = superForm(data.form, {
 			// Error handling for the flash message:
 			// - result is the ActionResult
 			// - message is the flash store (not the status message store)
-			const errorMessage = result.error.message
-			flashMessage.set({ type: 'error', message: errorMessage })
+			const errorMessage = result.error.message;
+			flashMessage.set({ type: 'error', message: errorMessage });
 		},
 	},
 	syncFlashMessage: false,
@@ -33,9 +28,9 @@ const superLoginForm = superForm(data.form, {
 	// validators: zodClient(signInSchema),
 	// validationMethod: 'oninput',
 	delayMs: 0,
-})
+});
 
-const { form: loginForm, enhance } = superLoginForm
+const { form: loginForm, enhance } = superLoginForm;
 </script>
 
 <svelte:head>

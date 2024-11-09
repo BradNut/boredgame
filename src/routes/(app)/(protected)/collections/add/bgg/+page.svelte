@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Input from "$components/ui/input/input.svelte";
-	import Label from "$components/ui/label/label.svelte";
+import Input from '$components/ui/input/input.svelte';
+import Label from '$components/ui/label/label.svelte';
 
-	export let data;
+export let data;
 </script>
 <h1>Add a game to your collection</h1>
 

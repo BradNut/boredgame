@@ -1,35 +1,31 @@
 <script lang="ts">
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { superForm } from 'sveltekit-superforms/client';
-	import * as flashModule from 'sveltekit-flash-message/client';
-	import { AlertCircle } from "lucide-svelte";
-	import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth';
-	import * as Card from "$lib/components/ui/card/index.js";
-	import * as Form from '$lib/components/ui/form';
-	import { Label } from '$components/ui/label';
-	import { Input } from '$components/ui/input';
-	import { Button } from '$components/ui/button';
-	import * as Alert from "$components/ui/alert";
-	import PinInput from '$components/pin-input.svelte';
+import PinInput from '$components/pin-input.svelte';
+import { Button } from '$components/ui/button';
+import * as Card from '$components/ui/card';
+import * as Form from '$components/ui/form';
+import { Input } from '$components/ui/input';
+import { recoveryCodeSchema, totpSchema } from '$lib/validations/auth';
+import { zodClient } from 'sveltekit-superforms/adapters';
+import { superForm } from 'sveltekit-superforms/client';
 
-	const { data } = $props();
+const { data } = $props();
 
-	const superTotpForm = superForm(data.totpForm, {
-		resetForm: false,
-		validators: zodClient(totpSchema),
-	});
+const superTotpForm = superForm(data.totpForm, {
+	resetForm: false,
+	validators: zodClient(totpSchema),
+});
 
-	const superRecoveryCodeForm = superForm(data.recoveryCodeForm, {
-		validators: zodClient(recoveryCodeSchema),
-		resetForm: false,
-		validationMethod: 'oninput',
-		delayMs: 0,
-	});
+const superRecoveryCodeForm = superForm(data.recoveryCodeForm, {
+	validators: zodClient(recoveryCodeSchema),
+	resetForm: false,
+	validationMethod: 'oninput',
+	delayMs: 0,
+});
 
-	let showRecoveryCode = $state(false);
+let showRecoveryCode = $state(false);
 
-	const { form: totpFormData, enhance: totpEnhance } = superTotpForm;
-	const { form: recoveryCodeFormData, enhance: recoveryCodeEnhance } = superRecoveryCodeForm;
+const { form: totpFormData, enhance: totpEnhance } = superTotpForm;
+const { form: recoveryCodeFormData, enhance: recoveryCodeEnhance } = superRecoveryCodeForm;
 </script>
 
 <svelte:head>

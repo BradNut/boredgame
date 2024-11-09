@@ -3,6 +3,6 @@ export async function load(event) {
 
 	return {
 		url: url.pathname,
-		user: locals.user
+		user: locals.user,
 	};
-};
+}

@@ -1,8 +1,7 @@
 import { notSignedInMessage } from '$lib/flashMessages.js';
 import { db } from '$lib/server/api/packages/drizzle';
-import { userNotAuthenticated } from '$lib/server/auth-utils';
 import { modifyListGameSchema } from '$lib/validations/zod-schemas';
-import { type Actions, error, fail } from '@sveltejs/kit';
+import { type Actions, error } from '@sveltejs/kit';
 import { and, eq } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
 import { zod } from 'sveltekit-superforms/adapters';

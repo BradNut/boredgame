@@ -1,17 +1,18 @@
 <script lang="ts">
-	import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { search_schema, type SearchSchema } from '$lib/zodValidation';
-	import Input from '$components/ui/input/input.svelte';
-	import Checkbox from '$components/ui/checkbox/checkbox.svelte';
+import Checkbox from '$components/ui/checkbox/checkbox.svelte';
+import * as Form from '$components/ui/form';
+import Input from '$components/ui/input/input.svelte';
+import { type SearchSchema, search_schema } from '$lib/zodValidation';
+import { type Infer, type SuperValidated, superForm } from 'sveltekit-superforms';
+import { zodClient } from 'sveltekit-superforms/adapters';
 
-	export let data: SuperValidated<Infer<SearchSchema>>;
+export let data: SuperValidated<Infer<SearchSchema>>;
 
-	const form = superForm(data, {
-		validators: zodClient(search_schema),
-	});
+const form = superForm(data, {
+	validators: zodClient(search_schema),
+});
 
-	const { form: formData } = form;
+const { form: formData } = form;
 </script>
 
 <search>

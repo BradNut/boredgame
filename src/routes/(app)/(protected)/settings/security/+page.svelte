@@ -1,10 +1,10 @@
 <script>
-import { Button } from '$components/ui/button/index'
-import { KeyRound } from 'lucide-svelte'
+import { Button } from '$components/ui/button/index';
+import { KeyRound } from 'lucide-svelte';
 
-const { data } = $props()
+const { data } = $props();
 
-const hasSetupTwoFactor = data.hasSetupTwoFactor
+const hasSetupTwoFactor = data.hasSetupTwoFactor;
 </script>
 
 <div class="mt-6">

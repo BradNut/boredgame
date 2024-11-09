@@ -1,10 +1,10 @@
 <script lang="ts">
-import Game from '$components/Game.svelte'
+import Game from '$components/Game.svelte';
 
-export let data
-console.log('data', data)
-const wishlist = data.wishlist
-const gamesItems = wishlist?.items
+export let data;
+console.log('data', data);
+const wishlist = data.wishlist;
+const gamesItems = wishlist?.items;
 </script>
 
 <svelte:head>

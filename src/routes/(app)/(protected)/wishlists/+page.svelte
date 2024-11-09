@@ -1,8 +1,7 @@
 <script lang="ts">
-import * as Card from '$components/ui/card'
-
-const { data } = $props()
-const { wishlists = [] } = data
+import * as Card from '$components/ui/card';
+const { data } = $props();
+const { wishlists = [] } = data;
 </script>
 
 <svelte:head>

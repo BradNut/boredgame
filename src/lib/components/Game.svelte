@@ -1,14 +1,15 @@
 <script lang="ts">
-	import type { GameType, SavedGameType } from '$lib/types';
-	import type { CollectionItems } from '$db/schema';
+import type { CollectionItems } from '$db/schema';
+import * as Card from '$lib/components/ui/card';
+import type { GameType, SavedGameType } from '$lib/types';
 
-	export let game: GameType | CollectionItems;
-	export let variant: 'default' | 'compact' = 'default';
+export let game: GameType | CollectionItems;
+export let variant: 'default' | 'compact' = 'default';
 
-	// Naive and assumes description is only on our GameType at the moment
-	function isGameType(game: GameType | SavedGameType): game is GameType {
-		return (game as GameType).description !== undefined;
-	}
+// Naive and assumes description is only on our GameType at the moment
+function isGameType(game: GameType | SavedGameType): game is GameType {
+	return (game as GameType).description !== undefined;
+}
 </script>
 
 <article class="grid grid-template-cols-2 gap-4">

@@ -1,4 +1,4 @@
-import { z, ZodNumber, ZodOptional } from 'zod';
+import { ZodNumber, ZodOptional, z } from 'zod';
 // import zodToJsonSchema from 'zod-to-json-schema';
 
 export const BoardGameSearch = z.object({
@@ -25,15 +25,7 @@ export type ListGameSchema = typeof list_game_request_schema;
 
 // https://github.com/colinhacks/zod/discussions/330
 export function IntegerString<schema extends ZodNumber | ZodOptional<ZodNumber>>(schema: schema) {
-	return z.preprocess(
-		(value) =>
-			typeof value === 'string'
-				? Number.parseInt(value, 10)
-				: typeof value === 'number'
-					? value
-					: undefined,
-		schema,
-	);
+	return z.preprocess((value) => (typeof value === 'string' ? Number.parseInt(value, 10) : typeof value === 'number' ? value : undefined), schema);
 }
 
 const Search = z.object({
@@ -73,47 +65,45 @@ export const search_schema = z
 		limit: z.number().min(10).max(100).default(10),
 		skip: z.number().min(0).default(0),
 	})
-	.superRefine(
-		({ minPlayers, maxPlayers, minAge, exactMinAge, exactMinPlayers, exactMaxPlayers }, ctx) => {
-			console.log({ minPlayers, maxPlayers });
-			if (minPlayers && maxPlayers && minPlayers > maxPlayers) {
-				ctx.addIssue({
-					code: 'custom',
-					message: 'Min Players must be smaller than Max Players',
-					path: ['minPlayers'],
-				});
-				ctx.addIssue({
-					code: 'custom',
-					message: 'Min Players must be smaller than Max Players',
-					path: ['maxPlayers'],
-				});
-			}
+	.superRefine(({ minPlayers, maxPlayers, minAge, exactMinAge, exactMinPlayers, exactMaxPlayers }, ctx) => {
+		console.log({ minPlayers, maxPlayers });
+		if (minPlayers && maxPlayers && minPlayers > maxPlayers) {
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Min Players must be smaller than Max Players',
+				path: ['minPlayers'],
+			});
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Min Players must be smaller than Max Players',
+				path: ['maxPlayers'],
+			});
+		}
 
-			if (exactMinAge && !minAge) {
-				ctx.addIssue({
-					code: 'custom',
-					message: 'Min Age required when searching for exact min age',
-					path: ['minAge'],
-				});
-			}
+		if (exactMinAge && !minAge) {
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Min Age required when searching for exact min age',
+				path: ['minAge'],
+			});
+		}
 
-			if (exactMinPlayers && !minPlayers) {
-				ctx.addIssue({
-					code: 'custom',
-					message: 'Min Players required when searching for exact min players',
-					path: ['minPlayers'],
-				});
-			}
+		if (exactMinPlayers && !minPlayers) {
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Min Players required when searching for exact min players',
+				path: ['minPlayers'],
+			});
+		}
 
-			if (exactMaxPlayers && !maxPlayers) {
-				ctx.addIssue({
-					code: 'custom',
-					message: 'Max Players required when searching for exact max players',
-					path: ['maxPlayers'],
-				});
-			}
-		},
-	);
+		if (exactMaxPlayers && !maxPlayers) {
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Max Players required when searching for exact max players',
+				path: ['maxPlayers'],
+			});
+		}
+	});
 
 export type SearchSchema = typeof search_schema;
 

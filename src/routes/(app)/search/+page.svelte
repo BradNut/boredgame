@@ -1,40 +1,40 @@
 <script lang="ts">
-import { dev } from '$app/environment'
-import Game from '$components/Game.svelte'
-import GameSearchForm from '$components/search/GameSearchForm.svelte'
-import * as Pagination from '$lib/components/ui/pagination'
-import { search_schema } from '$lib/zodValidation'
-import { createToolbar, melt } from '@melt-ui/svelte'
-import { LayoutGrid, LayoutList } from 'lucide-svelte'
-import { superForm } from 'sveltekit-superforms'
-import { zodClient } from 'sveltekit-superforms/adapters'
-import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte'
+import { dev } from '$app/environment';
+import Game from '$components/Game.svelte';
+import GameSearchForm from '$components/search/GameSearchForm.svelte';
+import * as Pagination from '$components/ui/pagination';
+import { search_schema } from '$lib/zodValidation';
+import { createToolbar, melt } from '@melt-ui/svelte';
+import { LayoutGrid, LayoutList } from 'lucide-svelte';
+import { superForm } from 'sveltekit-superforms';
+import { zodClient } from 'sveltekit-superforms/adapters';
+import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
-export let data
+export let data;
 
-const { games, totalCount } = data.searchData
+const { games, totalCount } = data.searchData;
 
-console.log('data found', data)
-console.log('found games', games)
-console.log('found totalCount', totalCount)
+console.log('data found', data);
+console.log('found games', games);
+console.log('found totalCount', totalCount);
 
 const form = superForm(data.form, {
 	validators: zodClient(search_schema),
-})
+});
 
-let pageSize: number = form.limit || 10
+let pageSize: number = form.limit || 10;
 
 const {
 	elements: { root: toolbarRoot },
 	builders: { createToolbarGroup },
-} = createToolbar()
+} = createToolbar();
 const {
 	elements: { group: listStyleGroup, item: listStyleItem },
-} = createToolbarGroup()
+} = createToolbarGroup();
 
-const gameListStyle: 'grid' | 'list' = 'grid'
+const gameListStyle: 'grid' | 'list' = 'grid';
 function handleListStyle(event) {
-	console.log(event, typeof event)
+	console.log(event, typeof event);
 }
 </script>
 

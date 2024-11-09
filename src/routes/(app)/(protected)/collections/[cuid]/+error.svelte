@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+import { page } from '$app/stores';
 </script>
 
 <div class="error">
 	{#if $page.status === 404}
-		<h1>The page you requested doesn't exist! 🤷‍♂️</h1>
+		<h1>The page you requested doesn't exist! 🤷</h1>
 		<h3 class="mt-6"><a href="/">Go Home</a></h3>
 	{:else}
 		<h1 class="h1">Unexpected Error</h1>

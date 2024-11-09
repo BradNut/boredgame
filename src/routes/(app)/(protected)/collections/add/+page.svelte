@@ -1,7 +1,7 @@
 <script lang="ts">
-	import GameSearchForm from "$components/search/GameSearchForm.svelte";
+import GameSearchForm from '$components/search/GameSearchForm.svelte';
 
-	export let data;
+export let data;
 </script>
 <h1>Add a game to your collection</h1>
 

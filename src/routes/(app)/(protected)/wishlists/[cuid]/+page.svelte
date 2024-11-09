@@ -1,8 +1,8 @@
 <script lang="ts">
-import Game from '$components/Game.svelte'
+import Game from '$components/Game.svelte';
 
-const { data } = $props()
-const { items = [] } = data
+const { data } = $props();
+const { items = [] } = data;
 </script>
 
 <svelte:head>

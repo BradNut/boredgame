@@ -1,17 +1,17 @@
-import { fail } from '@sveltejs/kit'
-import type { MetaTagsProps } from 'svelte-meta-tags'
-import type { PageServerLoad } from './$types'
+import { fail } from '@sveltejs/kit';
+import type { MetaTagsProps } from 'svelte-meta-tags';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-	const { locals, url } = event
+	const { locals, url } = event;
 
-	const authedUser = await locals.getAuthedUser()
+	const authedUser = await locals.getAuthedUser();
 
 	const image = {
 		url: `${new URL(url.pathname, url.origin).href}og?header=Bored Game&page=Home&content=Keep track of your games`,
 		width: 1200,
 		height: 630,
-	}
+	};
 	const metaTags: MetaTagsProps = Object.freeze({
 		title: 'Home',
 		description: 'Home page',
@@ -33,18 +33,18 @@ export const load: PageServerLoad = async (event) => {
 			image: `${new URL(url.pathname, url.origin).href}og?header=Bored Game&page=Home&content=Keep track of your games`,
 			imageAlt: 'Home | Bored Game',
 		},
-	})
+	});
 
 	if (authedUser) {
-		const { data: wishlistsData, error: wishlistsError } = await locals.api.wishlists.$get().then(locals.parseApiResponse)
-		const { data: collectionsData, error: collectionsError } = await locals.api.collections.$get().then(locals.parseApiResponse)
+		const { data: wishlistsData, error: wishlistsError } = await locals.api.wishlists.$get().then(locals.parseApiResponse);
+		const { data: collectionsData, error: collectionsError } = await locals.api.collections.$get().then(locals.parseApiResponse);
 
 		if (wishlistsError || collectionsError) {
-			return fail(500, 'Failed to fetch wishlistsTable or collections')
+			return fail(500, 'Failed to fetch wishlistsTable or collections');
 		}
 
-		console.log('Wishlists', wishlistsData.wishlists)
-		console.log('Collections', collectionsData.collections)
+		console.log('Wishlists', wishlistsData.wishlists);
+		console.log('Collections', collectionsData.collections);
 		return {
 			metaTagsChild: metaTags,
 			user: {
@@ -54,10 +54,10 @@ export const load: PageServerLoad = async (event) => {
 			},
 			wishlists: wishlistsData.wishlists,
 			collections: collectionsData.collections,
-		}
+		};
 	}
 
-	console.log('Not Authed')
+	console.log('Not Authed');
 
-	return { metaTagsChild: metaTags, user: null, wishlists: [], collections: [] }
-}
+	return { metaTagsChild: metaTags, user: null, wishlists: [], collections: [] };
+};

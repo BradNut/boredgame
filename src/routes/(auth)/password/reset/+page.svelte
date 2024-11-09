@@ -1,38 +1,36 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { Button } from "$lib/components/ui/button/index.js";
-	import * as Card from "$lib/components/ui/card/index.js";
-	import { Input } from "$lib/components/ui/input/index.js";
-	import { Label } from "$lib/components/ui/label/index.js";
-	import * as Form from '$lib/components/ui/form';
-	import { send, receive } from '$lib/utils/pageCrossfade';
-	import { resetPasswordEmailSchema, resetPasswordTokenSchema } from "$lib/validations/auth";
-	import PinInput  from "$lib/components/pin-input.svelte";
+import * as Card from '$components/ui/card';
+import * as Form from '$components/ui/form';
+import PinInput from '$lib/components/pin-input.svelte';
+import { Button } from '$lib/components/ui/button/index.js';
+import { Input } from '$lib/components/ui/input/index.js';
+import { receive, send } from '$lib/utils/pageCrossfade';
+import { resetPasswordEmailSchema, resetPasswordTokenSchema } from '$lib/validations/auth';
+import { superForm } from 'sveltekit-superforms';
+import { zodClient } from 'sveltekit-superforms/adapters';
 
-	const {data} = $props();
+const { data } = $props();
 
-	let showTokenVerification = $state(false);
+let showTokenVerification = $state(false);
 
-	const emailResetForm = superForm(data.emailForm, {
-		validators: zodClient(resetPasswordEmailSchema),
-		resetForm: false,
-		onUpdated: ({ form }) => {
-			if (form.valid) {
-				showTokenVerification = true;
-				$emailFormData.email = form.data.email;
-			}
+const emailResetForm = superForm(data.emailForm, {
+	validators: zodClient(resetPasswordEmailSchema),
+	resetForm: false,
+	onUpdated: ({ form }) => {
+		if (form.valid) {
+			showTokenVerification = true;
+			$emailFormData.email = form.data.email;
 		}
-	});
+	},
+});
 
-	const tokenVerificationForm = superForm(data.tokenForm, {
-		validators: zodClient(resetPasswordTokenSchema),
-		resetForm: false
-	});
+const tokenVerificationForm = superForm(data.tokenForm, {
+	validators: zodClient(resetPasswordTokenSchema),
+	resetForm: false,
+});
 
-	const { form: emailFormData, enhance: emailResetEnhance } = emailResetForm;
-	const { form: tokenFormData, enhance: tokenEnhance } = tokenVerificationForm;
-
+const { form: emailFormData, enhance: emailResetEnhance } = emailResetForm;
+const { form: tokenFormData, enhance: tokenEnhance } = tokenVerificationForm;
 </script>
 
 <div out:send={{ key: 'auth-card' }} in:receive={{ key: 'auth-card' }}>

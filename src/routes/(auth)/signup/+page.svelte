@@ -1,22 +1,21 @@
 <script lang="ts">
-import { Button } from '$components/ui/button'
-import { Input } from '$components/ui/input'
-import { Label } from '$components/ui/label'
-import * as Alert from '$lib/components/ui/alert'
-import * as Card from '$lib/components/ui/card'
-import * as Collapsible from '$lib/components/ui/collapsible'
-import { signupUsernameEmailDto } from '$lib/dtos/signup-username-email.dto'
-import { boredState } from '$lib/stores/boredState.js'
-import { receive, send } from '$lib/utils/pageCrossfade'
-import { signUpSchema } from '$lib/validations/auth'
-import { ChevronsUpDown } from 'lucide-svelte'
-import { quintIn } from 'svelte/easing'
-import { slide } from 'svelte/transition'
-import * as flashModule from 'sveltekit-flash-message/client'
-import { zodClient } from 'sveltekit-superforms/adapters'
-import { superForm } from 'sveltekit-superforms/client'
+import { Button } from '$components/ui/button';
+import { Input } from '$components/ui/input';
+import { Label } from '$components/ui/label';
+import * as Alert from '$lib/components/ui/alert';
+import * as Card from '$lib/components/ui/card';
+import * as Collapsible from '$lib/components/ui/collapsible';
+import { signupUsernameEmailDto } from '$lib/dtos/signup-username-email.dto';
+import { boredState } from '$lib/stores/boredState.js';
+import { receive, send } from '$lib/utils/pageCrossfade';
+import { ChevronsUpDown } from 'lucide-svelte';
+import { quintIn } from 'svelte/easing';
+import { slide } from 'svelte/transition';
+import * as flashModule from 'sveltekit-flash-message/client';
+import { zodClient } from 'sveltekit-superforms/adapters';
+import { superForm } from 'sveltekit-superforms/client';
 
-export let data
+export let data;
 
 const { form, errors, enhance } = superForm(data.form, {
 	onSubmit: () => boredState.update((n) => ({ ...n, loading: true })),
@@ -24,16 +23,16 @@ const { form, errors, enhance } = superForm(data.form, {
 	flashMessage: {
 		module: flashModule,
 		onError: ({ result, flashMessage }) => {
-			const errorMessage = result.error.message
-			flashMessage.set({ type: 'error', message: errorMessage })
+			const errorMessage = result.error.message;
+			flashMessage.set({ type: 'error', message: errorMessage });
 		},
 	},
 	taintedMessage: null,
 	validators: zodClient(signupUsernameEmailDto),
 	delayMs: 0,
-})
+});
 
-let collapsibleOpen = false
+let collapsibleOpen = false;
 </script>
 
 <svelte:head>

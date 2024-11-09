@@ -1,13 +1,11 @@
 <script lang="ts">
-import { Checkbox } from '$lib/components/ui/checkbox/index.js'
-import * as Form from '$lib/components/ui/form'
-import { Input } from '$lib/components/ui/input'
-import { type AddRoleSchema, addRoleSchema } from '$lib/validations/account'
-import { type Infer, type SuperValidated, superForm } from 'sveltekit-superforms'
-import { zodClient } from 'sveltekit-superforms/adapters'
+import { Checkbox } from '$lib/components/ui/checkbox/index.js';
+import { type AddRoleSchema, addRoleSchema } from '$lib/validations/account';
+import { type Infer, type SuperValidated, superForm } from 'sveltekit-superforms';
+import { zodClient } from 'sveltekit-superforms/adapters';
 
-export let availableRoles: { name: string; cuid: string }[] = []
-const data: SuperValidated<Infer<AddRoleSchema>> = availableRoles
+export let availableRoles: { name: string; cuid: string }[] = [];
+const data: SuperValidated<Infer<AddRoleSchema>> = availableRoles;
 
 const form = superForm(data, {
 	validators: zodClient(addRoleSchema),
@@ -18,16 +16,16 @@ const form = superForm(data, {
 	// 		toast.error("Please fix the errors in the form.");
 	// 	}
 	// }
-})
+});
 
-const { form: formData, enhance } = form
+const { form: formData, enhance } = form;
 
 function addRole(id: string) {
-	$formData.roles = [...$formData.roles, id]
+	$formData.roles = [...$formData.roles, id];
 }
 
 function removeRole(id: string) {
-	$formData.roles = $formData.roles.filter((i) => i !== id)
+	$formData.roles = $formData.roles.filter((i) => i !== id);
 }
 </script>
 

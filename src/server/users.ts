@@ -1,6 +1,6 @@
-import db from '../db';
+import { type Users, usersTable } from '$db/schema';
 import { eq } from 'drizzle-orm';
-import { usersTable, type Users } from '$db/schema';
+import db from '../db';
 import { add_user_to_role } from './roles';
 
 export function create_user(user: Users) {

@@ -4,7 +4,7 @@ export const theme = writable('system');
 
 const new_theme_selector = () => {
 	const { subscribe, update, set } = writable({
-		status: 'CLOSED'
+		status: 'CLOSED',
 	});
 
 	function open() {
@@ -31,7 +31,7 @@ const new_theme_selector = () => {
 		set,
 		close,
 		open,
-		toggle
+		toggle,
 	};
 };
 

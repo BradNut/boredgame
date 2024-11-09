@@ -1,19 +1,20 @@
 <script lang="ts">
-	import { cn } from '$lib/utils/ui';
-	import { type PinInputProps } from 'bits-ui';
+import { cn } from '$lib/utils/ui';
+import { PinInput } from 'bits-ui';
+import { type PinInputProps } from 'bits-ui';
 
-	interface Props extends Omit<PinInputProps, 'value'> {
-		value: string;
-		inputCount?: number;
-	}
+interface Props extends Omit<PinInputProps, 'value'> {
+	value: string;
+	inputCount?: number;
+}
 
-	let { value = $bindable(), inputCount = 6, ...rest }: Props = $props();
-	let pin = $state<string[] | undefined>(value?.split('') ?? []);
-	let inputs = $derived(Array(inputCount).fill(null));
+let { value = $bindable(), inputCount = 6, ...rest }: Props = $props();
+let pin = $state<string[] | undefined>(value?.split('') ?? []);
+let inputs = $derived(Array(inputCount).fill(null));
 
-	$effect(() => {
-		value = pin?.join('') ?? '';
-	});
+$effect(() => {
+	value = pin?.join('') ?? '';
+});
 </script>
 
 <PinInput.Root

@@ -1,6 +1,6 @@
-import type { User } from 'lucia';
 import type { ApiClient } from '$lib/server/api';
 import type { parseApiResponse } from '$lib/utils/api';
+import type { User } from 'lucia';
 
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
@@ -24,9 +24,9 @@ declare global {
 		}
 		namespace Superforms {
 			type Message = {
-				type: 'error' | 'success' | 'info',
-				text: string
-			}
+				type: 'error' | 'success' | 'info';
+				text: string;
+			};
 		}
 		interface Error {
 			code?: string;
@@ -37,7 +37,7 @@ declare global {
 	interface Document {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-				startViewTransition: (callback: never) => void; // Add your custom property/method here
+		startViewTransition: (callback: never) => void; // Add your custom property/method here
 	}
 }
 

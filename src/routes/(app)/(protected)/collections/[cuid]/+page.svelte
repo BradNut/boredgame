@@ -1,13 +1,13 @@
 <script lang="ts">
 // import { tick, onDestroy } from 'svelte';
-import Game from '$components/Game.svelte'
-import type { UICollection } from '$lib/types'
+import Game from '$components/Game.svelte';
+import type { UICollection } from '$lib/types';
 
-const { data } = $props()
-const { items = [] } = data
-console.log(`Page data: ${JSON.stringify(data)}`)
-let collection: UICollection = data?.collection ?? {}
-console.log('items', items)
+const { data } = $props();
+const { items = [] } = data;
+console.log(`Page data: ${JSON.stringify(data)}`);
+let collection: UICollection = data?.collection ?? {};
+console.log('items', items);
 
 // async function handleNextPageEvent(event: CustomEvent) {
 // 	if (+event?.detail?.page === page + 1) {

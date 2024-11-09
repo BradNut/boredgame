@@ -1,10 +1,12 @@
 <script lang="ts">
-	import Logo from '$components/logo.svelte';
-	import { ListChecks, ListTodo, LogOut, Settings } from 'lucide-svelte';
+import Logo from '$components/logo.svelte';
+import * as Avatar from '$lib/components/ui/avatar';
+import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+import { ListChecks, ListTodo, LogOut, Settings } from 'lucide-svelte';
 
-	let { user = null } = $props();
+let { user = null } = $props();
 
-	let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)');
+let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)');
 </script>
 
 <header>

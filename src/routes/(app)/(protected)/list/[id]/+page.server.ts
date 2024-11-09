@@ -1,6 +1,5 @@
 import { notSignedInMessage } from '$lib/flashMessages';
 import { db } from '$lib/server/api/packages/drizzle';
-import { userNotAuthenticated } from '$lib/server/auth-utils';
 import { modifyListGameSchema } from '$lib/validations/zod-schemas';
 import { type Actions, fail } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';

@@ -1,10 +1,9 @@
 <script lang="ts">
-	import Ellipsis from 'lucide-svelte/icons/ellipsis';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { Button } from '$lib/components/ui/button';
-	import { User } from 'lucide-svelte';
+import { Button } from '$lib/components/ui/button';
+import { User } from 'lucide-svelte';
+import Ellipsis from 'lucide-svelte/icons/ellipsis';
 
-	export let cuid: string;
+export let cuid: string;
 </script>
 
 <DropdownMenu.Root>
