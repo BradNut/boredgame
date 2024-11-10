@@ -1,19 +1,19 @@
 import 'reflect-metadata';
 import {
+	type SessionCookie,
 	cookieExpiresAt,
 	cookieName,
 	createBlankSessionTokenCookie,
 	createSessionTokenCookie,
-	type SessionCookie,
 	setSessionCookie,
 } from '$lib/server/api/common/utils/cookies';
-import {SessionsService} from '$lib/server/api/services/sessions.service';
-import type {MiddlewareHandler} from 'hono';
-import {getCookie} from 'hono/cookie';
-import {createMiddleware} from 'hono/factory';
-import {verifyRequestOrigin} from 'oslo/request';
-import {container} from 'tsyringe';
-import type {AppBindings} from '../common/types/hono';
+import { SessionsService } from '$lib/server/api/services/sessions.service';
+import type { MiddlewareHandler } from 'hono';
+import { getCookie } from 'hono/cookie';
+import { createMiddleware } from 'hono/factory';
+import { verifyRequestOrigin } from 'oslo/request';
+import { container } from 'tsyringe';
+import type { AppBindings } from '../common/types/hono';
 
 // resolve dependencies from the container
 const sessionService = container.resolve(SessionsService);
@@ -34,8 +34,20 @@ export const verifyOrigin: MiddlewareHandler<AppBindings> = createMiddleware(asy
 export const validateAuthSession: MiddlewareHandler<AppBindings> = createMiddleware(async (c, next) => {
 	const sessionId = getCookie(c, cookieName) ?? null;
 	if (!sessionId) {
+		const requestIpAddress = c.req.header('x-real-ip');
+		const requestIpCountry = c.req.header('x-vercel-ip-country');
+		const session = await sessionService.createSession(
+			sessionService.generateSessionToken(),
+			'anonymous',
+			requestIpCountry || 'unknown',
+			requestIpAddress || 'unknown',
+			false,
+			false,
+		);
+		const sessionCookie = createSessionTokenCookie(session.id, cookieExpiresAt);
+		setSessionCookie(c, sessionCookie);
+		c.set('session', session);
 		c.set('user', null);
-		c.set('session', null);
 		return next();
 	}
 

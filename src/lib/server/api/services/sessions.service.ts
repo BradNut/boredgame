@@ -26,7 +26,7 @@ export type Session = {
 	isTwoFactorAuthenticated: boolean;
 };
 
-export type SessionValidationResult = { session: Session; user: Users } | { session: null; user: null } | { session: Session; user: undefined };
+export type SessionValidationResult = { session: Session; user: Users } | { session: null; user: null } | { session: Session; user: null };
 
 @injectable()
 export class SessionsService {
@@ -97,7 +97,7 @@ export class SessionsService {
 			isTwoFactorAuthenticated: result.is_two_factor_authenticated,
 		};
 		let user: Users | undefined = undefined;
-		if (session.userId) {
+		if (session.userId && session.userId !== 'anonymous') {
 			user = await this.usersRepository.findOneById(session.userId);
 		}
 		if (Date.now() >= session.expiresAt.getTime()) {
@@ -126,7 +126,7 @@ export class SessionsService {
 			);
 		}
 
-		return { session, user };
+		return { session, user: user ?? null };
 	}
 
 	async invalidateSession(sessionId: string) {
