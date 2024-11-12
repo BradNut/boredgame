@@ -1,12 +1,11 @@
-import 'reflect-metadata';
 import {Controller} from '$lib/server/api/common/types/controller';
 import {UsersService} from '$lib/server/api/services/users.service';
-import {inject, injectable} from 'tsyringe';
+import {inject, injectable} from '@needle-di/core';
 import {requireAuth} from '../middleware/require-auth.middleware';
 
 @injectable()
 export class UserController extends Controller {
-	constructor(@inject(UsersService) private readonly usersService: UsersService) {
+	constructor(private usersService = inject(UsersService)) {
 		super();
 	}
 

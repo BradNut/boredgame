@@ -5,7 +5,7 @@ import {FederatedIdentityRepository} from '$lib/server/api/repositories/federate
 import {WishlistsRepository} from '$lib/server/api/repositories/wishlists.repository';
 import {TokensService} from '$lib/server/api/services/tokens.service';
 import {UserRolesService} from '$lib/server/api/services/user_roles.service';
-import {inject, injectable} from 'tsyringe';
+import { inject, injectable } from '@needle-di/core';
 import {CredentialsType, RoleName} from '../databases/postgres/tables';
 import {type UpdateUser, UsersRepository} from '../repositories/users.repository';
 import {CollectionsService} from './collections.service';
@@ -15,15 +15,15 @@ import {WishlistsService} from './wishlists.service';
 @injectable()
 export class UsersService {
 	constructor(
-		@inject(CollectionsService) private readonly collectionsService: CollectionsService,
-		@inject(CredentialsRepository) private readonly credentialsRepository: CredentialsRepository,
-		@inject(DrizzleService) private readonly drizzleService: DrizzleService,
-		@inject(FederatedIdentityRepository) private readonly federatedIdentityRepository: FederatedIdentityRepository,
-		@inject(TokensService) private readonly tokenService: TokensService,
-		@inject(UsersRepository) private readonly usersRepository: UsersRepository,
-		@inject(UserRolesService) private readonly userRolesService: UserRolesService,
-		@inject(WishlistsRepository) private readonly wishlistsRepository: WishlistsRepository,
-		@inject(WishlistsService) private readonly wishlistsService: WishlistsService,
+		private collectionsService = inject(CollectionsService),
+		private credentialsRepository = inject(CredentialsRepository),
+		private drizzleService = inject(DrizzleService),
+		private federatedIdentityRepository = inject(FederatedIdentityRepository),
+		private tokenService = inject(TokensService),
+		private usersRepository = inject(UsersRepository),
+		private userRolesService = inject(UserRolesService),
+		private wishlistsRepository = inject(WishlistsRepository),
+		private wishlistsService = inject(WishlistsService),
 	) {}
 
 	async create(data: SignupUsernameEmailDto) {
@@ -63,6 +63,7 @@ export class UsersService {
 
 			await this.wishlistsService.createEmptyNoName(createdUser.id, trx);
 			await this.collectionsService.createEmptyNoName(createdUser.id, trx);
+			return createdUser;
 		});
 	}
 

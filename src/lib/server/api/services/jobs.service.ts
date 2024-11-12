@@ -1,16 +1,25 @@
-import {RedisProvider} from '$lib/server/api/providers/redis.provider'
 import {type Processor, Queue, Worker} from 'bullmq'
-import {inject, injectable} from 'tsyringe'
+import RedisClient from 'ioredis';
+import { config } from "../common/config";
+import { injectable } from '@needle-di/core';
 
 @injectable()
 export class JobsService {
-	constructor(@inject(RedisProvider) private readonly redis: RedisProvider) {}
+	constructor() { }
 
 	createQueue(name: string) {
-		return new Queue(name, { connection: this.redis })
+		return new Queue(name, {
+			connection: new RedisClient(config.redis.url, {
+				maxRetriesPerRequest: null,
+			})
+		})
 	}
 
 	createWorker(name: string, processor: Processor) {
-		return new Worker(name, processor, { connection: this.redis })
+		return new Worker(name, processor, {
+			connection: new RedisClient(config.redis.url, {
+				maxRetriesPerRequest: null,
+			})
+		})
 	}
 }

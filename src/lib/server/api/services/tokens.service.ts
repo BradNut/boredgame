@@ -1,11 +1,11 @@
-import {inject, injectable} from "tsyringe";
+import {inject, injectable} from "@needle-di/core";
 import {generateRandomString} from "oslo/crypto";
 import {createDate, TimeSpan, type TimeSpanUnit} from 'oslo';
 import {HashingService} from "./hashing.service";
 
 @injectable()
 export class TokensService {
-	constructor(@inject(HashingService) private readonly hashingService: HashingService) { }
+	constructor(private hashingService = inject(HashingService)) { }
 
 	generateToken() {
 		const alphabet = '23456789ACDEFGHJKLMNPQRSTUVWXYZ'; // alphabet with removed look-alike characters (0, 1, O, I)

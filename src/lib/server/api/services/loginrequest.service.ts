@@ -1,24 +1,24 @@
 import type {SigninUsernameDto} from '$lib/server/api/dtos/signin-username.dto';
 import {SessionsService} from '$lib/server/api/services/sessions.service';
 import type {HonoRequest} from 'hono';
-import {inject, injectable} from 'tsyringe';
+import {inject, injectable} from '@needle-di/core';
 import {BadRequest} from '../common/exceptions';
 import type {Credentials} from '../databases/postgres/tables';
-import {DatabaseProvider} from '../providers/database.provider';
 import {CredentialsRepository} from '../repositories/credentials.repository';
 import {UsersRepository} from '../repositories/users.repository';
 import {MailerService} from './mailer.service';
 import {TokensService} from './tokens.service';
+import {DrizzleService} from "$lib/server/api/services/drizzle.service";
 
 @injectable()
 export class LoginRequestsService {
 	constructor(
-		@inject(SessionsService) private sessionsService: SessionsService,
-		@inject(DatabaseProvider) private readonly db: DatabaseProvider,
-		@inject(TokensService) private readonly tokensService: TokensService,
-		@inject(MailerService) private readonly mailerService: MailerService,
-		@inject(UsersRepository) private readonly usersRepository: UsersRepository,
-		@inject(CredentialsRepository) private readonly credentialsRepository: CredentialsRepository,
+		private sessionsService = inject(SessionsService),
+		private drizzleService = inject(DrizzleService) ,
+		private tokensService = inject(TokensService) ,
+		private mailerService = inject(MailerService) ,
+		private usersRepository = inject(UsersRepository) ,
+		private credentialsRepository = inject(CredentialsRepository) ,
 	) {}
 
 	// async create(data: RegisterEmailDto) {
@@ -73,7 +73,7 @@ export class LoginRequestsService {
 	// Create a new user and send a welcome email - or other onboarding process
 	private async handleNewUserRegistration(email: string) {
 		const newUser = await this.usersRepository.create({ email, verified: true });
-		this.mailerService.sendWelcome({ to: email, props: null });
+		// this.mailerService.sendWelcome({ to: email, props: null });
 		// TODO: add whatever onboarding process or extra data you need here
 		return newUser;
 	}

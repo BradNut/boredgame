@@ -1,4 +1,4 @@
-import {inject, injectable} from 'tsyringe'
+import {inject, injectable} from '@needle-di/core'
 import {FederatedIdentityRepository} from '../repositories/federated_identity.repository'
 import {UsersService} from './users.service'
 import type {OAuthProviders, OAuthUser} from "$lib/server/api/common/types/oauth";
@@ -6,8 +6,8 @@ import type {OAuthProviders, OAuthUser} from "$lib/server/api/common/types/oauth
 @injectable()
 export class OAuthService {
 	constructor(
-		@inject(FederatedIdentityRepository) private readonly federatedIdentityRepository: FederatedIdentityRepository,
-		@inject(UsersService) private readonly usersService: UsersService,
+		private federatedIdentityRepository = inject(FederatedIdentityRepository),
+		private usersService = inject(UsersService),
 	) {}
 
 	async handleOAuthUser(oAuthUser: OAuthUser, oauthProvider: OAuthProviders) {

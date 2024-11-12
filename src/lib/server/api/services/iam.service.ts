@@ -4,30 +4,13 @@ import type {UpdateProfileDto} from '$lib/server/api/dtos/update-profile.dto';
 import type {VerifyPasswordDto} from '$lib/server/api/dtos/verify-password.dto';
 import {SessionsService} from '$lib/server/api/services/sessions.service';
 import {UsersService} from '$lib/server/api/services/users.service';
-import {inject, injectable} from 'tsyringe';
+import {inject, injectable} from '@needle-di/core';
 
-/* -------------------------------------------------------------------------- */
-/*                                   Service                                  */
-/* -------------------------------------------------------------------------- */
-/* -------------------------------------------------------------------------- */
-/* ---------------------------------- About --------------------------------- */
-/*
-Services are responsible for handling business logic and data manipulation.
-They generally call on repositories or other services to complete a use-case.
-*/
-/* ---------------------------------- Notes --------------------------------- */
-/*
-Services should be kept as clean and simple as possible.
-
-Create private functions to handle complex logic and keep the public methods as
-simple as possible. This makes the service easier to read, test and understand.
-*/
-/* -------------------------------------------------------------------------- */
 @injectable()
 export class IamService {
 	constructor(
-		@inject(SessionsService) private sessionsService: SessionsService,
-		@inject(UsersService) private readonly usersService: UsersService,
+		private readonly sessionsService = inject(SessionsService),
+		private readonly usersService = inject(UsersService),
 	) {}
 
 	async logout(sessionId: string) {

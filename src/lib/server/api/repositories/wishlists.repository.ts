@@ -1,6 +1,6 @@
 import {DrizzleService} from '$lib/server/api/services/drizzle.service';
 import {eq, type InferInsertModel} from 'drizzle-orm';
-import {inject, injectable} from 'tsyringe';
+import {inject, injectable} from '@needle-di/core';
 import {takeFirstOrThrow} from '../common/utils/repository';
 import {wishlistsTable} from '../databases/postgres/tables';
 
@@ -9,7 +9,7 @@ export type UpdateWishlist = Partial<CreateWishlist>;
 
 @injectable()
 export class WishlistsRepository {
-	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
+	constructor(private drizzle = inject(DrizzleService)) {}
 
 	async findAll(db = this.drizzle.db) {
 		return db.query.wishlistsTable.findMany();

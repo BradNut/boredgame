@@ -1,12 +1,11 @@
-import 'reflect-metadata'
 import {Controller} from '$lib/server/api/common/types/controller'
 import {WishlistsService} from '$lib/server/api/services/wishlists.service'
-import {inject, injectable} from 'tsyringe'
+import {inject, injectable} from '@needle-di/core'
 import {requireAuth} from '../middleware/require-auth.middleware'
 
 @injectable()
 export class WishlistController extends Controller {
-	constructor(@inject(WishlistsService) private readonly wishlistsService: WishlistsService) {
+	constructor(private wishlistsService = inject(WishlistsService)) {
 		super()
 	}
 

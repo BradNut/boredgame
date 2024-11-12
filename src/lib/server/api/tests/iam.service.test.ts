@@ -1,21 +1,22 @@
-import 'reflect-metadata';
 import {IamService} from '$lib/server/api/services/iam.service';
 import {SessionsService} from '$lib/server/api/services/sessions.service';
 import {UsersService} from '$lib/server/api/services/users.service';
 import {faker} from '@faker-js/faker';
-import {container} from 'tsyringe';
+import { Container } from '@needle-di/core';
 import {afterAll, beforeAll, beforeEach, describe, expect, it, vi} from 'vitest';
 
 describe('IamService', () => {
 	let service: IamService;
-	const luciaService = vi.mocked(SessionsService.prototype);
+	const container = new Container();
+	const sessionService = vi.mocked(SessionsService.prototype);
 	const userService = vi.mocked(UsersService.prototype);
 
 	beforeAll(() => {
-		service = container
-			.register<SessionsService>(SessionsService, { useValue: luciaService })
-			.register<UsersService>(UsersService, { useValue: userService })
-			.resolve(IamService);
+		container
+			.bind<SessionsService>({ provide: SessionsService, useValue: sessionService })
+			.bind<UsersService>({ provide: UsersService, useValue: userService });
+
+		service = container.get(IamService);
 	});
 
 	beforeEach(() => {

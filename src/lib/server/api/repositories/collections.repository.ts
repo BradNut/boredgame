@@ -1,7 +1,7 @@
 import {takeFirstOrThrow} from '$lib/server/api/common/utils/repository';
 import {DrizzleService} from '$lib/server/api/services/drizzle.service';
 import {eq, type InferInsertModel} from 'drizzle-orm';
-import {inject, injectable} from 'tsyringe';
+import {inject, injectable} from '@needle-di/core';
 import {collections} from '../databases/postgres/tables';
 
 export type CreateCollection = InferInsertModel<typeof collections>;
@@ -9,7 +9,7 @@ export type UpdateCollection = Partial<CreateCollection>;
 
 @injectable()
 export class CollectionsRepository {
-	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
+	constructor(private drizzle = inject(DrizzleService)) {}
 
 	async findAll(db = this.drizzle.db) {
 		return db.query.collections.findMany();

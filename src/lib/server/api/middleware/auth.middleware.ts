@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import {
 	cookieExpiresAt,
 	cookieName,
@@ -12,11 +11,12 @@ import type {MiddlewareHandler} from 'hono';
 import {getCookie} from 'hono/cookie';
 import {createMiddleware} from 'hono/factory';
 import {verifyRequestOrigin} from 'oslo/request';
-import {container} from 'tsyringe';
+import { Container } from '@needle-di/core';
 import type {AppBindings} from '../common/types/hono';
 
 // resolve dependencies from the container
-const sessionService = container.resolve(SessionsService);
+const container = new Container();
+const sessionService = container.get(SessionsService);
 
 // CSRF protection middleware
 export const verifyOrigin: MiddlewareHandler<AppBindings> = createMiddleware(async (c, next) => {

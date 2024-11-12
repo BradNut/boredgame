@@ -1,5 +1,5 @@
 import {and, eq, type InferInsertModel} from 'drizzle-orm';
-import {inject, injectable} from 'tsyringe';
+import {inject, injectable} from '@needle-di/core';
 import {takeFirstOrThrow} from '../common/utils/repository';
 import {federatedIdentityTable} from '../databases/postgres/tables';
 import {DrizzleService} from '../services/drizzle.service';
@@ -8,7 +8,7 @@ export type CreateFederatedIdentity = InferInsertModel<typeof federatedIdentityT
 
 @injectable()
 export class FederatedIdentityRepository {
-	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
+	constructor(private drizzle = inject(DrizzleService)) {}
 
 	async findOneByUserIdAndProvider(userId: string, provider: string) {
 		return this.drizzle.db.query.federatedIdentityTable.findFirst({

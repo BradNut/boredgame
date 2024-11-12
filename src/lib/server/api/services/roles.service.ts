@@ -1,10 +1,10 @@
-import {inject, injectable} from "tsyringe";
+import {inject, injectable} from "@needle-di/core";
 import {RolesRepository} from "$lib/server/api/repositories/roles.repository";
 
 @injectable()
 export class RolesService {
 	constructor(
-			@inject(RolesRepository) private readonly rolesRepository: RolesRepository
+			private rolesRepository = inject(RolesRepository)
 	) { }
 
 

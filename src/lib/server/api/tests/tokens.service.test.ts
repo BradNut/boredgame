@@ -1,15 +1,17 @@
 import 'reflect-metadata'
-import {container} from 'tsyringe'
+import { Container } from '@needle-di/core'
 import {afterAll, beforeAll, describe, expect, expectTypeOf, it, vi} from 'vitest'
 import {HashingService} from '../services/hashing.service'
 import {TokensService} from '../services/tokens.service'
 
 describe('TokensService', () => {
+	const container = new Container()
 	let service: TokensService
 	const hashingService = vi.mocked(HashingService.prototype)
 
 	beforeAll(() => {
-		service = container.register<HashingService>(HashingService, { useValue: hashingService }).resolve(TokensService)
+		container.bind<HashingService>({ provide: HashingService, useValue: hashingService });
+		service = container.get(TokensService);
 	})
 
 	afterAll(() => {

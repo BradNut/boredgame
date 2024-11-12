@@ -9,7 +9,8 @@ import {WishlistController} from '$lib/server/api/controllers/wishlist.controlle
 import {AuthCleanupJobs} from '$lib/server/api/jobs/auth-cleanup.job';
 import {extendZodWithOpenApi} from 'hono-zod-openapi';
 import {hc} from 'hono/client';
-import {container} from 'tsyringe';
+// import {container} from 'tsyringe';
+import { Container } from '@needle-di/core';
 import {z} from 'zod';
 import {config} from './common/config';
 import {IamController} from './controllers/iam.controller';
@@ -17,20 +18,22 @@ import {LoginController} from './controllers/login.controller';
 
 extendZodWithOpenApi(z);
 
+const container = new Container();
+
 export const app = createApp();
 
 /* -------------------------------------------------------------------------- */
 /*                                   Routes                                   */
 /* -------------------------------------------------------------------------- */
 const routes = app
-	.route('/me', container.resolve(IamController).routes())
-	.route('/user', container.resolve(UserController).routes())
-	.route('/login', container.resolve(LoginController).routes())
-	.route('/oauth', container.resolve(OAuthController).routes())
-	.route('/signup', container.resolve(SignupController).routes())
-	.route('/wishlists', container.resolve(WishlistController).routes())
-	.route('/collections', container.resolve(CollectionController).routes())
-	.route('/mfa', container.resolve(MfaController).routes())
+	.route('/me', container.get(IamController).routes())
+	.route('/user', container.get(UserController).routes())
+	.route('/login', container.get(LoginController).routes())
+	.route('/oauth', container.get(OAuthController).routes())
+	.route('/signup', container.get(SignupController).routes())
+	.route('/wishlists', container.get(WishlistController).routes())
+	.route('/collections', container.get(CollectionController).routes())
+	.route('/mfa', container.get(MfaController).routes())
 	.get('/', (c) => c.json({ message: 'Server is healthy' }));
 
 configureOpenAPI(app);
@@ -38,8 +41,8 @@ configureOpenAPI(app);
 /* -------------------------------------------------------------------------- */
 /*                                  Cron Jobs                                 */
 /* -------------------------------------------------------------------------- */
-container.resolve(AuthCleanupJobs).deleteStaleEmailVerificationRequests();
-container.resolve(AuthCleanupJobs).deleteStaleLoginRequests();
+container.get(AuthCleanupJobs).deleteStaleEmailVerificationRequests();
+container.get(AuthCleanupJobs).deleteStaleLoginRequests();
 
 /* -------------------------------------------------------------------------- */
 /*                                   Exports                                  */
