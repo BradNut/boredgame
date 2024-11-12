@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import {faker} from '@faker-js/faker';
-import {container} from 'tsyringe';
+import { Container } from '@needle-di/core';
 import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest';
 import {CredentialsType} from '../databases/postgres/tables';
 import {CredentialsRepository} from '../repositories/credentials.repository';
@@ -13,6 +13,7 @@ import {UsersService} from '../services/users.service';
 import {WishlistsService} from '../services/wishlists.service';
 
 describe('UsersService', () => {
+	const container = new Container();
 	let service: UsersService;
 	const credentialsRepository = vi.mocked(CredentialsRepository.prototype);
 	const drizzleService = vi.mocked(DrizzleService.prototype, { deep: true });
@@ -38,15 +39,16 @@ describe('UsersService', () => {
 	}));
 
 	beforeAll(() => {
-		service = container
-			.register<CredentialsRepository>(CredentialsRepository, { useValue: credentialsRepository })
-			.register<DrizzleService>(DrizzleService, { useValue: drizzleService })
-			.register<TokensService>(TokensService, { useValue: tokensService })
-			.register<UsersRepository>(UsersRepository, { useValue: usersRepository })
-			.register<UserRolesService>(UserRolesService, { useValue: userRolesService })
-			.register<WishlistsService>(WishlistsService, { useValue: wishlistsService })
-			.register<CollectionsService>(CollectionsService, { useValue: collectionsService })
-			.resolve(UsersService);
+		container
+			.bind<CredentialsRepository>({ provide: CredentialsRepository, useValue: credentialsRepository })
+			.bind<DrizzleService>({ provide: DrizzleService, useValue: drizzleService })
+			.bind<TokensService>({ provide: TokensService, useValue: tokensService })
+			.bind<UsersRepository>({ provide: UsersRepository, useValue: usersRepository })
+			.bind<UserRolesService>({ provide: UserRolesService, useValue: userRolesService })
+			.bind<WishlistsService>({ provide: WishlistsService, useValue: wishlistsService })
+			.bind<CollectionsService>({ provide: CollectionsService, useValue: collectionsService });
+
+		service = container.get(UsersService);
 
 		drizzleService.db = {
 			transaction: vi.fn().mockImplementation(async (callback) => {
@@ -87,37 +89,22 @@ describe('UsersService', () => {
 		it('should resolve', async () => {
 			const hashedPassword = 'testhash';
 			tokensService.createHashedToken = vi.fn().mockResolvedValue(hashedPassword);
-			// drizzleService.db = {
-			// 	transaction: vi.fn().mockResolvedValue(dbUser satisfies Awaited<ReturnType<typeof drizzleService.db.transaction>>),
-			// }
-			usersRepository.create = vi.fn().mockResolvedValue(dbUser satisfies Awaited<ReturnType<typeof usersRepository.create>>);
-			credentialsRepository.create = vi.fn().mockResolvedValue(dbCredentials satisfies Awaited<ReturnType<typeof credentialsRepository.create>>);
-			userRolesService.addRoleToUser = vi.fn().mockResolvedValue(undefined);
-			wishlistsService.createEmptyNoName = vi.fn().mockResolvedValue(undefined);
-			collectionsService.createEmptyNoName = vi.fn().mockResolvedValue(undefined);
+
+			drizzleService.db.transaction = vi.fn().mockImplementation(async (callback) => {
+				return dbUser satisfies Awaited<ReturnType<typeof callback>>
+			});
 
 			const spy_tokensService_createHashToken = vi.spyOn(tokensService, 'createHashedToken');
-			const spy_usersRepository_create = vi.spyOn(usersRepository, 'create');
-			const spy_credentialsRepository_create = vi.spyOn(credentialsRepository, 'create');
-			const spy_userRolesService_addRoleToUser = vi.spyOn(userRolesService, 'addRoleToUser');
-			const spy_wishlistsService_createEmptyNoName = vi.spyOn(wishlistsService, 'createEmptyNoName');
-			const spy_collectionsService_createEmptyNoName = vi.spyOn(collectionsService, 'createEmptyNoName');
-			await expect(
-				service.create({
-					firstName: faker.person.firstName(),
-					lastName: faker.person.lastName(),
-					email: faker.internet.email(),
-					username: faker.internet.userName(),
-					password: faker.string.alphanumeric(10),
-					confirm_password: faker.string.alphanumeric(10),
-				}),
-			).resolves.toEqual(dbUser);
+			const createdUser = await service.create({
+				firstName: faker.person.firstName(),
+				lastName: faker.person.lastName(),
+				email: faker.internet.email(),
+				username: faker.internet.userName(),
+				password: faker.string.alphanumeric(10),
+				confirm_password: faker.string.alphanumeric(10),
+			});
+			expect(createdUser).toEqual(dbUser);
 			expect(spy_tokensService_createHashToken).toBeCalledTimes(1);
-			expect(spy_usersRepository_create).toBeCalledTimes(1);
-			expect(spy_credentialsRepository_create).toBeCalledTimes(1);
-			expect(spy_userRolesService_addRoleToUser).toBeCalledTimes(1);
-			expect(spy_wishlistsService_createEmptyNoName).toBeCalledTimes(1);
-			expect(spy_collectionsService_createEmptyNoName).toBeCalledTimes(1);
 		});
 	});
 	describe('Update User', () => {

@@ -3,7 +3,7 @@ import { UsersRepository } from '$lib/server/api/repositories/users.repository';
 import { RedisService } from '$lib/server/api/services/redis.service';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from '@needle-di/core';
 import type { Users } from '../databases/postgres/tables';
 
 export type RedisSession = {
@@ -31,8 +31,8 @@ export type SessionValidationResult = { session: Session; user: Users } | { sess
 @injectable()
 export class SessionsService {
 	constructor(
-		@inject(RedisService) private readonly redisService: RedisService,
-		@inject(UsersRepository) private readonly usersRepository: UsersRepository,
+		private redisService = inject(RedisService),
+		private usersRepository = inject(UsersRepository),
 	) {}
 
 	generateSessionToken() {

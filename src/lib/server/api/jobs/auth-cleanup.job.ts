@@ -1,11 +1,11 @@
-import {inject, injectable} from 'tsyringe'
+import {inject, injectable} from '@needle-di/core'
 import {JobsService} from '../services/jobs.service'
 
 @injectable()
 export class AuthCleanupJobs {
 	private queue
 
-	constructor(@inject(JobsService) private jobsService: JobsService) {
+	constructor(private jobsService = inject(JobsService)) {
 		/* ------------------------------ Create Queue ------------------------------ */
 		this.queue = this.jobsService.createQueue('test')
 

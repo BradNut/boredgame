@@ -1,11 +1,12 @@
 import {rateLimiter} from 'hono-rate-limiter';
 import {RedisStore} from 'rate-limit-redis';
-import {container} from 'tsyringe';
+import { Container } from '@needle-di/core';
 import type {AppBindings} from '../common/types/hono';
 import {RedisService} from '../services/redis.service';
 
+const container = new Container();
 // resolve dependencies from the container
-const { client } = container.resolve(RedisService);
+const { client } = container.get(RedisService);
 
 export function limiter({
 	limit,

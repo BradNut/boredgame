@@ -1,11 +1,11 @@
 import type {db} from '$lib/server/api/packages/drizzle'
 import {generateRandomAnimalName} from '$lib/utils/randomDataUtil'
-import {inject, injectable} from 'tsyringe'
+import {inject, injectable} from '@needle-di/core'
 import {WishlistsRepository} from '../repositories/wishlists.repository'
 
 @injectable()
 export class WishlistsService {
-	constructor(@inject(WishlistsRepository) private readonly wishlistsRepository: WishlistsRepository) {}
+	constructor(private wishlistsRepository = inject(WishlistsRepository)) {}
 
 	async findAllByUserId(userId: string) {
 		return this.wishlistsRepository.findAllByUserId(userId)

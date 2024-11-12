@@ -1,6 +1,6 @@
-import {injectable} from 'tsyringe'
+import {injectable} from '@needle-di/core'
 import {config} from '../common/config'
-import type {Email} from '../common/inferfaces/email.interface'
+import type {Email} from "$lib/server/api/common/types/email";
 
 type SendProps = {
 	to: string | string[]

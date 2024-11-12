@@ -1,14 +1,13 @@
-import 'reflect-metadata'
 import {RecoveryCodesRepository} from '$lib/server/api/repositories/recovery-codes.repository'
 import {alphabet, generateRandomString} from 'oslo/crypto'
-import {inject, injectable} from 'tsyringe'
+import {inject, injectable} from '@needle-di/core'
 import {HashingService} from './hashing.service'
 
 @injectable()
 export class RecoveryCodesService {
 	constructor(
-		@inject(HashingService) private readonly hashingService: HashingService,
-		@inject(RecoveryCodesRepository) private readonly recoveryCodesRepository: RecoveryCodesRepository
+		private hashingService = inject(HashingService),
+		private recoveryCodesRepository = inject(RecoveryCodesRepository),
 	) {}
 
 	async findAllRecoveryCodesByUserId(userId: string) {

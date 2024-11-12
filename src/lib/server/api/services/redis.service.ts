@@ -1,6 +1,7 @@
 import {config} from '$lib/server/api/common/config'
 import {Redis} from 'ioredis'
-import {type Disposable, injectable} from 'tsyringe'
+import { injectable} from '@needle-di/core';
+import type {Disposable} from 'tsyringe';
 
 @injectable()
 export class RedisService implements Disposable {

@@ -1,8 +1,7 @@
-import 'reflect-metadata';
 import {credentialsTable, CredentialsType} from '$lib/server/api/databases/postgres/tables/credentials.table';
 import {DrizzleService} from '$lib/server/api/services/drizzle.service';
 import {and, eq, type InferInsertModel} from 'drizzle-orm';
-import {inject, injectable} from 'tsyringe';
+import {inject, injectable} from '@needle-di/core';
 import {takeFirstOrThrow} from '../common/utils/repository';
 
 export type CreateCredentials = InferInsertModel<typeof credentialsTable>;
@@ -11,7 +10,7 @@ export type DeleteCredentials = Pick<CreateCredentials, 'id'>;
 
 @injectable()
 export class CredentialsRepository {
-	constructor(@inject(DrizzleService) private readonly drizzle: DrizzleService) {}
+	constructor(private drizzle = inject(DrizzleService)) {}
 
 	async findOneByUserId(userId: string, db = this.drizzle.db) {
 		return db.query.credentialsTable.findFirst({

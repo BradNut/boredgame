@@ -1,11 +1,10 @@
-import 'reflect-metadata';
 import {Controller} from '$lib/server/api/common/types/controller';
 import {cookieExpiresAt, createSessionTokenCookie, setSessionCookie} from '$lib/server/api/common/utils/cookies';
 import {signinUsernameDto} from '$lib/server/api/dtos/signin-username.dto';
 import {SessionsService} from '$lib/server/api/services/sessions.service';
 import {zValidator} from '@hono/zod-validator';
 import {openApi} from 'hono-zod-openapi';
-import {inject, injectable} from 'tsyringe';
+import { inject, injectable } from '@needle-di/core';
 import {limiter} from '../middleware/rate-limiter.middleware';
 import {LoginRequestsService} from '../services/loginrequest.service';
 import {signinUsername} from './login.routes';
@@ -13,8 +12,8 @@ import {signinUsername} from './login.routes';
 @injectable()
 export class LoginController extends Controller {
 	constructor(
-		@inject(LoginRequestsService) private readonly loginRequestsService: LoginRequestsService,
-		@inject(SessionsService) private luciaService: SessionsService,
+		private loginRequestsService = inject(LoginRequestsService),
+		private sessionsService = inject(SessionsService),
 	) {
 		super();
 	}

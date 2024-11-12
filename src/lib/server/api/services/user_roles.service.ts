@@ -1,13 +1,13 @@
 import type {db} from '$lib/server/api/packages/drizzle'
 import {type CreateUserRole, UserRolesRepository} from '$lib/server/api/repositories/user_roles.repository'
 import {RolesService} from '$lib/server/api/services/roles.service'
-import {inject, injectable} from 'tsyringe'
+import {inject, injectable} from '@needle-di/core'
 
 @injectable()
 export class UserRolesService {
 	constructor(
-		@inject(UserRolesRepository) private readonly userRolesRepository: UserRolesRepository,
-		@inject(RolesService) private readonly rolesService: RolesService,
+		private userRolesRepository = inject(UserRolesRepository),
+		private rolesService = inject(RolesService),
 	) {}
 
 	async findOneById(id: string) {

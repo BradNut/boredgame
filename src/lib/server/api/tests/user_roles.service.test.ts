@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import {faker} from '@faker-js/faker';
-import {container} from 'tsyringe';
+import { Container } from '@needle-di/core';
 import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest';
 import {RoleName} from '../databases/postgres/tables';
 import {UserRolesRepository} from '../repositories/user_roles.repository';
@@ -8,15 +8,17 @@ import {RolesService} from '../services/roles.service';
 import {UserRolesService} from '../services/user_roles.service';
 
 describe('UserRolesService', () => {
+	const container = new Container();
 	let service: UserRolesService;
 	const userRolesRepository = vi.mocked(UserRolesRepository.prototype);
 	const rolesService = vi.mocked(RolesService.prototype);
 
 	beforeAll(() => {
-		service = container
-			.register<UserRolesRepository>(UserRolesRepository, { useValue: userRolesRepository })
-			.register<RolesService>(RolesService, { useValue: rolesService })
-			.resolve(UserRolesService);
+		container
+			.bind<UserRolesRepository>({ provide: UserRolesRepository, useValue: userRolesRepository })
+			.bind<RolesService>({ provide: RolesService, useValue: rolesService });
+
+		service = container.get(UserRolesService);
 	});
 
 	afterAll(() => {

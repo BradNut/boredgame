@@ -1,12 +1,12 @@
 import {CredentialsRepository} from '$lib/server/api/repositories/credentials.repository';
 import {decodeHex, encodeHexLowerCase} from '@oslojs/encoding';
 import {verifyTOTP} from '@oslojs/otp';
-import {inject, injectable} from 'tsyringe';
+import {inject, injectable} from '@needle-di/core';
 import type {CredentialsType} from '../databases/postgres/tables';
 
 @injectable()
 export class TotpService {
-	constructor(@inject(CredentialsRepository) private readonly credentialsRepository: CredentialsRepository) {}
+	constructor(private credentialsRepository = inject(CredentialsRepository)) {}
 
 	async findOneByUserId(userId: string) {
 		return this.credentialsRepository.findTOTPCredentialsByUserId(userId);

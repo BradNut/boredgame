@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import {Controller} from '$lib/server/api/common/types/controller';
 import type {OAuthUser} from '$lib/server/api/common/types/oauth';
 import {cookieExpiresAt, createSessionTokenCookie, setSessionCookie} from '$lib/server/api/common/utils/cookies';
@@ -7,14 +6,13 @@ import {SessionsService} from '$lib/server/api/services/sessions.service';
 import {github, google} from '$lib/server/auth';
 import {OAuth2RequestError} from 'arctic';
 import {getCookie} from 'hono/cookie';
-
-import {inject, injectable} from 'tsyringe';
+import { injectable, inject } from "@needle-di/core";
 
 @injectable()
 export class OAuthController extends Controller {
 	constructor(
-		@inject(SessionsService) private sessionsService: SessionsService,
-		@inject(OAuthService) private oauthService: OAuthService,
+		private oauthService = inject(OAuthService),
+		private sessionsService = inject(SessionsService),
 	) {
 		super();
 	}

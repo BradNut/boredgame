@@ -11,16 +11,16 @@ import {LoginRequestsService} from '$lib/server/api/services/loginrequest.servic
 import {SessionsService} from '$lib/server/api/services/sessions.service';
 import {zValidator} from '@hono/zod-validator';
 import {openApi} from 'hono-zod-openapi';
-import {inject, injectable} from 'tsyringe';
+import { injectable, inject } from "@needle-di/core";
 import {requireAuth} from '../middleware/require-auth.middleware';
 import {iam, logout, updateEmail, updatePassword, updateProfile, verifyPassword} from './iam.routes';
 
 @injectable()
 export class IamController extends Controller {
 	constructor(
-		@inject(IamService) private readonly iamService: IamService,
-		@inject(LoginRequestsService) private readonly loginRequestService: LoginRequestsService,
-		@inject(SessionsService) private sessionsService: SessionsService,
+			private iamService = inject(IamService),
+			private loginRequestService = inject(LoginRequestsService),
+			private sessionsService = inject(SessionsService),
 	) {
 		super();
 	}

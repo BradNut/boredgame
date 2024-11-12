@@ -6,16 +6,15 @@ import {LoginRequestsService} from '$lib/server/api/services/loginrequest.servic
 import {SessionsService} from '$lib/server/api/services/sessions.service';
 import {UsersService} from '$lib/server/api/services/users.service';
 import {zValidator} from '@hono/zod-validator';
-import {setCookie} from 'hono/cookie';
-import {TimeSpan} from 'oslo';
-import {inject, injectable} from 'tsyringe';
+import {inject, injectable} from '@needle-di/core';
+import {cookieExpiresAt, createSessionTokenCookie, setSessionCookie} from "$lib/server/api/common/utils/cookies";
 
 @injectable()
 export class SignupController extends Controller {
 	constructor(
-		@inject(UsersService) private readonly usersService: UsersService,
-		@inject(LoginRequestsService) private readonly loginRequestService: LoginRequestsService,
-		@inject(SessionsService) private luciaService: SessionsService,
+		private usersService = inject(UsersService),
+		private loginRequestService = inject(LoginRequestsService),
+		private sessionsService = inject(SessionsService),
 	) {
 		super();
 	}
@@ -36,20 +35,9 @@ export class SignupController extends Controller {
 			}
 
 			const session = await this.loginRequestService.createUserSession(user.id, c.req, undefined);
-			const sessionCookie = this.luciaService.lucia.createSessionCookie(session.id);
+			const sessionCookie = createSessionTokenCookie(session.id, cookieExpiresAt);
 			console.log('set cookie', sessionCookie);
-			setCookie(c, sessionCookie.name, sessionCookie.value, {
-				path: sessionCookie.attributes.path,
-				maxAge:
-					sessionCookie?.attributes?.maxAge && sessionCookie?.attributes?.maxAge < new TimeSpan(365, 'd').seconds()
-						? sessionCookie.attributes.maxAge
-						: new TimeSpan(2, 'w').seconds(),
-				domain: sessionCookie.attributes.domain,
-				sameSite: sessionCookie.attributes.sameSite as any,
-				secure: sessionCookie.attributes.secure,
-				httpOnly: sessionCookie.attributes.httpOnly,
-				expires: sessionCookie.attributes.expires,
-			});
+			setSessionCookie(c, sessionCookie);
 			return c.json({ message: 'ok' });
 		});
 	}

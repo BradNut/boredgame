@@ -1,13 +1,13 @@
-import 'reflect-metadata'
-import {container} from 'tsyringe'
+import { Container } from '@needle-di/core';
 import {afterAll, beforeAll, describe, expect, it, vi} from 'vitest'
 import {HashingService} from '../services/hashing.service'
 
 describe('HashingService', () => {
 	let service: HashingService
+	const container = new Container()
 
 	beforeAll(() => {
-		service = container.resolve(HashingService)
+		service = container.get(HashingService)
 	})
 
 	afterAll(() => {
