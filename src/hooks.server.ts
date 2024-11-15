@@ -1,18 +1,21 @@
-import 'reflect-metadata';
-import { StatusCodes } from '$lib/constants/status-codes';
-import type { ApiRoutes } from '$lib/server/api';
-import { parseApiResponse } from '$lib/utils/api';
-import { type Handle, redirect } from '@sveltejs/kit';
-import { sequence } from '@sveltejs/kit/hooks';
-import { hc } from 'hono/client';
+import "reflect-metadata";
+import { StatusCodes } from "$lib/constants/status-codes";
+import type { ApiRoutes } from "$lib/server/api";
+import { parseApiResponse } from "$lib/utils/api";
+import { type Handle, redirect } from "@sveltejs/kit";
+import { sequence } from "@sveltejs/kit/hooks";
+import { hc } from "hono/client";
+import { i18n } from "$lib/i18n";
+
+const handleParaglide: Handle = i18n.handle();
 
 const apiClient: Handle = async ({ event, resolve }) => {
 	/* ------------------------------ Register api ------------------------------ */
-	const { api } = hc<ApiRoutes>('/', {
+	const { api } = hc<ApiRoutes>("/", {
 		fetch: event.fetch,
 		headers: {
-			'x-forwarded-for': event.url.host.includes('sveltekit-prerender') ? '127.0.0.1' : event.getClientAddress(),
-			host: event.request.headers.get('host') || '',
+			"x-forwarded-for": event.url.host.includes("sveltekit-prerender") ? "127.0.0.1" : event.getClientAddress(),
+			host: event.request.headers.get("host") || "",
 		},
 	});
 
@@ -25,7 +28,7 @@ const apiClient: Handle = async ({ event, resolve }) => {
 	async function getAuthedUserOrThrow() {
 		const { data } = await api.user.$get().then(parseApiResponse);
 		if (!data || !data.user) {
-			throw redirect(StatusCodes.TEMPORARY_REDIRECT, '/');
+			throw redirect(StatusCodes.TEMPORARY_REDIRECT, "/");
 		}
 		return data?.user;
 	}
@@ -40,4 +43,4 @@ const apiClient: Handle = async ({ event, resolve }) => {
 	return await resolve(event);
 };
 
-export const handle: Handle = sequence(apiClient);
+export const handle: Handle = sequence(apiClient, handleParaglide);

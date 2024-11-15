@@ -1,6 +1,5 @@
 const tailwindcss = require("tailwindcss");
 const tailwindNesting = require('tailwindcss/nesting');
-const autoprefixer = require('autoprefixer');
 const postcssPresetEnv = require('postcss-preset-env');
 const atImport = require('postcss-import');
 

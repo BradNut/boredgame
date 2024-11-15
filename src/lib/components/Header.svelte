@@ -3,10 +3,32 @@ import Logo from '$components/logo.svelte';
 import * as Avatar from '$lib/components/ui/avatar';
 import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 import { ListChecks, ListTodo, LogOut, Settings } from 'lucide-svelte';
+import { type AvailableLanguageTag, languageTag } from '$lib/paraglide/runtime';
+import { i18n } from '$lib/i18n';
+import { page } from '$app/stores';
+import { goto } from '$app/navigation';
+import type { Users } from '$lib/server/api/databases/postgres/tables';
 
-let { user = null } = $props();
+let { user = null }: { user: Users | null } = $props();
 
 let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)');
+
+let language = $derived.by(() => {
+	switch (languageTag()) {
+		case 'en':
+			return '🇺🇸';
+		case 'es':
+			return '🇲🇽';
+		default:
+			return '🇺🇸';
+	}
+});
+
+function switchToLanguage(newLanguage: AvailableLanguageTag) {
+	const canonicalPath = i18n.route($page.url.pathname);
+	const localisedPath = i18n.resolveRoute(canonicalPath, newLanguage);
+	goto(localisedPath);
+}
 </script>
 
 <header>
@@ -25,8 +47,22 @@ let avatar: string = $derived(user?.username?.slice(0, 1).toUpperCase() || ':)')
 			<a href="/login"> <span class="flex-auto">Login</span></a>
 			<a href="/signup"> <span class="flex-auto">Sign Up</span></a>
 		{/if}
+		{@render languageDropdown()}
 	</nav>
 </header>
+
+{#snippet languageDropdown()}
+	<DropdownMenu.Root>
+		<DropdownMenu.Trigger>
+			<span class="flex-auto">{language}</span>
+		</DropdownMenu.Trigger>
+		<DropdownMenu.Content>
+			<button onclick={() => switchToLanguage('en')}><DropdownMenu.Item><span>🇺🇸 English</span></DropdownMenu.Item></button>
+			<DropdownMenu.Separator />
+			<button onclick={() => switchToLanguage('es')}><DropdownMenu.Item><span>🇲🇽 Spanish</span></DropdownMenu.Item></button>
+		</DropdownMenu.Content>
+	</DropdownMenu.Root>
+{/snippet}
 
 {#snippet userDropdown()}
 	<DropdownMenu.Root>

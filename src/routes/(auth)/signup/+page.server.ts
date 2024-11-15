@@ -42,7 +42,7 @@ export const load: PageServerLoad = async (event) => {
 	// }
 
 	return {
-		form: await superValidate(zod(signupUsernameEmailDto), {
+		signupForm: await superValidate(zod(signupUsernameEmailDto), {
 			defaults: signUpDefaults,
 		}),
 	};

@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import { toastMessage } from '$lib/utils/superforms'; // Adjust the path if necessary
+import { Button } from '$lib/components/ui/button';
+import { toastMessage } from '$lib/utils/superforms'; // Adjust the path if necessary
 
-	const { codeContent, language }: { codeContent: string; language: string } = $props()
+const { codeContent, language }: { codeContent: string; language: string } = $props();
 
 // Function to copy code to clipboard
 const copyToClipboard = () => {
 	navigator.clipboard
 		.writeText(codeContent)
 		.then(() => {
-			toastMessage({ text: 'Copied to clipboard!', type: 'success' })
+			toastMessage({ text: 'Copied to clipboard!', type: 'success' });
 		})
 		.catch((err) => {
-			console.error('Failed to copy: ', err)
-		})
-}
+			console.error('Failed to copy: ', err);
+		});
+};
 </script>
 
 {#if codeContent}
@@ -24,7 +24,7 @@ const copyToClipboard = () => {
 				{codeContent}
 			</span>
 		</code>
-		<Button class="copy-button" on:click={copyToClipboard}>Copy</Button>
+		<Button class="copy-button" onclick={copyToClipboard}>Copy</Button>
 	</div>
 {/if}
 

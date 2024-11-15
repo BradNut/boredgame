@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="%paraglide.lang%" dir="%paraglide.textDirection%">
 <head>
 	<meta name="robots" content="noindex, nofollow"/>
 	<meta charset="utf-8"/>
 	<meta name="description" content="Bored? Find a game! Bored Game!"/>
 	<link rel="icon" href="%sveltekit.assets%/favicon-bored-game.svg"/>
-	<meta name="viewport" content="width=device-width"/>
-
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	%sveltekit.head%
 </head>
 
-<body>
-<div id="svelte">%sveltekit.body%</div>
+<body data-sveltekit-preload-data="hover">
+<div style="display: contents">%sveltekit.body%</div>
 </body>
 </html>
