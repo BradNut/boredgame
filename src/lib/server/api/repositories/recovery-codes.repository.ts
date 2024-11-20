@@ -1,6 +1,6 @@
 import {takeFirstOrThrow} from '$lib/server/api/common/utils/repository';
 import {DrizzleService} from '$lib/server/api/services/drizzle.service';
-import {eq, type InferInsertModel} from 'drizzle-orm';
+import {and, eq, type InferInsertModel} from 'drizzle-orm';
 import {inject, injectable} from '@needle-di/core';
 import {recoveryCodesTable} from '../databases/postgres/tables';
 
@@ -17,6 +17,12 @@ export class RecoveryCodesRepository {
 	async findAllByUserId(userId: string, db = this.drizzle.db) {
 		return db.query.recoveryCodesTable.findMany({
 			where: eq(recoveryCodesTable.userId, userId),
+		});
+	}
+
+	async findAllNotUsedByUserId(userId: string, db = this.drizzle.db) {
+		return db.query.recoveryCodesTable.findMany({
+			where: and(eq(recoveryCodesTable.userId, userId), eq(recoveryCodesTable.used, false)),
 		});
 	}
 

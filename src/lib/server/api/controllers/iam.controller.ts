@@ -79,7 +79,7 @@ export class IamController extends Controller {
 					try {
 						await this.iamService.updatePassword(user.id, { password, confirm_password });
 						await this.sessionsService.invalidateSession(user.id);
-						await this.loginRequestService.createUserSession(user.id, c.req, undefined);
+						await this.loginRequestService.createUserSession(user.id, c.req, false);
 						const sessionCookie = createBlankSessionTokenCookie();
 						setSessionCookie(c, sessionCookie);
 						return c.json({ status: 'success' });

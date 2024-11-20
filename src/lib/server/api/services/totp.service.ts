@@ -1,52 +1,57 @@
-import {CredentialsRepository} from '$lib/server/api/repositories/credentials.repository';
-import {decodeHex, encodeHexLowerCase} from '@oslojs/encoding';
-import {verifyTOTP} from '@oslojs/otp';
-import {inject, injectable} from '@needle-di/core';
-import type {CredentialsType} from '../databases/postgres/tables';
+import { CredentialsRepository } from '$lib/server/api/repositories/credentials.repository';
+import { inject, injectable } from '@needle-di/core';
+import { decodeBase64, encodeBase64 } from "@oslojs/encoding";
+import { generateTOTP, verifyTOTP } from '@oslojs/otp';
+import type { CredentialsType } from '../databases/postgres/tables';
+import { EncryptionService } from './encryption.service';
 
 @injectable()
 export class TotpService {
-	constructor(private credentialsRepository = inject(CredentialsRepository)) {}
+  constructor(
+    private credentialsRepository = inject(CredentialsRepository),
+    private encryptionService = inject(EncryptionService)
+  ) {}
 
-	async findOneByUserId(userId: string) {
-		return this.credentialsRepository.findTOTPCredentialsByUserId(userId);
-	}
+  async findOneByUserId(userId: string) {
+    return this.credentialsRepository.findTOTPCredentialsByUserId(userId);
+  }
 
-	async findOneByUserIdOrThrow(userId: string) {
-		const credential = await this.findOneByUserId(userId);
-		if (!credential) {
-			throw new Error('TOTP credential not found');
-		}
-		return credential;
-	}
+  async findOneByUserIdOrThrow(userId: string) {
+    const credential = await this.findOneByUserId(userId);
+    if (!credential) {
+      throw new Error('TOTP credential not found');
+    }
+    return credential;
+  }
 
-	async create(userId: string) {
-		const secret = new Uint8Array(20);
-		try {
-			return await this.credentialsRepository.create({
-				user_id: userId,
-				secret_data: encodeHexLowerCase(crypto.getRandomValues(secret)),
-				type: 'totp',
-			});
-		} catch (e) {
-			console.error(e);
-			return null;
-		}
-	}
+  async create(userId: string, key: Uint8Array) {
+    try {
+      return await this.credentialsRepository.create({
+        user_id: userId,
+        secret_data: encodeBase64(this.encryptionService.encrypt(key)),
+        type: 'totp',
+      });
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
 
-	async deleteOneByUserId(userId: string) {
-		return this.credentialsRepository.deleteByUserId(userId);
-	}
+  async deleteOneByUserId(userId: string) {
+    return this.credentialsRepository.deleteByUserId(userId);
+  }
 
-	async deleteOneByUserIdAndType(userId: string, type: CredentialsType) {
-		return this.credentialsRepository.deleteByUserIdAndType(userId, type);
-	}
+  async deleteOneByUserIdAndType(userId: string, type: CredentialsType) {
+    return this.credentialsRepository.deleteByUserIdAndType(userId, type);
+  }
 
-	async verify(userId: string, code: string) {
-		const credential = await this.credentialsRepository.findTOTPCredentialsByUserId(userId);
-		if (!credential) {
-			throw new Error('TOTP credential not found');
-		}
-		return verifyTOTP(decodeHex(credential.secret_data), 30, 6, code);
-	}
+  async verify(userId: string, code: string) {
+    const credential = await this.credentialsRepository.findTOTPCredentialsByUserId(userId);
+    console.log(`TOTP credential: ${JSON.stringify(credential)}`);
+    if (!credential) {
+      throw new Error('TOTP credential not found');
+    }
+    const secret = this.encryptionService.decrypt(decodeBase64(credential.secret_data));
+    return verifyTOTP(secret, 30, 6, code);
+  }
 }

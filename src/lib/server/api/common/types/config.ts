@@ -5,6 +5,7 @@ export interface Config {
 	// storage: StorageConfig
 	redis: RedisConfig;
 	postgres: PostgresConfig;
+	security: SecurityConfig;
 }
 
 interface ApiConfig {
@@ -32,4 +33,8 @@ interface PostgresConfig {
 	max: number | undefined;
 	migrating: boolean;
 	seeding: boolean;
+}
+
+interface SecurityConfig {
+	encryptionKey: string;
 }

@@ -32,7 +32,7 @@
   "linter": { "enabled": true, "rules": { "recommended": true } },
   "javascript": {
     "formatter": {
-      "jsxQuoteStyle": "double",
+      "jsxQuoteStyle": "single",
       "quoteProperties": "asNeeded",
       "trailingCommas": "all",
       "indentStyle": "space",

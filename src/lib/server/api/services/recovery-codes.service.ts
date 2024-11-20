@@ -29,6 +29,11 @@ export class RecoveryCodesService {
 		return []
 	}
 
+	async verify(userId: string, code: string) {
+		const recoveryCodes = await this.recoveryCodesRepository.findAllNotUsedByUserId(userId);
+		return recoveryCodes.find(recoveryCode => this.hashingService.verify(recoveryCode.code, code))
+	}
+
 	async deleteAllRecoveryCodesByUserId(userId: string) {
 		return this.recoveryCodesRepository.deleteAllByUserId(userId)
 	}

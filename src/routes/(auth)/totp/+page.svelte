@@ -11,15 +11,15 @@ import { superForm } from 'sveltekit-superforms/client';
 const { data } = $props();
 
 const superTotpForm = superForm(data.totpForm, {
-	resetForm: false,
-	validators: zodClient(totpSchema),
+  resetForm: false,
+  validators: zodClient(totpSchema),
 });
 
 const superRecoveryCodeForm = superForm(data.recoveryCodeForm, {
-	validators: zodClient(recoveryCodeSchema),
-	resetForm: false,
-	validationMethod: 'oninput',
-	delayMs: 0,
+  validators: zodClient(recoveryCodeSchema),
+  resetForm: false,
+  validationMethod: 'oninput',
+  delayMs: 0,
 });
 
 let showRecoveryCode = $state(false);
@@ -40,20 +40,20 @@ const { form: recoveryCodeFormData, enhance: recoveryCodeEnhance } = superRecove
 	<Card.Content>
 		{#if !showRecoveryCode}
 			{@render totpForm()}
-			<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = true}>Show Recovery Code</Button>
+			<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = true}>Use Recovery Code</Button>
 		{:else}
 			{@render recoveryCodeForm()}
-			<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = false}>Show TOTP Code</Button>
+			<Button variant="link" class="text-secondary-foreground" on:click={() => showRecoveryCode = false}>Use TOTP Code</Button>
 		{/if}
 	</Card.Content>
 </Card.Root>
 
 {#snippet totpForm()}
 	<form method="POST" action="?/validateTotp" use:totpEnhance>
-		<Form.Field class="form-field-container" form={superTotpForm} name="totpToken">
+		<Form.Field class="form-field-container" form={superTotpForm} name="code">
 			<Form.Control let:attrs>
 				<Form.Label>TOTP Code</Form.Label>
-				<PinInput {...attrs} bind:value={$totpFormData.totpToken} class="justify-evenly" />
+				<PinInput {...attrs} bind:value={$totpFormData.code} class="justify-evenly" />
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>

@@ -21,4 +21,7 @@ export const config: Config = {
 		migrating: env.DB_MIGRATING,
 		seeding: env.DB_SEEDING,
 	},
+	security: {
+		encryptionKey: env.ENCRYPTION_KEY,
+	}
 };

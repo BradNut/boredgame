@@ -24,5 +24,5 @@ export const load: PageServerLoad = async (event) => {
 		};
 	}
 
-	redirect(302, '/profile', { message: 'Two-Factor Authentication is not enabled', type: 'error' }, event);
+	redirect(302, '/settings/profile', { message: 'Two-Factor Authentication is not enabled', type: 'error' }, event);
 };

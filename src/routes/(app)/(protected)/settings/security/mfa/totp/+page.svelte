@@ -9,7 +9,7 @@ import { addTwoFactorSchema, removeTwoFactorSchema } from './schemas';
 
 const { data } = $props();
 
-const { qrCode, secret, twoFactorEnabled, recoveryCodes } = data;
+const { qrCode, twoFactorEnabled, recoveryCodes, secret } = data;
 
 const addTwoFactorForm = superForm(data.addTwoFactorForm, {
 	taintedMessage: null,
@@ -52,10 +52,10 @@ const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = remov
 		<h2>Please scan the following QR Code</h2>
 		<img src={qrCode} alt="QR Code" />
 		<form method="POST" action="?/enableTotp" use:addTwoFactorEnhance data-sveltekit-replacestate>
-			<Form.Field form={addTwoFactorForm} name="two_factor_code">
+			<Form.Field form={addTwoFactorForm} name="code">
 				<Form.Control let:attrs>
 					<Form.Label for="code">Enter Code</Form.Label>
-					<PinInput {...attrs} bind:value={$addTwoFactorFormData.two_factor_code} />
+					<PinInput {...attrs} bind:value={$addTwoFactorFormData.code} />
 				</Form.Control>
 				<Form.Description>This is the code from your authenticator app.</Form.Description>
 				<Form.FieldErrors />
@@ -68,6 +68,7 @@ const { form: removeTwoFactorFormData, enhance: removeTwoFactorEnhance } = remov
 				<Form.Description>Please enter your current password.</Form.Description>
 				<Form.FieldErrors />
 			</Form.Field>
+			<input name="key" type="hidden" value={$addTwoFactorFormData.key} hidden required />
 			<Form.Button>Submit</Form.Button>
 		</form>
 		<div class="mt-4">
