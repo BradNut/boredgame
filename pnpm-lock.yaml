@@ -13,13 +13,13 @@ importers:
         version: 5.1.0
       '@hono/swagger-ui':
         specifier: ^0.4.1
-        version: 0.4.1(hono@4.6.10)
+        version: 0.4.1(hono@4.6.11)
       '@hono/zod-openapi':
         specifier: ^0.15.3
-        version: 0.15.3(hono@4.6.10)(zod@3.23.8)
+        version: 0.15.3(hono@4.6.11)(zod@3.23.8)
       '@hono/zod-validator':
         specifier: ^0.2.2
-        version: 0.2.2(hono@4.6.10)(zod@3.23.8)
+        version: 0.2.2(hono@4.6.11)(zod@3.23.8)
       '@iconify-icons/line-md':
         specifier: ^1.2.30
         version: 1.2.30
@@ -30,8 +30,8 @@ importers:
         specifier: ^0.11.1
         version: 0.11.5(@sveltejs/kit@2.8.1(@sveltejs/vite-plugin-svelte@4.0.0-next.7(svelte@5.0.0-next.175)(vite@5.4.11(@types/node@20.17.6)))(svelte@5.0.0-next.175)(vite@5.4.11(@types/node@20.17.6)))
       '@internationalized/date':
-        specifier: ^3.5.6
-        version: 3.5.6
+        specifier: ^3.6.0
+        version: 3.6.0
       '@lucia-auth/adapter-drizzle':
         specifier: ^1.1.0
         version: 1.1.0(drizzle-orm@0.36.3(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.1)(postgres@3.4.5))(lucia@3.2.0)
@@ -72,8 +72,8 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       '@scalar/hono-api-reference':
-        specifier: ^0.5.159
-        version: 0.5.159(hono@4.6.10)
+        specifier: ^0.5.160
+        version: 0.5.160(hono@4.6.11)
       '@sveltejs/adapter-node':
         specifier: ^5.2.9
         version: 5.2.9(@sveltejs/kit@2.8.1(@sveltejs/vite-plugin-svelte@4.0.0-next.7(svelte@5.0.0-next.175)(vite@5.4.11(@types/node@20.17.6)))(svelte@5.0.0-next.175)(vite@5.4.11(@types/node@20.17.6)))
@@ -87,8 +87,8 @@ importers:
         specifier: ^1.9.1
         version: 1.9.1
       bullmq:
-        specifier: ^5.27.0
-        version: 5.27.0
+        specifier: ^5.28.1
+        version: 5.28.1
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -96,8 +96,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       cookie:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -117,17 +117,17 @@ importers:
         specifier: ^4.7.8
         version: 4.7.8
       hono:
-        specifier: ^4.6.10
-        version: 4.6.10
+        specifier: ^4.6.11
+        version: 4.6.11
       hono-pino:
         specifier: ^0.3.0
-        version: 0.3.0(hono@4.6.10)(pino@9.5.0)
+        version: 0.3.0(hono@4.6.11)(pino@9.5.0)
       hono-rate-limiter:
         specifier: ^0.4.0
-        version: 0.4.0(hono@4.6.10)
+        version: 0.4.0(hono@4.6.11)
       hono-zod-openapi:
         specifier: ^0.4.2
-        version: 0.4.2(hono@4.6.10)(zod@3.23.8)
+        version: 0.4.2(hono@4.6.11)(zod@3.23.8)
       html-entities:
         specifier: ^2.5.2
         version: 2.5.2
@@ -178,7 +178,7 @@ importers:
         version: 0.2.2
       stoker:
         specifier: ^1.3.0
-        version: 1.3.0(@asteasolutions/zod-to-openapi@7.1.2(zod@3.23.8))(@hono/zod-openapi@0.15.3(hono@4.6.10)(zod@3.23.8))(hono@4.6.10)(openapi3-ts@4.4.0)
+        version: 1.3.0(@asteasolutions/zod-to-openapi@7.1.2(zod@3.23.8))(@hono/zod-openapi@0.15.3(hono@4.6.11)(zod@3.23.8))(hono@4.6.11)(openapi3-ts@4.4.0)
       svelte-lazy-loader:
         specifier: ^1.0.0
         version: 1.0.0
@@ -292,8 +292,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       prettier-plugin-svelte:
-        specifier: ^3.2.8
-        version: 3.2.8(prettier@3.3.3)(svelte@5.0.0-next.175)
+        specifier: ^3.3.0
+        version: 3.3.0(prettier@3.3.3)(svelte@5.0.0-next.175)
       svelte:
         specifier: 5.0.0-next.175
         version: 5.0.0-next.175
@@ -1665,8 +1665,8 @@ packages:
   '@inlang/translatable@1.3.1':
     resolution: {integrity: sha512-VAtle21vRpIrB+axtHFrFB0d1HtDaaNj+lV77eZQTJyOWbTFYTVIQJ8WAbyw9eu4F6h6QC2FutLyxjMomxfpcQ==}
 
-  '@internationalized/date@3.5.6':
-    resolution: {integrity: sha512-jLxQjefH9VI5P9UQuqB6qNKnvFt1Ky1TPIzHGsIlCi7sZZoMR8SdYbBGRvM0y+Jtb+ez4ieBzmiAUcpmPYpyOw==}
+  '@internationalized/date@3.6.0':
+    resolution: {integrity: sha512-+z6ti+CcJnRlLHok/emGEsWQhe7kfSmEW+/6qCzvKY67YPh7YOBfvc7+/+NXq+zJlbArg30tYpqLjNgcAYv2YQ==}
 
   '@ioredis/commands@1.2.0':
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
@@ -2344,8 +2344,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@scalar/hono-api-reference@0.5.159':
-    resolution: {integrity: sha512-nUKaN0CKvytbXPj9b6taF/efKKRqEUwhVxlfLVjrJXN0eHNHDWxG9e/5Tyw1o2MXJo1cQpGZ4qTh48k/8u6ZjA==}
+  '@scalar/hono-api-reference@0.5.160':
+    resolution: {integrity: sha512-3NXXh4B+5sa9QEchtQNKH0me4pEB8soFfCSqOxsuB0d8agokDO574cP9Qq4l6vwSh6FMiqSdaGTv5459g8hTCg==}
     engines: {node: '>=18'}
     peerDependencies:
       hono: ^4.0.0
@@ -2354,8 +2354,8 @@ packages:
     resolution: {integrity: sha512-6geH9ehvQ/sG/xUyy3e0lyOw3BaY5s6nn22wHjEJhcobdmWyFER0O6m7AU0ZN4QTjle/gYvFJOjj552l/rsNSw==}
     engines: {node: '>=18'}
 
-  '@scalar/types@0.0.19':
-    resolution: {integrity: sha512-wOxtXd35BS0DaVhBopQUB8c8hfLQ+/PKEr99GbOZW+4DWCrEB8JfWJgvpJyxHU6by7LHNVY4fvpFQR7Ezh1IIw==}
+  '@scalar/types@0.0.20':
+    resolution: {integrity: sha512-Sx7tqiuV9ZNp2XpIXKD/srzTjjb4I6aof0Y7+U5MgEuKPwrRnYS/BaocdNgWLnpCZisBIg5qp4YSqozxibabVg==}
     engines: {node: '>=18'}
 
   '@sideway/address@4.1.5':
@@ -2801,8 +2801,8 @@ packages:
   buffer@6.0.3:
     resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
-  bullmq@5.27.0:
-    resolution: {integrity: sha512-DZWrjDLkecZZ1/43h/SkG6CxU8nO/Lq/0svVoQdw33ksUCGfccgjbvCa/cuxHP/OvhxlTAA0cO3dBOoaT7sRFQ==}
+  bullmq@5.28.1:
+    resolution: {integrity: sha512-iSoqziPLKH//mmoc4Aj3/opTmk1PgFdITwUrx/wDqrTxfBRjnTGInsu129LCEY6d+SmhZWnA9PYU6ciX+NT64A==}
 
   bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
@@ -2956,8 +2956,8 @@ packages:
     resolution: {integrity: sha512-U71cyTamuh1CRNCfpGY6to28lxvNwPG4Guz/EVjgf3Jmzv0vlDp1atT9eS5dDjMYHucpHbWns6Lwf3BKz6svdw==}
     engines: {node: '>= 0.6'}
 
-  cookie@1.0.1:
-    resolution: {integrity: sha512-Xd8lFX4LM9QEEwxQpF9J9NTUh8pmdJO0cyRJhFiDoLTk2eH8FXlRv2IFGYVadZpqI3j8fhNrSdKCeYPxiAhLXw==}
+  cookie@1.0.2:
+    resolution: {integrity: sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==}
     engines: {node: '>=18'}
 
   core-js@3.38.1:
@@ -3659,8 +3659,8 @@ packages:
       hono: ^4.6.3
       zod: ^3.21.4
 
-  hono@4.6.10:
-    resolution: {integrity: sha512-IXXNfRAZEahFnWBhUUlqKEGF9upeE6hZoRZszvNkyAz/CYp+iVbxm3viMvStlagRJohjlBRGOQ7f4jfcV0XMGg==}
+  hono@4.6.11:
+    resolution: {integrity: sha512-f0LwJQFKdUUrCUAVowxSvNCjyzI7ZLt8XWYU/EApyeq5FfOvHFarBaE5rjU9HTNFk4RI0FkdB2edb3p/7xZjzQ==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -4648,8 +4648,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-plugin-svelte@3.2.8:
-    resolution: {integrity: sha512-PAHmmU5cGZdnhW4mWhmvxuG2PVbbHIxUuPOdUKvfE+d4Qt2d29iU5VWrPdsaW5YqVEE0nqhlvN4eoKmVMpIF3Q==}
+  prettier-plugin-svelte@3.3.0:
+    resolution: {integrity: sha512-iNoYiQUx4zwqbQDW/bk0WR75w+QiY4fHJQpGQ5v8Yr7X5m7YoSvs2buUnhoYFXNAL32ULVmrjPSc0vVOHJsO0Q==}
     peerDependencies:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
@@ -6325,25 +6325,25 @@ snapshots:
       '@hapi/hoek': 9.3.0
     optional: true
 
-  '@hono/swagger-ui@0.4.1(hono@4.6.10)':
+  '@hono/swagger-ui@0.4.1(hono@4.6.11)':
     dependencies:
-      hono: 4.6.10
+      hono: 4.6.11
 
-  '@hono/zod-openapi@0.15.3(hono@4.6.10)(zod@3.23.8)':
+  '@hono/zod-openapi@0.15.3(hono@4.6.11)(zod@3.23.8)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.1.2(zod@3.23.8)
-      '@hono/zod-validator': 0.2.2(hono@4.6.10)(zod@3.23.8)
-      hono: 4.6.10
+      '@hono/zod-validator': 0.2.2(hono@4.6.11)(zod@3.23.8)
+      hono: 4.6.11
       zod: 3.23.8
 
-  '@hono/zod-validator@0.2.2(hono@4.6.10)(zod@3.23.8)':
+  '@hono/zod-validator@0.2.2(hono@4.6.11)(zod@3.23.8)':
     dependencies:
-      hono: 4.6.10
+      hono: 4.6.11
       zod: 3.23.8
 
-  '@hono/zod-validator@0.4.1(hono@4.6.10)(zod@3.23.8)':
+  '@hono/zod-validator@0.4.1(hono@4.6.11)(zod@3.23.8)':
     dependencies:
-      hono: 4.6.10
+      hono: 4.6.11
       zod: 3.23.8
 
   '@humanwhocodes/config-array@0.13.0':
@@ -6571,7 +6571,7 @@ snapshots:
     dependencies:
       '@inlang/language-tag': 1.5.1
 
-  '@internationalized/date@3.5.6':
+  '@internationalized/date@3.6.0':
     dependencies:
       '@swc/helpers': 0.5.13
 
@@ -6665,7 +6665,7 @@ snapshots:
     dependencies:
       '@floating-ui/core': 1.6.8
       '@floating-ui/dom': 1.6.11
-      '@internationalized/date': 3.5.6
+      '@internationalized/date': 3.6.0
       dequal: 2.0.3
       focus-trap: 7.6.0
       nanoid: 5.0.7
@@ -6675,7 +6675,7 @@ snapshots:
     dependencies:
       '@floating-ui/core': 1.6.8
       '@floating-ui/dom': 1.6.11
-      '@internationalized/date': 3.5.6
+      '@internationalized/date': 3.6.0
       dequal: 2.0.3
       focus-trap: 7.6.0
       nanoid: 5.0.7
@@ -7226,14 +7226,14 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.24.0':
     optional: true
 
-  '@scalar/hono-api-reference@0.5.159(hono@4.6.10)':
+  '@scalar/hono-api-reference@0.5.160(hono@4.6.11)':
     dependencies:
-      '@scalar/types': 0.0.19
-      hono: 4.6.10
+      '@scalar/types': 0.0.20
+      hono: 4.6.11
 
   '@scalar/openapi-types@0.1.5': {}
 
-  '@scalar/types@0.0.19':
+  '@scalar/types@0.0.20':
     dependencies:
       '@scalar/openapi-types': 0.1.5
       '@unhead/schema': 1.11.11
@@ -7701,7 +7701,7 @@ snapshots:
 
   bits-ui@0.21.16(svelte@5.0.0-next.175):
     dependencies:
-      '@internationalized/date': 3.5.6
+      '@internationalized/date': 3.6.0
       '@melt-ui/svelte': 0.76.2(svelte@5.0.0-next.175)
       nanoid: 5.0.7
       svelte: 5.0.0-next.175
@@ -7766,7 +7766,7 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
-  bullmq@5.27.0:
+  bullmq@5.28.1:
     dependencies:
       cron-parser: 4.9.0
       ioredis: 5.4.1
@@ -7921,7 +7921,7 @@ snapshots:
 
   cookie@0.6.0: {}
 
-  cookie@1.0.1: {}
+  cookie@1.0.2: {}
 
   core-js@3.38.1: {}
 
@@ -8636,24 +8636,24 @@ snapshots:
 
   help-me@5.0.0: {}
 
-  hono-pino@0.3.0(hono@4.6.10)(pino@9.5.0):
+  hono-pino@0.3.0(hono@4.6.11)(pino@9.5.0):
     dependencies:
       defu: 6.1.4
-      hono: 4.6.10
+      hono: 4.6.11
       pino: 9.5.0
 
-  hono-rate-limiter@0.4.0(hono@4.6.10):
+  hono-rate-limiter@0.4.0(hono@4.6.11):
     dependencies:
-      hono: 4.6.10
+      hono: 4.6.11
 
-  hono-zod-openapi@0.4.2(hono@4.6.10)(zod@3.23.8):
+  hono-zod-openapi@0.4.2(hono@4.6.11)(zod@3.23.8):
     dependencies:
-      '@hono/zod-validator': 0.4.1(hono@4.6.10)(zod@3.23.8)
-      hono: 4.6.10
+      '@hono/zod-validator': 0.4.1(hono@4.6.11)(zod@3.23.8)
+      hono: 4.6.11
       zod: 3.23.8
       zod-openapi: 3.3.0(zod@3.23.8)
 
-  hono@4.6.10: {}
+  hono@4.6.11: {}
 
   hookable@5.5.3: {}
 
@@ -9634,7 +9634,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-svelte@3.2.8(prettier@3.3.3)(svelte@5.0.0-next.175):
+  prettier-plugin-svelte@3.3.0(prettier@3.3.3)(svelte@5.0.0-next.175):
     dependencies:
       prettier: 3.3.3
       svelte: 5.0.0-next.175
@@ -9962,13 +9962,13 @@ snapshots:
 
   std-env@3.7.0: {}
 
-  stoker@1.3.0(@asteasolutions/zod-to-openapi@7.1.2(zod@3.23.8))(@hono/zod-openapi@0.15.3(hono@4.6.10)(zod@3.23.8))(hono@4.6.10)(openapi3-ts@4.4.0):
+  stoker@1.3.0(@asteasolutions/zod-to-openapi@7.1.2(zod@3.23.8))(@hono/zod-openapi@0.15.3(hono@4.6.11)(zod@3.23.8))(hono@4.6.11)(openapi3-ts@4.4.0):
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.1.2(zod@3.23.8)
-      hono: 4.6.10
+      hono: 4.6.11
       openapi3-ts: 4.4.0
     optionalDependencies:
-      '@hono/zod-openapi': 0.15.3(hono@4.6.10)(zod@3.23.8)
+      '@hono/zod-openapi': 0.15.3(hono@4.6.11)(zod@3.23.8)
 
   string-width@4.2.3:
     dependencies:

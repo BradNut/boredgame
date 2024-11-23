@@ -1,4 +1,3 @@
-import type { Sessions } from '$lib/server/api/databases/postgres/tables';
 import type { Session } from '$lib/server/api/services/sessions.service';
 import type { Hono } from 'hono';
 import type { PinoLogger } from 'hono-pino';

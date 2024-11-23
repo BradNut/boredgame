@@ -9,9 +9,9 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async (event) => {
   const { locals } = event;
 
-  const authedUser = await locals.getAuthedUser();
+  const { user } = await locals.getAuthedUser();
 
-  if (authedUser) {
+  if (user) {
     console.log('user already signed in');
     const message = { type: 'success', message: 'You are already signed in' } as const;
     throw redirect('/', message, event);
@@ -28,9 +28,9 @@ export const actions: Actions = {
   default: async (event) => {
     const { locals } = event;
 
-    const authedUser = await locals.getAuthedUser();
+    const { user } = await locals.getAuthedUser();
 
-    if (authedUser) {
+    if (user) {
       const message = { type: 'success', message: 'You are already signed in' } as const;
       throw redirect('/', message, event);
     }
@@ -38,8 +38,10 @@ export const actions: Actions = {
     const form = await superValidate(event, zod(signinUsernameDto));
 
     const { error } = await locals.api.login.$post({ json: form.data }).then(locals.parseApiResponse);
+    console.log('Login error', error);
     if (error) {
-      return setError(form, 'username', error);
+      console.log('Setting error');
+      return setError(form, 'username', 'An error occurred while logging in.');
     }
 
     if (!form.valid) {

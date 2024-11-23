@@ -1,22 +1,25 @@
 <script lang="ts">
-const { data } = $props()
-const { user, wishlists = [], collections = [] } = data
+	import { page } from "$app/stores";
+	import type { PageData } from './$types';
 
-const welcomeName = $derived.by(() => {
-	let welcomeName = ''
-	if (data?.user?.firstName) {
-		welcomeName += data?.user?.firstName
-	}
-	if (data?.user?.lastName) {
-		welcomeName = welcomeName.length === 0 ? data?.user?.lastName : welcomeName
-	}
+	let { data }: { data: PageData } = $props();
+	const { user, wishlists = [], collections = [] } = data;
 
-	if (welcomeName.length === 0) {
-		return user?.username
-	}
+	const welcomeName = $derived.by(() => {
+		let welcomeName = "";
+		if (data?.user?.firstName) {
+			welcomeName += data?.user?.firstName;
+		}
+		if (data?.user?.lastName) {
+			welcomeName = welcomeName.length === 0 ? data?.user?.lastName : welcomeName;
+		}
 
-	return welcomeName
-})
+		if (welcomeName.length === 0) {
+			return user?.username;
+		}
+
+		return welcomeName;
+	});
 </script>
 
 <div class="container">
@@ -37,7 +40,10 @@ const welcomeName = $derived.by(() => {
 	{:else}
 		<h1>Welcome to Bored Game!</h1>
 		<h2>Track the board games you own, the ones you want, and whether you play them enough.</h2>
-		<p>Get started by joining the <a href="/waitlist">wait list</a> or <a href="/login">log in</a> if you already have an account.</p>
+		<p>
+			Get started by joining the <a href="/waitlist">wait list</a> or <a href="/login">log in</a> if you already have an
+			account.
+		</p>
 	{/if}
 </div>
 

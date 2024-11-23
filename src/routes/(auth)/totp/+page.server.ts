@@ -13,19 +13,16 @@ import type { PageServerLoad, RequestEvent } from './$types';
 
 export const load: PageServerLoad = async (event) => {
   const { locals } = event;
-
-  const authedUser = await locals.getAuthedUser();
-  if (!authedUser) {
+  const { session } = await locals.getAuthedUser();
+  if (session === null) {
     throw redirect(302, '/login', notSignedInMessage, event);
   }
-
-  const { data } = await locals.api.mfa.totp.$get().then(locals.parseApiResponse);
-  if (!data) {
+  if (!session?.twoFactorEnabled) {
     throw redirect(302, '/login', notSignedInMessage, event);
   }
-  const { totpCredential } = data;
-  if (!totpCredential) {
-    throw redirect(302, '/login', notSignedInMessage, event);
+  if (session.twoFactorVerified) {
+    const message = { type: 'success', message: 'You are already signed in' } as const;
+    throw redirect('/', message, event);
   }
 
   return {
@@ -38,9 +35,13 @@ export const actions: Actions = {
   validateTotp: async (event) => {
     const { locals } = event;
 
-    const authedUser = await locals.getAuthedUser();
-    if (!authedUser) {
+    const { session } = await locals.getAuthedUser();
+    if (session === null) {
       throw redirect(302, '/login', notSignedInMessage, event);
+    }
+    if (!session.twoFactorEnabled || session.twoFactorVerified) {
+      const message = { type: 'success', message: 'You are already signed in' } as const;
+      throw redirect('/', message, event);
     }
 
     const { data: totpData } = await locals.api.mfa.totp.$get().then(locals.parseApiResponse);
@@ -64,15 +65,23 @@ export const actions: Actions = {
       return setError(totpForm, 'code', totpVerifyError);
     }
 
-    console.log('Successfully logged in');
-    return message(totpForm, { type: 'success', message: 'Successfully logged in!' });
+    totpForm.data.code = '';
+    const message = { type: 'success', message: 'Successfully logged in!' } as const;
+    redirect(302, '/', message, event);
   },
   validateRecoveryCode: async (event) => {
     const { cookies, locals } = event;
 
-    const authedUser = await locals.getAuthedUser();
-    if (!authedUser) {
+    const { session } = await locals.getAuthedUser();
+    if (session === null) {
       throw redirect(302, '/login', notSignedInMessage, event);
+    }
+    if (!session?.twoFactorEnabled) {
+      throw redirect(302, '/login', notSignedInMessage, event);
+    }
+    if (session.twoFactorVerified) {
+      const message = { type: 'success', message: 'You are already signed in' } as const;
+      throw redirect('/', message, event);
     }
 
     const { dbUser, twoFactorDetails } = await validateUserData(event, locals);
@@ -157,7 +166,7 @@ async function validateUserData(event: RequestEvent, locals: App.Locals) {
     throw fail(401);
   }
 
-  const isTwoFactorAuthenticated = session?.isTwoFactorAuthenticated;
+  const twoFactorVerified = session?.twoFactorVerified;
   const twoFactorDetails = await db.query.twoFactorTable.findFirst({
     where: eq(twoFactorTable.userId, dbUser!.id!),
   });
@@ -167,7 +176,7 @@ async function validateUserData(event: RequestEvent, locals: App.Locals) {
     throw redirect(302, '/login', message, event);
   }
 
-  if (isTwoFactorAuthenticated && twoFactorDetails.enabled && twoFactorDetails.secret !== '') {
+  if (twoFactorVerified && twoFactorDetails.enabled && twoFactorDetails.secret !== '') {
     const message = { type: 'success', message: 'You are already signed in' } as const;
     throw redirect('/', message, event);
   }

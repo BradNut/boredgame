@@ -21,12 +21,12 @@ const apiClient: Handle = async ({ event, resolve }) => {
 
 	/* ----------------------------- Auth functions ----------------------------- */
 	async function getAuthedUser() {
-		const { data } = await api.user.$get().then(parseApiResponse);
-		return data?.user;
+		const { data } = await api.me.$get().then(parseApiResponse);
+		return { user: data?.user, session: data?.session };
 	}
 
 	async function getAuthedUserOrThrow() {
-		const { data } = await api.user.$get().then(parseApiResponse);
+		const { data } = await api.me.$get().then(parseApiResponse);
 		if (!data || !data.user) {
 			throw redirect(StatusCodes.TEMPORARY_REDIRECT, "/");
 		}

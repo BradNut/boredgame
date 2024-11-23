@@ -34,7 +34,7 @@ export class SignupController extends Controller {
 				return c.body('Failed to create user', 500);
 			}
 
-			const session = await this.loginRequestService.createUserSession(user.id, c.req, false);
+			const session = await this.loginRequestService.createUserSession(user.id, c.req, false, false);
 			const sessionCookie = createSessionTokenCookie(session.id, cookieExpiresAt);
 			console.log('set cookie', sessionCookie);
 			setSessionCookie(c, sessionCookie);

@@ -1,5 +1,6 @@
 import type { ApiClient } from '$lib/server/api';
 import type { Users } from '$lib/server/api/databases/postgres/tables';
+import type { Session } from '$lib/server/api/services/sessions.service';
 import type { parseApiResponse } from '$lib/utils/api';
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
@@ -16,8 +17,8 @@ declare global {
     interface Locals {
       api: ApiClient['api'];
       parseApiResponse: typeof parseApiResponse;
-      getAuthedUser: () => Promise<Returned<Users> | null>;
-      getAuthedUserOrThrow: () => Promise<Returned<User>>;
+      getAuthedUser: () => Promise<Returned<Record<Users, Session>> | null>;
+      getAuthedUserOrThrow: () => Promise<Returned<Record<Users, Session>>>;
     }
     namespace Superforms {
       type Message = {

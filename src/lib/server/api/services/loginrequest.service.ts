@@ -2,7 +2,7 @@ import type { SigninUsernameDto } from '$lib/server/api/dtos/signin-username.dto
 import { SessionsService } from '$lib/server/api/services/sessions.service';
 import type { HonoRequest } from 'hono';
 import { inject, injectable } from '@needle-di/core';
-import { BadRequest } from '../common/exceptions';
+import { BadRequest, NotFound } from '../common/exceptions';
 import type { Credentials } from '../databases/postgres/tables';
 import { CredentialsRepository } from '../repositories/credentials.repository';
 import { UsersRepository } from '../repositories/users.repository';
@@ -39,7 +39,7 @@ export class LoginRequestsService {
     const existingUser = await this.usersRepository.findOneByUsername(data.username);
 
     if (!existingUser) {
-      throw BadRequest('User not found');
+      throw NotFound('User not found');
     }
 
     const credential = await this.credentialsRepository.findPasswordCredentialsByUserId(existingUser.id);
@@ -54,10 +54,15 @@ export class LoginRequestsService {
 
     const totpCredentials = await this.credentialsRepository.findTOTPCredentialsByUserId(existingUser.id);
 
-    return await this.createUserSession(existingUser.id, req, !!totpCredentials && totpCredentials.secret_data !== null && totpCredentials.secret_data !== '');
+    return await this.createUserSession(
+      existingUser.id,
+      req,
+      !!totpCredentials && totpCredentials.secret_data !== null && totpCredentials.secret_data !== '',
+      false,
+    );
   }
 
-  async createUserSession(existingUserId: string, req: HonoRequest, twoFactorAuthEnabled: boolean) {
+  async createUserSession(existingUserId: string, req: HonoRequest, twoFactorAuthEnabled: boolean, twoFactorVerified = false) {
     const requestIpAddress = req.header('X-Forwarded-For');
     const requestIpCountry = req.header('x-vercel-ip-country');
     return this.sessionsService.createSession(
@@ -66,7 +71,7 @@ export class LoginRequestsService {
       requestIpCountry || 'unknown',
       requestIpAddress || 'unknown',
       twoFactorAuthEnabled,
-      false,
+      twoFactorVerified,
     );
   }
 

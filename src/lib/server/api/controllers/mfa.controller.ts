@@ -7,7 +7,7 @@ import { UsersService } from '$lib/server/api/services/users.service';
 import { zValidator } from '@hono/zod-validator';
 import { inject, injectable } from '@needle-di/core';
 import { CredentialsType } from '../databases/postgres/tables';
-import { requireAuth } from '../middleware/require-auth.middleware';
+import { requireFullAuth, requireTempAuth } from '../middleware/require-auth.middleware';
 import { createTwoFactorSchema } from '../dtos/create-totp.dto';
 import { decodeBase64 } from '@oslojs/encoding';
 import { LoginRequestsService } from '../services/loginrequest.service';
@@ -26,12 +26,13 @@ export class MfaController extends Controller {
 
   routes() {
     return this.controller
-      .get('/totp', requireAuth, async (c) => {
+      .get('/totp', requireTempAuth, async (c) => {
         const user = c.var.user;
+        c.var.logger.info(`The user ${user.id} is requesting TOTP credentials`);
         const totpCredential = await this.totpService.findOneByUserId(user.id);
         return c.json({ totpCredential });
       })
-      .post('/totp', requireAuth, zValidator('json', createTwoFactorSchema), async (c) => {
+      .post('/totp', requireTempAuth, zValidator('json', createTwoFactorSchema), async (c) => {
         const user = c.var.user;
         const { key } = c.req.valid('json');
         const totpCredential = await this.totpService.create(user.id, decodeBase64(key));
@@ -41,7 +42,7 @@ export class MfaController extends Controller {
         }
         return c.status(StatusCodes.INTERNAL_SERVER_ERROR);
       })
-      .delete('/totp', requireAuth, async (c) => {
+      .delete('/totp', requireFullAuth, async (c) => {
         const user = c.var.user;
         try {
           await this.totpService.deleteOneByUserIdAndType(user.id, CredentialsType.TOTP);
@@ -54,20 +55,20 @@ export class MfaController extends Controller {
           return c.status(StatusCodes.INTERNAL_SERVER_ERROR);
         }
       })
-      .get('/totp/recoveryCodes', requireAuth, async (c) => {
+      .get('/totp/recoveryCodes', requireFullAuth, async (c) => {
         const user = c.var.user;
         // You can only view recovery codes once and that is on creation
         const existingCodes = await this.recoveryCodesService.findAllRecoveryCodesByUserId(user.id);
         if (existingCodes && existingCodes.length > 0) {
           console.log('Recovery Codes found', existingCodes);
           // Filter out codes that are not used and only return the code
-          const codes = existingCodes.filter(code => !code.used).map(code => code.code);
+          const codes = existingCodes.filter((code) => !code.used).map((code) => code.code);
           return c.json({ recoveryCodes: codes });
         }
         const recoveryCodes = await this.recoveryCodesService.createRecoveryCodes(user.id);
         return c.json({ recoveryCodes });
       })
-      .post('/totp/recoveryCodes', requireAuth, zValidator('json', verifyTotpDto), async (c) => {
+      .post('/totp/recoveryCodes', requireFullAuth, zValidator('json', verifyTotpDto), async (c) => {
         try {
           const user = c.var.user;
           const { code } = c.req.valid('json');
@@ -82,7 +83,7 @@ export class MfaController extends Controller {
           return c.status(StatusCodes.INTERNAL_SERVER_ERROR);
         }
       })
-      .post('/totp/verify', requireAuth, zValidator('json', verifyTotpDto), async (c) => {
+      .post('/totp/verify', requireTempAuth, zValidator('json', verifyTotpDto), async (c) => {
         try {
           const user = c.var.user;
           const { code } = c.req.valid('json');
@@ -90,7 +91,7 @@ export class MfaController extends Controller {
           const verified = await this.totpService.verify(user.id, code);
           if (verified) {
             await this.usersService.updateUser(user.id, { mfa_enabled: true });
-            const session = await this.loginRequestService.createUserSession(user.id, c.req, true);
+            const session = await this.loginRequestService.createUserSession(user.id, c.req, true, true);
             const sessionCookie = createSessionTokenCookie(session.id, cookieExpiresAt);
             console.log('set cookie', sessionCookie);
             setSessionCookie(c, sessionCookie);
