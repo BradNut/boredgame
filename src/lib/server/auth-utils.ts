@@ -1,9 +1,19 @@
+import { generateId } from '$lib/server/api/common/utils/crypto';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { eq } from 'drizzle-orm';
-import { generateIdFromEntropySize } from 'lucia';
-import { createDate, TimeSpan } from 'oslo';
-import { password_reset_tokens, type Users } from './api/databases/postgres/tables';
+import { type Users, password_reset_tokens } from './api/databases/postgres/tables';
+import type { Session } from './api/iam/sessions/sessions.service';
 import { db } from './api/packages/drizzle';
-import type { Session } from './api/services/sessions.service';
+
+dayjs.extend(relativeTime);
+
+function generateCode() {
+  // alphabet with removed look-alike characters (0, 1, O, I)
+  const alphabet = '23456789ACDEFGHJKLMNPQRSTUVWXYZ';
+  // generate 6 character long random string
+  return generateId(6, alphabet);
+}
 
 export async function createPasswordResetToken(userId: string): Promise<string> {
   // optionally invalidate all existing tokens
@@ -12,7 +22,7 @@ export async function createPasswordResetToken(userId: string): Promise<string> 
   await db.insert(password_reset_tokens).values({
     id: tokenId,
     user_id: userId,
-    expires_at: createDate(new TimeSpan(2, 'h')),
+    expires_at: dayjs().add(30, 'day').toDate(),
   });
   return tokenId;
 }
@@ -35,7 +45,7 @@ export function userNotFullyAuthenticated(user: Users | null, session: Session |
  * @param {Session | null} session - The session object.
  * @returns {boolean} True if the user is not fully authenticated, otherwise false.
  */
-export function userNotAuthenticated(user: User | null, session: Session | null) {
+export function userNotAuthenticated(user: Users | null, session: Session | null) {
   return !user || !session || userNotFullyAuthenticated(user, session);
 }
 
@@ -46,6 +56,6 @@ export function userNotAuthenticated(user: User | null, session: Session | null)
  * @param {Session | null} session - The session object.
  * @returns {boolean} True if the user is fully authenticated, otherwise false.
  */
-export function userFullyAuthenticated(user: User | null, session: Session | null) {
+export function userFullyAuthenticated(user: Users | null, session: Session | null) {
   return !userNotAuthenticated(user, session);
 }

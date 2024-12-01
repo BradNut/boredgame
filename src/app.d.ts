@@ -1,6 +1,6 @@
 import type { ApiClient } from '$lib/server/api';
 import type { Users } from '$lib/server/api/databases/postgres/tables';
-import type { Session } from '$lib/server/api/services/sessions.service';
+import type { Session } from '$lib/server/api/iam/sessions/sessions.service';
 import type { parseApiResponse } from '$lib/utils/api';
 
 // See https://svelte.dev/docs/kit/types#app.d.ts

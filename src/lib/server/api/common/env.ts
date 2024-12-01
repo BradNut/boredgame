@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
-import { z, type ZodError } from 'zod';
+import { type ZodError, z } from 'zod';
 
 expand(config());
 
@@ -37,9 +37,9 @@ const EnvSchema = z.object({
   TWO_FACTOR_TIMEOUT: z.coerce.number().default(300000),
 });
 
-export type env = z.infer<typeof EnvSchema>;
+export type EnvsDto = z.infer<typeof EnvSchema>;
 
-let env: env;
+let env: EnvsDto;
 
 try {
   env = EnvSchema.parse(process.env);

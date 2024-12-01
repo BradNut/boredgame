@@ -1,5 +1,5 @@
-import { StatusCodes } from '$lib/constants/status-codes';
 import { signinUsernameDto } from '$lib/dtos/signin-username.dto';
+import { StatusCodes } from '$lib/utils/status-codes';
 import { type Actions, fail } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 import { zod } from 'sveltekit-superforms/adapters';
